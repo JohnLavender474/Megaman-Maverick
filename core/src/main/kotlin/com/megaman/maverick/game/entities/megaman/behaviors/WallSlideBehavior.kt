@@ -5,11 +5,13 @@ import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.currentWeaponPrevents
+import com.megaman.maverick.game.players.AButtonTask
 import com.megaman.maverick.game.players.WallSlideParams
+import com.megaman.maverick.game.players.aButtonTask
 import com.megaman.maverick.game.players.playerWallSlideBehavior
+import com.megaman.maverick.game.players.setAirDashTaskOutOfWater
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.isSensing
 
@@ -41,6 +43,6 @@ internal fun Megaman.wallSlideBehavior(): IBehavior = playerWallSlideBehavior(
                 body.physics.gravityOn = false
             }
         },
-        onEnd = { if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH }
+        onEnd = { setAirDashTaskOutOfWater() }
     )
 )

@@ -3,6 +3,8 @@ package com.megaman.maverick.game.entities.protoman
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.entities.isBehaviorActive
+import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.players.SabreParams
@@ -16,7 +18,8 @@ internal fun protomanSabreParams(proto: Protoman) = SabreParams(
             ProtomanSabreMoves.SLASH_2,
             ProtomanSabreMoves.SLASH_3
         ),
-        SabreState.AIR pairTo gdxArrayOf(ProtomanSabreMoves.AIR)
+        SabreState.AIR pairTo gdxArrayOf(ProtomanSabreMoves.AIR),
+        SabreState.WALL pairTo gdxArrayOf(ProtomanSabreMoves.WALL)
     ),
     atlas = TextureAsset.PROTOMAN,
     spriteSize = ProtomanValues.SPRITE_SIZE,
@@ -25,6 +28,7 @@ internal fun protomanSabreParams(proto: Protoman) = SabreParams(
     canStart = { !proto.buster.shooting },
     chooseState = {
         when {
+            proto.isBehaviorActive(BehaviorType.WALL_SLIDING) -> SabreState.WALL
             !proto.bodyOverGround -> SabreState.AIR
             else -> SabreState.FLOOR
         }

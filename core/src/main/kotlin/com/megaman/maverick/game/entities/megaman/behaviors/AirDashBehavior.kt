@@ -3,10 +3,12 @@ package com.megaman.maverick.game.entities.megaman.behaviors
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.maverick.game.engine.behaviors.IBehavior
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.currentWeaponPrevents
+import com.megaman.maverick.game.players.AButtonTask
 import com.megaman.maverick.game.players.AirDashParams
+import com.megaman.maverick.game.players.aButtonTask
+import com.megaman.maverick.game.players.aButtonTaskOnAirDashStart
 import com.megaman.maverick.game.players.airDashInputJustPressed
 import com.megaman.maverick.game.players.airDashInputPressed
 import com.megaman.maverick.game.players.bodyOverGround
@@ -42,8 +44,7 @@ internal fun Megaman.airDashBehavior(): IBehavior = playerAirDashBehavior(
             else MegamanValues.AIR_DASH_END_BUMP
         },
         onStart = {
-            aButtonTask = AButtonTask.JUMP
-            airDashConsumed = true
+            aButtonTaskOnAirDashStart()
             airDashDirection = direction
         },
         onEnd = { currentWeapon.airDash?.onEnd?.invoke(this) }

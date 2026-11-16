@@ -27,5 +27,8 @@ internal val PROTOMAN_BUSTER = BusterParams(
     // TODO: at a ladder foot with the feet over the floor the sprite has no air drop, so the ladder shot leaves 0.25
     //  tile under the muzzle, as Megaman's ladder shot does (060d docs/TODO.md)
     climbOffset = BusterOffset(ProtomanValues.SHOT_CLIMB_OFFSET_X, ProtomanValues.SHOT_CLIMB_OFFSET_Y),
-    slideOffset = BusterOffset(ProtomanValues.SHOT_SLIDE_OFFSET_X, ProtomanValues.SHOT_SLIDE_OFFSET_Y)
+    slideOffset = BusterOffset(ProtomanValues.SHOT_SLIDE_OFFSET_X, ProtomanValues.SHOT_SLIDE_OFFSET_Y),
+    wallSlideOffset = BusterOffset(ProtomanValues.SHOT_WALL_SLIDE_OFFSET_X, ProtomanValues.SHOT_WALL_SLIDE_OFFSET_Y),
+    airDashOffset = BusterOffset(ProtomanValues.SHOT_AIR_DASH_OFFSET_X, ProtomanValues.SHOT_AIR_DASH_OFFSET_Y),
+    swimOffset = BusterOffset(ProtomanValues.SHOT_SWIM_OFFSET_X, ProtomanValues.SHOT_SWIM_OFFSET_Y)
 )

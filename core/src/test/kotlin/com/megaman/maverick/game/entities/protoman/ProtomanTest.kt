@@ -79,6 +79,15 @@ import com.megaman.maverick.game.players.BusterShot
 import com.megaman.maverick.game.players.BusterClimbOffsetMissingException
 import com.megaman.maverick.game.players.BusterCrouchOffsetMissingException
 import com.megaman.maverick.game.players.BusterSlideOffsetMissingException
+import com.megaman.maverick.game.players.BusterWallSlideOffsetMissingException
+import com.megaman.maverick.game.players.BusterAirDashOffsetMissingException
+import com.megaman.maverick.game.players.BusterSwimOffsetMissingException
+import com.megaman.maverick.game.players.AButtonTask
+import com.megaman.maverick.game.players.aButtonTask
+import com.maverick.game.engine.camera.CameraFollow
+import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.locks.isLocked
+import com.badlogic.gdx.utils.ObjectSet
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -87,6 +96,12 @@ import com.maverick.game.engine.common.objects.props
 import com.megaman.maverick.game.events.EventType
 import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.players.SabreMove
+import com.megaman.maverick.game.players.PlayerAButtonComponent
+import com.megaman.maverick.game.players.updateAButtonTask
+import com.megaman.maverick.game.players.onGravityDeviceSwitch
+import com.megaman.maverick.game.controllers.SelectButtonAction
+import com.maverick.game.engine.common.enums.ProcessState
+import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.testServices
@@ -128,10 +143,12 @@ class ProtomanTest : DescribeSpec({
         controllerSystem.update(DELTA)
         behaviorStep()
         worldStep()
+        proto.updateWallTimers(DELTA)
         proto.buster.update(DELTA)
         proto.sabre.update(DELTA)
         proto.updateGuard(DELTA)
         proto.updateDeflects()
+        proto.updateAButtonTask()
     }
 
     fun hold(button: MegaControllerButton, seconds: Float) {
@@ -180,6 +197,7 @@ class ProtomanTest : DescribeSpec({
         proto = Protoman(services)
         proto.existenceState = EntityExistenceState.LIVE
         proto.facing = Facing.RIGHT
+        proto.addComponent(PlayerAButtonComponent())
         proto.addComponent(proto.defineBodyComponent())
         body = (proto.getComponent(BodyComponent::class)!!).body
         body.putProperty(ConstKeys.BODY_OVER_GROUND, { overGround })
@@ -420,7 +438,10 @@ class ProtomanTest : DescribeSpec({
                     airOffsetY = 0f,
                     crouchOffset = null,
                     climbOffset = null,
-                    slideOffset = null
+                    slideOffset = null,
+                    wallSlideOffset = null,
+                    airDashOffset = null,
+                    swimOffset = null
                 )
             )
             shouldThrow<BusterCrouchOffsetMissingException> {
@@ -451,7 +472,10 @@ class ProtomanTest : DescribeSpec({
                     airOffsetY = 0f,
                     crouchOffset = PROTOMAN_BUSTER.crouchOffset,
                     climbOffset = PROTOMAN_BUSTER.climbOffset,
-                    slideOffset = null
+                    slideOffset = null,
+                    wallSlideOffset = null,
+                    airDashOffset = null,
+                    swimOffset = null
                 )
             )
             shouldThrow<BusterSlideOffsetMissingException> {
@@ -1873,6 +1897,21 @@ class ProtomanTest : DescribeSpec({
             body.physics.velocity.y shouldBe 0f
         }
 
+        it("sets the A task to the swim in water and to the air dash out of water at the grab") {
+            body.setBodySense(BodySense.IN_WATER, true)
+            grab()
+            proto.aButtonTask shouldBe AButtonTask.SWIM
+        }
+
+        it("sets the A task again at the let-go, also with the air dash of the jump used") {
+            grab()
+            proto.aButtonTask = AButtonTask.JUMP
+            proto.require(PlayerAButtonComponent::class).airDashConsumed = true
+            step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+            climbing() shouldBe false
+            proto.aButtonTask shouldBe AButtonTask.AIR_DASH
+        }
+
         it("lets go on A with no jump") {
             grab()
             step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
@@ -2027,9 +2066,12 @@ class ProtomanTest : DescribeSpec({
     }
 
     describe("the behaviors") {
-        it("are in Megaman's order: the jump, the slide, then the climb") {
+        it("are in Megaman's order: the wall slide, the swim, the jump, the air dash, the slide, then the climb") {
             proto.defineBehaviorsComponent().behaviors.keys().toList() shouldBe listOf(
+                BehaviorType.WALL_SLIDING,
+                BehaviorType.SWIMMING,
                 BehaviorType.JUMPING,
+                BehaviorType.AIR_DASHING,
                 BehaviorType.GROUND_SLIDING,
                 BehaviorType.CLIMBING
             )
@@ -2109,6 +2151,623 @@ class ProtomanTest : DescribeSpec({
         it("flashes in the damage recovery") {
             proto.damageRecovery.update(MegamanValues.DAMAGE_FLASH_DURATION, false, true)
             drawn().color.a shouldBe 0f
+        }
+    }
+
+    describe("the buster offsets of the moves") {
+        it("throws on a wall slide, an air dash or a swim shot when the params have no offset for it") {
+            val buster = PlayerBuster(
+                proto, BusterParams(
+                    notCharged = PROTOMAN_BUSTER.notCharged,
+                    halfCharged = null,
+                    fullyCharged = null,
+                    offsetX = ProtomanValues.SHOT_OFFSET_X,
+                    offsetY = ProtomanValues.SHOT_OFFSET_Y,
+                    runOffsetX = 0f,
+                    airOffsetY = 0f,
+                    crouchOffset = PROTOMAN_BUSTER.crouchOffset,
+                    climbOffset = PROTOMAN_BUSTER.climbOffset,
+                    slideOffset = PROTOMAN_BUSTER.slideOffset,
+                    wallSlideOffset = null,
+                    airDashOffset = null,
+                    swimOffset = null
+                )
+            )
+            shouldThrow<BusterWallSlideOffsetMissingException> {
+                buster.shoot(MegaChargeStatus.NOT_CHARGED, wallSliding = true)
+            }
+            shouldThrow<BusterAirDashOffsetMissingException> {
+                buster.shoot(MegaChargeStatus.NOT_CHARGED, airDashing = true)
+            }
+            shouldThrow<BusterSwimOffsetMissingException> {
+                buster.shoot(MegaChargeStatus.NOT_CHARGED, swimming = true)
+            }
+            spawned.none { it.first is ProtoBuster } shouldBe true
+        }
+    }
+
+    describe("the camera turn") {
+        lateinit var follow: CameraFollow
+        val turns = mutableListOf<Direction>()
+
+        beforeEach {
+            turns.clear()
+            follow = CameraFollow(0f, { 1f })
+            proto.services.cameraController.addMover(follow)
+            proto.services.events.addListener(object : IEventListener {
+                override val eventKeyMask = ObjectSet<Any>().also { it.add(EventType.START_GAME_CAM_ROTATION) }
+                override fun onEvent(event: Event) {
+                    turns.add(event.getProperty(ConstKeys.DIRECTION, Direction::class)!!)
+                }
+            })
+        }
+
+        listOf(
+            Direction.DOWN to Direction.DOWN,
+            Direction.LEFT to Direction.RIGHT,
+            Direction.RIGHT to Direction.LEFT
+        ).forEach { (gravity, camera) ->
+            it("turns the camera to $camera on a gravity change to $gravity, as Megaman: smooth follow, movement lock, stop") {
+                body.physics.velocity.set(100f, 100f)
+                proto.direction = gravity
+                proto.services.events.run()
+                turns shouldBe listOf(camera)
+                follow.smooth shouldBe true
+                proto.isLocked(MegaLockGroup.MOVEMENT) shouldBe true
+                body.physics.gravityOn shouldBe false
+                body.physics.velocity.isZero shouldBe true
+                body.direction shouldBe gravity
+            }
+        }
+
+        it("does not turn the camera when the gravity keeps its direction") {
+            body.physics.velocity.set(100f, 100f)
+            proto.direction = Direction.UP
+            proto.services.events.run()
+            turns shouldBe emptyList()
+            follow.smooth shouldBe false
+            proto.isLocked(MegaLockGroup.MOVEMENT) shouldBe false
+            body.physics.velocity.x shouldBe 100f
+        }
+    }
+
+    describe("the moves of Megaman") {
+        val ppm = ConstVals.PPM.toFloat()
+
+        fun wallSliding() = proto.isBehaviorActive(BehaviorType.WALL_SLIDING)
+
+        fun airDashing() = proto.isBehaviorActive(BehaviorType.AIR_DASHING)
+
+        fun swimming() = proto.isBehaviorActive(BehaviorType.SWIMMING)
+
+        fun jumping() = proto.isBehaviorActive(BehaviorType.JUMPING)
+
+        fun shield() = body.getFixtures(Array<IFixture>(), FixtureType.SHIELD).first() as Fixture
+
+        fun shots() = spawned.filter { it.first is ProtoBuster }
+
+        fun place() {
+            body.setSize(ProtomanValues.BODY_WIDTH * ConstVals.PPM, ProtomanValues.BODY_HEIGHT * ConstVals.PPM)
+            body.setCenter(0f, 0f)
+            body.preProcess()
+        }
+
+        fun shieldCenter(): Vector2 = (shield().getShape() as GameRectangle).getCenter(Vector2())
+
+        fun key(pose: String) = proto.animationKey(pose, ObjectMap())
+
+        beforeEach {
+            val behaviors = BehaviorsSystem()
+            behaviors.add(proto)
+            behaviorStep = { behaviors.update(DELTA) }
+            worldStep = { body.preProcess() }
+            repeat(3) { step() }
+        }
+
+        it("has Megaman's wall slide, wall jump, air dash and swim numbers") {
+            ProtomanValues.WALL_JUMP_VEL shouldBe MegamanValues.WALL_JUMP_VEL
+            ProtomanValues.WALL_JUMP_HORIZONTAL shouldBe MegamanValues.WALL_JUMP_HORIZONTAL
+            ProtomanValues.WALL_JUMP_IMPETUS_TIME shouldBe MegamanValues.WALL_JUMP_IMPETUS_TIME
+            ProtomanValues.WALL_SLIDE_FRICTION_TO_APPLY shouldBe MegamanValues.WALL_SLIDE_FRICTION_TO_APPLY
+            ProtomanValues.WALL_SLIDE_NOT_ALLOWED_DELAY shouldBe MegamanValues.WALLSLIDE_NOT_ALLOWED_DELAY
+            ProtomanValues.AIR_DASH_MIN_TIME shouldBe MegamanValues.AIR_DASH_MIN_TIME
+            ProtomanValues.AIR_DASH_MAX_TIME shouldBe MegamanValues.AIR_DASH_MAX_TIME
+            ProtomanValues.AIR_DASH_VEL shouldBe MegamanValues.AIR_DASH_VEL
+            ProtomanValues.AIR_DASH_END_BUMP shouldBe MegamanValues.AIR_DASH_END_BUMP
+            ProtomanValues.WATER_AIR_DASH_VEL shouldBe MegamanValues.WATER_AIR_DASH_VEL
+            ProtomanValues.WATER_AIR_DASH_END_BUMP shouldBe MegamanValues.WATER_AIR_DASH_END_BUMP
+            ProtomanValues.SWIM_VEL_Y shouldBe MegamanValues.SWIM_VEL_Y
+            ProtomanValues.SWIM_TIMER shouldBe MegamanValues.SWIM_TIMER
+        }
+
+        describe("the A task") {
+            it("jumps on the ground, air dashes in the air and swims in water") {
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                jumping() shouldBe true
+                proto.aButtonTask shouldBe AButtonTask.JUMP
+                step(MegaControllerButton.A to ButtonStatus.JUST_RELEASED)
+                overGround = false
+                step()
+                proto.aButtonTask shouldBe AButtonTask.AIR_DASH
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                airDashing() shouldBe true
+                swimming() shouldBe false
+                hold(MegaControllerButton.A, ProtomanValues.AIR_DASH_MAX_TIME)
+                step(MegaControllerButton.A to ButtonStatus.JUST_RELEASED)
+                body.setBodySense(BodySense.IN_WATER, true)
+                step()
+                proto.aButtonTask shouldBe AButtonTask.SWIM
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                swimming() shouldBe true
+                airDashing() shouldBe false
+                jumping() shouldBe false
+            }
+
+            fun feetBlock(state: ProcessState) {
+                val block = mockk<Block>(relaxed = true)
+                every { block.body } returns Body(BodyType.STATIC)
+                every { block.getOrDefaultProperty(any(), any<Boolean>(), Boolean::class) } answers { secondArg() }
+                body.getFixtures(Array<IFixture>(), FixtureType.FEET).first()
+                    .receiver(Receivers.FEET_BLOCK_CONTACT)!!.invoke(state, block)
+            }
+
+            fun water(state: ProcessState) = body.getFixtures(Array<IFixture>(), FixtureType.WATER_LISTENER).first()
+                .receiver(Receivers.WATER_CONTACT)!!.invoke(state, true)
+
+            it("takes the jump when the feet touch a block") {
+                proto.aButtonTask = AButtonTask.AIR_DASH
+                feetBlock(ProcessState.BEGIN)
+                proto.aButtonTask shouldBe AButtonTask.JUMP
+            }
+
+            it("keeps the jump while the feet stay on a block") {
+                proto.aButtonTask = AButtonTask.AIR_DASH
+                feetBlock(ProcessState.CONTINUE)
+                proto.aButtonTask shouldBe AButtonTask.JUMP
+            }
+
+            it("takes the air dash when the feet leave a block in the air") {
+                overGround = false
+                feetBlock(ProcessState.END)
+                proto.aButtonTask shouldBe AButtonTask.AIR_DASH
+            }
+
+            it("takes the air dash on a feet bounce out of water") {
+                overGround = false
+                body.getFixtures(Array<IFixture>(), FixtureType.FEET).first().receiver(Receivers.RUNNABLE)!!.invoke()
+                proto.aButtonTask shouldBe AButtonTask.AIR_DASH
+            }
+
+            it("takes the swim in water in the air, and the air dash out of the water") {
+                overGround = false
+                water(ProcessState.BEGIN)
+                proto.aButtonTask shouldBe AButtonTask.SWIM
+                water(ProcessState.END)
+                proto.aButtonTask shouldBe AButtonTask.AIR_DASH
+            }
+
+            it("takes the jump again on the ground at the spawn") {
+                proto.init()
+                proto.aButtonTask = AButtonTask.SWIM
+                proto.require(PlayerAButtonComponent::class).airDashConsumed = true
+                proto.onSpawn(props(ConstKeys.BOUNDS pairTo GameRectangle(0f, 0f, ConstVals.PPM.toFloat(), 48f)))
+                proto.aButtonTask shouldBe AButtonTask.JUMP
+                proto.require(PlayerAButtonComponent::class).airDashConsumed shouldBe false
+            }
+
+            it("sets the task on a gravity switch device") {
+                proto.init()
+                proto.addComponent(proto.defineBodyComponent())
+                body = proto.body
+                body.putProperty(ConstKeys.BODY_OVER_GROUND, { overGround })
+                overGround = false
+                proto.aButtonTask = AButtonTask.JUMP
+                proto.onGravityDeviceSwitch()
+                proto.aButtonTask shouldBe AButtonTask.AIR_DASH
+            }
+
+            it("does not jump on the ground while the task is not the jump, as Megaman") {
+                body.setBodySense(BodySense.IN_WATER, true)
+                proto.aButtonTask = AButtonTask.AIR_DASH
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                jumping() shouldBe false
+            }
+
+            it("keeps the jump on A in water on the ground") {
+                body.setBodySense(BodySense.IN_WATER, true)
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                jumping() shouldBe true
+                swimming() shouldBe false
+            }
+        }
+
+        describe("the wall slide") {
+            fun onLeftWall() {
+                overGround = false
+                body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, true)
+                step(MegaControllerButton.LEFT to ButtonStatus.JUST_PRESSED)
+            }
+
+            fun holdWall(vararg others: Pair<MegaControllerButton, ButtonStatus>) =
+                step(MegaControllerButton.LEFT to ButtonStatus.PRESSED, *others)
+
+            it("starts on a wall in the air with the side to the wall held, faces away, and applies the wall friction") {
+                onLeftWall()
+                wallSliding() shouldBe true
+                proto.facing shouldBe Facing.RIGHT
+                holdWall()
+                wallSliding() shouldBe true
+                proto.facing shouldBe Facing.RIGHT
+                body.physics.frictionOnSelf.y shouldBe
+                    (ProtomanValues.WALL_SLIDE_FRICTION_TO_APPLY * ppm plusOrMinus TOLERANCE)
+                key("jump") shouldBe "wallslide"
+            }
+
+            it("does not start on the ground, or with no side held") {
+                body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, true)
+                body.setBodySense(BodySense.FEET_ON_GROUND, true)
+                step(MegaControllerButton.LEFT to ButtonStatus.JUST_PRESSED)
+                wallSliding() shouldBe false
+                body.setBodySense(BodySense.FEET_ON_GROUND, false)
+                overGround = false
+                step()
+                wallSliding() shouldBe false
+            }
+
+            it("ends on a bounce and waits Megaman's delay before the next wall slide") {
+                onLeftWall()
+                wallSliding() shouldBe true
+                body.getFixtures(Array<IFixture>(), FixtureType.HEAD).first().receiver(Receivers.RUNNABLE)!!.invoke()
+                wallSliding() shouldBe false
+                holdWall()
+                wallSliding() shouldBe false
+                repeat(3) { holdWall() }
+                wallSliding() shouldBe true
+            }
+
+            it("does not start on sand") {
+                body.setBodySense(BodySense.FEET_ON_SAND, true)
+                onLeftWall()
+                wallSliding() shouldBe false
+            }
+
+            it("ends when the side is released, and when he leaves the wall") {
+                onLeftWall()
+                step(MegaControllerButton.LEFT to ButtonStatus.JUST_RELEASED)
+                wallSliding() shouldBe false
+                onLeftWall()
+                wallSliding() shouldBe true
+                body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, false)
+                holdWall()
+                wallSliding() shouldBe false
+            }
+
+            it("wall jumps on A: the wall jump speed up and the kick away from the wall") {
+                onLeftWall()
+                holdWall(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                jumping() shouldBe true
+                body.physics.velocity.y shouldBe (ProtomanValues.WALL_JUMP_VEL * ppm plusOrMinus TOLERANCE)
+                body.physics.velocity.x shouldBe (ProtomanValues.WALL_JUMP_HORIZONTAL * ppm plusOrMinus TOLERANCE)
+                holdWall(MegaControllerButton.A to ButtonStatus.PRESSED)
+                wallSliding() shouldBe false
+            }
+
+            it("keeps the A task on the jump on the wall, and gives the air dash at the end out of water") {
+                onLeftWall()
+                proto.aButtonTask shouldBe AButtonTask.JUMP
+                step(MegaControllerButton.LEFT to ButtonStatus.JUST_RELEASED)
+                proto.aButtonTask shouldBe AButtonTask.AIR_DASH
+            }
+
+            it("fires on B away from the wall, from the wall slide offset, in the wall slide shoot pose") {
+                onLeftWall()
+                val center = body.getCenter().cpy()
+                holdWall(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                shots().size shouldBe 1
+                val position = shots()[0].second.get(ConstKeys.POSITION) as Vector2
+                position.x shouldBe (center.x + ProtomanValues.SHOT_WALL_SLIDE_OFFSET_X * ppm plusOrMinus TOLERANCE)
+                position.y shouldBe (center.y + ProtomanValues.SHOT_WALL_SLIDE_OFFSET_Y * ppm plusOrMinus TOLERANCE)
+                (shots()[0].second.get(ConstKeys.TRAJECTORY) as Vector2).x shouldBeGreaterThan 0f
+                wallSliding() shouldBe true
+                key("wallslide") shouldBe "wallslide_shoot"
+            }
+
+            it("starts the wall slash on UP and B, which keeps him on the wall also with the side released") {
+                onLeftWall()
+                holdWall(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                proto.sabre.state shouldBe SabreState.WALL
+                proto.sabre.move shouldBe ProtomanSabreMoves.WALL
+                shots().size shouldBe 0
+                step(MegaControllerButton.LEFT to ButtonStatus.JUST_RELEASED)
+                wallSliding() shouldBe true
+                proto.sabre.move shouldBe ProtomanSabreMoves.WALL
+                key("wallslide") shouldBe "sabre_wall"
+            }
+
+            it("ends the wall slash when he leaves the wall") {
+                onLeftWall()
+                holdWall(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, false)
+                holdWall()
+                wallSliding() shouldBe false
+                proto.sabre.active shouldBe false
+            }
+
+            it("does not start during an air slash, and starts after it") {
+                overGround = false
+                step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                proto.sabre.state shouldBe SabreState.AIR
+                body.setBodySense(BodySense.SIDE_TOUCHING_BLOCK_LEFT, true)
+                holdWall()
+                wallSliding() shouldBe false
+                proto.sabre.move shouldBe ProtomanSabreMoves.AIR
+                var steps = 0
+                while (proto.sabre.active && steps < 20) {
+                    holdWall()
+                    steps++
+                }
+                holdWall()
+                wallSliding() shouldBe true
+            }
+
+            listOf(Facing.RIGHT, Facing.LEFT).forEach { away ->
+                it("raises the wall guard on DOWN, facing $away away from the wall, with the jump shield box in front") {
+                    val wall = away.opposite()
+                    overGround = false
+                    body.setBodySense(
+                        if (wall == Facing.LEFT) BodySense.SIDE_TOUCHING_BLOCK_LEFT else BodySense.SIDE_TOUCHING_BLOCK_RIGHT,
+                        true
+                    )
+                    val side = if (wall == Facing.LEFT) MegaControllerButton.LEFT else MegaControllerButton.RIGHT
+                    step(side to ButtonStatus.JUST_PRESSED)
+                    step(side to ButtonStatus.PRESSED, MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
+                    key("wallslide") shouldBe "wallslide_guard_start"
+                    var steps = 1
+                    while (!proto.guarding && steps < 10) {
+                        step(side to ButtonStatus.PRESSED, MegaControllerButton.DOWN to ButtonStatus.PRESSED)
+                        steps++
+                    }
+                    steps shouldBe ProtomanValues.GUARD_JUMP_TURN_FRAMES + 1
+                    wallSliding() shouldBe true
+                    proto.facing shouldBe away
+                    key("wallslide") shouldBe "wallslide_guard"
+                    place()
+                    shieldCenter().x shouldBe (23f * away.value plusOrMinus TOLERANCE)
+                    shieldCenter().y shouldBe (2f plusOrMinus TOLERANCE)
+                    step(side to ButtonStatus.PRESSED, MegaControllerButton.DOWN to ButtonStatus.JUST_RELEASED)
+                    proto.puttingAwayGuard shouldBe false
+                    shield().isActive() shouldBe false
+                    key("wallslide") shouldBe "wallslide"
+                }
+            }
+        }
+
+        it("ends an air put-away when an air dash starts on SELECT, which has no put-away strip") {
+            proto.services.players.settings(PlayerSlot(0)).selectButtonAction = SelectButtonAction.AIR_DASH
+            overGround = false
+            step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
+            repeat(ProtomanValues.GUARD_JUMP_TURN_FRAMES + 1) { step(MegaControllerButton.DOWN to ButtonStatus.PRESSED) }
+            step(MegaControllerButton.DOWN to ButtonStatus.JUST_RELEASED)
+            proto.puttingAwayGuard shouldBe true
+            step(MegaControllerButton.SELECT to ButtonStatus.JUST_PRESSED)
+            airDashing() shouldBe true
+            proto.puttingAwayGuard shouldBe false
+            key("airdash") shouldBe "airdash"
+        }
+
+        it("keeps the frame time between the guard keys of the moves and the jump guard keys, and in a shot pose") {
+            fun threeFrames() = Animation(gdxArrayOf(TextureRegion(), TextureRegion(), TextureRegion()), 0.05f, false)
+            val animations = ObjectMap<String, IAnimation>()
+            listOf(
+                "guard_jump_start", "wallslide_guard_start", "airdash_guard_start", "guard_jump", "wallslide_guard",
+                "airdash_guard", "wallslide", "wallslide_shoot", "airdash", "airdash_shoot", "swim", "swim_shoot"
+            ).forEach { animations.put(it, threeFrames()) }
+            listOf(
+                "guard_jump_start" to "wallslide_guard_start",
+                "guard_jump_start" to "airdash_guard_start",
+                "guard_jump" to "wallslide_guard",
+                "guard_jump" to "airdash_guard",
+                "wallslide" to "wallslide_shoot",
+                "airdash" to "airdash_shoot",
+                "swim" to "swim_shoot"
+            ).forEach { (from, to) ->
+                animations[from].reset()
+                animations[to].reset()
+                animations[from].update(0.06f)
+                proto.carryFrameTime(from, to, animations)
+                animations[to].getIndex() shouldBe 1
+            }
+        }
+
+        describe("the air dash") {
+            fun startDash() {
+                overGround = false
+                step()
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+            }
+
+            it("starts on A in the air at the dash speed in the facing direction, with the gravity off") {
+                startDash()
+                airDashing() shouldBe true
+                body.physics.velocity.x shouldBe (ProtomanValues.AIR_DASH_VEL * ppm plusOrMinus TOLERANCE)
+                body.physics.velocity.y shouldBe 0f
+                body.physics.gravityOn shouldBe false
+                key("jump") shouldBe "airdash"
+            }
+
+            it("uses the water dash speed in water") {
+                overGround = false
+                body.setBodySense(BodySense.IN_WATER, true)
+                proto.aButtonTask = AButtonTask.AIR_DASH
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                airDashing() shouldBe true
+                body.physics.velocity.x shouldBe (ProtomanValues.WATER_AIR_DASH_VEL * ppm plusOrMinus TOLERANCE)
+            }
+
+            it("does not start on the ground") {
+                proto.aButtonTask = AButtonTask.AIR_DASH
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                airDashing() shouldBe false
+            }
+
+            it("ends at the max time with A held, and once per jump: a new dash only after a landing") {
+                startDash()
+                hold(MegaControllerButton.A, ProtomanValues.AIR_DASH_MAX_TIME)
+                airDashing() shouldBe false
+                body.physics.gravityOn shouldBe true
+                step(MegaControllerButton.A to ButtonStatus.JUST_RELEASED)
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                airDashing() shouldBe false
+                jumping() shouldBe false
+                step(MegaControllerButton.A to ButtonStatus.JUST_RELEASED)
+                overGround = true
+                step()
+                startDash()
+                airDashing() shouldBe true
+            }
+
+            it("adds Megaman's end bump in the facing direction at the end") {
+                startDash()
+                var steps = 0
+                while (airDashing() && steps < 20) {
+                    step(MegaControllerButton.A to ButtonStatus.PRESSED)
+                    steps++
+                }
+                airDashing() shouldBe false
+                body.physics.velocity.x shouldBe
+                    ((ProtomanValues.AIR_DASH_VEL + ProtomanValues.AIR_DASH_END_BUMP) * ppm plusOrMinus TOLERANCE)
+            }
+
+            it("ends after the min time when A is released") {
+                startDash()
+                step(MegaControllerButton.A to ButtonStatus.PRESSED)
+                airDashing() shouldBe true
+                step(MegaControllerButton.A to ButtonStatus.JUST_RELEASED)
+                airDashing() shouldBe false
+            }
+
+            it("does not start during a slash") {
+                overGround = false
+                step()
+                step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                proto.sabre.active shouldBe true
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                airDashing() shouldBe false
+            }
+
+            it("fires on B from the air dash offset in the dash shoot pose, and the dash goes on") {
+                startDash()
+                val center = body.getCenter().cpy()
+                step(MegaControllerButton.A to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                shots().size shouldBe 1
+                val position = shots()[0].second.get(ConstKeys.POSITION) as Vector2
+                position.x shouldBe (center.x + ProtomanValues.SHOT_AIR_DASH_OFFSET_X * ppm plusOrMinus TOLERANCE)
+                position.y shouldBe (center.y + ProtomanValues.SHOT_AIR_DASH_OFFSET_Y * ppm plusOrMinus TOLERANCE)
+                airDashing() shouldBe true
+                key("airdash") shouldBe "airdash_shoot"
+            }
+
+            it("starts the air slash on UP and B, and the dash goes on") {
+                startDash()
+                step(
+                    MegaControllerButton.A to ButtonStatus.PRESSED,
+                    MegaControllerButton.UP to ButtonStatus.PRESSED,
+                    MegaControllerButton.B to ButtonStatus.JUST_PRESSED
+                )
+                proto.sabre.move shouldBe ProtomanSabreMoves.AIR
+                shots().size shouldBe 0
+                airDashing() shouldBe true
+                body.physics.velocity.x shouldBe (ProtomanValues.AIR_DASH_VEL * ppm plusOrMinus TOLERANCE)
+            }
+
+            it("dashes with the shield up from an air guard, and drops it at once on the release, with no put-away") {
+                overGround = false
+                step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
+                repeat(ProtomanValues.GUARD_JUMP_TURN_FRAMES) { step(MegaControllerButton.DOWN to ButtonStatus.PRESSED) }
+                proto.guarding shouldBe true
+                step(MegaControllerButton.DOWN to ButtonStatus.PRESSED, MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                airDashing() shouldBe true
+                proto.guarding shouldBe true
+                key("airdash") shouldBe "airdash_guard"
+                step(MegaControllerButton.A to ButtonStatus.PRESSED, MegaControllerButton.DOWN to ButtonStatus.JUST_RELEASED)
+                airDashing() shouldBe true
+                proto.puttingAwayGuard shouldBe false
+                shield().isActive() shouldBe false
+                key("airdash") shouldBe "airdash"
+            }
+
+            it("keeps dashing at the dash speed with the shield up in front on DOWN: the shielded dash") {
+                startDash()
+                step(MegaControllerButton.A to ButtonStatus.PRESSED, MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
+                key("airdash") shouldBe "airdash_guard_start"
+                var steps = 1
+                while (!proto.guarding && steps < 10) {
+                    step(MegaControllerButton.A to ButtonStatus.PRESSED, MegaControllerButton.DOWN to ButtonStatus.PRESSED)
+                    steps++
+                }
+                steps shouldBe ProtomanValues.GUARD_JUMP_TURN_FRAMES + 1
+                airDashing() shouldBe true
+                body.physics.velocity.x shouldBe (ProtomanValues.AIR_DASH_VEL * ppm plusOrMinus TOLERANCE)
+                key("airdash") shouldBe "airdash_guard"
+                place()
+                shield().isActive() shouldBe true
+                (shield().getShape() as GameRectangle).getWidth() shouldBe (14f plusOrMinus TOLERANCE)
+                (shield().getShape() as GameRectangle).getHeight() shouldBe (36f plusOrMinus TOLERANCE)
+                shieldCenter().x shouldBe (29f plusOrMinus TOLERANCE)
+                shieldCenter().y shouldBe (-8f plusOrMinus TOLERANCE)
+            }
+        }
+
+        describe("the swim") {
+            fun inWater() {
+                overGround = false
+                body.setBodySense(BodySense.IN_WATER, true)
+                step()
+            }
+
+            it("strokes on A in water in the air with Megaman's swim speed") {
+                inWater()
+                body.physics.velocity.y = 0f
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                swimming() shouldBe true
+                body.physics.velocity.y shouldBe (ProtomanValues.SWIM_VEL_Y * ppm plusOrMinus TOLERANCE)
+                key("jump") shouldBe "swim"
+            }
+
+            it("does not stroke out of water") {
+                overGround = false
+                step()
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                swimming() shouldBe false
+            }
+
+            it("fires on B in a stroke from the swim offset in the swim shoot pose") {
+                inWater()
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                val center = body.getCenter().cpy()
+                step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                shots().size shouldBe 1
+                val position = shots()[0].second.get(ConstKeys.POSITION) as Vector2
+                position.x shouldBe (center.x + ProtomanValues.SHOT_SWIM_OFFSET_X * ppm plusOrMinus TOLERANCE)
+                position.y shouldBe (center.y + ProtomanValues.SHOT_SWIM_OFFSET_Y * ppm plusOrMinus TOLERANCE)
+                key("swim") shouldBe "swim_shoot"
+            }
+
+            it("starts the air slash on UP and B in water") {
+                inWater()
+                step(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                proto.sabre.move shouldBe ProtomanSabreMoves.AIR
+            }
+
+            it("raises the air guard on DOWN in water, also in a stroke") {
+                inWater()
+                step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+                step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
+                key("swim") shouldBe "guard_jump_start"
+                repeat(ProtomanValues.GUARD_JUMP_TURN_FRAMES) { step(MegaControllerButton.DOWN to ButtonStatus.PRESSED) }
+                proto.guarding shouldBe true
+                key("jump") shouldBe "guard_jump"
+            }
         }
     }
 })

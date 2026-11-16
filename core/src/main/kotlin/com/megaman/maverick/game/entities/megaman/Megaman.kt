@@ -10,13 +10,11 @@ import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
-import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
-import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
@@ -50,7 +48,6 @@ import com.megaman.maverick.game.entities.contracts.ITeleporterEntity
 import com.megaman.maverick.game.entities.enemies.SpringHead
 import com.megaman.maverick.game.entities.megaman.behaviors.*
 import com.megaman.maverick.game.entities.megaman.components.*
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
@@ -71,7 +68,6 @@ import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.players.*
-import com.megaman.maverick.game.utils.extensions.startSmoothFollow
 import com.megaman.maverick.game.utils.extensions.stopSmoothFollow
 import com.megaman.maverick.game.utils.misc.FacingUtils
 import com.megaman.maverick.game.world.body.*
@@ -92,7 +88,6 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
     internal val shootAnimTimer = Timer(MegamanValues.SHOOT_ANIM_TIME).setToEnd()
     internal val wallJumpTimer = Timer(MegamanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
 
-    internal var airDashConsumed = false
     internal var airDashDirection: Direction? = null
 
     var currentAnimKey: String? = null
@@ -113,45 +108,13 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         get() = body.direction
         set(value) {
             GameLogger.debug(TAG, "direction-set(): value=$value")
-
-            if (value != body.direction) {
-                GameLogger.debug(TAG, "direction-set(): value not same as field")
-
-                // TODO: the camera rotation belongs to WorldGravity, not to each player; with more players, each
-                //  player's setter would ask for the rotation (see the 029d scope, "Gravity direction")
-
-                body.direction = value
-
-                services.cameraController.startSmoothFollow()
-
-                val camDir = if (value.isVertical()) value else value.getOpposite()
-                if (services.gameCamera.direction != camDir) {
-                    services.events.submitEvent(
-                        Event(
-                            EventType.START_GAME_CAM_ROTATION,
-                            props(ConstKeys.DIRECTION pairTo camDir)
-                        )
-                    )
-
-                    lock(MegaLockGroup.MOVEMENT, MegaLockReason.CAMERA_ROTATION)
-
-                    // the jetpacking behavior must be reset before the physics values are set below since
-                    // ending that behavior turns gravity back on
-                    resetBehavior(BehaviorType.JETPACKING)
-
-                    body.physics.gravityOn = false
-                    body.physics.velocity.setZero()
-                }
-            } else GameLogger.debug(TAG, "direction-set(): value same as field")
-
+            turnBodyAndCamera(value, onCameraTurnStart = { resetBehavior(BehaviorType.JETPACKING) })
             playerGravity.applyDirection(value)
             val sign = value.upSign()
             jumpVel = MegamanValues.JUMP_VEL * sign
             wallJumpVel = MegamanValues.WALL_JUMP_VEL * sign
             swimVel = MegamanValues.SWIM_VEL_Y * sign
         }
-
-    lateinit var aButtonTask: AButtonTask
 
     private var weapon: WeaponDef<Megaman>? = null
     var currentWeapon: WeaponDef<Megaman>
@@ -224,14 +187,9 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
 
         currentWeapon = MegamanWeapons.MEGA_BUSTER
         addComponent(defineWeaponsComponent())
-        aButtonTask = AButtonTask.JUMP
 
-        addComponent(GravityDeviceComponent {
-            aButtonTask = when {
-                body.isSensing(BodySense.FEET_ON_GROUND) -> AButtonTask.JUMP
-                else -> AButtonTask.AIR_DASH
-            }
-        })
+        addComponent(PlayerAButtonComponent())
+        addComponent(GravityDeviceComponent { aButtonTaskOnGravitySwitch() })
         addComponent(PlayerLightComponent {
             when {
                 charging -> if (fullyCharged) PlayerLight.FULL_CHARGE else PlayerLight.HALF_CHARGE
@@ -267,7 +225,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
     )
 
     override fun onPlayerSpawn(spawnProps: Properties) {
-        aButtonTask = AButtonTask.JUMP
+        resetAButtonTask()
 
         weaponsHandler.setAllToMaxAmmo()
         currentWeapon = MegamanWeapons.MEGA_BUSTER
@@ -282,7 +240,6 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         wallJumpTimer.reset()
 
         wallSlideNotAllowedTimer.reset()
-        airDashConsumed = false
     }
 
     override fun onPlayerDestroy() {
@@ -361,7 +318,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
                 clampX = MegamanValues.CLAMP_X,
                 clampY = MegamanValues.CLAMP_Y,
                 onBounce = { wallSlideNotAllowedTimer.reset() },
-                onFeetBounce = { if (!body.isSensing(BodySense.IN_WATER)) aButtonTask = AButtonTask.AIR_DASH },
+                onFeetBounce = { setAirDashTaskOutOfWater() },
                 onFeetBlockBegin = { makesSound ->
                     aButtonTask = AButtonTask.JUMP
                     if (makesSound && canMakeLandSound) {
@@ -371,12 +328,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
                 },
                 onFeetBlockContinue = { aButtonTask = AButtonTask.JUMP },
                 onFeetBlockEnd = {
-                    if (!bodyOverGround) {
-                        aButtonTask = when {
-                            body.isSensing(BodySense.IN_WATER) -> AButtonTask.SWIM
-                            else -> AButtonTask.AIR_DASH
-                        }
-                    }
+                    if (!bodyOverGround) aButtonTask = offGroundAButtonTask()
                     if (!body.hasAnyFeetBlock()) canMakeLandSound = true
                 },
                 onHeadHitBlock = {
@@ -394,15 +346,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
                     val owner = blockFixture.getEntity().getProperty(ConstKeys.OWNER) as IGameEntity?
                     owner !is GutsTank
                 },
-                onWater = { state ->
-                    when (state) {
-                        ProcessState.BEGIN, ProcessState.CONTINUE -> if (
-                            !body.isSensing(BodySense.FEET_ON_GROUND) && !isBehaviorActive(BehaviorType.WALL_SLIDING)
-                        ) aButtonTask = AButtonTask.SWIM
-
-                        ProcessState.END -> aButtonTask = AButtonTask.AIR_DASH
-                    }
-                },
+                onWater = { state -> aButtonTaskOnWater(state) },
                 onPreStep = { weaponPreStep() }
             )
         )

@@ -39,7 +39,10 @@ class BusterParams(
     val airOffsetY: Float,
     val crouchOffset: BusterOffset?,
     val climbOffset: BusterOffset?,
-    val slideOffset: BusterOffset?
+    val slideOffset: BusterOffset?,
+    val wallSlideOffset: BusterOffset?,
+    val airDashOffset: BusterOffset?,
+    val swimOffset: BusterOffset?
 )
 
 class BusterCrouchOffsetMissingException :
@@ -50,6 +53,17 @@ class BusterClimbOffsetMissingException :
 
 class BusterSlideOffsetMissingException :
     IllegalStateException("A shot in a slide needs a slide offset. Set slideOffset in the BusterParams of the player.")
+
+class BusterWallSlideOffsetMissingException : IllegalStateException(
+    "A shot in a wall slide needs a wall slide offset. Set wallSlideOffset in the BusterParams of the player."
+)
+
+class BusterAirDashOffsetMissingException : IllegalStateException(
+    "A shot in an air dash needs an air dash offset. Set airDashOffset in the BusterParams of the player."
+)
+
+class BusterSwimOffsetMissingException :
+    IllegalStateException("A shot in a swim stroke needs a swim offset. Set swimOffset in the BusterParams of the player.")
 
 // TODO: widen the player type when an enemy clone calls this (item 121)
 class PlayerBuster(private val player: MegaPlayer, private val params: BusterParams) {
@@ -100,12 +114,18 @@ class PlayerBuster(private val player: MegaPlayer, private val params: BusterPar
         status: MegaChargeStatus,
         crouched: Boolean = false,
         climbing: Boolean = false,
-        sliding: Boolean = false
+        sliding: Boolean = false,
+        wallSliding: Boolean = false,
+        airDashing: Boolean = false,
+        swimming: Boolean = false
     ): Boolean {
         val poseOffset = when {
             crouched -> params.crouchOffset ?: throw BusterCrouchOffsetMissingException()
             climbing -> params.climbOffset ?: throw BusterClimbOffsetMissingException()
             sliding -> params.slideOffset ?: throw BusterSlideOffsetMissingException()
+            wallSliding -> params.wallSlideOffset ?: throw BusterWallSlideOffsetMissingException()
+            airDashing -> params.airDashOffset ?: throw BusterAirDashOffsetMissingException()
+            swimming -> params.swimOffset ?: throw BusterSwimOffsetMissingException()
             else -> null
         }
         if (!canShoot(status)) return false

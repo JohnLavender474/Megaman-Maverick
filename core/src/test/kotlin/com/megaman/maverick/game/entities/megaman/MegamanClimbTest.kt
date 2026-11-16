@@ -14,7 +14,8 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.behaviors.climbBehavior
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.players.AButtonTask
+import com.megaman.maverick.game.players.aButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.world.body.BodySense

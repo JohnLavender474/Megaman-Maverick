@@ -22,8 +22,10 @@ The examples in this file are hypothetical. The real code is in `MegaPlayer.kt`.
 `Megaman`, `MegamanX` (`081b`) and `Protoman` (`060b`) are the player classes, all on `MegaPlayer` (`060j`). The
 classes show the two forms of a class: X has its own body and run (the X6 feet and walk); `Protoman` moves like Megaman,
 so it has no move code of its own. It calls `playerBody`, `playerRunButton`, `playerJumpBehavior`,
-`playerGroundSlideBehavior` and `playerClimbBehavior` with its own values file, and gives only its values, its sprites
-and its list of moves. `MegaPlayer` reads the
+`playerWallSlideBehavior`, `playerAirDashBehavior`, `playerSwimBehavior`, `playerGroundSlideBehavior` and
+`playerClimbBehavior` with its own values file, and gives only its values, its sprites and its list of moves. `Megaman`
+and `Protoman` use the `A` task part (`060m`); X does not. `Megaman` and `Protoman` turn the camera on a gravity change
+through `turnBodyAndCamera` (`PlayerGravity.kt`; it moves to `WorldGravity` with item `058`). `MegaPlayer` reads the
 shared values (damage time, start health, freeze) from `MegamanValues` until a character needs other values. Some rules still have another owner, and a `TODO` at the
 function names it: the difficulty change of the damage (`023`), the owner chain of a shot (`030`), the death event
 (`119`), the health base class (`048`), and the locks for stun, freeze and damage (`126`). Only slot 0 can change its character, at the level start (`047` for co-op, `113` for a select screen).
@@ -34,7 +36,8 @@ function names it: the difficulty change of the damage (`023`), the owner chain 
 flowchart LR
     Class["a player class<br/>(for example Megaman or Protoman)"] -- "extends" --> Base["MegaPlayer<br/>lifecycle, shared components,<br/>damage rules, hooks"]
     Base -- "damageNegotiator" --> Negotiator["PlayerDamageNegotiator<br/>the damage table for players"]
-    Class -- "its behaviors call" --> Moves["PlayerJump.kt, PlayerWallSlide.kt,<br/>PlayerAirDash.kt, PlayerClimb.kt,<br/>PlayerGroundSlide.kt<br/>each with the class's params"]
+    Class -- "its behaviors call" --> Moves["PlayerJump.kt, PlayerWallSlide.kt,<br/>PlayerAirDash.kt, PlayerClimb.kt,<br/>PlayerGroundSlide.kt, PlayerSwim.kt<br/>each with the class's params"]
+    Class -- "its hooks and params call" --> ATask["PlayerAButton.kt<br/>PlayerAButtonComponent:<br/>what A does (jump, air dash, swim)"]
     Class -- "its run buttons" --> Run["PlayerRun.kt<br/>the run gate and buttons"]
     Run -- "calls" --> Step["entities/movement/Run.kt<br/>runStep, maxRunSpeed, RunParams<br/>for any body"]
     Class -- "defineBodyComponent" --> Body["PlayerBody.kt<br/>shared fixtures and pre-step,<br/>with PlayerBodyParams and hooks"]
@@ -111,7 +114,7 @@ class Dasher(services: MegaServices) : MegaPlayer(services) {
   that locks `MOVEMENT`, and the lock clear must remove it.
 - **One copy.** A rule that two player classes need goes here, not into each class. A difference between the
   classes is a parameter (for example `JumpParams`, `WallSlideParams`, `AirDashParams`, `ClimbParams`,
-  `GroundSlideParams`), not a type check in the
+  `GroundSlideParams`, `SwimParams`), not a type check in the
   shared code. A shared behavior keeps the gate and the physics that every class has; the params give the class's own start
   rules, speeds, timers and side effects.
 - **The body keeps its fixture order.** The order of the fixtures sets the order of the contacts. `playerBody` adds
@@ -164,5 +167,14 @@ class Dasher(services: MegaServices) : MegaPlayer(services) {
   `DEFAULT` pre-step, because that step resets both fixtures on each step. An attack from the crouch breaks the
   guard like any attack; the class keeps its crouch box for the whole attack, and the guard starts again from its
   pull-out when the attack ends with the button still held. Proto Man is the first such class (`entities/protoman/`).
+- **The `A` task is one state with named rules.** What `A` does in the air and in water (`AButtonTask`: jump, air
+  dash, swim) and whether the air dash of this jump is used live in `PlayerAButtonComponent`, which a class adds in
+  `init()`. The class does not set the task by its own rules: it calls the rule functions of `PlayerAButton.kt` at
+  the matching points (the spawn, each frame, the body's feet and water hooks, the start and end of a move, a gravity
+  switch, a teleport end; Proto Man does not yet call it at a teleport end, a `060m` backlog candidate), and its
+  move params read the task in their start rule (`canStart`). A class with no
+  component cannot read the task, and a read throws. The order of the frame matters: the behaviors read the task
+  first, and the frame rule (`updateAButtonTask`) runs after them in the class's updatables, so a move that a frame
+  ends changes `A` for the next frame.
 - **Swap only out of the engine.** `PlayerRoster.putInSlot0` throws when the outgoing player is in the engine. Call it
   before the level screen starts, and set the camera focus after it.

@@ -7,12 +7,13 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.entities.megaman.Megaman
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.currentWeaponPrevents
 import com.megaman.maverick.game.levels.LevelType
+import com.megaman.maverick.game.players.AButtonTask
 import com.megaman.maverick.game.players.JumpParams
+import com.megaman.maverick.game.players.aButtonTask
 import com.megaman.maverick.game.players.playerJumpBehavior
 
 internal fun Megaman.jumpBehavior(): IBehavior = playerJumpBehavior(

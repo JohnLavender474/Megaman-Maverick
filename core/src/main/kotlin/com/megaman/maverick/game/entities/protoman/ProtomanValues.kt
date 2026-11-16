@@ -23,6 +23,21 @@ object ProtomanValues {
     const val POST_ACTION_BURST_RESISTANCE = 16f
 
     const val JUMP_VEL = 25f
+    const val WALL_JUMP_VEL = 20f
+    const val WALL_JUMP_HORIZONTAL = 6f
+    const val WALL_JUMP_IMPETUS_TIME = 0.1f
+    const val WALL_SLIDE_FRICTION_TO_APPLY = 2.5f
+    const val WALL_SLIDE_NOT_ALLOWED_DELAY = 0.1f
+
+    const val AIR_DASH_MIN_TIME = 0.1f
+    const val AIR_DASH_MAX_TIME = 0.25f
+    const val AIR_DASH_VEL = 10f
+    const val AIR_DASH_END_BUMP = 2f
+    const val WATER_AIR_DASH_VEL = 5f
+    const val WATER_AIR_DASH_END_BUMP = 1f
+
+    const val SWIM_VEL_Y = 18f
+    const val SWIM_TIMER = 0.25f
 
     const val GROUND_SLIDE_COOLDOWN = 0.075f
     const val GROUND_SLIDE_MIN_TIME = 0.2f
@@ -80,6 +95,24 @@ object ProtomanValues {
         SHOT_OFFSET_X + (CLIMB_SHOOT_MUZZLE_X - STAND_SHOOT_MUZZLE_X) * SPRITE_SIZE / ART_FRAME_PX
     const val SHOT_CLIMB_OFFSET_Y = SHOT_OFFSET_Y -
         (CLIMB_SHOOT_MUZZLE_Y - STAND_SHOOT_MUZZLE_Y) * SPRITE_SIZE / ART_FRAME_PX + AIR_SPRITE_OFFSET_Y
+    const val WALL_SLIDE_SHOOT_MUZZLE_X = 42
+    const val WALL_SLIDE_SHOOT_MUZZLE_Y = 31
+    const val SHOT_WALL_SLIDE_OFFSET_X =
+        SHOT_OFFSET_X + (WALL_SLIDE_SHOOT_MUZZLE_X - STAND_SHOOT_MUZZLE_X) * SPRITE_SIZE / ART_FRAME_PX
+    const val SHOT_WALL_SLIDE_OFFSET_Y = SHOT_OFFSET_Y -
+        (WALL_SLIDE_SHOOT_MUZZLE_Y - STAND_SHOOT_MUZZLE_Y) * SPRITE_SIZE / ART_FRAME_PX + AIR_SPRITE_OFFSET_Y
+    const val AIR_DASH_SHOOT_MUZZLE_X = 45
+    const val AIR_DASH_SHOOT_MUZZLE_Y = 36
+    const val SHOT_AIR_DASH_OFFSET_X =
+        SHOT_OFFSET_X + (AIR_DASH_SHOOT_MUZZLE_X - STAND_SHOOT_MUZZLE_X) * SPRITE_SIZE / ART_FRAME_PX
+    const val SHOT_AIR_DASH_OFFSET_Y = SHOT_OFFSET_Y -
+        (AIR_DASH_SHOOT_MUZZLE_Y - STAND_SHOOT_MUZZLE_Y) * SPRITE_SIZE / ART_FRAME_PX + AIR_SPRITE_OFFSET_Y
+    const val SWIM_SHOOT_MUZZLE_X = 42
+    const val SWIM_SHOOT_MUZZLE_Y = 31
+    const val SHOT_SWIM_OFFSET_X =
+        SHOT_OFFSET_X + (SWIM_SHOOT_MUZZLE_X - STAND_SHOOT_MUZZLE_X) * SPRITE_SIZE / ART_FRAME_PX
+    const val SHOT_SWIM_OFFSET_Y = SHOT_OFFSET_Y -
+        (SWIM_SHOOT_MUZZLE_Y - STAND_SHOOT_MUZZLE_Y) * SPRITE_SIZE / ART_FRAME_PX + AIR_SPRITE_OFFSET_Y
 
     const val GUARD_TURN_FRAME_TIME = 0.05f
     const val GUARD_CROUCH_TURN_FRAMES = 4
@@ -90,6 +123,7 @@ object ProtomanValues {
     const val GUARD_JUMP_PUT_AWAY_TIME = GUARD_JUMP_TURN_FRAMES * GUARD_TURN_FRAME_TIME
     internal val GUARD_CROUCH_SHIELD_BOX = ArtBox(left = 31, top = 30, right = 37, bottom = 47)
     internal val GUARD_JUMP_SHIELD_BOX = ArtBox(left = 32, top = 22, right = 38, bottom = 39)
+    internal val GUARD_AIR_DASH_SHIELD_BOX = ArtBox(left = 35, top = 27, right = 41, bottom = 44)
     const val GUARD_CROUCH_ART_ROWS = 18
     const val GUARD_CROUCH_HEIGHT = GUARD_CROUCH_ART_ROWS * SPRITE_SIZE / ART_FRAME_PX
     const val DEFLECT_BURST_TIME = 0.15f

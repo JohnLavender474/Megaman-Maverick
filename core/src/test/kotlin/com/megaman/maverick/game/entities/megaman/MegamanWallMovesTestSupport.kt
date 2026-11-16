@@ -17,7 +17,8 @@ import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.players.AButtonTask
+import com.megaman.maverick.game.players.aButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.state.PostActionMomentumComponent
@@ -46,7 +47,6 @@ class MegamanMovesRig {
         megaman.jetpackHandler = mockk(relaxed = true)
         megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
         megaman.facing = Facing.RIGHT
-        megaman.aButtonTask = AButtonTask.AIR_DASH
         megaman.jumpVel = MegamanValues.JUMP_VEL
         megaman.wallJumpVel = MegamanValues.WALL_JUMP_VEL
         megaman.wallSlideNotAllowedTimer.setToEnd()
@@ -59,6 +59,7 @@ class MegamanMovesRig {
         megaman.addComponent(PostActionMomentumComponent(1f, 1f, { 1f }, { overGround }, { false }, { false }))
         megaman.addComponent(behaviors)
         megaman.addRuleComponents()
+        megaman.aButtonTask = AButtonTask.AIR_DASH
 
         services.players.register(PlayerSlot(0), megaman)
         megaman.addComponent(ControllerComponent().also { it.input = InputSource { frame } })

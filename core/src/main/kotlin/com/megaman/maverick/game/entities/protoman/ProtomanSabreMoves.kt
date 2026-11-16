@@ -119,5 +119,28 @@ internal object ProtomanSabreMoves {
         fullStrength = false
     )
 
-    val ALL = gdxArrayOf(SLASH_1, SLASH_2, SLASH_3, AIR, AIR_LAND)
+    val WALL = SabreMove(
+        bodyRegion = "sabre_wall",
+        arcRegion = "sabre_wall_arc",
+        stripFrames = 5,
+        firstFrame = 0,
+        frameTimes = floatArrayOf(0.05f, 0.0333f, 0.0333f, 0.0833f, 0.05f),
+        arcWidth = 102,
+        arcHeight = 82,
+        arcCenterAboveBody = -5,
+        stripFacesLeft = false,
+        hitBoxes = gdxArrayOf(
+            intArrayOf(42, 47, 17, 27),
+            intArrayOf(20, 30, 79, 51),
+            intArrayOf(59, 0, 43, 78),
+            intArrayOf(62, 0, 39, 49),
+            intArrayOf(62, 0, 31, 29)
+        ),
+        artOnFrame = 1,
+        swingEndFrame = 2,
+        artOffFrame = 4,
+        fullStrength = false
+    )
+
+    val ALL = gdxArrayOf(SLASH_1, SLASH_2, SLASH_3, AIR, AIR_LAND, WALL)
 }

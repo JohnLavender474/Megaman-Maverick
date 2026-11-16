@@ -79,7 +79,10 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             "groundslide" pairTo "groundslide_shoot",
             "climb" pairTo "climb_still_shoot",
             "climb_still" pairTo "climb_still_shoot",
-            "climb_finish" pairTo "climb_still_shoot"
+            "climb_finish" pairTo "climb_still_shoot",
+            "wallslide" pairTo "wallslide_shoot",
+            "airdash" pairTo "airdash_shoot",
+            "swim" pairTo "swim_shoot"
         )
         private val BASE_POSES = objectMapOf(
             "stand_shoot" pairTo "stand",
@@ -94,24 +97,33 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             "guard_crouch_end" pairTo "stand",
             "guard_jump_start" pairTo "jump",
             "guard_jump" pairTo "jump",
-            "guard_jump_end" pairTo "jump"
+            "guard_jump_end" pairTo "jump",
+            "wallslide_shoot" pairTo "wallslide",
+            "wallslide_guard_start" pairTo "wallslide",
+            "wallslide_guard" pairTo "wallslide",
+            "airdash_shoot" pairTo "airdash",
+            "airdash_guard_start" pairTo "airdash",
+            "airdash_guard" pairTo "airdash",
+            "swim_shoot" pairTo "swim"
         )
         private val GUARD_PHASES = objectMapOf(
             "guard_crouch_start" pairTo "pull_out",
             "guard_jump_start" pairTo "pull_out",
+            "wallslide_guard_start" pairTo "pull_out",
+            "airdash_guard_start" pairTo "pull_out",
             "guard_crouch" pairTo "up",
             "guard_jump" pairTo "up",
+            "wallslide_guard" pairTo "up",
+            "airdash_guard" pairTo "up",
             "guard_crouch_end" pairTo "put_away",
             "guard_jump_end" pairTo "put_away"
         )
     }
 
-    // TODO: Protoman does not turn the camera when the world gravity changes, as Megaman does; the camera turn moves
-    //  to WorldGravity with item 058
     override var direction: Direction
         get() = body.direction
         set(value) {
-            body.direction = value
+            turnBodyAndCamera(value, onCameraTurnStart = {})
             playerGravity.applyDirection(value)
         }
 
@@ -152,6 +164,9 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
 
     private var canMakeLandSound = false
 
+    private val wallJumpTimer = Timer(ProtomanValues.WALL_JUMP_IMPETUS_TIME).setToEnd()
+    private val wallSlideNotAllowedTimer = Timer(ProtomanValues.WALL_SLIDE_NOT_ALLOWED_DELAY)
+
     private val guardPullOut = Timer(ProtomanValues.GUARD_CROUCH_PULL_OUT_TIME)
     private val guardPutAway = Timer(ProtomanValues.GUARD_CROUCH_PUT_AWAY_TIME)
     private val slideToCrouchDelay =
@@ -173,6 +188,15 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
 
     private val climbing: Boolean
         get() = isBehaviorActive(BehaviorType.CLIMBING)
+
+    private val wallSliding: Boolean
+        get() = isBehaviorActive(BehaviorType.WALL_SLIDING)
+
+    private val airDashing: Boolean
+        get() = isBehaviorActive(BehaviorType.AIR_DASHING)
+
+    private val swimming: Boolean
+        get() = isBehaviorActive(BehaviorType.SWIMMING)
 
     private val crouchShooting: Boolean
         get() = crouchShot && buster.shooting && !sliding && !climbing
@@ -196,11 +220,16 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
     override fun init(vararg params: Any) {
         super.init()
         addComponent(playerGravity)
+        addComponent(PlayerAButtonComponent())
+        addComponent(GravityDeviceComponent { aButtonTaskOnGravitySwitch() })
     }
 
     override fun onPlayerSpawn(spawnProps: Properties) {
+        resetAButtonTask()
         gravityScalar = 1f
         canMakeLandSound = false
+        wallJumpTimer.reset()
+        wallSlideNotAllowedTimer.reset()
         crouchShot = false
         slideToCrouchDelay.setToEnd(allowJustFinished = false)
         dropGuard()
@@ -257,7 +286,10 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
     }
 
     private fun standingShot() {
-        if (buster.shoot(MegaChargeStatus.NOT_CHARGED)) crouchShot = false
+        val shot = buster.shoot(
+            MegaChargeStatus.NOT_CHARGED, wallSliding = wallSliding, airDashing = airDashing, swimming = swimming
+        )
+        if (shot) crouchShot = false
     }
 
     private fun guardPlanted() = guardWanted() && bodyOverGround
@@ -275,9 +307,10 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         guardPullOut.reset()
     }
 
+    // TODO: no put-away strip for the wall slide and the air dash, so the shield goes away at once there (060k)
     private fun putAwayCut() = input.isPressed(MegaControllerButton.LEFT) ||
         input.isPressed(MegaControllerButton.RIGHT) || input.isJustPressed(MegaControllerButton.A) ||
-        input.isJustPressed(MegaControllerButton.B) || guardBroken()
+        input.isJustPressed(MegaControllerButton.B) || guardBroken() || wallSliding || airDashing
 
     internal fun updateGuard(delta: Float) {
         if (sliding) slideToCrouchDelay.reset() else slideToCrouchDelay.update(delta)
@@ -320,6 +353,11 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
 
     internal fun updateDeflects() = deflects.update()
 
+    internal fun updateWallTimers(delta: Float) {
+        wallJumpTimer.update(delta)
+        wallSlideNotAllowedTimer.update(delta)
+    }
+
     override fun defineUpdatablesComponent(updatablesComponent: UpdatablesComponent) {
         super.defineUpdatablesComponent(updatablesComponent)
         // TODO: share the updatables list with Megaman and X when one frame order fits all classes (item 060)
@@ -331,10 +369,12 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             require(RoomTransitionCarryComponent::class).update(delta)
             updatePostActionMomentum(delta, running)
             require(FreezeComponent::class).update(delta)
+            updateWallTimers(delta)
             buster.update(delta)
             sabre.update(delta)
             updateGuard(delta)
             updateDeflects()
+            updateAButtonTask()
         }
     }
 
@@ -349,25 +389,28 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
                 waterGravityScalar = ProtomanValues.WATER_GRAVITY_SCALAR,
                 clampX = ProtomanValues.CLAMP_X,
                 clampY = ProtomanValues.CLAMP_Y,
-                onBounce = {},
-                onFeetBounce = {},
+                onBounce = { wallSlideNotAllowedTimer.reset() },
+                onFeetBounce = { setAirDashTaskOutOfWater() },
                 // TODO: share the land sound with Megaman when a third player class needs it (item 060)
                 onFeetBlockBegin = { makesSound ->
+                    aButtonTask = AButtonTask.JUMP
                     if (makesSound && canMakeLandSound) {
                         requestToPlaySound(SoundAsset.MEGAMAN_LAND_SOUND, loop = false)
                         canMakeLandSound = false
                     }
                 },
-                onFeetBlockContinue = {},
-                onFeetBlockEnd = { if (!body.hasAnyFeetBlock()) canMakeLandSound = true },
+                onFeetBlockContinue = { aButtonTask = AButtonTask.JUMP },
+                onFeetBlockEnd = {
+                    if (!bodyOverGround) aButtonTask = offGroundAButtonTask()
+                    if (!body.hasAnyFeetBlock()) canMakeLandSound = true
+                },
                 onHeadHitBlock = {},
                 // TODO: share the GutsTank side-stick rule with Megaman when a third player class needs it (item 060)
                 sideSticksTo = { blockFixture ->
                     val owner = blockFixture.getEntity().getProperty(ConstKeys.OWNER) as IGameEntity?
                     owner !is GutsTank
                 },
-                // TODO: no swim; A in mid-water does nothing; decided in 060g
-                onWater = {},
+                onWater = { state -> aButtonTaskOnWater(state) },
                 onPreStep = {}
             )
         )
@@ -401,8 +444,11 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         body.preProcess.put(ConstKeys.SHIELD) {
             shieldUp = guardUp && guardWanted()
             shield.setActive(shieldUp)
-            val box = if (bodyOverGround) ProtomanValues.GUARD_CROUCH_SHIELD_BOX
-            else ProtomanValues.GUARD_JUMP_SHIELD_BOX
+            val box = when {
+                airDashing -> ProtomanValues.GUARD_AIR_DASH_SHIELD_BOX
+                bodyOverGround -> ProtomanValues.GUARD_CROUCH_SHIELD_BOX
+                else -> ProtomanValues.GUARD_JUMP_SHIELD_BOX
+            }
             val artPx = ProtomanValues.SPRITE_SIZE * ConstVals.PPM / ProtomanValues.ART_FRAME_PX
             (shield.rawShape as GameRectangle).setSize(box.width * artPx, box.height * artPx)
             shield.offsetFromBodyAttachment.set(
@@ -445,20 +491,82 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
     override fun defineBehaviorsComponent(): BehaviorsComponent {
         val component = BehaviorsComponent()
         component.addBehavior(
+            BehaviorType.WALL_SLIDING, playerWallSlideBehavior(
+                this,
+                WallSlideParams(
+                    blocked = {
+                        body.isSensing(BodySense.FEET_ON_SAND) || !wallSlideNotAllowedTimer.isFinished() ||
+                            !wallJumpTimer.isFinished() || (sabre.active && sabre.state != SabreState.WALL)
+                    },
+                    allowedWhileJumping = { false },
+                    holdsWithoutInput = {
+                        sabre.state == SabreState.WALL &&
+                            body.isSensingAny(BodySense.SIDE_TOUCHING_BLOCK_LEFT, BodySense.SIDE_TOUCHING_BLOCK_RIGHT)
+                    },
+                    onStart = { aButtonTask = AButtonTask.JUMP },
+                    onAct = {
+                        aButtonTask = AButtonTask.JUMP
+                        val friction = ProtomanValues.WALL_SLIDE_FRICTION_TO_APPLY * ConstVals.PPM
+                        if (direction.isVertical()) body.physics.frictionOnSelf.y = friction
+                        else body.physics.frictionOnSelf.x = friction
+                    },
+                    onEnd = { setAirDashTaskOutOfWater() }
+                )
+            )
+        )
+        component.addBehavior(
+            BehaviorType.SWIMMING, playerSwimBehavior(
+                this,
+                SwimParams(
+                    time = ProtomanValues.SWIM_TIMER,
+                    speed = { ProtomanValues.SWIM_VEL_Y * direction.upSign() },
+                    blocked = { false },
+                    canStart = { aButtonTask == AButtonTask.SWIM }
+                )
+            )
+        )
+        component.addBehavior(
             BehaviorType.JUMPING, playerJumpBehavior(
                 this,
                 JumpParams(
-                    canStart = { true },
+                    canStart = { aButtonTask == AButtonTask.JUMP },
                     blocked = { false },
                     jumpSpeed = { ProtomanValues.JUMP_VEL * direction.upSign() },
-                    wallJumpSpeed = { 0f },
-                    wallJumpHorizontal = 0f,
-                    wallJumpAllowed = { false },
+                    wallJumpSpeed = { ProtomanValues.WALL_JUMP_VEL * direction.upSign() },
+                    wallJumpHorizontal = ProtomanValues.WALL_JUMP_HORIZONTAL,
+                    wallJumpAllowed = { wallSliding },
                     ignoreRelease = { false },
                     startPressed = { input.isJustPressed(MegaControllerButton.A) },
                     downBlocksGroundJump = true,
                     endKeepsFall = false,
                     onJump = { canMakeLandSound = true }
+                )
+            )
+        )
+        component.addBehavior(
+            BehaviorType.AIR_DASHING, playerAirDashBehavior(
+                this,
+                AirDashParams(
+                    blocked = { bodyOverGround },
+                    canStart = {
+                        !sabre.active && aButtonTask == AButtonTask.AIR_DASH && airDashInputJustPressed(this)
+                    },
+                    held = { airDashInputPressed(this) },
+                    startDelay = 0f,
+                    minTime = ProtomanValues.AIR_DASH_MIN_TIME,
+                    maxTime = { ProtomanValues.AIR_DASH_MAX_TIME },
+                    speed = {
+                        if (body.isSensing(BodySense.IN_WATER)) ProtomanValues.WATER_AIR_DASH_VEL
+                        else ProtomanValues.AIR_DASH_VEL
+                    },
+                    decel = { 0f },
+                    minSpeed = 0f,
+                    endBump = {
+                        if (body.isSensing(BodySense.IN_WATER)) ProtomanValues.WATER_AIR_DASH_END_BUMP
+                        else ProtomanValues.AIR_DASH_END_BUMP
+                    },
+                    onStart = { aButtonTaskOnAirDashStart() },
+                    onEnd = {}
                 )
             )
         )
@@ -486,8 +594,11 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
                     feetGrabAllowed = { true },
                     holdStill = { buster.shooting },
                     leavesOnFloor = false,
-                    onStart = { canMakeLandSound = false },
-                    onEnd = {}
+                    onStart = {
+                        aButtonTask = offGroundAButtonTask()
+                        canMakeLandSound = false
+                    },
+                    onEnd = { aButtonTask = offGroundAButtonTask() }
                 )
             )
         )
@@ -580,6 +691,16 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         animations.put("guard_crouch_end", turn("guard_crouch_end", ProtomanValues.GUARD_CROUCH_TURN_FRAMES))
         animations.put("guard_jump_start", turn("guard_jump_start", ProtomanValues.GUARD_JUMP_TURN_FRAMES))
         animations.put("guard_jump_end", turn("guard_jump_end", ProtomanValues.GUARD_JUMP_TURN_FRAMES))
+        animations.put("wallslide", Animation(frames("wallslide", 1), 1f))
+        animations.put("wallslide_shoot", Animation(frames("wallslide_shoot", 1), 1f))
+        animations.put("wallslide_guard", Animation(frames("wallslide_guard", 1), 1f))
+        animations.put("wallslide_guard_start", turn("wallslide_guard_start", ProtomanValues.GUARD_JUMP_TURN_FRAMES))
+        animations.put("airdash", Animation(frames("airdash", 1), 1f))
+        animations.put("airdash_shoot", Animation(frames("airdash_shoot", 1), 1f))
+        animations.put("airdash_guard", Animation(frames("airdash_guard", 1), 1f))
+        animations.put("airdash_guard_start", turn("airdash_guard_start", ProtomanValues.GUARD_JUMP_TURN_FRAMES))
+        animations.put("swim", Animation(frames("swim", 1), 1f))
+        animations.put("swim_shoot", Animation(frames("swim_shoot", 1), 1f))
         ProtomanSabreMoves.ALL.forEach { animations.put(it.bodyRegion, Animation(frames(it.bodyRegion, it.stripFrames), 1f)) }
         // TODO: the stand frame shows while damaged or stunned until Protoman's damage and stun art (item 060e)
         animations.put("damaged", Animation(standFrames[0]))
@@ -618,11 +739,18 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             sabre.active -> sabre.move!!.bodyRegion
             crouchShooting -> "crouch_shoot"
             buster.shooting -> SHOOT_KEYS[pose] ?: throw IllegalStateException("No shoot key for the pose $pose")
-            pullingOutGuard -> if (pose == "jump") "guard_jump_start" else "guard_crouch_start"
-            guarding -> if (pose == "jump") "guard_jump" else "guard_crouch"
-            puttingAwayGuard -> if (pose == "jump") "guard_jump_end" else "guard_crouch_end"
+            pullingOutGuard -> guardKey(pose) + "_start"
+            guarding -> guardKey(pose)
+            puttingAwayGuard -> guardKey(pose) + "_end"
             else -> pose
         }
+    }
+
+    private fun guardKey(pose: String) = when (pose) {
+        "wallslide" -> "wallslide_guard"
+        "airdash" -> "airdash_guard"
+        "jump", "swim" -> "guard_jump"
+        else -> "guard_crouch"
     }
 
     private fun poseKey(current: String?, playing: IAnimation?): String? = when {
@@ -636,6 +764,9 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         damaged || stunned -> "damaged"
         climbing -> climbPose()
         sliding -> "groundslide"
+        airDashing -> "airdash"
+        wallSliding -> "wallslide"
+        swimming -> "swim"
         isBehaviorActive(BehaviorType.JUMPING) || !bodyOverGround -> "jump"
         running -> "run"
         current == "run_trans" && playing?.isFinished() == false -> "run_trans"

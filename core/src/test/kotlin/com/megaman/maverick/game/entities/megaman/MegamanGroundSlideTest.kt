@@ -33,7 +33,8 @@ import com.megaman.maverick.game.entities.enemies.MetaWheelF
 import com.megaman.maverick.game.entities.megaman.behaviors.groundSlideBehavior
 import com.megaman.maverick.game.entities.megaman.behaviors.jumpBehavior
 import com.megaman.maverick.game.entities.megaman.components.GROUNDSLIDE_CROUCH_HEIGHT
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.players.AButtonTask
+import com.megaman.maverick.game.players.aButtonTask
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
@@ -140,13 +141,13 @@ class MegamanGroundSlideTest : DescribeSpec({
         megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
         megaman.shooting = false
         megaman.facing = Facing.RIGHT
-        megaman.aButtonTask = AButtonTask.JUMP
         megaman.jumpVel = MegamanValues.JUMP_VEL
         megaman.wallJumpVel = MegamanValues.WALL_JUMP_VEL
 
         behaviors = BehaviorsComponent()
         megaman.addComponent(behaviors)
         megaman.addRuleComponents()
+        megaman.aButtonTask = AButtonTask.JUMP
         megaman.addComponent(megaman.defineBodyComponent())
         body = megaman.body
         body.putProperty(ConstKeys.BODY_OVER_GROUND, { overGround })

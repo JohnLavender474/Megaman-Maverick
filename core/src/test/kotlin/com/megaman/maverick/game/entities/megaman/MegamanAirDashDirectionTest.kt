@@ -12,6 +12,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.behaviors.airDashBehavior
 import com.megaman.maverick.game.entities.megaman.components.getSpriteDirection
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.players.PlayerAButtonComponent
 import com.megaman.maverick.game.testServices
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -41,6 +42,7 @@ class MegamanAirDashDirectionTest : DescribeSpec({
         every { dash.isActive() } answers { dashing }
         behaviors.addBehavior(BehaviorType.AIR_DASHING, dash)
         megaman.addComponent(behaviors)
+        megaman.addComponent(PlayerAButtonComponent())
     }
 
     afterEach { unmockkAll() }

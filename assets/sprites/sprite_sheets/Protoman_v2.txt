@@ -1,207 +1,235 @@
 Protoman_v2.png
-size: 212, 2397
+size: 214, 3065
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 ProtoBuster
   rotate: false
-  xy: 1, 2363
+  xy: 1, 3031
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+airdash
+  rotate: false
+  xy: 1, 2531
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+airdash_guard
+  rotate: false
+  xy: 1, 2581
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+airdash_guard_start
+  rotate: false
+  xy: 1, 1995
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+airdash_shoot
+  rotate: false
+  xy: 107, 2593
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 climb
   rotate: false
-  xy: 105, 1821
+  xy: 107, 2299
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 climb_finish
   rotate: false
-  xy: 1, 2063
+  xy: 1, 2631
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 climb_still
   rotate: false
-  xy: 1, 2113
+  xy: 107, 2643
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 climb_still_shoot
   rotate: false
-  xy: 105, 2115
+  xy: 1, 2681
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 crouch_shoot
   rotate: false
-  xy: 1, 2163
+  xy: 107, 2693
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 crouch_slash
   rotate: false
-  xy: 1, 897
+  xy: 1, 1219
   size: 48, 192
   orig: 48, 192
   offset: 0, 0
   index: -1
 crouch_slash_arc
   rotate: false
-  xy: 105, 1497
+  xy: 107, 1829
   size: 106, 160
   orig: 106, 160
   offset: 0, 0
   index: -1
 groundslide
   rotate: false
-  xy: 105, 1919
+  xy: 107, 2397
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 groundslide_shoot
   rotate: false
-  xy: 105, 2165
+  xy: 1, 2731
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 guard_crouch
   rotate: false
-  xy: 1, 1965
+  xy: 1, 2433
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 guard_crouch_end
   rotate: false
-  xy: 1, 1091
+  xy: 1, 1413
   size: 48, 192
   orig: 48, 192
   offset: 0, 0
   index: -1
 guard_crouch_start
   rotate: false
-  xy: 105, 1109
+  xy: 107, 1441
   size: 48, 192
   orig: 48, 192
   offset: 0, 0
   index: -1
 guard_jump
   rotate: false
-  xy: 1, 2213
+  xy: 107, 2743
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 guard_jump_end
   rotate: false
-  xy: 1, 1673
+  xy: 1, 2141
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
 guard_jump_start
   rotate: false
-  xy: 1, 1819
+  xy: 107, 2153
   size: 48, 144
   orig: 48, 144
   offset: 0, 0
   index: -1
 jump
   rotate: false
-  xy: 105, 2215
+  xy: 1, 2781
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 jump_shoot
   rotate: false
-  xy: 1, 2263
+  xy: 107, 2793
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 run
   rotate: false
-  xy: 1, 1285
+  xy: 1, 1607
   size: 48, 192
   orig: 48, 192
   offset: 0, 0
   index: -1
 run_shoot
   rotate: false
-  xy: 105, 1303
+  xy: 107, 1635
   size: 48, 192
   orig: 48, 192
   offset: 0, 0
   index: -1
 run_trans
   rotate: false
-  xy: 105, 2265
+  xy: 1, 2831
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 run_trans_shoot
   rotate: false
-  xy: 1, 2313
+  xy: 107, 2843
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 sabre_1
   rotate: false
-  xy: 1, 413
+  xy: 107, 715
   size: 48, 240
   orig: 48, 240
   offset: 0, 0
   index: -1
 sabre_1_arc
   rotate: false
-  xy: 105, 323
+  xy: 107, 413
   size: 104, 300
   orig: 104, 300
   offset: 0, 0
   index: -1
 sabre_2
   rotate: false
-  xy: 105, 625
+  xy: 1, 735
   size: 48, 240
   orig: 48, 240
   offset: 0, 0
   index: -1
 sabre_2_arc
   rotate: false
-  xy: 105, 1
+  xy: 1, 413
   size: 104, 320
   orig: 104, 320
   offset: 0, 0
   index: -1
 sabre_3
   rotate: false
-  xy: 1, 1479
+  xy: 1, 1801
   size: 48, 192
   orig: 48, 192
   offset: 0, 0
   index: -1
 sabre_3_arc
   rotate: false
-  xy: 105, 1659
+  xy: 107, 1991
   size: 106, 160
   orig: 106, 160
   offset: 0, 0
   index: -1
 sabre_air
   rotate: false
-  xy: 1, 655
+  xy: 107, 957
   size: 48, 240
   orig: 48, 240
   offset: 0, 0
@@ -215,21 +243,77 @@ sabre_air_arc
   index: -1
 sabre_air_land
   rotate: false
-  xy: 105, 867
+  xy: 1, 977
   size: 48, 240
   orig: 48, 240
   offset: 0, 0
   index: -1
+sabre_wall
+  rotate: false
+  xy: 107, 1199
+  size: 48, 240
+  orig: 48, 240
+  offset: 0, 0
+  index: -1
+sabre_wall_arc
+  rotate: false
+  xy: 107, 1
+  size: 102, 410
+  orig: 102, 410
+  offset: 0, 0
+  index: -1
 stand
   rotate: false
-  xy: 105, 2017
+  xy: 107, 2495
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 stand_shoot
   rotate: false
-  xy: 105, 2315
+  xy: 1, 2881
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+swim
+  rotate: false
+  xy: 107, 2893
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+swim_shoot
+  rotate: false
+  xy: 1, 2931
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+wallslide
+  rotate: false
+  xy: 107, 2943
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+wallslide_guard
+  rotate: false
+  xy: 1, 2981
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+wallslide_guard_start
+  rotate: false
+  xy: 1, 2287
+  size: 48, 144
+  orig: 48, 144
+  offset: 0, 0
+  index: -1
+wallslide_shoot
+  rotate: false
+  xy: 107, 2993
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

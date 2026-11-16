@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman
 import com.maverick.game.engine.behaviors.IBehavior
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
+import com.maverick.game.engine.components.require
 import com.maverick.game.engine.controller.buttons.ButtonStatus
 import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.ConstVals
@@ -10,7 +11,9 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.entities.megaman.behaviors.airDashBehavior
-import com.megaman.maverick.game.entities.megaman.constants.AButtonTask
+import com.megaman.maverick.game.players.AButtonTask
+import com.megaman.maverick.game.players.aButtonTask
+import com.megaman.maverick.game.players.PlayerAButtonComponent
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.world.body.BodySense
@@ -112,7 +115,7 @@ class MegamanAirDashTest : DescribeSpec({
             startDash()
             rig.body.physics.gravityOn shouldBe false
             rig.megaman.aButtonTask shouldBe AButtonTask.JUMP
-            rig.megaman.airDashConsumed shouldBe true
+            rig.megaman.require(PlayerAButtonComponent::class).airDashConsumed shouldBe true
             rig.megaman.airDashDirection shouldBe Direction.UP
         }
 
