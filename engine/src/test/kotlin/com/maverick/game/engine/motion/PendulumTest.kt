@@ -2,8 +2,10 @@ package com.maverick.game.engine.motion
 
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.extensions.round
+import com.maverick.game.engine.common.random.SeededRandom
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+import java.util.Random
 
 class PendulumTest :
     DescribeSpec({
@@ -17,7 +19,7 @@ class PendulumTest :
 
             lateinit var pendulum: Pendulum
 
-            beforeEach { pendulum = Pendulum(length, gravity, anchor, targetFPS) }
+            beforeEach { pendulum = Pendulum(length, gravity, anchor, targetFPS, SeededRandom(Random(1L))) }
 
             it("should update pendulum motion correctly") {
                 pendulum.update(targetFPS)

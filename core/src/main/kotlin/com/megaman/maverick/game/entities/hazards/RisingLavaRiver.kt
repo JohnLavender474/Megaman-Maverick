@@ -12,7 +12,6 @@ import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.*
 import com.maverick.game.engine.common.objects.Matrix
@@ -286,7 +285,7 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
                 emberDelay.update(delta)
                 if (emberDelay.isFinished()) {
                     val position = GameObjectPools.fetch(Vector2::class)
-                        .setX(fullBounds.getRandomPositionInBounds().x)
+                        .setX(fullBounds.getRandomPositionInBounds(services.random).x)
                         .setY(fullBounds.getMaxY())
 
                     val canSpawnBounds = GameObjectPools.fetch(GameRectangle::class)
@@ -438,7 +437,7 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
     }
 
     private fun resetEmberDelay() {
-        val duration = UtilMethods.getRandom(EMBER_MIN_DELAY, EMBER_MAX_DELAY)
+        val duration = services.random.nextFloat(EMBER_MIN_DELAY, EMBER_MAX_DELAY)
         emberDelay.resetDuration(duration)
     }
 

@@ -9,8 +9,6 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedMap
 import com.maverick.game.engine.animations.*
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
-import com.maverick.game.engine.common.UtilMethods.getRandomBool
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.*
@@ -589,17 +587,17 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
                 previousAttackState != DesertManState.PUNCH &&
                     isMegamanInLongPunchXRange() &&
                     isMegamanInPunchYRange() &&
-                    getRandom(0f, 1f) <= PUNCH_PERCENTAGE
+                    services.random.nextFloat(0f, 1f) <= PUNCH_PERCENTAGE
             }
             .transition(DesertManState.STAND.name, DesertManState.TORNADO.name) {
                 previousAttackState != DesertManState.TORNADO && isMegamanInTornadoYRange() &&
                     !isHittingAgainstLeftWall() && !isHittingAgainstRightWall()
             }
             .transition(DesertManState.STAND.name, DesertManState.DANCE.name) {
-                previousAttackState != DesertManState.DANCE && getRandomBool()
+                previousAttackState != DesertManState.DANCE && services.random.nextBoolean()
             }
             .transition(DesertManState.STAND.name, DesertManState.JUMP.name) {
-                getRandom(0, 100) <= 80
+                services.random.nextInt(0, 100) <= 80
             }
             .transition(DesertManState.STAND.name, DesertManState.DANCE.name) { true }
             // PUNCH -> STAND

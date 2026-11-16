@@ -12,7 +12,6 @@ import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.UtilMethods
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Size
@@ -370,7 +369,7 @@ class GutsTank(services: MegaServices) : AbstractBoss(services, size = Size.LARG
                 attackDelayTimer.update(delta)
 
                 if (attackDelayTimer.isFinished()) {
-                    val attack = ATTACK_STATES.random()
+                    val attack = services.random.pick(ATTACK_STATES)
                     this.attackState = attack
 
                     if (attack == GutsTankAttackState.SHOOT_BLASTS) blastAngles = BLAST_ANGLES.toOrderedSet()
@@ -440,7 +439,7 @@ class GutsTank(services: MegaServices) : AbstractBoss(services, size = Size.LARG
                         else {
                             requestToPlaySound(SoundAsset.BASSY_BLAST_SOUND, false)
 
-                            val randomIndex = getRandom(0, blastAngles.size - 1)
+                            val randomIndex = services.random.nextInt(0, blastAngles.size - 1)
                             val angle = blastAngles.removeIndex(randomIndex)
                             val trajectory = Vector2(BLAST_VELOCITY * ConstVals.PPM, 0f).setAngleDeg(angle)
 

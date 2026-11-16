@@ -299,8 +299,8 @@ class PreciousGemCanon(services: MegaServices) : AbstractEnemy(services), IFreez
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.IMPULSE pairTo impulse,
                 ConstKeys.GRAVITY_ON pairTo false,
-                ConstKeys.SIZE pairTo PreciousShardSize.entries.random(),
-                ConstKeys.COLOR pairTo PreciousShardColor.entries.random(),
+                ConstKeys.SIZE pairTo services.random.pick(PreciousShardSize.entries),
+                ConstKeys.COLOR pairTo services.random.pick(PreciousShardColor.entries),
             )
         )
 
@@ -322,7 +322,7 @@ class PreciousGemCanon(services: MegaServices) : AbstractEnemy(services), IFreez
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo trajectory,
-                ConstKeys.COLOR pairTo PreciousGemBombColor.entries.random()
+                ConstKeys.COLOR pairTo services.random.pick(PreciousGemBombColor.entries)
             )
         )
 

@@ -9,7 +9,6 @@ import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.objects.Properties
@@ -678,7 +677,7 @@ class D1000Core(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         if (dodging || dodgeCooldown > 0f || !canDodge()) return
         val threat = findThreat() ?: return
         seenThreats.add(threat)
-        if (UtilMethods.random.nextFloat() >= tuning.dodgeChance) return
+        if (services.random.nextFloat(0f, 1f) >= tuning.dodgeChance) return
         if (!aimDodge(dodgeStep.x, dodgeStep.y) && !aimDodge(-dodgeStep.x, -dodgeStep.y)) return
         GameLogger.debug(TAG, "updateDodge(): threat=$threat, target=$dodgeTarget")
         dodging = true

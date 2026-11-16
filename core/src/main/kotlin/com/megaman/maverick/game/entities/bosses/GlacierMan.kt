@@ -10,8 +10,6 @@ import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
-import com.maverick.game.engine.common.UtilMethods.getRandomBool
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.*
@@ -470,9 +468,9 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
             .transition(GlacierManState.STAND.name, GlacierManState.FIRED.name) { fired }
             .transition(GlacierManState.STAND.name, GlacierManState.ICE_BLAST_ATTACK.name) {
                 !firstUpdate && previousState != GlacierManState.ICE_BLAST_ATTACK && canIceBlast() &&
-                    getRandom(0, 10) <= 4
+                    services.random.nextInt(0, 10) <= 4
             }.transition(GlacierManState.STAND.name, GlacierManState.DUCK.name) {
-                !isMegamanAboveOffsetY() && previousState != GlacierManState.DUCK && getRandom(0, 10) <= 5
+                !isMegamanAboveOffsetY() && previousState != GlacierManState.DUCK && services.random.nextInt(0, 10) <= 5
             }
             .transition(GlacierManState.STAND.name, GlacierManState.SLED.name) {
                 isMegamanOutsideOffsetX() && previousState != GlacierManState.SLED
@@ -587,7 +585,7 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
 
         val trajectory: Vector2
         val gravityOn: Boolean
-        val chunkIceBlast = getRandomBool()
+        val chunkIceBlast = services.random.nextBoolean()
         if (chunkIceBlast) {
             trajectory = MegaUtilMethods.calculateJumpImpulse(
                 spawn, targetPlayer.body.getCenter(), CHUNK_ICE_BLAST_VEL_Y * ConstVals.PPM
@@ -619,7 +617,7 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
     private fun shoot() {
         GameLogger.debug(TAG, "shoot()")
 
-        shootUp = canShootUp() && (isFalling() || isMegamanAboveOffsetY() || getRandom(0f, 1f) <= SHOOT_UP_CHANCE)
+        shootUp = canShootUp() && (isFalling() || isMegamanAboveOffsetY() || services.random.nextFloat(0f, 1f) <= SHOOT_UP_CHANCE)
 
         val spawn = body.getCenter()
         val trajectory = Vector2()

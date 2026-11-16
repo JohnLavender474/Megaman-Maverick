@@ -11,7 +11,6 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.extensions.gdxArrayOf
@@ -183,10 +182,10 @@ class MoonEyeStone(services: MegaServices) : AbstractEnemy(services), IFreezable
         asteroids.keys().forEach { asteroid ->
             asteroid.owner = null
 
-            val speed = UtilMethods.getRandom(MIN_RELEASE_SPEED, MAX_RELEASE_SPEED)
+            val speed = services.random.nextFloat(MIN_RELEASE_SPEED, MAX_RELEASE_SPEED)
             val impulse = GameObjectPools.fetch(Vector2::class)
                 .set(0f, speed * ConstVals.PPM)
-                .setAngleDeg(UtilMethods.getRandom(0f, 359f))
+                .setAngleDeg(services.random.nextFloat(0f, 359f))
             asteroid.impulse.set(impulse)
         }
 
@@ -309,11 +308,11 @@ class MoonEyeStone(services: MegaServices) : AbstractEnemy(services), IFreezable
                 else GameObjectPools.fetch(Vector2::class)
                     .set(asteroid.body.getCenter())
                     .add(
-                        UtilMethods.getRandom(-1f, 1f) * ConstVals.PPM,
-                        UtilMethods.getRandom(-1f, 1f) * ConstVals.PPM
+                        services.random.nextFloat(-1f, 1f) * ConstVals.PPM,
+                        services.random.nextFloat(-1f, 1f) * ConstVals.PPM
                     )
 
-            val speed = if (targetMegaman) THROW_SPEED else UtilMethods.getRandom(MIN_RELEASE_SPEED, MAX_RELEASE_SPEED)
+            val speed = if (targetMegaman) THROW_SPEED else services.random.nextFloat(MIN_RELEASE_SPEED, MAX_RELEASE_SPEED)
 
             val impulse = target
                 .sub(asteroid.body.getBounds().getCenter())

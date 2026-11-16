@@ -12,7 +12,6 @@ import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.UtilMethods
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
@@ -643,7 +642,7 @@ class MoonMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity,
 
     private fun shouldEnterGravityChangeState(): Boolean {
         if (!canActivateGravityChange || shouldEnterThrowAsteroidsState()) return false
-        val randomPercentage = getRandom(0f, 1f)
+        val randomPercentage = services.random.nextFloat(0f, 1f)
         return randomPercentage < gravityChangeChance
     }
 
@@ -715,8 +714,8 @@ class MoonMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity,
 
     private fun spawnAsteroid() {
         val spawn = GameObjectPools.fetch(Vector2::class)
-        spawn.x = getRandom(asteroidSpawnBounds.getX(), asteroidSpawnBounds.getMaxX())
-        spawn.y = getRandom(asteroidSpawnBounds.getY(), asteroidSpawnBounds.getMaxY())
+        spawn.x = services.random.nextFloat(asteroidSpawnBounds.getX(), asteroidSpawnBounds.getMaxX())
+        spawn.y = services.random.nextFloat(asteroidSpawnBounds.getY(), asteroidSpawnBounds.getMaxY())
 
         val asteroid = MegaEntityFactory.fetch(Asteroid::class)!!
         asteroid.spawn(

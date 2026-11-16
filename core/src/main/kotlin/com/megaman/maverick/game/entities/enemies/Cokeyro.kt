@@ -183,7 +183,7 @@ class Cokeyro(services: MegaServices) : AbstractEnemy(services), IFreezableEntit
                         explode(
                             props(
                                 ConstKeys.OWNER pairTo this,
-                                ConstKeys.POSITION pairTo body.getBounds().getRandomPositionInBounds()
+                                ConstKeys.POSITION pairTo body.getBounds().getRandomPositionInBounds(services.random)
                             )
                         )
                         explodeTimer.reset()

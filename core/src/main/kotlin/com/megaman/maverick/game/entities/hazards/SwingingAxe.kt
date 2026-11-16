@@ -125,7 +125,7 @@ class SwingingAxe(services: MegaServices) : MegaGameEntity(services), ISpritesEn
 
     private fun setPendulum(bounds: GameRectangle) {
         pendulum = Pendulum(
-            LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(false), 1 / 60f
+            LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(false), 1 / 60f, services.random
         )
         putMotionDefinition(
             ConstKeys.PENDULUM, MotionComponent.MotionDefinition(motion = pendulum, function = { value, _ ->

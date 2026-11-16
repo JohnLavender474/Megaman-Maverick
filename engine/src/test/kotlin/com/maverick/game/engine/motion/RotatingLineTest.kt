@@ -3,12 +3,15 @@ package com.maverick.game.engine.motion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.UtilMethods
-import com.maverick.game.engine.common.UtilMethods.getRandom
+import com.maverick.game.engine.common.random.SeededRandom
 import com.maverick.game.engine.common.shapes.GameLine
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+import java.util.Random
 
 class RotatingLineTest : DescribeSpec({
+
+    val seeded = SeededRandom(Random(1L))
 
     describe("RotatingLine class") {
 
@@ -125,15 +128,15 @@ class RotatingLineTest : DescribeSpec({
             val testCount = 50
             val randomVarCount = 4
             val updatesPerTest = 25
-            val deltaSupplier: () -> Float = { getRandom(0f, 0.5f, 1f) }
-            val scaleSupplier: (Int) -> Float = { if (it % 2 == 0) 1f else getRandom(0.5f, 2f) }
+            val deltaSupplier: () -> Float = { seeded.pickOf(0f, 0.5f, 1f) }
+            val scaleSupplier: (Int) -> Float = { if (it % 2 == 0) 1f else seeded.nextFloat(0.5f, 2f) }
             val updateTeardown: () -> Unit = { outFloatArr.clear() }
 
             (1..testCount).forEach { testNum ->
                 println("Test$testNum: begin ---")
 
                 val randomVars = Array<Float>()
-                (0 until randomVarCount).forEach { randomVars.add(UtilMethods.getRandom(0, 359).toFloat()) }
+                (0 until randomVarCount).forEach { randomVars.add(seeded.nextInt(0, 359).toFloat()) }
                 println("Test$testNum: set up randomVars: $randomVars")
 
                 val origin = Vector2(randomVars[0], randomVars[1])

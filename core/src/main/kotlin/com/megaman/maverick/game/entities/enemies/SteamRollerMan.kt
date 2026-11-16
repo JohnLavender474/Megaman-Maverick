@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.*
@@ -414,18 +413,18 @@ class SteamRollerMan(services: MegaServices) : AbstractEnemy(services), IAnimate
 
         (0 until SMASH_ROCKS).forEach {
             val spawn = smashArea.getCenter().add(
-                UtilMethods.getRandom(
+                services.random.nextFloat(
                     SMASH_ROCKS_MIN_OFFSET_X,
                     SMASH_ROCKS_MAX_OFFSET_X
                 ) * ConstVals.PPM * facing.value,
-                UtilMethods.getRandom(SMASH_ROCKS_MIN_OFFSET_Y, SMASH_ROCKS_MAX_OFFSET_Y) * ConstVals.PPM
+                services.random.nextFloat(SMASH_ROCKS_MIN_OFFSET_Y, SMASH_ROCKS_MAX_OFFSET_Y) * ConstVals.PPM
             )
 
             val size = if (it % 2 == 0) RockSize.BIG else RockSize.SMALL
 
             val impulse = GameObjectPools.fetch(Vector2::class)
-                .setX(UtilMethods.getRandom(SMASH_ROCKS_MIN_X_IMPULSE, SMASH_ROCKS_MAX_X_IMPULSE) * ConstVals.PPM)
-                .setY(UtilMethods.getRandom(SMASH_ROCKS_MIN_Y_IMPULSE, SMASH_ROCKS_MAX_Y_IMPULSE) * ConstVals.PPM)
+                .setX(services.random.nextFloat(SMASH_ROCKS_MIN_X_IMPULSE, SMASH_ROCKS_MAX_X_IMPULSE) * ConstVals.PPM)
+                .setY(services.random.nextFloat(SMASH_ROCKS_MIN_Y_IMPULSE, SMASH_ROCKS_MAX_Y_IMPULSE) * ConstVals.PPM)
 
             val rock = MegaEntityFactory.fetch(Rock::class)!!
             rock.spawn(

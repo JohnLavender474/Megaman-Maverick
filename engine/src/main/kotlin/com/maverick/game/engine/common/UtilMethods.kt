@@ -7,7 +7,6 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.IGameShape2D
 import java.util.*
-import java.util.function.Consumer
 import java.util.function.Predicate
 import kotlin.math.*
 
@@ -19,33 +18,11 @@ object UtilMethods {
     private val rect2 = Rectangle()
     private val rect3 = Rectangle()
 
-    val random = Random(System.currentTimeMillis())
-
     fun allAreTrue(vararg conditions: Boolean) = conditions.all { it }
 
     fun anyIsTrue(vararg conditions: Boolean) = conditions.any { it }
 
     fun amountIsTrue(amount: Int, vararg conditions: Boolean) = conditions.count { it } == amount
-
-    fun getRandomBool() = random.nextBoolean()
-
-    fun getRandom(min: Int, max: Int) = random.nextInt(max + 1 - min) + min
-
-    fun getRandom(min: Float, max: Float) = random.nextFloat() * (max - min) + min
-
-    fun <T> getRandom(vararg values: T) : T {
-        if (values.isEmpty()) throw IllegalStateException("Must have at least one value")
-        val index = random.nextInt(values.size)
-        return values[index]
-    }
-
-    fun doIfRandomMatches(min: Int, max: Int, matches: Iterable<Int>, runOnMatch: Consumer<Int?>) {
-        val r = getRandom(min, max)
-        for (i in matches) if (r == i) {
-            runOnMatch.accept(r)
-            break
-        }
-    }
 
     fun <T> mask(o1: T, o2: T, p1: Predicate<T>, p2: Predicate<T>) =
         p1.test(o1) && p2.test(o2) || p2.test(o1) && p1.test(o2)

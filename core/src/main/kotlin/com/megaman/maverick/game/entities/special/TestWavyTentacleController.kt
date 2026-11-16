@@ -133,10 +133,10 @@ class TestWavyTentacleController(services: MegaServices) :
         currentTipTarget.set(targetPos)
 
         // Randomize drift phases so anchor and target never move in parallel
-        anchorDriftPhaseX = MathUtils.random(0f, MathUtils.PI2)
-        anchorDriftPhaseY = MathUtils.random(0f, MathUtils.PI2)
-        targetDriftPhaseX = MathUtils.random(0f, MathUtils.PI2)
-        targetDriftPhaseY = MathUtils.random(0f, MathUtils.PI2)
+        anchorDriftPhaseX = services.random.nextFloat(0f, MathUtils.PI2)
+        anchorDriftPhaseY = services.random.nextFloat(0f, MathUtils.PI2)
+        targetDriftPhaseX = services.random.nextFloat(0f, MathUtils.PI2)
+        targetDriftPhaseY = services.random.nextFloat(0f, MathUtils.PI2)
 
         // Spawn the child tentacle, anchored at the same bounds
         tentacle = MegaEntityFactory.fetch(WavyTentacleOfJoints::class)!!

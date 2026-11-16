@@ -11,7 +11,6 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.*
@@ -757,7 +756,7 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
             PreciousWomanState.AIRPUNCH.name
         ) { shouldAirPunch() }
         .transition(PreciousWomanState.STAND.name, PreciousWomanState.JUMP.name) {
-            getRandom(0f, 100f) <= JUMP_CHANCE_SECOND_CHECK
+            services.random.nextFloat(0f, 100f) <= JUMP_CHANCE_SECOND_CHECK
         }
         .transition(PreciousWomanState.STAND.name, PreciousWomanState.RUN.name) { true }
         // run
@@ -899,12 +898,12 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
         }
     }
 
-    private fun shouldGroundslide() = getRandom(0f, 100f) <= GROUNDSLIDE_CHANCE && !FacingUtils.isFacingBlock(this)
+    private fun shouldGroundslide() = services.random.nextFloat(0f, 100f) <= GROUNDSLIDE_CHANCE && !FacingUtils.isFacingBlock(this)
 
-    private fun shouldStartRunning() = getRandom(0f, 100f) <= RUN_CHANCE && !FacingUtils.isFacingBlock(this)
+    private fun shouldStartRunning() = services.random.nextFloat(0f, 100f) <= RUN_CHANCE && !FacingUtils.isFacingBlock(this)
 
     private fun shouldSpawnShieldGems() =
-        shieldGems.isEmpty && spawnShieldsDelay.isFinished() && getRandom(0f, 100f) <= spawnShieldsChance
+        shieldGems.isEmpty && spawnShieldsDelay.isFinished() && services.random.nextFloat(0f, 100f) <= spawnShieldsChance
 
     private fun shouldThrowShieldGems() = !shieldGems.isEmpty && shouldThrowGems()
 
@@ -956,7 +955,7 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
 
     // Precious Woman's very first attack when spawned should always be to jump towards Megaman
     private fun shouldJump() =
-        firstUpdate || (getRandom(0f, 100f) <= JUMP_CHANCE_FIRST_CHECK && !FacingUtils.isFacingBlock(this))
+        firstUpdate || (services.random.nextFloat(0f, 100f) <= JUMP_CHANCE_FIRST_CHECK && !FacingUtils.isFacingBlock(this))
 
     private fun jump(target: Vector2): Vector2 {
         GameLogger.debug(TAG, "jump(): target=$target")
@@ -971,7 +970,7 @@ class PreciousWoman(services: MegaServices) : AbstractBoss(services), IAnimatedE
     private fun shouldEndJump() =
         shouldStand() || shouldStartWallSliding() || shouldAirPunch() || shouldSpawnShieldGems()
 
-    private fun shouldAirPunch() = airpunchCooldown.isFinished() && getRandom(0f, 100f) <= AIRPUNCH_CHANCE &&
+    private fun shouldAirPunch() = airpunchCooldown.isFinished() && services.random.nextFloat(0f, 100f) <= AIRPUNCH_CHANCE &&
         targetPlayer.body.getY() <= body.getMaxY() && targetPlayer.body.getMaxY() >= body.getY()
 
     private fun shouldEndAirPunch() = body.getBounds().overlaps(targetPlayer.body.getBounds()) ||

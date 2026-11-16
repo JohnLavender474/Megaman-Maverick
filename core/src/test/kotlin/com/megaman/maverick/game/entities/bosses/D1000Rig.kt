@@ -1,18 +1,20 @@
 package com.megaman.maverick.game.entities.bosses
 
+import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.GameEngine
-import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.animations.AnimationsSystem
-import com.maverick.game.engine.common.UtilMethods
+import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.common.random.SeededRandom
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.players.PlayerSlot
@@ -23,39 +25,37 @@ import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
+import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
+import com.megaman.maverick.game.entities.bosses.d1000.D1000Action
+import com.megaman.maverick.game.entities.bosses.d1000.D1000Context
+import com.megaman.maverick.game.entities.bosses.d1000.D1000Director
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.decorations.D1000BombMarker
+import com.megaman.maverick.game.entities.decorations.D1000DebrisWarning
+import com.megaman.maverick.game.entities.decorations.D1000RubblePile
+import com.megaman.maverick.game.entities.decorations.FallingPiece
+import com.megaman.maverick.game.entities.hazards.D1000CeilingDebris
+import com.megaman.maverick.game.entities.hazards.D1000Pillar
+import com.megaman.maverick.game.entities.hazards.D1000Shockwave
 import com.megaman.maverick.game.entities.megamanx.MegamanX
 import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.ChargedShot
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
-import com.megaman.maverick.game.entities.decorations.D1000BombMarker
-import com.megaman.maverick.game.entities.decorations.D1000DebrisWarning
-import com.megaman.maverick.game.entities.decorations.FallingPiece
-import com.megaman.maverick.game.entities.decorations.D1000RubblePile
-import com.megaman.maverick.game.entities.hazards.D1000CeilingDebris
-import com.megaman.maverick.game.entities.hazards.D1000Pillar
-import com.megaman.maverick.game.entities.hazards.D1000Shockwave
 import com.megaman.maverick.game.entities.projectiles.EnemyShot
-import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.megaman.maverick.game.entities.state.BossPhase
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.testServices
-import com.badlogic.gdx.assets.AssetManager
-import com.megaman.maverick.game.audio.MegaAudioManager
 import io.mockk.clearAllMocks
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import java.util.Random
 import kotlin.math.sqrt
-import com.megaman.maverick.game.entities.bosses.d1000.D1000Action
-import com.megaman.maverick.game.entities.bosses.d1000.D1000Context
-import com.megaman.maverick.game.entities.bosses.d1000.D1000Director
 
 private const val CLEAR_EVERY = 30
 private const val HALF_HEALTH_HITS_DAMAGE = D1000.HALF_HEALTH / 3
@@ -72,6 +72,7 @@ class D1000Rig(val arenaHeight: Float = RIG_ARENA_HEIGHT, val arenaWidth: Float 
 
     val spawned = Array<IGameEntity>()
     val destroyed = Array<IGameEntity>()
+    val randomSource = Random(0L)
     val services: MegaServices
     val x: MegamanX
     val xBody: Body
@@ -108,7 +109,7 @@ class D1000Rig(val arenaHeight: Float = RIG_ARENA_HEIGHT, val arenaWidth: Float 
             entity.existenceState = EntityExistenceState.DESTROY_QUEUED
             true
         }
-        services = testServices(engine = engine, assets = assets, audio = audio)
+        services = testServices(engine = engine, assets = assets, audio = audio, random = SeededRandom(randomSource))
         every { texture.width } returns RIG_TEXTURE_SIZE
         every { texture.height } returns RIG_TEXTURE_SIZE
         every { atlas.findRegion(any()) } returns AtlasRegion(texture, 0, 0, 64, 64)
@@ -211,7 +212,7 @@ class D1000Rig(val arenaHeight: Float = RIG_ARENA_HEIGHT, val arenaWidth: Float 
     fun rollFor(action: D1000Action, context: D1000Context) {
         val r = (0 until D1000Director.ROLLS).first { D1000Director.choose(context.copy(r = it))!!.action == action }
         val seed = (0L until Long.MAX_VALUE).first { Random(it).nextInt(D1000Director.ROLLS) == r }
-        UtilMethods.random.setSeed(seed)
+        randomSource.setSeed(seed)
     }
 
     fun landingX(bomb: D1000Bomb): Float {

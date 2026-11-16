@@ -7,7 +7,6 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.objectSetOf
@@ -104,10 +103,10 @@ class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISprites
 
         outOfBoundsTimer.reset()
 
-        val speed = UtilMethods.getRandom(MIN_RISE_SPEED, MAX_RISE_SPEED) * ConstVals.PPM
-        val flipX = UtilMethods.getRandomBool()
-        val amplitude = UtilMethods.getRandom(MIN_AMPLITUDE, MAX_AMPLITUDE) * ConstVals.PPM * if (flipX) -1 else 1
-        val frequency = UtilMethods.getRandom(MIN_FREQUENCY, MAX_FREQUENCY) * ConstVals.PPM
+        val speed = services.random.nextFloat(MIN_RISE_SPEED, MAX_RISE_SPEED) * ConstVals.PPM
+        val flipX = services.random.nextBoolean()
+        val amplitude = services.random.nextFloat(MIN_AMPLITUDE, MAX_AMPLITUDE) * ConstVals.PPM * if (flipX) -1 else 1
+        val frequency = services.random.nextFloat(MIN_FREQUENCY, MAX_FREQUENCY) * ConstVals.PPM
         sine = SineWave(center.cpy().swapped(), speed, amplitude, frequency)
 
         onMaxSpawnedByTag(TAG, MAX_SPAWNED_ALLOWED) { set ->

@@ -70,7 +70,7 @@ class SpikeBall(services: MegaServices) : MegaGameEntity(services), IBodyEntity,
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, PENDULUM_GRAVITY, Float::class)
         val pendulum =
             Pendulum(
-                length * ConstVals.PPM, gravity * ConstVals.PPM, spawn, 1 / 60f
+                length * ConstVals.PPM, gravity * ConstVals.PPM, spawn, 1 / 60f, services.random
             )
         putMotionDefinition(
             ConstKeys.PENDULUM,

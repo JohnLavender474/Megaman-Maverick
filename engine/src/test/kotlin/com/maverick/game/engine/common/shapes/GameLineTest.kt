@@ -3,12 +3,15 @@ package com.maverick.game.engine.common.shapes
 import com.badlogic.gdx.math.Polyline
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.maverick.game.engine.common.UtilMethods
+import com.maverick.game.engine.common.random.SeededRandom
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.floats.plusOrMinus
 import io.kotest.matchers.shouldBe
+import java.util.Random
 
 class GameLineTest : DescribeSpec({
+
+    val seeded = SeededRandom(Random(1L))
 
     describe("GameLine class") {
 
@@ -88,10 +91,10 @@ class GameLineTest : DescribeSpec({
         it("should have equal local and world points when local point 1 and origin are the same") {
             val testsToConduct = 100
             (0 until testsToConduct).forEach {
-                val x1 = UtilMethods.getRandom(0f, 10f)
-                val y1 = UtilMethods.getRandom(0f, 10f)
-                val x2 = UtilMethods.getRandom(0f, 10f)
-                val y2 = UtilMethods.getRandom(0f, 10f)
+                val x1 = seeded.nextFloat(0f, 10f)
+                val y1 = seeded.nextFloat(0f, 10f)
+                val x2 = seeded.nextFloat(0f, 10f)
+                val y2 = seeded.nextFloat(0f, 10f)
 
                 val line = GameLine()
                 line.setOrigin(x1, y1)
@@ -113,7 +116,7 @@ class GameLineTest : DescribeSpec({
                 val randomVarCount = 11
 
                 val random = Array<Float>()
-                (0 until randomVarCount).forEach { random.add(UtilMethods.getRandom(0, 359).toFloat()) }
+                (0 until randomVarCount).forEach { random.add(seeded.nextInt(0, 359).toFloat()) }
                 println("Vars: $random")
 
                 // control line

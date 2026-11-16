@@ -12,7 +12,6 @@ import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.IFixture
@@ -278,7 +277,7 @@ class BigAssMaverickRobotFightTest : DescribeSpec({
             boss.bossComponent.phase = BossPhase.FIGHT
             hit(30)
             boss.healthPhase shouldBe 2
-            UtilMethods.random.setSeed(seed)
+            rig.randomSource.setSeed(seed)
             withClue("a pincer clap starts") {
                 rig.ticksUntil(90f) { hand(HandSide.LEFT).state == HandState.CLAP_ALIGN } shouldBe true
             }
@@ -369,7 +368,7 @@ class BigAssMaverickRobotFightTest : DescribeSpec({
             boss.bossComponent.phase = BossPhase.FIGHT
             hit(30)
             boss.healthPhase shouldBe 2
-            UtilMethods.random.setSeed(3L)
+            rig.randomSource.setSeed(3L)
             var rightAttacked = false
             rig.ticks(30f, each = {
                 standOn(rig.player, left)
@@ -384,7 +383,7 @@ class BigAssMaverickRobotFightTest : DescribeSpec({
             val left = hand(HandSide.LEFT)
             val right = hand(HandSide.RIGHT)
             boss.bossComponent.phase = BossPhase.FIGHT
-            UtilMethods.random.setSeed(3L)
+            rig.randomSource.setSeed(3L)
             val seen = mutableSetOf<HandState>()
             rig.ticks(60f, each = {
                 seen.add(left.state)
@@ -520,7 +519,7 @@ class BigAssMaverickRobotFightTest : DescribeSpec({
         it("never attacks with a hand that a player stands on, and the partner braces during a wind-up") {
             val left = hand(HandSide.LEFT)
             val right = hand(HandSide.RIGHT)
-            UtilMethods.random.setSeed(7L)
+            rig.randomSource.setSeed(7L)
             boss.bossComponent.phase = BossPhase.FIGHT
             var rightAttacked = false
             var braced = false

@@ -13,7 +13,6 @@ import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.ProcessState
@@ -423,7 +422,7 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
             .transition(TimberWomanState.STAND.name, TimberWomanState.BURN.name) { burning }
             .transition(TimberWomanState.STAND.name, TimberWomanState.JUMP_UP.name) { shouldJump() }
             .transition(TimberWomanState.STAND.name, TimberWomanState.STAND_POUND.name) {
-                getRandom(0, 100) <= STAND_POUND_CHANCE
+                services.random.nextInt(0, 100) <= STAND_POUND_CHANCE
             }
             .transition(TimberWomanState.STAND.name, TimberWomanState.RUN.name) standToRun@{
                 if (previousNonStandState == TimberWomanState.RUN) return@standToRun false
@@ -433,7 +432,7 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
                     targetPlayer.body.getY() > body.getMaxY()
                 ) return@standToRun false
 
-                return@standToRun getRandom(0, 100) <= RUN_CHANCE
+                return@standToRun services.random.nextInt(0, 100) <= RUN_CHANCE
             }
             .transition(TimberWomanState.STAND.name, TimberWomanState.STAND_SWING.name) { true }
 
@@ -693,7 +692,7 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
             if (bossComponent.phase != BossPhase.ENTRANCE && services.gameState.hardMode) {
                 hardModeLeafSpawnDelay.update(delta)
                 if (hardModeLeafSpawnDelay.isFinished()) {
-                    val spawn = leafSpawnBounds.getRandomPositionInBounds()
+                    val spawn = leafSpawnBounds.getRandomPositionInBounds(services.random)
                     spawnDeadlyLeaves(spawn, true)
 
                     hardModeLeafSpawnDelay.reset()
@@ -717,7 +716,7 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
         else -> when {
             cyclesSinceLastJump <= 1 -> false
             cyclesSinceLastJump >= MAX_CYCLES_WITHOUT_JUMP -> true
-            else -> getRandom(0, 100) <= JUMP_CHANCE
+            else -> services.random.nextInt(0, 100) <= JUMP_CHANCE
         }
     }
 
@@ -807,7 +806,7 @@ class TimberWoman(services: MegaServices) : AbstractBoss(services), IFireableEnt
         spawnGroundPebbles()
 
         val spawn = GameObjectPools.fetch(Vector2::class)
-        val randomLeafSpawn = leafSpawnBounds.getRandomPositionInBounds(spawn)
+        val randomLeafSpawn = leafSpawnBounds.getRandomPositionInBounds(services.random, spawn)
         spawnDeadlyLeaves(randomLeafSpawn)
 
         services.events.submitEvent(

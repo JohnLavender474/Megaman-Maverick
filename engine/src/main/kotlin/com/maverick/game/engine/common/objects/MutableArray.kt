@@ -23,11 +23,7 @@ class MutableArray<T> : MutableCollection<T> {
 
     fun reverse() = array.reverse()
 
-    fun shuffle() = array.shuffle()
-
     fun truncate(newSize: Int) = array.truncate(newSize)
-
-    fun random(): T? = array.random()
 
     fun removeIndex(index: Int) = array.removeIndex(index)
 

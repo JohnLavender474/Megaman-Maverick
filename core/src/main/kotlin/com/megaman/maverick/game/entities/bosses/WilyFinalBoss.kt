@@ -356,7 +356,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
     }
 
     override fun spawnDefeatExplosion() {
-        val position = Position.entries.random()
+        val position = services.random.pick(Position.entries)
 
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
@@ -960,6 +960,8 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
         var currentFlyByStartRow = 0
 
         var swoopExplosionIndices = gdxArrayOf<Int>()
+        private val swoopSignIndices = Array<Int>()
+        private val swoopSignPicks = Array<Int>()
         var lastSwoopFollowedByFlyBy = false
         val swoopEntryDelayTimer = Timer(Phase1ConstVals.SWOOP_ENTRY_DELAY)
             .setRunOnJustFinished {
@@ -1389,10 +1391,10 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
                     swoopExplosionIndices.clear()
                     val signsToBlow = if (services.gameState.hardMode) Phase1ConstVals.GROUND_WARNING_SIGNS_TO_BLOW_HARD
                     else Phase1ConstVals.GROUND_WARNING_SIGNS_TO_BLOW
+                    swoopSignIndices.clear()
                     (Phase1ConstVals.GROUND_WARNING_SIGN_START_INDEX..Phase1ConstVals.GROUND_WARNING_SIGN_END_INDEX)
-                        .shuffled()
-                        .take(signsToBlow)
-                        .forEach { swoopExplosionIndices.add(it) }
+                        .forEach { swoopSignIndices.add(it) }
+                    swoopExplosionIndices.addAll(swoopSignIndices.getRandomElements(services.random, signsToBlow, swoopSignPicks))
 
                     val position = flyInTargetPositions[0, 1]!!
                     body.setCenter(position)
@@ -1414,7 +1416,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
                         beginFlyByFromHover()
                     else {
                         currentFlyByStartCol = 1 - currentFlyByStartCol
-                        currentFlyByStartRow = UtilMethods.getRandom(0, 1)
+                        currentFlyByStartRow = services.random.nextInt(0, 1)
                         beginNextFlyBy()
                     }
                 }
@@ -1424,9 +1426,9 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
                         currentFlyInCol = 0
                         currentFlyInRow = 1
                     } else {
-                        currentFlyInCol = UtilMethods.getRandom(0, 1)
+                        currentFlyInCol = services.random.nextInt(0, 1)
                         currentFlyInRow = when {
-                            UtilMethods.getRandom(0f, 1f) <=
+                            services.random.nextFloat(0f, 1f) <=
                                 Phase1ConstVals.FLY_IN_ALT_ROW_CHANCE -> 1 - currentFlyInRow
 
                             else -> currentFlyInRow
@@ -1510,7 +1512,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
         fun shouldSwoop() =
             !stateQueue.contains(WilyPhase1State.SWOOP) && rollChance(WilyPhase1State.SWOOP)
 
-        fun shouldFlyBy() = !initSequence && UtilMethods.getRandomBool()
+        fun shouldFlyBy() = !initSequence && services.random.nextBoolean()
 
         fun shouldFlyByAfterSwoop(): Boolean {
             if (initSequence) return false
@@ -1520,12 +1522,12 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
                 else -> Phase1ConstVals.FLY_BY_CHANCE
             }
 
-            return UtilMethods.getRandom(0f, 1f) <= chance
+            return services.random.nextFloat(0f, 1f) <= chance
         }
 
         fun shouldFlyOut() =
             currentFlyInRow == 1 &&
-                UtilMethods.getRandomBool() &&
+                services.random.nextBoolean() &&
                 !stateQueue.contains(WilyPhase1State.FLY_OUT)
 
         fun shouldShootMissiles() = hoverPatternIndex % 2 == 1 &&
@@ -1550,7 +1552,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
             attackChances.put(state, min(Phase1ConstVals.MAX_ATTACK_CHANCE, attackChances[state]!! + amount))
         }
 
-        fun rollChance(state: WilyPhase1State) = UtilMethods.getRandom(0f, 1f) <= attackChances[state]!!
+        fun rollChance(state: WilyPhase1State) = services.random.nextFloat(0f, 1f) <= attackChances[state]!!
 
         private fun getGridSignKey(col: Int, row: Int) = when {
             col == 0 && row == 0 -> "bottom_left_warning_sign"
@@ -1675,7 +1677,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
         }
 
         fun beginDropBomb() {
-            currentFlyByStartCol = UtilMethods.getRandom(0, 1)
+            currentFlyByStartCol = services.random.nextInt(0, 1)
             currentFlyByStartRow = 1
 
             dropBombHatchOpen = false
@@ -1951,7 +1953,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
                 val bottomCenter = GameObjectPools.fetch(Vector2::class, false)
                     .set(warningSign.center.x, warningSign.center.y - 0.5f * ConstVals.PPM)
 
-                val delay = UtilMethods.getRandom(0.5f, 0.75f)
+                val delay = services.random.nextFloat(0.5f, 0.75f)
 
                 MegaUtilMethods.delayRun(services, delay) {
                     val explosion = MegaEntityFactory.fetch(GroundExplosion::class)!!
@@ -2150,7 +2152,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
             .build()
 
         private fun shouldDive(): Boolean {
-            if (!UtilMethods.getRandomBool()) return false
+            if (!services.random.nextBoolean()) return false
             if (targetPlayer.body.getMaxY() >= body.getY()) return false
 
             val minX = targetPlayer.body.getX() - Phase2ConstVals.DIVE_CHECK_X_OFFSET * ConstVals.PPM
@@ -2160,9 +2162,9 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
 
         private fun shouldPin() = attackCount % Phase2ConstVals.ATTACKS_PER_SPECIAL == 0
 
-        private fun shouldCharge() = MathUtils.random() < Phase2ConstVals.CHARGE_CHANCE
+        private fun shouldCharge() = services.random.nextFloat(0f, 1f) < Phase2ConstVals.CHARGE_CHANCE
 
-        private fun shouldLowSway() = MathUtils.random() < Phase2ConstVals.LOW_SWAY_CHANCE
+        private fun shouldLowSway() = services.random.nextFloat(0f, 1f) < Phase2ConstVals.LOW_SWAY_CHANCE
 
         private fun onChangeState(current: WilyPhase2State, previous: WilyPhase2State) {
             GameLogger.debug(TAG, "Phase2Handler: current=$current, previous=$previous")
@@ -2851,6 +2853,7 @@ class WilyFinalBoss(services: MegaServices) : AbstractBoss(services), IAnimatedE
                     val spawns = when {
                         intro -> introPositions
                         else -> spawnPositions.getRandomElements(
+                            services.random,
                             Phase3ConstVals.FAKE_CAPSULE_COUNT + 1,
                             tempVec2Arr
                         )

@@ -9,7 +9,6 @@ import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandomBool
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Size
@@ -172,7 +171,7 @@ class ToxicBarrelBot(services: MegaServices) : AbstractEnemy(services, size = Si
 
                     closedTimer.update(delta)
                     if (closedTimer.isFinished()) {
-                        val openingTop = getRandomBool()
+                        val openingTop = services.random.nextBoolean()
                         toxicBarrelBotState =
                             if (openingTop) ToxicBarrelBotState.OPENING_TOP else ToxicBarrelBotState.OPENING_CENTER
 

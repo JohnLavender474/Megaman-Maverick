@@ -893,7 +893,7 @@ class RodentMan(services: MegaServices) : AbstractBoss(services), IParentEntity<
         if (numerator < 0f) numerator = 0f
         if (numerator > denominator) numerator = denominator
 
-        return WALL_JUMP_CHANCE_SCALAR * UtilMethods.getRandom(0f, 100f) >= (numerator / denominator) * 100f
+        return WALL_JUMP_CHANCE_SCALAR * services.random.nextFloat(0f, 100f) >= (numerator / denominator) * 100f
     }
 
     // If Rodent Man is jumping from a wall, then `onWallState` needs to remain a non-null value until after the

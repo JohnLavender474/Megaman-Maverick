@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.extensions.*
@@ -293,7 +292,7 @@ class RainFall(services: MegaServices) : MegaGameEntity(services), ICullableEnti
 
         rainFallAngle = spawnProps.getOrDefault(ConstKeys.ANGLE, DEFAULT_ANGLE, Float::class)
 
-        rainSpawnDelay = Timer(getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR))
+        rainSpawnDelay = Timer(services.random.nextFloat(MIN_DELAY_DUR, MAX_DELAY_DUR))
 
         rainFallBounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
         deathY = spawnProps.getOrDefault("${ConstKeys.DEATH}_${ConstKeys.Y}", rainFallBounds.getY(), Float::class)
@@ -315,7 +314,7 @@ class RainFall(services: MegaServices) : MegaGameEntity(services), ICullableEnti
             if (!rainSpawner.overlaps(rainSpawnArea)) return@forEach
 
             val spawn = GameObjectPools.fetch(Vector2::class)
-                .setX(getRandom(rainSpawner.getX(), rainSpawner.getMaxX()))
+                .setX(services.random.nextFloat(rainSpawner.getX(), rainSpawner.getMaxX()))
                 .setY(rainSpawner.getPositionPoint(Position.TOP_CENTER).y)
 
             val trajectory = GameObjectPools.fetch(Vector2::class)
@@ -342,7 +341,7 @@ class RainFall(services: MegaServices) : MegaGameEntity(services), ICullableEnti
         if (canSpawn && rainSpawnDelay.isFinished()) {
             spawnRainDrops()
 
-            val duration = getRandom(MIN_DELAY_DUR, MAX_DELAY_DUR)
+            val duration = services.random.nextFloat(MIN_DELAY_DUR, MAX_DELAY_DUR)
             rainSpawnDelay.resetDuration(duration)
         }
     })

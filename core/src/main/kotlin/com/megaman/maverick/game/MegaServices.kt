@@ -7,6 +7,7 @@ import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.camera.CameraController
 import com.maverick.game.engine.camera.ICameraView
 import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.random.GameRandom
 import com.maverick.game.engine.events.EventsManager
 import com.maverick.game.engine.groups.GroupsSystem
 import com.megaman.maverick.game.audio.MegaAudioManager
@@ -34,5 +35,6 @@ class MegaServices(
     val groups: GroupsSystem,
     val gameCamera: ICameraView,
     val cameraController: CameraController,
-    val rules: SessionRules
+    val rules: SessionRules,
+    val random: GameRandom
 )

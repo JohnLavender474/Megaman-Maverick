@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.common.random.GameRandom
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
@@ -69,10 +69,10 @@ class FallingPiece(services: MegaServices) : MegaGameEntity(services), IBodyEnti
             )
         }
 
-        fun throwDebris(keys: Array<String>, position: Vector2) = keys.forEach { key ->
+        fun throwDebris(keys: Array<String>, position: Vector2, random: GameRandom) = keys.forEach { key ->
             val velocity = Vector2(
-                SPEEDS_X[getRandom(0, SPEEDS_X.size - 1)] * ConstVals.PPM,
-                SPEEDS_Y[getRandom(0, SPEEDS_Y.size - 1)] * ConstVals.PPM
+                SPEEDS_X[random.nextInt(0, SPEEDS_X.size - 1)] * ConstVals.PPM,
+                SPEEDS_Y[random.nextInt(0, SPEEDS_Y.size - 1)] * ConstVals.PPM
             )
             spawn(FallingPieceDef.DEBRIS, key, position.cpy(), velocity)
         }
@@ -112,7 +112,7 @@ class FallingPiece(services: MegaServices) : MegaGameEntity(services), IBodyEnti
         body.physics.applyFrictionX = required(spawnProps, def, ConstKeys.FRICTION_X, Boolean::class) { it.frictionX }
         val position = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         val jitter = required(spawnProps, def, ConstKeys.JITTER, Float::class) { it.jitter } * ConstVals.PPM
-        if (jitter > 0f) body.setCenter(position.x + getRandom(-jitter, jitter), position.y + getRandom(-jitter, jitter))
+        if (jitter > 0f) body.setCenter(position.x + services.random.nextFloat(-jitter, jitter), position.y + services.random.nextFloat(-jitter, jitter))
         else body.setCenter(position)
         body.physics.velocity.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
         size = required(spawnProps, def, ConstKeys.SIZE, FallingPieceSize::class) { it.size }

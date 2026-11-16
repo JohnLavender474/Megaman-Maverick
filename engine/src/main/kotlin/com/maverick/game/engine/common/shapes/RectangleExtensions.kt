@@ -6,12 +6,12 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.math.collision.BoundingBox
 import com.badlogic.gdx.utils.Array
-import com.maverick.game.engine.common.UtilMethods
+import com.maverick.game.engine.common.random.GameRandom
 import com.maverick.game.engine.common.utils.BoundingBoxUtils
 
-fun Rectangle.getRandomPositionInBounds(out: Vector2): Vector2 {
-    val randX = UtilMethods.getRandom(x, x + width)
-    val randY = UtilMethods.getRandom(y, y + height)
+fun Rectangle.getRandomPositionInBounds(random: GameRandom, out: Vector2): Vector2 {
+    val randX = random.nextFloat(x, x + width)
+    val randY = random.nextFloat(y, y + height)
     return out.set(randX, randY)
 }
 

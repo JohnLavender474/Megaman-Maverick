@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.bosses
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.world.body.BodyComponent
@@ -65,7 +64,7 @@ class D1000EyeTest : DescribeSpec({
             val roll = Random(it).nextFloat()
             if (low) roll < 0.05f else roll > 0.95f
         }
-        UtilMethods.random.setSeed(seed)
+        rig.randomSource.setSeed(seed)
     }
 
     fun shootAtEye(tilesBefore: Float): Bullet {

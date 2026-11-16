@@ -517,13 +517,13 @@ internal fun fireRodentClaws(megaman: Megaman, state: WeaponState, stat: MegaCha
 
     val slashAngles = when (slashKey) {
         1 -> gdxArrayOf(
-            if (megaman.isFacing(Facing.LEFT)) UtilMethods.getRandom(165f, 180f)
-            else UtilMethods.getRandom(0f, 15f)
+            if (megaman.isFacing(Facing.LEFT)) megaman.services.random.nextFloat(165f, 180f)
+            else megaman.services.random.nextFloat(0f, 15f)
         )
 
         2 -> gdxArrayOf(
-            if (megaman.isFacing(Facing.LEFT)) UtilMethods.getRandom(150f, 165f)
-            else UtilMethods.getRandom(30f, 45f)
+            if (megaman.isFacing(Facing.LEFT)) megaman.services.random.nextFloat(150f, 165f)
+            else megaman.services.random.nextFloat(30f, 45f)
         )
 
         else -> when (megaman.facing) {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedMap
+import com.maverick.game.engine.common.random.GameRandom
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
@@ -42,7 +43,6 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
-import java.util.Random
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -113,24 +113,24 @@ class D1000CeilingDebris(services: MegaServices) : MegaGameEntity(services), IBo
             maxLanding: Float,
             hangY: Float,
             floorY: Float,
-            random: Random
+            random: GameRandom
         ) {
-            val count = MIN_PIECES + random.nextInt(MAX_PIECES - MIN_PIECES + 1)
+            val count = random.nextInt(MIN_PIECES, MAX_PIECES)
             var delay = 0f
             for (i in 0 until count) {
                 val drop = if (i < out.size) out[i] else D1000DebrisDrop().also { out.add(it) }
                 val big = i == 0
-                drop.key = if (big) BIG_KEYS[random.nextInt(BIG_KEYS.size)] else SMALL_KEYS[random.nextInt(SMALL_KEYS.size)]
-                drop.startX = if (big) lane else lane + spread * (2f * random.nextFloat() - 1f)
-                val landing = (lane + spread * (2f * random.nextFloat() - 1f)).coerceIn(minLanding, maxLanding)
-                val startSpeed = MAX_START_SPEED * random.nextFloat()
+                drop.key = if (big) BIG_KEYS[random.nextInt(0, BIG_KEYS.size - 1)] else SMALL_KEYS[random.nextInt(0, SMALL_KEYS.size - 1)]
+                drop.startX = if (big) lane else lane + spread * (2f * random.nextFloat(0f, 1f) - 1f)
+                val landing = (lane + spread * (2f * random.nextFloat(0f, 1f) - 1f)).coerceIn(minLanding, maxLanding)
+                val startSpeed = MAX_START_SPEED * random.nextFloat(0f, 1f)
                 val time = fallTime(hangY - size(drop.key).y / 2f - floorY, startSpeed)
                 val drift = ((landing - drop.startX) / time).coerceIn(-MAX_DRIFT_SPEED, MAX_DRIFT_SPEED)
                 drop.velocity.set(drift, -startSpeed)
-                drop.spin = (MIN_SPIN + (MAX_SPIN - MIN_SPIN) * random.nextFloat()) * (if (random.nextBoolean()) 1f else -1f)
+                drop.spin = (MIN_SPIN + (MAX_SPIN - MIN_SPIN) * random.nextFloat(0f, 1f)) * (if (random.nextBoolean()) 1f else -1f)
                 drop.delay = delay
                 drop.dropped = false
-                delay += MIN_GAP + (MAX_GAP - MIN_GAP) * random.nextFloat()
+                delay += MIN_GAP + (MAX_GAP - MIN_GAP) * random.nextFloat(0f, 1f)
             }
             out.truncate(count)
         }

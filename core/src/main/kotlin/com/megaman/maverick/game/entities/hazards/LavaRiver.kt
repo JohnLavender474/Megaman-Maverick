@@ -8,7 +8,6 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.extensions.*
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -126,7 +125,7 @@ class LavaRiver(services: MegaServices) : MegaGameEntity(services), ICullableEnt
                 emberDelay.update(delta)
                 if (emberDelay.isFinished()) {
                     val position = GameObjectPools.fetch(Vector2::class)
-                        .setX(bounds.getRandomPositionInBounds().x)
+                        .setX(bounds.getRandomPositionInBounds(services.random).x)
                         .setY(bounds.getMaxY())
 
                     val canSpawnBounds = GameObjectPools.fetch(GameRectangle::class)
@@ -192,7 +191,7 @@ class LavaRiver(services: MegaServices) : MegaGameEntity(services), ICullableEnt
         .build()
 
     private fun resetEmberDelay() {
-        val duration = UtilMethods.getRandom(EMBER_MIN_DELAY, EMBER_MAX_DELAY)
+        val duration = services.random.nextFloat(EMBER_MIN_DELAY, EMBER_MAX_DELAY)
         emberDelay.resetDuration(duration)
     }
 

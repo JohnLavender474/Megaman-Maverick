@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.bosses.d1000
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -107,7 +106,7 @@ internal class D1000Volley(private val boss: D1000) : D1000Move {
                 goTo(Step.RISE)
             } else {
                 boss.setAnim("throw")
-                val script = UtilMethods.getRandom(0, D1000Orbs.scriptCount(pattern) - 1)
+                val script = boss.services.random.nextInt(0, D1000Orbs.scriptCount(pattern) - 1)
                 D1000Orbs.roles(pattern, script, D1000Orbs.count(pattern, boss.tuning), roles)
                 beginGuide()
             }
@@ -151,7 +150,7 @@ internal class D1000Volley(private val boss: D1000) : D1000Move {
         }
         wallX = D1000Orbs.wallX(boss.arena, boss.playerX())
         railX = wallX + if (wallX > boss.origin.x) -D1000Orbs.WALL_EYE_GAP else D1000Orbs.WALL_EYE_GAP
-        val script = UtilMethods.getRandom(0, D1000Orbs.scriptCount(pattern) - 1)
+        val script = boss.services.random.nextInt(0, D1000Orbs.scriptCount(pattern) - 1)
         D1000Orbs.roles(pattern, script, D1000Orbs.count(pattern, boss.tuning), roles)
         beginGuide()
     }
@@ -284,7 +283,7 @@ internal class D1000Volley(private val boss: D1000) : D1000Move {
 
             D1000Role.FEINT -> {
                 repeat(D1000Orbs.FEINT_TRIES) {
-                    val lane = D1000Orbs.feintLane(arena, playerX, thrown, thrownCount, bodyLow(), bodyHigh())
+                    val lane = D1000Orbs.feintLane(arena, playerX, thrown, thrownCount, bodyLow(), bodyHigh(), boss.services.random)
                     if (lane.isNaN()) return huntLane()
                     if (releaseAllowed(lane, delayTo(lane))) return lane
                 }

@@ -7,7 +7,6 @@ import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.gdxArrayOf
@@ -229,7 +228,7 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
         state = if (facing == Facing.LEFT) HoverGunnerState.FLY else HoverGunnerState.WAIT
         if (state == HoverGunnerState.FLY) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
 
-        range = RANGES[getRandom(0, RANGES.size - 1)] * ConstVals.PPM
+        range = RANGES[services.random.nextInt(0, RANGES.size - 1)] * ConstVals.PPM
         bursts = 0
         aim = 0
         poseKey = "fly"
@@ -349,7 +348,7 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
                 ConstKeys.DAMAGER pairTo false
             )
         )
-        FallingPiece.throwDebris(DEBRIS, body.getCenter())
+        FallingPiece.throwDebris(DEBRIS, body.getCenter(), services.random)
     }
 
     override fun defineBodyComponent(): BodyComponent {

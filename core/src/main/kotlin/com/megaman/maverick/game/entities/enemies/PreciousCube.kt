@@ -10,7 +10,6 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.extensions.equalsAny
 import com.maverick.game.engine.common.extensions.getTextureAtlas
@@ -168,9 +167,9 @@ class PreciousCube(services: MegaServices) : AbstractEnemy(services), IAnimatedE
                 var radius = targetPlayer.body.getCenter().dst(body.getCenter())
                 if (radius < BLINK_IN_MIN_DIST * ConstVals.PPM) radius = BLINK_IN_MIN_DIST * ConstVals.PPM
 
-                var angle = MathUtils.random() * MathUtils.PI * 2f
+                var angle = services.random.nextFloat(0f, 1f) * MathUtils.PI * 2f
                 if (abs(angle - currentAngle) < BLINK_IN_MIN_ANGLE_DIFF) {
-                    val random = UtilMethods.getRandomBool()
+                    val random = services.random.nextBoolean()
                     if (random) angle -= BLINK_IN_MIN_ANGLE_DIFF else angle += BLINK_IN_MIN_ANGLE_DIFF
                 }
 
@@ -181,7 +180,7 @@ class PreciousCube(services: MegaServices) : AbstractEnemy(services), IAnimatedE
 
                 positions.add(position)
             }
-            positions.shuffle()
+            services.random.shuffle(positions)
 
             val camBounds = services.gameCamera.getRotatedBounds()
             var blinkInPos = positions.firstOrNull { position -> camBounds.contains(position) }

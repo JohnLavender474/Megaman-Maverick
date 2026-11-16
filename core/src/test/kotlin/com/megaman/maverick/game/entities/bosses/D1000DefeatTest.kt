@@ -13,7 +13,6 @@ import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.decorations.FallingPiece
-import com.maverick.game.engine.common.UtilMethods
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.entities.decorations.D1000RubblePile
 import com.megaman.maverick.game.entities.explosions.Explosion
@@ -206,7 +205,7 @@ class D1000DefeatTest : DescribeSpec({
 
         it("throws ${D1000Defeat.DEBRIS.size} + ${D1000Defeat.DEBRIS_EXTRA_MIN} to ${D1000Defeat.DEBRIS_EXTRA_MAX} body fragments from the body box, up and to both sides, which fall and are gone after 2 s") {
             breakNow()
-            UtilMethods.random.setSeed(7L)
+            rig.randomSource.setSeed(7L)
             rig.tick()
             val pieces = fragments()
             (pieces.size in D1000Defeat.DEBRIS.size + D1000Defeat.DEBRIS_EXTRA_MIN..D1000Defeat.DEBRIS.size + D1000Defeat.DEBRIS_EXTRA_MAX) shouldBe true

@@ -393,4 +393,21 @@ class LaunchOptionsResolverTest : DescribeSpec({
             result.errors.size shouldBe 2
         }
     }
+
+    describe("--randSeed") {
+        it("is not set by default") {
+            resolve(LaunchOptions()).resolved!!.randSeed shouldBe null
+        }
+
+        it("reads a whole number, also a negative one") {
+            resolve(LaunchOptions(randSeed = " 12345 ")).resolved!!.randSeed shouldBe 12345L
+            resolve(LaunchOptions(randSeed = "-7")).resolved!!.randSeed shouldBe -7L
+        }
+
+        it("rejects a value that is not a whole number") {
+            val result = resolve(LaunchOptions(randSeed = "abc"))
+            result.isValid shouldBe false
+            result.errors[0] shouldContain "Invalid --randSeed 'abc'"
+        }
+    }
 })

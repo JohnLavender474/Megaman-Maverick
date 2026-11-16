@@ -1,9 +1,7 @@
 package com.maverick.game.engine.common.extensions
 
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.ObjectSet
 import com.badlogic.gdx.utils.OrderedSet
-import kotlin.random.Random
 
 fun <T> ObjectSet<T>.removeIf(predicate: (T) -> Boolean): ObjectSet<T> {
     val iter = iterator()
@@ -63,22 +61,5 @@ fun <T> ObjectSet<T>.addAllAndReturn(iterable: Iterable<T>): ObjectSet<T> {
 fun <T> ObjectSet<T>.addAllAndReturn(vararg elements: T): ObjectSet<T> {
     elements.forEach { add(it) }
     return this
-}
-
-fun <T> OrderedSet<T>.random(): T {
-    if (isEmpty) throw IllegalStateException("Cannot fetch random element if set is empty")
-
-    return orderedItems()[MathUtils.random(0, size - 1)]
-}
-
-fun <T> OrderedSet<T>.superRandom(): T? {
-    if (size == 0) return null
-
-    val random = Random(System.currentTimeMillis()).nextInt(0, size)
-
-    val item = removeIndex(random)
-    add(item)
-
-    return item
 }
 

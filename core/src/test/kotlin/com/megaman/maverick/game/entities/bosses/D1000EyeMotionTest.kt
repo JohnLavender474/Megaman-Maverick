@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.bosses
 
 import com.badlogic.gdx.math.Vector2
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.world.body.BodyComponent
@@ -156,7 +155,7 @@ class D1000EyeMotionTest : DescribeSpec({
                     it(name) {
                         newRig(hard)
                         start(overdrive)
-                        UtilMethods.random.setSeed(if (hard) 11L else 7L)
+                        rig.randomSource.setSeed(if (hard) 11L else 7L)
                         val track = EyeTrack()
                         fight(shoot, FIGHT_SECONDS, track)
                         val reversals = track.slowReversals()

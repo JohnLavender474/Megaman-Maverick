@@ -4,8 +4,6 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Size
@@ -153,13 +151,13 @@ abstract class AbstractEnemy(
                 disintegrate()
 
                 if (dropItemOnDeath && !body.isSensing(BodySense.BODY_TOUCHING_BLOCK)) {
-                    DROP_ENTITIES.shuffle()
+                    services.random.shuffle(DROP_ENTITIES)
                     DROP_ENTITIES.any { (type, chanceFunction) ->
-                        val random = getRandom(0, 100)
+                        val random = services.random.nextInt(0, 100)
                         val chance = chanceFunction.invoke(this)
                         if (random <= chance.toInt()) {
                             val position = body.getCenter()
-                            val large = getRandom(0, 100) <= LARGE_ITEM_CHANCE
+                            val large = services.random.nextInt(0, 100) <= LARGE_ITEM_CHANCE
                             val entity = MegaEntityFactory.fetch(type)!!
                             return@any entity.spawn(
                                 props(ConstKeys.LARGE pairTo large, ConstKeys.POSITION pairTo position)
@@ -345,7 +343,7 @@ abstract class AbstractEnemy(
         val position = when (targetPlayer.direction) {
             Direction.UP -> GameObjectPools.fetch(Vector2::class)
                 .set(
-                    UtilMethods.getRandom(
+                    services.random.nextFloat(
                         body.getBounds().getX(),
                         body.getBounds().getMaxX()
                     ),
@@ -353,7 +351,7 @@ abstract class AbstractEnemy(
                 )
             Direction.DOWN -> GameObjectPools.fetch(Vector2::class)
                 .set(
-                    UtilMethods.getRandom(
+                    services.random.nextFloat(
                         body.getBounds().getX(),
                         body.getBounds().getMaxX()
                     ),
@@ -362,7 +360,7 @@ abstract class AbstractEnemy(
             Direction.LEFT -> GameObjectPools.fetch(Vector2::class)
                 .set(
                     body.getBounds().getMaxX(),
-                    UtilMethods.getRandom(
+                    services.random.nextFloat(
                         body.getBounds().getY(),
                         body.getBounds().getMaxY()
                     ),
@@ -370,7 +368,7 @@ abstract class AbstractEnemy(
             Direction.RIGHT -> GameObjectPools.fetch(Vector2::class)
                 .set(
                     body.getBounds().getX(),
-                    UtilMethods.getRandom(
+                    services.random.nextFloat(
                         body.getBounds().getY(),
                         body.getBounds().getMaxY()
                     ),

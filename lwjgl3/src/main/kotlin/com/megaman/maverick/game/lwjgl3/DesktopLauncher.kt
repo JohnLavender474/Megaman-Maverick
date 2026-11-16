@@ -92,7 +92,8 @@ object DesktopLauncher {
             mode = appArgs.mode,
             viewEdges = appArgs.viewEdges,
             saveFile = appArgs.saveFile,
-            difficulty = appArgs.difficulty
+            difficulty = appArgs.difficulty,
+            randSeed = appArgs.randSeed ?: System.currentTimeMillis().toString()
         )
         errors.addAll(resolveLaunchOptions(launchOptions).errors)
 
@@ -117,6 +118,7 @@ object DesktopLauncher {
         println("- View Edges: " + appArgs.viewEdges)
         println("- Save File: " + appArgs.saveFile)
         println("- Difficulty: " + appArgs.difficulty)
+        println("- Rand Seed: " + launchOptions.randSeed)
         println("- Interpolation: " + (appArgs.interpolation ?: DEFAULT_INTERPOLATION))
         println("- Load Keyboard Prefs: " + appArgs.loadKeyboardPrefs)
         println("- Reset Bindings: " + appArgs.resetBindings)
@@ -464,6 +466,13 @@ object DesktopLauncher {
                 "in the difficulty screen replaces it. When given, the game does not write the save file."
         )
         var difficulty: String? = null
+
+        @Parameter(
+            names = ["--randSeed"],
+            description = "Dev option: the seed of the game's random source, a whole number. With no value, the " +
+                "game takes the clock time and prints it as the seed at start."
+        )
+        var randSeed: String? = null
 
         @Parameter(
             names = ["--interpolation"],

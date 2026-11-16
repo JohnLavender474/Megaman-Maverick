@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.UtilMethods.getOverlapPushDirection
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
@@ -123,8 +122,8 @@ class BoulderProjectile(services: MegaServices) : AbstractProjectile(services) {
         when (size) {
             Size.LARGE -> {
                 for (i in 0 until 4) {
-                    var x = getRandom(MEDIUM_MIN_X, MEDIUM_MAX_X)
-                    val y = getRandom(MEDIUM_MIN_Y, MEDIUM_MAX_Y)
+                    var x = services.random.nextFloat(MEDIUM_MIN_X, MEDIUM_MAX_X)
+                    val y = services.random.nextFloat(MEDIUM_MIN_Y, MEDIUM_MAX_Y)
                     if (i >= 2) x *= -1f
                     trajectories.add(Vector2(x, y).scl(ConstVals.PPM.toFloat()))
                 }
@@ -132,8 +131,8 @@ class BoulderProjectile(services: MegaServices) : AbstractProjectile(services) {
 
             Size.MEDIUM -> {
                 for (i in 0 until 4) {
-                    var x = getRandom(SMALL_MIN_X, SMALL_MAX_X)
-                    val y = getRandom(SMALL_MIN_Y, SMALL_MAX_Y)
+                    var x = services.random.nextFloat(SMALL_MIN_X, SMALL_MAX_X)
+                    val y = services.random.nextFloat(SMALL_MIN_Y, SMALL_MAX_Y)
                     if (i >= 2) x *= -1f
                     trajectories.add(Vector2(x, y).scl(ConstVals.PPM.toFloat()))
                 }

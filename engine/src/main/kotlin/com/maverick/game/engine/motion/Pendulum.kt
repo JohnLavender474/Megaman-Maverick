@@ -1,7 +1,10 @@
 package com.maverick.game.engine.motion
 
-import com.badlogic.gdx.math.MathUtils.*
+import com.badlogic.gdx.math.MathUtils.PI
+import com.badlogic.gdx.math.MathUtils.cos
+import com.badlogic.gdx.math.MathUtils.sin
 import com.badlogic.gdx.math.Vector2
+import com.maverick.game.engine.common.random.GameRandom
 import kotlin.math.abs
 
 class Pendulum(
@@ -9,11 +12,12 @@ class Pendulum(
     var gravity: Float,
     var anchor: Vector2,
     var targetFPS: Float,
+    random: GameRandom,
     var scalar: Float = 1f,
     var defaultAngle: Float = PI / 2f,
     var damping: Float = 0f,
     var disturbanceThreshold: Float = DEFAULT_DISTURBANCE_THRESHOLD,
-    var randomForce: () -> Float = { random(-DEFAULT_RANDOM_FORCE, DEFAULT_RANDOM_FORCE) }
+    var randomForce: () -> Float = { random.nextFloat(-DEFAULT_RANDOM_FORCE, DEFAULT_RANDOM_FORCE) }
 ) : IMotion {
 
     companion object {

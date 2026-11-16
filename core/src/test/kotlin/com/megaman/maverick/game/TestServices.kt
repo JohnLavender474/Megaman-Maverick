@@ -9,6 +9,8 @@ import com.maverick.game.engine.camera.CameraController
 import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.ICameraView
 import com.maverick.game.engine.common.interfaces.Updatable
+import com.maverick.game.engine.common.random.GameRandom
+import com.maverick.game.engine.common.random.SeededRandom
 import com.maverick.game.engine.events.EventsManager
 import com.maverick.game.engine.groups.GroupsSystem
 import com.megaman.maverick.game.audio.MegaAudioManager
@@ -23,6 +25,7 @@ import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.state.Performance
 import com.megaman.maverick.game.state.SessionRules
 import io.mockk.mockk
+import java.util.Random
 
 fun testServices(
     engine: GameEngine = mockk(relaxed = true),
@@ -40,7 +43,8 @@ fun testServices(
     groups: GroupsSystem = GroupsSystem(),
     gameCamera: ICameraView = CameraView(OrthographicCamera()),
     cameraController: CameraController = CameraController(OrthographicCamera()),
-    rules: SessionRules = GameMode.SINGLE.rules
+    rules: SessionRules = GameMode.SINGLE.rules,
+    random: GameRandom = SeededRandom(Random(1L))
 ) = MegaServices(
     engine,
     events,
@@ -57,5 +61,6 @@ fun testServices(
     groups,
     gameCamera,
     cameraController,
-    rules
+    rules,
+    random
 )

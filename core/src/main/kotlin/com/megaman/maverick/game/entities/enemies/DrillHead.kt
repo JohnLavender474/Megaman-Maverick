@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.OrderedSet
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.*
@@ -335,21 +334,21 @@ class DrillHead(services: MegaServices) : AbstractEnemy(services), IFreezableEnt
         tempVec2Set.addAll(hoverSpots)
         tempVec2Set.remove(currentHoverSpot)
 
-        val nextHoverSpot = tempVec2Set.random()
+        val nextHoverSpot = services.random.pick(tempVec2Set.orderedItems())
         currentHoverSpot.set(nextHoverSpot)
 
         tempVec2Set.clear()
     }
 
     private fun spawnDrillDebris() {
-        val big = UtilMethods.getRandomBool()
+        val big = services.random.nextBoolean()
 
         val position = body.getPositionPoint(Position.TOP_CENTER)
             .sub(0f, 0.2f * ConstVals.PPM)
 
         val impulse = GameObjectPools.fetch(Vector2::class)
-            .setX(UtilMethods.getRandom(DRILL_ROCK_MIN_X_IMPULSE, DRILL_ROCK_MAX_X_IMPULSE))
-            .setY(UtilMethods.getRandom(DRILL_ROCK_MIN_Y_IMPULSE, DRILL_ROCK_MAX_Y_IMPULSE))
+            .setX(services.random.nextFloat(DRILL_ROCK_MIN_X_IMPULSE, DRILL_ROCK_MAX_X_IMPULSE))
+            .setY(services.random.nextFloat(DRILL_ROCK_MIN_Y_IMPULSE, DRILL_ROCK_MAX_Y_IMPULSE))
             .scl(ConstVals.PPM.toFloat())
 
         GameLogger.debug(
@@ -373,8 +372,8 @@ class DrillHead(services: MegaServices) : AbstractEnemy(services), IFreezableEnt
                 )
             }
             DrillSpawnType.PRECIOUS_SHARD -> {
-                val size = PreciousShardSize.entries.random()
-                val color = PreciousShardColor.entries.random()
+                val size = services.random.pick(PreciousShardSize.entries)
+                val color = services.random.pick(PreciousShardColor.entries)
 
                 val preciousShard = MegaEntityFactory.fetch(PreciousShard::class)!!
                 preciousShard.spawn(

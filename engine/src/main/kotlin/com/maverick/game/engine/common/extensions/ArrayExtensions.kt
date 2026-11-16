@@ -4,9 +4,9 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.FloatArray
 import com.badlogic.gdx.utils.IntArray
 import com.badlogic.gdx.utils.Predicate
+import com.maverick.game.engine.common.random.GameRandom
 import java.util.function.Consumer
 import java.util.function.Function
-import kotlin.random.Random
 
 fun Array<Float>.toGdxFloatArray(out: FloatArray): FloatArray {
     forEach { out.add(it) }
@@ -64,7 +64,7 @@ fun <T> Array<T>.processAndFilter(process: (T) -> Unit, filter: (T) -> Boolean):
 fun <T> Array<T>.processAndFilter(process: Consumer<T>, filter: Predicate<T>) =
     processAndFilter(process::accept, filter::evaluate)
 
-fun <T> Array<T>.getRandomElements(amount: Int, temp: Array<T>): Array<T> {
+fun <T> Array<T>.getRandomElements(random: GameRandom, amount: Int, temp: Array<T>): Array<T> {
     require(amount >= 0) { "Number of indices must not be negative." }
     require(amount <= size) { "Number of indices must not exceed the size of the array." }
 
@@ -73,7 +73,7 @@ fun <T> Array<T>.getRandomElements(amount: Int, temp: Array<T>): Array<T> {
     if (amount == 0) return temp
 
     temp.addAll(this)
-    temp.shuffle()
+    random.shuffle(temp)
     temp.truncate(amount)
 
     return temp
@@ -104,11 +104,4 @@ fun <T> Array<T>.addAllAndReturn(iterable: Iterable<T>): Array<T> {
 fun <T> Array<T>.addAllAndReturn(vararg elements: T): Array<T> {
     elements.forEach { add(it) }
     return this
-}
-
-fun <T> Array<T>.superRandom(): T? {
-    if (size == 0) return null
-
-    val random = Random(System.currentTimeMillis()).nextInt(0, size)
-    return items[random]
 }

@@ -7,7 +7,6 @@ import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.gdxArrayOf
@@ -876,7 +875,7 @@ class D1000(services: MegaServices) :
     }
 
     private fun choosePlan(startIn: Float): D1000Plan? {
-        val base = context(UtilMethods.getRandom(0, D1000Director.ROLLS - 1))
+        val base = context(services.random.nextInt(0, D1000Director.ROLLS - 1))
         beginGuard()
         val liveOk = liveEscape()
         guard.refused.clear()

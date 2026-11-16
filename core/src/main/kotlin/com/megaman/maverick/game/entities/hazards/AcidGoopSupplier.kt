@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.hazards
 
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.objects.Properties
@@ -84,7 +83,7 @@ class AcidGoopSupplier(services: MegaServices) : MegaGameEntity(services), IHaza
             minDelay = MIN_SPAWN_DELAY
             maxDelay = MAX_SPAWN_DELAY
         }
-        val delay = UtilMethods.getRandom(minDelay, maxDelay)
+        val delay = services.random.nextFloat(minDelay, maxDelay)
         spawnDelayTimer.resetDuration(delay)
     }
 

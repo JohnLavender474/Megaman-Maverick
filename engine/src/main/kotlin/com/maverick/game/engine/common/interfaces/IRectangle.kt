@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.math.collision.BoundingBox
 import com.badlogic.gdx.utils.Array
-import com.maverick.game.engine.common.UtilMethods
+import com.maverick.game.engine.common.random.GameRandom
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.shapes.GamePolygon
 import com.maverick.game.engine.common.shapes.GameRectangle
@@ -157,9 +157,9 @@ interface IRectangle : IDimensionable {
 
     fun translate(delta: Vector2) = translate(delta.x, delta.y)
 
-    fun getRandomPositionInBounds(out: Vector2): Vector2 {
-        val randX = UtilMethods.getRandom(getX(), getX() + getWidth())
-        val randY = UtilMethods.getRandom(getY(), getY() + getHeight())
+    fun getRandomPositionInBounds(random: GameRandom, out: Vector2): Vector2 {
+        val randX = random.nextFloat(getX(), getX() + getWidth())
+        val randY = random.nextFloat(getY(), getY() + getHeight())
         return out.set(randX, randY)
     }
 

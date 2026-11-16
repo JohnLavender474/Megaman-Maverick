@@ -4,11 +4,8 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.OrderedMap
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.objectSetOf
-import com.maverick.game.engine.common.extensions.random
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -74,7 +71,7 @@ class AsteroidsSpawner(services: MegaServices) : MegaGameEntity(services), ICull
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.SPAWNER)) {
                 val spawner = (value as RectangleMapObject).rectangle.toGameRectangle(false)
-                spawners.put(spawner, Timer(getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)))
+                spawners.put(spawner, Timer(services.random.nextFloat(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)))
             }
         }
 
@@ -91,14 +88,14 @@ class AsteroidsSpawner(services: MegaServices) : MegaGameEntity(services), ICull
         spawners.clear()
     }
 
-    private fun shouldAimAtMoonEyeStone() = UtilMethods.getRandomBool() &&
+    private fun shouldAimAtMoonEyeStone() = services.random.nextBoolean() &&
         MegaGameEntities.getOfTag(MoonEyeStone.TAG).size > 0
 
-    private fun getRandomMoonEyeStone() = MegaGameEntities.getOfTag(MoonEyeStone.TAG).random() as MoonEyeStone
+    private fun getRandomMoonEyeStone() = services.random.pick(MegaGameEntities.getOfTag(MoonEyeStone.TAG).orderedItems()) as MoonEyeStone
 
     private fun spawnAsteroid(spawner: GameRectangle) {
         val spawn = GameObjectPools.fetch(Vector2::class).set(
-            getRandom(spawner.getX(), spawner.getMaxX()), spawner.getMaxY()
+            services.random.nextFloat(spawner.getX(), spawner.getMaxX()), spawner.getMaxY()
         )
 
         val angle = when {
@@ -109,11 +106,11 @@ class AsteroidsSpawner(services: MegaServices) : MegaGameEntity(services), ICull
                 .angleDeg()
                 .coerceIn(MIN_ANGLE, MAX_ANGLE)
 
-            else -> getRandom(MIN_ANGLE, MAX_ANGLE)
+            else -> services.random.nextFloat(MIN_ANGLE, MAX_ANGLE)
         }
 
         val impulse = GameObjectPools.fetch(Vector2::class)
-            .set(getRandom(MIN_SPEED, MAX_SPEED), 0f)
+            .set(services.random.nextFloat(MIN_SPEED, MAX_SPEED), 0f)
             .rotateDeg(angle).scl(ConstVals.PPM.toFloat())
 
         val asteroid = MegaEntityFactory.fetch(Asteroid::class)!!
@@ -141,7 +138,7 @@ class AsteroidsSpawner(services: MegaServices) : MegaGameEntity(services), ICull
             timer.update(delta)
             if (timer.isFinished()) {
                 spawnAsteroid(spawner)
-                timer.resetDuration(getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY))
+                timer.resetDuration(services.random.nextFloat(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY))
             }
         }
     })

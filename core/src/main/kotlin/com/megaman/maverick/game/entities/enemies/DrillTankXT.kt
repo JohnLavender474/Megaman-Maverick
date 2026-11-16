@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.ProcessState
@@ -406,8 +405,8 @@ class DrillTankXT(services: MegaServices) : AbstractEnemy(services), IAnimatedEn
         val position = drillTip.getCenter().add(0.5f * ConstVals.PPM * -facing.value, 0f)
 
         val impulse = GameObjectPools.fetch(Vector2::class)
-            .setX(-facing.value * UtilMethods.getRandom(DRILL_ROCK_MIN_X_IMPULSE, DRILL_ROCK_MAX_X_IMPULSE))
-            .setY(UtilMethods.getRandom(DRILL_ROCK_MIN_Y_IMPULSE, DRILL_ROCK_MAX_Y_IMPULSE))
+            .setX(-facing.value * services.random.nextFloat(DRILL_ROCK_MIN_X_IMPULSE, DRILL_ROCK_MAX_X_IMPULSE))
+            .setY(services.random.nextFloat(DRILL_ROCK_MIN_Y_IMPULSE, DRILL_ROCK_MAX_Y_IMPULSE))
             .scl(ConstVals.PPM.toFloat())
 
         GameLogger.debug(
@@ -432,7 +431,7 @@ class DrillTankXT(services: MegaServices) : AbstractEnemy(services), IAnimatedEn
     }
 
     private fun spawnExplosion() {
-        val position = Position.entries.random()
+        val position = services.random.pick(Position.entries)
 
         val spawn = body.getCenter().add(
             (position.x - 1) * 0.75f * ConstVals.PPM, (position.y - 1) * 0.75f * ConstVals.PPM

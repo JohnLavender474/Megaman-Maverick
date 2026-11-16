@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -107,8 +106,8 @@ class WilyPlaneBody(services: MegaServices) : MegaGameEntity(services), IBodyEnt
             val position = GameObjectPools.fetch(Vector2::class)
                 .set(current)
                 .add(
-                UtilMethods.getRandom(-EXPLOSION_MAX_OFFSET, EXPLOSION_MAX_OFFSET) * ConstVals.PPM,
-                UtilMethods.getRandom(-EXPLOSION_MAX_OFFSET, EXPLOSION_MAX_OFFSET) * ConstVals.PPM,
+                services.random.nextFloat(-EXPLOSION_MAX_OFFSET, EXPLOSION_MAX_OFFSET) * ConstVals.PPM,
+                services.random.nextFloat(-EXPLOSION_MAX_OFFSET, EXPLOSION_MAX_OFFSET) * ConstVals.PPM,
             )
             val explosion = MegaEntityFactory.fetch(Explosion::class)!!
             explosion.spawn(

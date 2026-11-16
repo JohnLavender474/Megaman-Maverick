@@ -145,6 +145,7 @@ class SwingingPlatform(services: MegaServices) : Block(services), IParentEntity<
             gravity = PENDULUM_GRAVITY * ConstVals.PPM,
             anchor = bounds.getCenter(false).add(0f, DEFAULT_LENGTH * ConstVals.PPM),
             targetFPS = 1 / 60f,
+            random = services.random,
             defaultAngle = PI.toFloat() / 1.5f
         )
         putMotionDefinition(

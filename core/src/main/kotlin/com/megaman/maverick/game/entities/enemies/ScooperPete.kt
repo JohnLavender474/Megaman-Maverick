@@ -10,7 +10,6 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.*
@@ -237,7 +236,7 @@ class ScooperPete(services: MegaServices) : AbstractEnemy(services), IFreezableE
         THROW_IMPULSES.forEach {
             val impulse = GameObjectPools.fetch(Vector2::class)
                 .set(it.x * facing.value, it.y)
-                .add(UtilMethods.getRandom(-THROW_IMPULSE_VAR, THROW_IMPULSE_VAR))
+                .add(services.random.nextFloat(-THROW_IMPULSE_VAR, THROW_IMPULSE_VAR))
                 .scl(ConstVals.PPM.toFloat())
 
             val dirt = MegaEntityFactory.fetch(GroundPebble::class)!!

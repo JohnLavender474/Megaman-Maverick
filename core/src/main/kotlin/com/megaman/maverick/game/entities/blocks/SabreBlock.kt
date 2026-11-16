@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.blocks
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectMapOf
@@ -110,10 +109,10 @@ class SabreBlock(services: MegaServices) : Block(services), ISpritesEntity, IDam
         val center = body.getCenter()
         val spread = EXPLOSION_SPREAD * ConstVals.PPM
         repeat(EXPLOSIONS) {
-            spawnExplosion(Vector2(center.x + getRandom(-1, 1) * spread, center.y + getRandom(-1, 1) * spread))
+            spawnExplosion(Vector2(center.x + services.random.nextInt(-1, 1) * spread, center.y + services.random.nextInt(-1, 1) * spread))
         }
         spawnExplosion(center)
-        FallingPiece.throwDebris(DEBRIS, center)
+        FallingPiece.throwDebris(DEBRIS, center, services.random)
         services.audio.playSound(SoundAsset.EXPLOSION_2_SOUND, false)
     }
 

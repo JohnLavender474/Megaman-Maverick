@@ -10,7 +10,6 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Speed
@@ -157,17 +156,17 @@ class UnderwaterFan(services: MegaServices) : MegaGameEntity(services), IBodyEnt
     }
 
     private fun spawnBubbles() {
-        val random = UtilMethods.getRandom(MIN_BUBBLES_TO_SPAWN, MAX_BUBBLES_TO_SPAWN)
+        val random = services.random.nextInt(MIN_BUBBLES_TO_SPAWN, MAX_BUBBLES_TO_SPAWN)
         (0 until random).forEach { _ ->
             val x = when (direction) {
-                Direction.UP, Direction.DOWN -> UtilMethods.getRandom(forceBounds.getX(), forceBounds.getMaxX())
+                Direction.UP, Direction.DOWN -> services.random.nextFloat(forceBounds.getX(), forceBounds.getMaxX())
                 Direction.LEFT -> forceBounds.getMaxX() - 0.5f * ConstVals.PPM
                 Direction.RIGHT -> forceBounds.getX() + 0.5f * ConstVals.PPM
             }
             val y = when (direction) {
                 Direction.UP -> body.getBounds().getMaxY()
                 Direction.DOWN -> body.getBounds().getY()
-                Direction.LEFT, Direction.RIGHT -> UtilMethods.getRandom(forceBounds.getY(), forceBounds.getMaxY())
+                Direction.LEFT, Direction.RIGHT -> services.random.nextFloat(forceBounds.getY(), forceBounds.getMaxY())
             }
             val position = GameObjectPools.fetch(Vector2::class).set(x, y)
 
@@ -188,7 +187,7 @@ class UnderwaterFan(services: MegaServices) : MegaGameEntity(services), IBodyEnt
             spawnBubblesDelay.update(delta)
             if (spawnBubblesDelay.isFinished()) {
                 spawnBubbles()
-                val duration = UtilMethods.getRandom(SPAWN_BUBBLES_MIN_DELAY, SPAWN_BUBBLE_MAX_DELAY)
+                val duration = services.random.nextFloat(SPAWN_BUBBLES_MIN_DELAY, SPAWN_BUBBLE_MAX_DELAY)
                 spawnBubblesDelay.resetDuration(duration)
             }
         }

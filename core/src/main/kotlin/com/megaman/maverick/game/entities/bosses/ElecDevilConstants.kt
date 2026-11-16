@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.bosses
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
 import com.badlogic.gdx.utils.OrderedSet
+import com.maverick.game.engine.common.random.GameRandom
 import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.extensions.orderedSetOf
 import com.maverick.game.engine.common.objects.IntPair
@@ -59,7 +60,7 @@ internal object ElecDevilConstants {
     private val rows = Array<Int>()
     private val pieces = Array<IntPair>()
 
-    internal fun getPieceQueue(): Array<IntPair> {
+    internal fun getPieceQueue(random: GameRandom): Array<IntPair> {
         pieces.clear()
 
         val columns = PIECE_COLUMNS - 1 downTo 0
@@ -67,7 +68,7 @@ internal object ElecDevilConstants {
             // clear, load, and shuffle rows
             rows.clear()
             (0 until PIECE_ROWS).forEach { rows.add(it) }
-            rows.shuffle()
+            random.shuffle(rows)
 
             rows.forEach { row -> if (CELLS[row].contains(column)) pieces.add(row pairTo column) }
         }

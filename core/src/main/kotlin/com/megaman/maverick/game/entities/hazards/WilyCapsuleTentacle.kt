@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.interfaces.IActivatable
 import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.objects.Properties
@@ -193,13 +192,13 @@ class WilyCapsuleTentacle(services: MegaServices) : MegaGameEntity(services), ID
         currentIdleTarget.set(anchor).add(idleOffset)
         currentTipTarget.set(currentIdleTarget)
 
-        tipDriftPhaseX = MathUtils.random(0f, MathUtils.PI2)
-        tipDriftPhaseY = MathUtils.random(0f, MathUtils.PI2)
+        tipDriftPhaseX = services.random.nextFloat(0f, MathUtils.PI2)
+        tipDriftPhaseY = services.random.nextFloat(0f, MathUtils.PI2)
 
         wanderOffset.setZero()
         rollWanderGoal()
         wanderTimer = 0f
-        wanderRetargetTime = MathUtils.random(WANDER_RETARGET_MIN, WANDER_RETARGET_MAX)
+        wanderRetargetTime = services.random.nextFloat(WANDER_RETARGET_MIN, WANDER_RETARGET_MAX)
 
         tentacle = MegaEntityFactory.fetch(WavyTentacleOfJoints::class)!!
         tentacle!!.spawn(
@@ -254,8 +253,8 @@ class WilyCapsuleTentacle(services: MegaServices) : MegaGameEntity(services), ID
     fun lunge(
         target: Vector2 = targetPlayer.body.getCenter(),
         lungeType: LungeType = when {
-            services.gameState.hardMode -> LungeType.entries.random()
-            else -> UtilMethods.getRandom(LungeType.SIMPLE, LungeType.MULTI_STEP)
+            services.gameState.hardMode -> services.random.pick(LungeType.entries)
+            else -> services.random.pickOf(LungeType.SIMPLE, LungeType.MULTI_STEP)
         }
     ) {
         if (tentacle == null || tentacle!!.getState() != TentacleState.IDLE) return
@@ -386,7 +385,7 @@ class WilyCapsuleTentacle(services: MegaServices) : MegaGameEntity(services), ID
         wanderTimer += delta
         if (wanderTimer >= wanderRetargetTime) {
             wanderTimer = 0f
-            wanderRetargetTime = MathUtils.random(WANDER_RETARGET_MIN, WANDER_RETARGET_MAX)
+            wanderRetargetTime = services.random.nextFloat(WANDER_RETARGET_MIN, WANDER_RETARGET_MAX)
             rollWanderGoal()
         }
         wanderOffset.x = MathUtils.lerp(wanderOffset.x, wanderGoal.x, WANDER_LERP_SPEED * delta)
@@ -545,8 +544,8 @@ class WilyCapsuleTentacle(services: MegaServices) : MegaGameEntity(services), ID
     }
 
     private fun rollWanderGoal() {
-        val angle = MathUtils.random(0f, MathUtils.PI2)
-        val radius = MathUtils.random(0f, WANDER_RADIUS)
+        val angle = services.random.nextFloat(0f, MathUtils.PI2)
+        val radius = services.random.nextFloat(0f, WANDER_RADIUS)
         wanderGoal.set(MathUtils.cos(angle) * radius, MathUtils.sin(angle) * radius)
     }
 

@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -53,7 +52,7 @@ class FallingLeaves(services: MegaServices) : MegaGameEntity(services), ICullabl
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         this.bounds.set(bounds)
 
-        val time = getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
+        val time = services.random.nextFloat(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
         spawnTimer.resetDuration(time)
 
         val cullBoundsType = when {
@@ -91,7 +90,7 @@ class FallingLeaves(services: MegaServices) : MegaGameEntity(services), ICullabl
     }
 
     private fun spawnLeaf() {
-        val x = getRandom(bounds.getX(), bounds.getMaxX())
+        val x = services.random.nextFloat(bounds.getX(), bounds.getMaxX())
         val y = bounds.getMaxY()
 
         val leaf = MegaEntityFactory.fetch(FallingLeaf::class)!!
@@ -119,7 +118,7 @@ class FallingLeaves(services: MegaServices) : MegaGameEntity(services), ICullabl
         ) {
             spawnLeaf()
 
-            val duration = getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
+            val duration = services.random.nextFloat(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
             spawnTimer.resetDuration(duration)
         }
     })

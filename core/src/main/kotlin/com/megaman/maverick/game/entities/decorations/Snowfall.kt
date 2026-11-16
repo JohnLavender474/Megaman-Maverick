@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.decorations
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -110,14 +109,14 @@ class Snowfall(services: MegaServices) : MegaGameEntity(services) {
 
     private fun spawnSnow(position: Vector2? = null) {
         val spawnPos = position ?: GameObjectPools.fetch(Vector2::class).set(
-            UtilMethods.getRandom(bounds.getX(), bounds.getMaxX()),
+            services.random.nextFloat(bounds.getX(), bounds.getMaxX()),
             bounds.getMaxY()
         )
 
-        var speed = UtilMethods.getRandom(-MIN_FALL_SPEED, -MAX_FALL_SPEED) * ConstVals.PPM
+        var speed = services.random.nextFloat(-MIN_FALL_SPEED, -MAX_FALL_SPEED) * ConstVals.PPM
         if (background) speed *= BACKGROUND_SCALAR
 
-        var drift = UtilMethods.getRandom(0f, ABS_DRIFT) * ConstVals.PPM
+        var drift = services.random.nextFloat(0f, ABS_DRIFT) * ConstVals.PPM
         if (left) drift *= -1f
         if (background) drift *= BACKGROUND_SCALAR
 
@@ -150,7 +149,7 @@ class Snowfall(services: MegaServices) : MegaGameEntity(services) {
     }
 
     private fun resetSpawnDelay() {
-        val random = UtilMethods.getRandom(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
+        val random = services.random.nextFloat(MIN_SPAWN_DELAY, MAX_SPAWN_DELAY)
         spawnDelay.resetDuration(random)
     }
 

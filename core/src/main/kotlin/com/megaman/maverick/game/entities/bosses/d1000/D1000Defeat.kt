@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.bosses.d1000
 
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
@@ -101,8 +100,8 @@ class D1000Defeat(private val boss: D1000) {
     }
 
     private fun randomIn(bounds: GameRectangle) = Vector2(
-        UtilMethods.getRandom(bounds.getX(), bounds.getMaxX()),
-        UtilMethods.getRandom(bounds.getY(), bounds.getMaxY())
+        boss.services.random.nextFloat(bounds.getX(), bounds.getMaxX()),
+        boss.services.random.nextFloat(bounds.getY(), bounds.getMaxY())
     )
 
     private fun breakApart() {
@@ -113,11 +112,11 @@ class D1000Defeat(private val boss: D1000) {
         val bounds = boss.body.getBounds()
         explosionAt(boss.body.getCenter())
         repeat(BREAK_BURST_COUNT - 1) { explosionAt(randomIn(bounds)) }
-        val count = DEBRIS.size + UtilMethods.getRandom(DEBRIS_EXTRA_MIN, DEBRIS_EXTRA_MAX)
+        val count = DEBRIS.size + boss.services.random.nextInt(DEBRIS_EXTRA_MIN, DEBRIS_EXTRA_MAX)
         for (i in 0 until count) {
-            val key = if (i < DEBRIS.size) DEBRIS[i] else DEBRIS[UtilMethods.getRandom(0, DEBRIS.size - 1)]
-            val velocity = Vector2(UtilMethods.getRandom(DEBRIS_SPEED_MIN, DEBRIS_SPEED_MAX), 0f)
-                .setAngleDeg(UtilMethods.getRandom(DEBRIS_ANGLE_MIN, DEBRIS_ANGLE_MAX))
+            val key = if (i < DEBRIS.size) DEBRIS[i] else DEBRIS[boss.services.random.nextInt(0, DEBRIS.size - 1)]
+            val velocity = Vector2(boss.services.random.nextFloat(DEBRIS_SPEED_MIN, DEBRIS_SPEED_MAX), 0f)
+                .setAngleDeg(boss.services.random.nextFloat(DEBRIS_ANGLE_MIN, DEBRIS_ANGLE_MAX))
             FallingPiece.spawn(FallingPieceDef.DEBRIS, key, randomIn(bounds), velocity)
         }
         boss.requestToPlaySound(SoundAsset.EXPLOSION_1_SOUND, false)

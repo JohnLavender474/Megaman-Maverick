@@ -9,7 +9,6 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Size
@@ -152,7 +151,7 @@ class TotemPolem(services: MegaServices) : AbstractEnemy(services, size = Size.M
                 loop.next()
 
                 if (loop.getCurrent() == TotemPolemState.EYES_OPENING)
-                    shootPositionIndex = getRandom(0, SHOOT_OPTIONS - 1)
+                    shootPositionIndex = services.random.nextInt(0, SHOOT_OPTIONS - 1)
 
                 timer.reset()
             }

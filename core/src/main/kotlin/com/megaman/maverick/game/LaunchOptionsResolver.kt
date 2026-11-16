@@ -35,7 +35,8 @@ data class ResolvedLaunch(
     val mode: GameMode = GameMode.SINGLE,
     val rules: SessionRules = mode.rules,
     val saveFile: String = PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE,
-    val difficulty: DifficultyMode? = null
+    val difficulty: DifficultyMode? = null,
+    val randSeed: Long? = null
 ) {
 
     val savesAllowed: Boolean
@@ -78,6 +79,7 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     val saveFile = parseSaveFile(options.saveFile, errors)
     val difficulty = options.difficulty?.takeIf { it.isNotBlank() }
         ?.let { parseEnumOption<DifficultyMode>("--difficulty", it, errors) }
+    val randSeed = parseRandSeed(options.randSeed, errors)
     if (level != null && players != null && players > 1 && PlayerCharacter.MEGAMAN !in level.characters)
         errors.add("--level $level plays only with 1 player (${level.characters.joinToString()}); remove --players.")
 
@@ -96,7 +98,7 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     return LaunchResult(
         ResolvedLaunch(
             start, room, logTags, logAllTags, options.autoPerf, weapons, heartTanks, healthTanks, players!!, mode,
-            mode.rules.copy(viewEdges = viewEdges), saveFile, difficulty
+            mode.rules.copy(viewEdges = viewEdges), saveFile, difficulty, randSeed
         ),
         errors
     )
@@ -162,6 +164,15 @@ private fun parseSaveFile(value: String?, errors: MutableList<String>): String {
     val name = value.trim()
     if (name.isEmpty()) errors.add("--saveFile needs a name, for example --saveFile test-save.")
     return name
+}
+
+private fun parseRandSeed(value: String?, errors: MutableList<String>): Long? {
+    val text = value?.trim()
+    if (text.isNullOrEmpty()) return null
+
+    val randSeed = text.toLongOrNull()
+    if (randSeed == null) errors.add("Invalid --randSeed '$text'. Use a whole number, for example --randSeed 12345.")
+    return randSeed
 }
 
 private fun parsePlayers(value: String?, errors: MutableList<String>): Int? {

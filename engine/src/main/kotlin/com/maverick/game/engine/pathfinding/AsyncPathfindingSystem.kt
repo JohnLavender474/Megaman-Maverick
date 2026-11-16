@@ -63,6 +63,7 @@ class AsyncPathfindingSystem(
                         completedComponents.addLast(component)
                     }
                 }
+                // TODO: the timeout and the apply frame use the wall clock and thread speed, not the tick (item 010)
                 System.currentTimeMillis() - (submitTimeMap[component] ?: 0L) > timeoutMillis -> {
                     future.cancel(true)
                     submitTimeMap.remove(component)

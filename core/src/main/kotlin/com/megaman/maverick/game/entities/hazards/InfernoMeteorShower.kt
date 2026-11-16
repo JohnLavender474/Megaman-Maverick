@@ -4,7 +4,6 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.OrderedMap
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.objectSetOf
@@ -90,7 +89,7 @@ class InfernoMeteorShower(services: MegaServices) : MegaGameEntity(services), IC
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.SPAWNER)) {
                 val spawner = (value as RectangleMapObject).rectangle.toGameRectangle(false)
-                spawners.put(spawner, Timer(UtilMethods.getRandom(MIN_CONTINUE_SPAWN_DELAY, MAX_CONTINUE_SPAWN_DELAY)))
+                spawners.put(spawner, Timer(services.random.nextFloat(MIN_CONTINUE_SPAWN_DELAY, MAX_CONTINUE_SPAWN_DELAY)))
             }
         }
 
@@ -170,12 +169,12 @@ class InfernoMeteorShower(services: MegaServices) : MegaGameEntity(services), IC
                         val timer = entry.value
                         timer.update(delta)
                         if (timer.isFinished()) {
-                            val x = UtilMethods.getRandom(spawner.getX(), spawner.getMaxX())
+                            val x = services.random.nextFloat(spawner.getX(), spawner.getMaxX())
                             val y = spawner.getMaxY()
                             val spawn = GameObjectPools.fetch(Vector2::class).set(x, y)
                             spawnMeteor(spawn)
                             timer.resetDuration(
-                                UtilMethods.getRandom(MIN_CONTINUE_SPAWN_DELAY, MAX_CONTINUE_SPAWN_DELAY)
+                                services.random.nextFloat(MIN_CONTINUE_SPAWN_DELAY, MAX_CONTINUE_SPAWN_DELAY)
                             )
                         }
                     }

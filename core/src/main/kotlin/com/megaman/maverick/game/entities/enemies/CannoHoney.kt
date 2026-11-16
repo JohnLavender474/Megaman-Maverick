@@ -300,9 +300,9 @@ class CannoHoney(services: MegaServices) : AbstractEnemy(services), IFreezableEn
 
         beesToCycle.clear()
         for (child in children) if (child.existenceState.liveAfterUpdate) beesToCycle.add(child)
-        beesToCycle.shuffle()
+        services.random.shuffle(beesToCycle)
 
-        val numBeesToCycle = UtilMethods.getRandom(MIN_BEES_TO_CYCLE, MAX_BEES_TO_CYCLE)
+        val numBeesToCycle = services.random.nextInt(MIN_BEES_TO_CYCLE, MAX_BEES_TO_CYCLE)
         beesToCycle.truncate(numBeesToCycle)
 
         for (beeToCycle in beesToCycle) {

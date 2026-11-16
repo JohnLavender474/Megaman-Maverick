@@ -1,5 +1,7 @@
 package com.megaman.maverick.game.entities.bosses
 
+import com.badlogic.gdx.utils.Array
+import com.maverick.game.engine.common.random.SeededRandom
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.megaman.maverick.game.entities.bosses.d1000.D1000BombPattern
 import com.megaman.maverick.game.entities.bosses.d1000.D1000Orbs
@@ -8,12 +10,14 @@ import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.floats.plusOrMinus
 import io.kotest.matchers.shouldBe
-import com.badlogic.gdx.utils.Array
+import java.util.Random
 import kotlin.math.abs
 
 private const val PPM = 32f
 
 class D1000OrbsTest : DescribeSpec({
+
+    val random = SeededRandom(Random(1L))
 
     val arena = GameRectangle(0f, 0f, 21.5f * PPM, 12f * PPM)
 
@@ -46,7 +50,7 @@ class D1000OrbsTest : DescribeSpec({
         }
 
         it("a feint finds no lane when every lane near X is under the body or beside an earlier mark") {
-            D1000Orbs.feintLane(arena, 8f * PPM, floatArrayOf(5f * PPM), 1, 9f * PPM, 14f * PPM).isNaN() shouldBe true
+            D1000Orbs.feintLane(arena, 8f * PPM, floatArrayOf(5f * PPM), 1, 9f * PPM, 14f * PPM, random).isNaN() shouldBe true
         }
 
         it("a cut that leaves the arena or lands under the body goes to the other side") {
@@ -59,7 +63,7 @@ class D1000OrbsTest : DescribeSpec({
             val low = 12f * PPM
             val high = 16f * PPM
             repeat(100) {
-                val x = D1000Orbs.feintLane(arena, 8f * PPM, used, 1, low, high)
+                val x = D1000Orbs.feintLane(arena, 8f * PPM, used, 1, low, high, random)
                 val off = abs(x - 8f * PPM)
                 withClue("feint at ${x / PPM} tiles") {
                     (off >= D1000Orbs.FEINT_MIN - 0.01f && off <= D1000Orbs.FEINT_MAX + 0.01f) shouldBe true

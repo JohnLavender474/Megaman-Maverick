@@ -9,7 +9,6 @@ import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -107,7 +106,7 @@ class D1000DebrisWarning(services: MegaServices) : MegaGameEntity(services), ISp
         next = 0
         D1000CeilingDebris.roll(
             pieces, position.x, spread, arena.getX() + D1000Ceiling.CEILING_POCKET, arena.getMaxX() - D1000Ceiling.CEILING_POCKET,
-            hangPoint.y, arena.getY(), UtilMethods.random
+            hangPoint.y, arena.getY(), services.random
         )
     }
 

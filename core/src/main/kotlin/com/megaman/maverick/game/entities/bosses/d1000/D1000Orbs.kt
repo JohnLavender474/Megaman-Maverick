@@ -1,7 +1,7 @@
 package com.megaman.maverick.game.entities.bosses.d1000
 
 import com.badlogic.gdx.utils.Array
-import com.maverick.game.engine.common.UtilMethods
+import com.maverick.game.engine.common.random.GameRandom
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.hazards.D1000Pillar
@@ -136,11 +136,17 @@ object D1000Orbs {
     }
 
     fun feintLane(
-        arena: GameRectangle, playerX: Float, used: FloatArray, usedCount: Int, bodyLow: Float, bodyHigh: Float
+        arena: GameRectangle,
+        playerX: Float,
+        used: FloatArray,
+        usedCount: Int,
+        bodyLow: Float,
+        bodyHigh: Float,
+        random: GameRandom
     ): Float {
         repeat(FEINT_TRIES) {
-            val side = if (UtilMethods.random.nextBoolean()) 1 else -1
-            val x = playerX + side * (FEINT_MIN + UtilMethods.random.nextFloat() * (FEINT_MAX - FEINT_MIN))
+            val side = if (random.nextBoolean()) 1 else -1
+            val x = playerX + side * (FEINT_MIN + random.nextFloat(0f, 1f) * (FEINT_MAX - FEINT_MIN))
             if (open(arena, x, bodyLow, bodyHigh) && spread(x, used, usedCount)) return x
         }
         val roomy = if (arena.getMaxX() - playerX >= playerX - arena.getX()) 1 else -1

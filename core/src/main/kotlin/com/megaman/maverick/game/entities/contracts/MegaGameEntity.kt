@@ -29,7 +29,7 @@ abstract class MegaGameEntity(val services: MegaServices) : GameEntity(services.
 
     val players get() = services.players
 
-    var timeSpawned = 0L
+    var spawnOrder = 0L
         private set
 
     override fun init(vararg params: Any) {
@@ -68,7 +68,7 @@ abstract class MegaGameEntity(val services: MegaServices) : GameEntity(services.
             val groups = getComponent(GroupsComponent::class) ?: GroupsComponent().also { addComponent(it) }
             groups.groups.add(group)
         }
-        timeSpawned = System.currentTimeMillis()
+        spawnOrder = services.engine.spawnCount
         MegaGameEntities.add(this)
         runnablesOnSpawn.values().forEach { it.invoke() }
         GameLogger.debug(TAG, "$tags: onSpawn(): this=$this")

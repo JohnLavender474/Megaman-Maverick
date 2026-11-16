@@ -7,7 +7,6 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.objectSetOf
@@ -127,14 +126,14 @@ class FallingLeaf(services: MegaServices) : MegaGameEntity(services), ICullableE
         )
         maxTrajectory.set(maxX, maxY)
 
-        currentTrajectory.set(getRandom(minTrajectory.x, maxTrajectory.x), getRandom(minTrajectory.y, maxTrajectory.y))
+        currentTrajectory.set(services.random.nextFloat(minTrajectory.x, maxTrajectory.x), services.random.nextFloat(minTrajectory.y, maxTrajectory.y))
         prevTrajectory.set(currentTrajectory)
 
         minElapseDuration =
             spawnProps.getOrDefault("${ConstKeys.MIN}_${ConstKeys.ELAPSE}", DEFAULT_MIN_ELAPSE_DURATION, Float::class)
         maxElapseDuration =
             spawnProps.getOrDefault("${ConstKeys.MAX}_${ConstKeys.ELAPSE}", DEFAULT_MAX_ELAPSE_DURATION, Float::class)
-        elapseTimer.resetDuration(getRandom(minElapseDuration, maxElapseDuration))
+        elapseTimer.resetDuration(services.random.nextFloat(minElapseDuration, maxElapseDuration))
 
         transTimer.setToEnd()
 
@@ -200,13 +199,13 @@ class FallingLeaf(services: MegaServices) : MegaGameEntity(services), ICullableE
 
             elapseTimer.update(delta)
             if (elapseTimer.isFinished()) {
-                val duration = getRandom(minElapseDuration, maxElapseDuration)
+                val duration = services.random.nextFloat(minElapseDuration, maxElapseDuration)
                 elapseTimer.resetDuration(duration)
 
                 prevTrajectory.set(currentTrajectory)
 
-                val trajX = getRandom(minTrajectory.x, maxTrajectory.x)
-                val trajY = getRandom(minTrajectory.y, maxTrajectory.y)
+                val trajX = services.random.nextFloat(minTrajectory.x, maxTrajectory.x)
+                val trajY = services.random.nextFloat(minTrajectory.y, maxTrajectory.y)
                 currentTrajectory.set(trajX, trajY)
 
                 transTimer.reset()

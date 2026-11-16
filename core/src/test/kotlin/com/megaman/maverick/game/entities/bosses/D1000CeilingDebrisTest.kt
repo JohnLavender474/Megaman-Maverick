@@ -1,7 +1,6 @@
 package com.megaman.maverick.game.entities.bosses
 
 import com.badlogic.gdx.math.Vector2
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.world.body.BodyComponent
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.decorations.D1000DebrisWarning
@@ -72,7 +71,7 @@ class D1000CeilingDebrisTest : DescribeSpec({
         )
         val start = rig.bossCenter().y
         rig.ticksUntil(6f) { rig.bossCenter().y > start + RIG_PPM } shouldBe true
-        UtilMethods.random.setSeed(seed)
+        rig.randomSource.setSeed(seed)
         rig.ticksUntil(3f) { rig.spawnedOf<D1000DebrisWarning>().isNotEmpty() } shouldBe true
     }
 

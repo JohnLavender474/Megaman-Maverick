@@ -326,7 +326,7 @@ class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size
             .set(spawn)
             .add(offset.x * ConstVals.PPM, offset.y * ConstVals.PPM)
 
-        val color = GEM_COLORS.random()
+        val color = services.random.pick(GEM_COLORS)
 
         val speed = GEM_THROW_SPEED * ConstVals.PPM
 
@@ -369,7 +369,7 @@ class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size
 
         GameLogger.debug(TAG, "setNextPosition(): candidates=$candidates")
 
-        val nextPosition = candidates.random()
+        val nextPosition = services.random.pick(candidates)
         body.setBottomCenterToPoint(nextPosition)
         currentPosition.set(nextPosition)
 

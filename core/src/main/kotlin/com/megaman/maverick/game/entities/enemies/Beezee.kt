@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.gdxArrayOf
@@ -137,11 +136,11 @@ class Beezee(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL
         state = BeezeeState.HOVER
         resetHoverTimer()
 
-        val attackDelayDur = UtilMethods.getRandom(ATTACK_MIN_DELAY, ATTACK_MAX_DELAY)
+        val attackDelayDur = services.random.nextFloat(ATTACK_MIN_DELAY, ATTACK_MAX_DELAY)
         attackDelay.resetDuration(attackDelayDur)
 
         cullTimer.reset()
-        facing = UtilMethods.getRandom(Facing.LEFT, Facing.RIGHT)
+        facing = services.random.pickOf(Facing.LEFT, Facing.RIGHT)
         frozen = false
 
         val owner = spawnProps.get(ConstKeys.OWNER, CannoHoney::class)
@@ -283,7 +282,7 @@ class Beezee(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL
 
     private fun resetHoverTimer() {
         GameLogger.debug(TAG, "resetHoverTimer(): hashCode=${hashCode()}")
-        val duration = UtilMethods.getRandom(MIN_HOVER_DUR, MAX_HOVER_DUR)
+        val duration = services.random.nextFloat(MIN_HOVER_DUR, MAX_HOVER_DUR)
         hoverTimer.resetDuration(duration)
     }
 
@@ -300,8 +299,8 @@ class Beezee(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL
                 reusableBoundsMatrix
             )
             .flatten(reusableBoundsArray)
-        sections.shuffle()
-        val target = sections[0].getRandomPositionInBounds()
+        services.random.shuffle(sections)
+        val target = sections[0].getRandomPositionInBounds(services.random)
 
         reusableBoundsArray.clear()
         reusableBoundsMatrix.clear()

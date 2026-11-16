@@ -12,6 +12,7 @@ import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.common.random.SeededRandom
 import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.events.Event
@@ -41,6 +42,7 @@ import io.mockk.clearAllMocks
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
+import java.util.Random
 
 const val BOSS_RIG_PPM = ConstVals.PPM.toFloat()
 
@@ -50,6 +52,7 @@ class BossRig {
     val queued = Array<Pair<IGameEntity, Properties>>()
     val destroyed = Array<IGameEntity>()
     val events = Array<Event>()
+    val randomSource = Random(0L)
     val services: MegaServices
     val player: MegamanX
     val playerBody: Body
@@ -90,7 +93,9 @@ class BossRig {
             entity.existenceState = EntityExistenceState.DESTROY_QUEUED
             true
         }
-        services = testServices(engine = engine, assets = assets, audio = audio, players = MegaPlayers(2))
+        services = testServices(engine = engine, assets = assets, audio = audio, players = MegaPlayers(2),
+            random = SeededRandom(randomSource)
+        )
         every { texture.width } returns 1024
         every { texture.height } returns 1024
         every { atlas.findRegion(any()) } returns AtlasRegion(texture, 0, 0, 64, 64)

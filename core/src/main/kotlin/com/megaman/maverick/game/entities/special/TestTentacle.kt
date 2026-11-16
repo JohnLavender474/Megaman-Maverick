@@ -279,10 +279,10 @@ class TestTentacle(services: MegaServices) : MegaGameEntity(services), IDrawable
         idleTarget.set(targetPos)
         targetOrigin.set(targetPos)
 
-        anchorDriftPhaseX = MathUtils.random(0f, MathUtils.PI2)
-        anchorDriftPhaseY = MathUtils.random(0f, MathUtils.PI2)
-        targetDriftPhaseX = MathUtils.random(0f, MathUtils.PI2)
-        targetDriftPhaseY = MathUtils.random(0f, MathUtils.PI2)
+        anchorDriftPhaseX = services.random.nextFloat(0f, MathUtils.PI2)
+        anchorDriftPhaseY = services.random.nextFloat(0f, MathUtils.PI2)
+        targetDriftPhaseX = services.random.nextFloat(0f, MathUtils.PI2)
+        targetDriftPhaseY = services.random.nextFloat(0f, MathUtils.PI2)
 
         val jointCount = segmentCount + 1
         (0 until jointCount).forEach { _ ->

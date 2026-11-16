@@ -74,7 +74,7 @@ class ExplosionField(services: MegaServices): MegaGameEntity(services), IOwnable
         GameLogger.debug(TAG, "spawnExplosion()")
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION)!!
         explosion.spawn(props(
-            ConstKeys.POSITION pairTo bounds.getRandomPositionInBounds(GameObjectPools.fetch(Vector2::class)),
+            ConstKeys.POSITION pairTo bounds.getRandomPositionInBounds(services.random, GameObjectPools.fetch(Vector2::class)),
             ConstKeys.SOUND pairTo SoundAsset.EXPLOSION_2_SOUND,
             ConstKeys.OWNER pairTo owner
         ))

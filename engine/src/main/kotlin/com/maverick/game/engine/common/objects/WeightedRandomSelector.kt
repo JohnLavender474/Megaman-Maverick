@@ -1,7 +1,7 @@
 package com.maverick.game.engine.common.objects
 
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.OrderedMap
+import com.maverick.game.engine.common.random.GameRandom
 
 
 class WeightedRandomSelector<T>(
@@ -30,8 +30,8 @@ class WeightedRandomSelector<T>(
     }
 
 
-    fun getRandomItem(): T {
-        val r = MathUtils.random() * weightSum
+    fun getRandomItem(random: GameRandom): T {
+        val r = random.nextFloat(0f, 1f) * weightSum
         var cumWeight = 0f
         for (entry in items) {
             cumWeight += entry.value

@@ -282,7 +282,7 @@ class ElecDevil(services: MegaServices) : AbstractBoss(services), IStateable<Ele
     }
 
     override fun spawnDefeatExplosion() {
-        val position = Position.entries.random()
+        val position = services.random.pick(Position.entries)
 
         val spawn = when {
             leftBody!!.on -> leftBody!!.body.getCenter()
@@ -579,7 +579,7 @@ class ElecDevil(services: MegaServices) : AbstractBoss(services), IStateable<Ele
             else -> null
         }
 
-        ElecDevilConstants.getPieceQueue().forEach { (row, column) ->
+        ElecDevilConstants.getPieceQueue(services.random).forEach { (row, column) ->
             var xOffset = ElecDevilConstants.PIECE_WIDTH * ConstVals.PPM / 2f
             val yOffset = ElecDevilConstants.PIECE_HEIGHT * ConstVals.PPM / 2f
 
@@ -593,7 +593,7 @@ class ElecDevil(services: MegaServices) : AbstractBoss(services), IStateable<Ele
             val target = when {
                 randomTargetRows -> {
                     val targetColumn = columnRowMap!![column]
-                    val targetRow = targetColumn.random()
+                    val targetRow = services.random.pick(targetColumn.orderedItems())
 
                     targetColumn.remove(targetRow)
                     if (targetColumn.isEmpty) columnRowMap.remove(column)
@@ -668,8 +668,8 @@ class ElecDevil(services: MegaServices) : AbstractBoss(services), IStateable<Ele
         GameLogger.debug(TAG, "shootFromEye()")
 
         val target = targetPlayer.body.getCenter()
-        val targetXDelta = UtilMethods.getRandom(-0.5f, 0.5f) * ConstVals.PPM
-        val targetYDelta = UtilMethods.getRandom(-0.5f, 0.5f) * ConstVals.PPM
+        val targetXDelta = services.random.nextFloat(-0.5f, 0.5f) * ConstVals.PPM
+        val targetYDelta = services.random.nextFloat(-0.5f, 0.5f) * ConstVals.PPM
         target.add(targetXDelta, targetYDelta)
 
         val elecBall = MegaEntityFactory.fetch(ElecBall::class)!!

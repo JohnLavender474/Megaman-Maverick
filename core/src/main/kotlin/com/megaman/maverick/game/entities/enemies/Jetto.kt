@@ -253,7 +253,7 @@ class Jetto(services: MegaServices) : AbstractEnemy(services), IFreezableEntity,
                 if (fallExplodeTimer.isFinished()) {
                     val explosionProps = props(
                         ConstKeys.OWNER pairTo this,
-                        ConstKeys.POSITION pairTo body.getBounds().getRandomPositionInBounds()
+                        ConstKeys.POSITION pairTo body.getBounds().getRandomPositionInBounds(services.random)
                     )
                     explode(explosionProps)
 

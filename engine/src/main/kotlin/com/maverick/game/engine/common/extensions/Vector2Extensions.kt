@@ -3,7 +3,6 @@ package com.maverick.game.engine.common.extensions
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.objects.IntPair
 
@@ -62,10 +61,6 @@ fun Vector2.add(length: Float, direction: Direction): Vector2 {
 
 fun Vector2.add(delta: Float): Vector2 = add(delta, delta)
 
-fun randomVector2(min: Float, max: Float, out: Vector2) = out.set(getRandom(min, max), getRandom(min, max))
-
-fun randomVector2(minX: Float, maxX: Float, minY: Float, maxY: Float, out: Vector2) =
-    out.set(getRandom(minX, maxX), getRandom(minY, maxY))
 
 fun Vector2.setToDirection(direction: Direction): Vector2 = when (direction) {
     Direction.UP -> set(0f, 1f)

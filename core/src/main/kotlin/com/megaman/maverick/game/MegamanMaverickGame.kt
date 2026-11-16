@@ -35,6 +35,7 @@ import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.objects.InsertionOrderPriorityQueue
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.random.SeededRandom
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameLine
@@ -444,7 +445,8 @@ class MegamanMaverickGame(
             getSystem(GroupsSystem::class)!!,
             cameraView,
             cameraController,
-            launch.rules
+            launch.rules,
+            SeededRandom(launch.randSeed ?: System.currentTimeMillis())
         )
 
         MegaEntityFactory.init(services)

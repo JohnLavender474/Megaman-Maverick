@@ -11,6 +11,7 @@ import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.common.random.SeededRandom
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.systems.GameSystem
@@ -18,8 +19,8 @@ import com.maverick.game.engine.updatables.UpdatablesSystem
 import com.maverick.game.engine.world.WorldSystem
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
-import com.maverick.game.engine.world.container.SimpleGridWorldContainer
 import com.maverick.game.engine.world.contacts.ContactRuleDispatcher
+import com.maverick.game.engine.world.container.SimpleGridWorldContainer
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
@@ -43,6 +44,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.every
 import io.mockk.mockk
+import java.util.Random
 import kotlin.math.abs
 
 private const val PPM = ConstVals.PPM.toFloat()
@@ -359,7 +361,7 @@ class FallingPieceTest : DescribeSpec({
             val ys = setOf(6.6f, 8.4f, 11.25f, 5.6f, 7.5f, 9.4f, 10.3f, 4.7f).map { it * PPM }
             val before = mutableSetOf<MegaGameEntity>()
             MegaGameEntities.getOfType(EntityType.DECORATION).forEach { before.add(it) }
-            FallingPiece.throwDebris(arrayOf(DEBRIS_KEY, DEBRIS_KEY, DEBRIS_KEY), Vector2(5f * PPM, 5f * PPM))
+            FallingPiece.throwDebris(arrayOf(DEBRIS_KEY, DEBRIS_KEY, DEBRIS_KEY), Vector2(5f * PPM, 5f * PPM), SeededRandom(Random(1L)))
             engine.update(0f)
             val thrown = mutableListOf<FallingPiece>()
             MegaGameEntities.getOfType(EntityType.DECORATION).forEach { if (it !in before) thrown.add(it as FallingPiece) }

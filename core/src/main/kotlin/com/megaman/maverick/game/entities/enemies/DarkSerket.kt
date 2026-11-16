@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.equalsAny
@@ -521,7 +520,7 @@ class DarkSerket(services: MegaServices) : AbstractEnemy(services), IFreezableEn
             targetPlayer.body.getBounds().getMaxY() <= body.getBounds().getY())
 
     private fun shouldJumpToAttack() = isMegamanOverlappingScanner() && !isAnyBlockInTheWay() &&
-        UtilMethods.getRandom(0f, 100f) <= RANDOM_CLOSE_RANGE_JUMP_CHANCE
+        services.random.nextFloat(0f, 100f) <= RANDOM_CLOSE_RANGE_JUMP_CHANCE
 
     private fun jump() {
         GameLogger.debug(TAG, "jump()")

@@ -13,7 +13,6 @@ import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.UtilMethods
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.ProcessState
@@ -676,8 +675,8 @@ class MechaDragon(services: MegaServices) : AbstractBoss(services), IFreezableEn
             MechaDragonState.CHARGE_TO_OTHER_SIDE -> {
                 val roomSide = getRoomSideOf(body.getCenter())
                 val target = when (roomSide) {
-                    RoomSide.LEFT -> rightSideChargeTargets.superRandom()
-                    RoomSide.RIGHT -> leftSideChargeTargets.superRandom()
+                    RoomSide.LEFT -> services.random.pick(rightSideChargeTargets)
+                    RoomSide.RIGHT -> services.random.pick(leftSideChargeTargets)
                 }
                 currentTarget.set(target)
 
@@ -698,7 +697,7 @@ class MechaDragon(services: MegaServices) : AbstractBoss(services), IFreezableEn
                 reusableHoverTargetsSet.addAll(candidateTargets)
                 reusableHoverTargetsSet.remove(currentTarget)
 
-                val target = reusableHoverTargetsSet.superRandom()
+                val target = services.random.pick(reusableHoverTargetsSet.orderedItems())
                 currentTarget.set(target)
 
                 reusableHoverTargetsSet.clear()
@@ -719,7 +718,7 @@ class MechaDragon(services: MegaServices) : AbstractBoss(services), IFreezableEn
         }
     }
 
-    private fun shouldChargeToOtherSide() = getRandom(0, 100) <= chargeChance
+    private fun shouldChargeToOtherSide() = services.random.nextInt(0, 100) <= chargeChance
 
     private fun shouldTurnAround() = getRoomSideOf(body.getCenter()).name == facing.name
 

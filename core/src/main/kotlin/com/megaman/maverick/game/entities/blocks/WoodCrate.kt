@@ -9,7 +9,6 @@ import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.extensions.*
@@ -179,22 +178,22 @@ class WoodCrate(services: MegaServices) : Block(services), IFireableEntity, ISpr
         GameLogger.debug(TAG, "spawnPieces()")
 
         (0 until PIECES_ON_DESTROY).forEach { _ ->
-            val position = body.getBounds().getRandomPositionInBounds()
+            val position = body.getBounds().getRandomPositionInBounds(services.random)
 
             val impulse = GameObjectPools.fetch(Vector2::class)
                 .set(
-                    UtilMethods.getRandom(
+                    services.random.nextFloat(
                         PIECE_ON_DESTROY_MIN_IMPULSE_X,
                         PIECE_ON_DESTROY_MAX_IMPULSE_X
                     ),
-                    UtilMethods.getRandom(
+                    services.random.nextFloat(
                         PIECE_ON_DESTROY_MIN_IMPULSE_Y,
                         PIECE_ON_DESTROY_MAX_IMPULSE_Y
                     )
                 )
                 .scl(ConstVals.PPM.toFloat())
 
-            val key = FallingPiece.WOOD_CRATE_REGIONS[UtilMethods.getRandom(0, FallingPiece.WOOD_CRATE_REGIONS.size - 1)]
+            val key = FallingPiece.WOOD_CRATE_REGIONS[services.random.nextInt(0, FallingPiece.WOOD_CRATE_REGIONS.size - 1)]
             FallingPiece.spawn(FallingPieceDef.WOOD_CRATE, key, position, impulse)
         }
     }
@@ -309,11 +308,11 @@ class WoodCrate(services: MegaServices) : Block(services), IFireableEntity, ISpr
                 GameLogger.debug(TAG, "update(): spawn flame")
 
                 val impulse = GameObjectPools.fetch(Vector2::class)
-                    .setX(UtilMethods.getRandom(FLAME_MIN_IMPULSE_X, FLAME_MAX_IMPULSE_X))
-                    .setY(UtilMethods.getRandom(FLAME_MIN_IMPULSE_Y, FLAME_MAX_IMPULSE_Y))
+                    .setX(services.random.nextFloat(FLAME_MIN_IMPULSE_X, FLAME_MAX_IMPULSE_X))
+                    .setY(services.random.nextFloat(FLAME_MIN_IMPULSE_Y, FLAME_MAX_IMPULSE_Y))
                     .scl(ConstVals.PPM.toFloat())
 
-                val position = body.getBounds().getRandomPositionInBounds()
+                val position = body.getBounds().getRandomPositionInBounds(services.random)
 
                 val flame = MegaEntityFactory.fetch(MagmaFlame::class)!!
                 flame.spawn(

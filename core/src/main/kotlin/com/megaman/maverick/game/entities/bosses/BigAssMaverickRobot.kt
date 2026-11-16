@@ -12,7 +12,6 @@ import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.UtilMethods
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.*
@@ -451,7 +450,7 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services, defea
         body.fixtures[FixtureType.DAMAGEABLE].first()
             .getShape()
             .getBoundingRectangle()
-            .getRandomPositionInBounds(position)
+            .getRandomPositionInBounds(services.random, position)
 
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(
@@ -512,7 +511,7 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services, defea
             target.body.getCenter(),
             target.body.physics.velocity,
             arena,
-            { min, max -> getRandom(min, max) },
+            { min, max -> services.random.nextFloat(min, max) },
             GameObjectPools.fetch(Vector2::class)
         )
         val speed = UtilMethods.interpolate(volleyTuning.orbMinSpeed, volleyTuning.orbMaxSpeed, 1f - getHealthRatio())
@@ -546,7 +545,7 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services, defea
         allHands.forEach { if (it.state == HandState.IDLE && !it.isBeingStoodUpon()) free.add(it) }
 
         val total = tuning.totalWeight(free.size)
-        val kind = if (total <= 0) null else tuning.attackFor(getRandom(0, total - 1), free.size)
+        val kind = if (total <= 0) null else tuning.attackFor(services.random.nextInt(0, total - 1), free.size)
         if (kind == null) {
             attackWait.resetDuration(tuning.attackWait)
             return

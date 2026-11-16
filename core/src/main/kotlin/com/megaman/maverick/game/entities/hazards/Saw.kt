@@ -125,7 +125,7 @@ class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpri
     private fun setToPendulum(bounds: GameRectangle, spawnProps: Properties) {
         val length = spawnProps.getOrDefault(ConstKeys.LENGTH, LENGTH, Float::class)
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, PENDULUM_GRAVITY, Float::class)
-        val pendulum = Pendulum(length * ConstVals.PPM, gravity * ConstVals.PPM, bounds.getCenter(false), 1 / 60f)
+        val pendulum = Pendulum(length * ConstVals.PPM, gravity * ConstVals.PPM, bounds.getCenter(false), 1 / 60f, services.random)
 
         putMotionDefinition(
             ConstKeys.PENDULUM, MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) })

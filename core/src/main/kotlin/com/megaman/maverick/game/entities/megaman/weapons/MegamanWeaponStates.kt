@@ -30,7 +30,8 @@ class MoonScythesState(cooldown: Float) : WeaponState(cooldown) {
         val allMoonScythes = getAllSpawned(outArray)
         // TODO: outArray is not cleared on this return, so it keeps old entries (bug candidate in the 024a TODO.md)
         if (allMoonScythes.size <= 4) return
-        allMoonScythes.sort { o1, o2 -> o1.timeSpawned.compareTo(o2.timeSpawned) }
+        // TODO: scythes of this shot are still spawn-queued, so their stale spawnOrder sorts them as oldest (011a TODO.md)
+        allMoonScythes.sort { o1, o2 -> o1.spawnOrder.compareTo(o2.spawnOrder) }
         var aliveCount = allMoonScythes.size
         val iter = allMoonScythes.iterator()
         while (iter.hasNext() && aliveCount > 4) {

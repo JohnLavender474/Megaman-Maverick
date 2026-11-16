@@ -10,7 +10,6 @@ import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
@@ -342,11 +341,11 @@ class SteamRoller(services: MegaServices) : MegaGameEntity(services), IBodyEntit
             val spawn = GameObjectPools.fetch(Vector2::class)
                 .set(center)
                 .add(
-                    UtilMethods.getRandom(
+                    services.random.nextFloat(
                         SMASH_ROCKS_MIN_OFFSET_X,
                         SMASH_ROCKS_MAX_OFFSET_X
                     ) * ConstVals.PPM * facing.value,
-                    UtilMethods.getRandom(
+                    services.random.nextFloat(
                         SMASH_ROCKS_MIN_OFFSET_Y,
                         SMASH_ROCKS_MAX_OFFSET_Y
                     ) * ConstVals.PPM
@@ -356,13 +355,13 @@ class SteamRoller(services: MegaServices) : MegaGameEntity(services), IBodyEntit
 
             val impulse = GameObjectPools.fetch(Vector2::class)
                 .setX(
-                    UtilMethods.getRandom(
+                    services.random.nextFloat(
                         SMASH_ROCKS_MIN_X_IMPULSE,
                         SMASH_ROCKS_MAX_X_IMPULSE
                     ) * ConstVals.PPM
                 )
                 .setY(
-                    UtilMethods.getRandom(
+                    services.random.nextFloat(
                         SMASH_ROCKS_MIN_Y_IMPULSE,
                         SMASH_ROCKS_MAX_Y_IMPULSE
                     ) * ConstVals.PPM

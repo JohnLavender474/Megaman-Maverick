@@ -109,8 +109,8 @@ class WilyPlaneBomb(services: MegaServices) : AbstractProjectile(services) {
     private fun spawnExplosion() {
         GameLogger.debug(TAG, "spawnExplosion()")
 
-        val angle = MathUtils.random(MathUtils.PI2)
-        val distance = MathUtils.random(0f, EXPLOSION_RADIUS * ConstVals.PPM)
+        val angle = services.random.nextFloat(0f, MathUtils.PI2)
+        val distance = services.random.nextFloat(0f, EXPLOSION_RADIUS * ConstVals.PPM)
 
         val center = body.getCenter()
         val position = GameObjectPools.fetch(Vector2::class).set(

@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
@@ -84,7 +83,7 @@ class LampeonBullet(services: MegaServices) : AbstractProjectile(services), IFac
         val index = spawnProps.getOrDefault(ConstKeys.INDEX, -1, Int::class)
         if (index < 0 || index > 4) throw IllegalStateException("Index is invalid: $index")
 
-        val angle = ANGLES[index] + 270f + UtilMethods.getRandom(-RANDOM_SPREAD, RANDOM_SPREAD)
+        val angle = ANGLES[index] + 270f + services.random.nextFloat(-RANDOM_SPREAD, RANDOM_SPREAD)
 
         val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
 

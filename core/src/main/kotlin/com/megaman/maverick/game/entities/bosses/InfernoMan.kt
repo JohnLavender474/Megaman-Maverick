@@ -11,7 +11,6 @@ import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
@@ -503,7 +502,7 @@ class InfernoMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
         val flameHeadTimer = Timer(flameHeadDur)
         val flameHeadRunnables = Array<TimeMarkedRunnable>()
         val flameHeadOffsetTime = flameHeadDur / FLAME_HEAD_SHOTS
-        val randomIndex = getRandom(0, FLAME_HEAD_SHOTS - 1)
+        val randomIndex = services.random.nextInt(0, FLAME_HEAD_SHOTS - 1)
         for (i in 0 until FLAME_HEAD_SHOTS) {
             val time = FLAME_HEAD_SHOOT_DELAY + flameHeadOffsetTime * i
             val runnable = TimeMarkedRunnable(time) { launchOrb(i == randomIndex) }
@@ -581,7 +580,7 @@ class InfernoMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
             }
             InfernoManState.FLAMEHEAD -> {
                 timers["flamehead"].reset()
-                randomMeteorKeys.shuffle()
+                services.random.shuffle(randomMeteorKeys)
             }
             InfernoManState.WALLSLIDE -> {
                 timers["wallslide"].reset()
@@ -593,7 +592,7 @@ class InfernoMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
 
     private fun getShootMethod() = when (currentState) {
         InfernoManState.STAND -> {
-            val random = getRandom(0f, 1f)
+            val random = services.random.nextFloat(0f, 1f)
             when {
                 isMegamanStraightAhead() -> when {
                     random <= 0.75f || !timers["shoot"].isFinished() -> ShootMethod.STRAIGHT

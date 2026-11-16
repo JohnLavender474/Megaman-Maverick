@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.bosses
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -381,7 +380,7 @@ class D1000TrapTest : DescribeSpec({
                     val dodger = D1000Dodger(rig, hard)
                     dodger.bodyCounts = false
                     if (tier == D1000Tier.OVERDRIVE) overdrive(rig) else rig.startFight()
-                    UtilMethods.random.setSeed(if (hard) 11L else if (tier == D1000Tier.NORMAL) 5L else 7L)
+                    rig.randomSource.setSeed(if (hard) 11L else if (tier == D1000Tier.NORMAL) 5L else 7L)
                     dodger.run(45f)
                     dodger.stuns.isNotEmpty() shouldBe true
                     withClue("eye shots that hit X in a stun: ${dodger.stunHits}") { dodger.stunHits.isEmpty() shouldBe true }

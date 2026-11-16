@@ -80,5 +80,27 @@ class GameEngineTest :
                 engine.spawn(entity) shouldBe false
                 rejected.shouldBeEmpty()
             }
+
+            it("counts each spawn in spawn order, and the entity reads its number in onSpawn") {
+                val orders = mutableListOf<Long>()
+
+                class CountedEntity : GameEntity(engine) {
+                    override fun init(vararg params: Any) {}
+
+                    override fun onSpawn(spawnProps: Properties) {
+                        orders.add(engine.spawnCount)
+                    }
+
+                    override fun onDestroy() {}
+                }
+
+                engine.spawnCount shouldBe 0L
+                engine.spawn(CountedEntity())
+                engine.spawn(CountedEntity())
+                engine.update(0f)
+
+                orders shouldContainExactly listOf(1L, 2L)
+                engine.spawnCount shouldBe 2L
+            }
         }
     })

@@ -63,6 +63,9 @@ class GameEngine(
     var updating = false
         private set
 
+    var spawnCount = 0L
+        private set
+
     private val entities = MutableOrderedSet<IGameEntity>()
 
     private val entitiesToSpawn = EntitiesToSpawn()
@@ -120,6 +123,7 @@ class GameEngine(
 
     private fun spawnNow(entity: IGameEntity, spawnProps: Properties) {
         entities.add(entity)
+        spawnCount++
 
         entity.onSpawn(spawnProps)
         entity.existenceState = when {

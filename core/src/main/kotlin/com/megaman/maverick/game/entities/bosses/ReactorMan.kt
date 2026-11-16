@@ -624,7 +624,7 @@ class ReactorMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
     }
 
     private fun reloadIndexArray(): Array<Int> {
-        val index = UtilMethods.getRandom(0, GIGA_LASER_BEAMS_ARRAYS.size - 1)
+        val index = services.random.nextInt(0, GIGA_LASER_BEAMS_ARRAYS.size - 1)
         val array = GIGA_LASER_BEAMS_ARRAYS[index]
 
         GameLogger.debug(TAG, "reloadIndexArray(): index=$index, array=$array")
@@ -737,7 +737,7 @@ class ReactorMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
     private fun shouldPerformGigaAttack(): Boolean {
         if (standCycles < MIN_CYCLES_BEFORE_GIGA) return false
 
-        val chance = UtilMethods.getRandom(0f, 100f)
+        val chance = services.random.nextFloat(0f, 100f)
         return chance < standCycles * GIGA_CHANCE_DELTA
     }
 
@@ -824,7 +824,7 @@ class ReactorMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
 
     private fun shouldStartRunning() = cyclesSinceRun >= CYCLES_BEFORE_RUN &&
         abs(targetPlayer.body.getX() - body.getX()) >= MIN_DIST_TO_TRIGGER_RUN * ConstVals.PPM &&
-        UtilMethods.getRandom(0f, 100f) <= RUN_CHANCE
+        services.random.nextFloat(0f, 100f) <= RUN_CHANCE
 
     private fun shouldStopRunning() = FacingUtils.isFacingBlock(this)
 

@@ -302,7 +302,7 @@ abstract class AbstractBoss(
     }
 
     protected open fun spawnDefeatExplosion() {
-        val position = Position.entries.random()
+        val position = services.random.pick(Position.entries)
 
         val explosion = MegaEntityFactory.fetch(Explosion::class)!!
         explosion.spawn(

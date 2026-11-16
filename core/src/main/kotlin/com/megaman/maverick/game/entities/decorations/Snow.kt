@@ -3,7 +3,6 @@ package com.megaman.maverick.game.entities.decorations
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.swapped
 import com.maverick.game.engine.common.objects.Properties
@@ -85,8 +84,8 @@ class Snow(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
         val maxAmplitude = spawnProps.get("${ConstKeys.MAX}_${ConstKeys.AMPLITUDE}", Float::class)!!
 
         val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
-        val amplitude = UtilMethods.getRandom(minAmplitude, maxAmplitude)
-        val frequency = UtilMethods.getRandom(minFrequency, maxFrequency)
+        val amplitude = services.random.nextFloat(minAmplitude, maxAmplitude)
+        val frequency = services.random.nextFloat(minFrequency, maxFrequency)
         sine = SineWave(spawn.cpy().swapped(), speed, amplitude, frequency)
 
         driftEachFrame = spawnProps.getOrDefault(ConstKeys.DRIFT, 0f, Float::class)

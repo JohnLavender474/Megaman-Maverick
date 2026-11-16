@@ -6,7 +6,6 @@ import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.gdxArrayOf
@@ -199,12 +198,12 @@ class MetaWheelF(services: MegaServices) : AbstractEnemy(services, size = Size.L
                     ConstKeys.OWNER pairTo this,
                     ConstKeys.DAMAGER pairTo false,
                     ConstKeys.POSITION pairTo Vector2(
-                        center.x + getRandom(-spread, spread), center.y + getRandom(-spread, spread)
+                        center.x + services.random.nextFloat(-spread, spread), center.y + services.random.nextFloat(-spread, spread)
                     )
                 )
             )
         }
-        FallingPiece.throwDebris(DEBRIS, center)
+        FallingPiece.throwDebris(DEBRIS, center, services.random)
     }
 
     override fun defineBodyComponent(): BodyComponent {

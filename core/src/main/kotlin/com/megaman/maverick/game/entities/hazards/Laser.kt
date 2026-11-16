@@ -309,13 +309,13 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
                     .add(0.25f * ConstVals.PPM, direction)
 
                 val impulse = GameObjectPools.fetch(Vector2::class)
-                    .setX(UtilMethods.getRandom(LASER_SHARDS_MIN_IMPULSE_X, LASER_SHARDS_MAX_IMPULSE_X))
+                    .setX(services.random.nextFloat(LASER_SHARDS_MIN_IMPULSE_X, LASER_SHARDS_MAX_IMPULSE_X))
                     .setY(LASER_SHARDS_IMPULSE_Y)
                     .rotateDeg(direction.rotation)
                     .scl(ConstVals.PPM.toFloat())
 
-                val size = PreciousShardSize.entries.random()
-                val color = PreciousShardColor.entries.random()
+                val size = services.random.pick(PreciousShardSize.entries)
+                val color = services.random.pick(PreciousShardColor.entries)
 
                 val preciousShard = MegaEntityFactory.fetch(PreciousShard::class)!!
                 preciousShard.spawn(

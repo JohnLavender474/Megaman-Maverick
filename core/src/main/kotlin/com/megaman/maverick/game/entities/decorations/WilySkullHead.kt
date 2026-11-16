@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -87,8 +86,8 @@ class WilySkullHead(services: MegaServices) : MegaGameEntity(services), IAudioEn
         explosionDelay.update(delta)
         if (explosionDelay.isFinished()) {
             val position = current.cpy().add(
-                UtilMethods.getRandom(-1f, 1f) * ConstVals.PPM,
-                UtilMethods.getRandom(-1f, 1f) * ConstVals.PPM,
+                services.random.nextFloat(-1f, 1f) * ConstVals.PPM,
+                services.random.nextFloat(-1f, 1f) * ConstVals.PPM,
             )
             val explosion = MegaEntityFactory.fetch(Explosion::class)!!
             explosion.spawn(

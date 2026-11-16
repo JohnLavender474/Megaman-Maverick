@@ -10,7 +10,6 @@ import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.UtilMethods.getRandom
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.*
@@ -176,8 +175,8 @@ class MoonHead(services: MegaServices) : AbstractBoss(services, dmgDuration = DA
     }
 
     private fun getRandomSpawn(): Vector2 {
-        val randomX = getRandom(area.getX(), area.getMaxX())
-        val randomY = getRandom(area.getY(), area.getMaxY())
+        val randomX = services.random.nextFloat(area.getX(), area.getMaxX())
+        val randomY = services.random.nextFloat(area.getY(), area.getMaxY())
         return Vector2(randomX, randomY)
     }
 

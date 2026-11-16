@@ -9,7 +9,6 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
-import com.maverick.game.engine.common.UtilMethods.getRandomBool
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.*
@@ -275,7 +274,7 @@ class SigmaRat(services: MegaServices) : AbstractBoss(services, size = Size.LARG
             weightedAttackSelector.putItem(SigmaRatAttack.FIRE_BLASTS, MEDIUM_CHANCE)
         }
 
-        val attackState = weightedAttackSelector.getRandomItem()
+        val attackState = weightedAttackSelector.getRandomItem(services.random)
         when (attackState) {
             SigmaRatAttack.ELECTRIC_BALLS -> {
                 electricShotDelayTimer.reset()
@@ -287,7 +286,7 @@ class SigmaRat(services: MegaServices) : AbstractBoss(services, size = Size.LARG
                     electricBalls.addLast(electricBall as SigmaRatElectricBall)
                 }
 
-                electricBallsClockwise = getRandomBool()
+                electricBallsClockwise = services.random.nextBoolean()
 
                 requestToPlaySound(SoundAsset.LIFT_OFF_SOUND, false)
             }
@@ -295,7 +294,7 @@ class SigmaRat(services: MegaServices) : AbstractBoss(services, size = Size.LARG
             SigmaRatAttack.FIRE_BLASTS -> {
                 fireballDelayTimer.reset()
 
-                val angles = FIRE_BALL_ANGLES.getRandomElements(3, reusableFloatArray)
+                val angles = FIRE_BALL_ANGLES.getRandomElements(services.random, 3, reusableFloatArray)
                 for (angle in angles) {
                     val fireball =
                         EntityFactories.fetch(EntityType.PROJECTILE, ProjectilesFactory.FIREBALL)!! as Fireball
@@ -364,7 +363,7 @@ class SigmaRat(services: MegaServices) : AbstractBoss(services, size = Size.LARG
                     electricBall.launch(trajectory)
 
                     if (INDICES_TO_TRY_CLAW_DURING_ELECTRIC_BALLS.contains(index)) {
-                        val attack = weightedAttackSelector.getRandomItem()
+                        val attack = weightedAttackSelector.getRandomItem(services.random)
                         when (attack) {
                             SigmaRatAttack.CLAW_SHOCK -> {
                                 val distToLeft = targetPlayer.body.getCenter().dst2(leftClaw!!.body.getCenter())

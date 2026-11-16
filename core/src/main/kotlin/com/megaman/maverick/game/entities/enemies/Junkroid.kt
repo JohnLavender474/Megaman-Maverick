@@ -209,7 +209,7 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
                 ConstKeys.DAMAGER pairTo false
             )
         )
-        FallingPiece.throwDebris(DEBRIS, body.getCenter())
+        FallingPiece.throwDebris(DEBRIS, body.getCenter(), services.random)
     }
 
     override fun defineBodyComponent(): BodyComponent {
