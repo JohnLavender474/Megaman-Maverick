@@ -2603,3 +2603,7 @@ newest entry at the bottom.
   measure stay in `045`; the per-frame leftovers and `delayRun` go to `045b`; the one-line guard gap goes to `161`.
   `--poolChecks` added to the root `CLAUDE.md`. `O5-R1` current state updated. The main checkout had 1 modified file
   of another session (`DesertMan_16x14_v4.tmx`); it stays unstaged.
+- Checks on `master` after the squash: `core:test` 2390, `core:smokeTest` 469 and `lwjgl3:jar` pass. `engine:test`
+  failed twice in the full run on `PathfindingRespawnTest` (async latch, 5 s) and passed alone twice (main checkout
+  and `045b` worktree; code identical to the passing branch tip). Filed:
+  `docs/issues/2026-11-16-async-pathfinding-respawn-test-flaky.md`.
