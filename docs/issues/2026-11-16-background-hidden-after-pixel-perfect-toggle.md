@@ -50,8 +50,9 @@ Not changed:
 
 Checks:
 
-- A new unit test in `core` fails without the fix and passes with it: after `TOGGLE_PIXEL_PERFECT` (both values), the
-  background viewport has the screen size of `Gdx.graphics`.
+- A new test in `core:smokeTest` (`BackgroundViewportSmokeTest`; `viewport.update` needs the LibGDX natives, which
+  only that suite loads) fails without the fix and passes with it: after `TOGGLE_PIXEL_PERFECT` (both values), the
+  background viewport has a screen size above 0.
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 - Play check (experimental): `./run-game-alpha.sh --level DESERT_MAN --room room14`: pause, change pixel-perfect,
   resume, walk into `room15`: the sky and the sunset draw. Change it back and look again.
