@@ -34,6 +34,20 @@ class ProtomanGuardStripsSmokeTest : DescribeSpec({
             regions["crouch_slash_arc"]!!.height shouldBe 4 * 40
         }
 
+        mapOf(
+            "groundslide" to 2,
+            "groundslide_shoot" to 1,
+            "climb" to 2,
+            "climb_still" to 1,
+            "climb_still_shoot" to 1,
+            "climb_finish" to 1
+        ).forEach { (name, frames) ->
+            it("has the slide and ladder strip $name with $frames frames of 48x48") {
+                regions[name]!!.width shouldBe ProtomanValues.ART_FRAME_PX
+                regions[name]!!.height shouldBe frames * ProtomanValues.ART_FRAME_PX
+            }
+        }
+
         it("has no ground guard stand strips") {
             regions.containsKey("guard_stand_start") shouldBe false
             regions.containsKey("guard_stand") shouldBe false

@@ -20,6 +20,13 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.container.SimpleGridWorldContainer
 import com.megaman.maverick.game.entities.projectiles.Picket
 import com.megaman.maverick.game.world.body.FixtureType
+import com.megaman.maverick.game.world.body.BodySense
+import com.megaman.maverick.game.world.body.setBodySense
+import com.maverick.game.engine.behaviors.BehaviorsSystem
+import com.maverick.game.engine.entities.contracts.IBodyEntity
+import com.maverick.game.engine.world.body.BodyType
+import com.megaman.maverick.game.world.body.getCenter
+import com.maverick.game.engine.entities.isBehaviorActive
 import com.megaman.maverick.game.world.body.Receivers
 import com.megaman.maverick.game.world.body.receiver
 import com.megaman.maverick.game.world.contacts.rules.DamageRule
@@ -72,6 +79,7 @@ import com.megaman.maverick.game.players.BusterParams
 import com.megaman.maverick.game.players.BusterShot
 import com.megaman.maverick.game.players.BusterClimbOffsetMissingException
 import com.megaman.maverick.game.players.BusterCrouchOffsetMissingException
+import com.megaman.maverick.game.players.BusterSlideOffsetMissingException
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
@@ -97,6 +105,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import io.mockk.clearAllMocks
 
 private const val DELTA = 0.05f
 private const val TOLERANCE = 0.001f
@@ -109,6 +118,7 @@ class ProtomanTest : DescribeSpec({
     lateinit var spawned: MutableList<Pair<IGameEntity, Properties>>
     var frame = InputFrame.RELEASED
     var worldStep: () -> Unit = {}
+    var behaviorStep: () -> Unit = {}
     var overGround = true
 
     val impulse = ProtomanValues.RUN_IMPULSE * DELTA * ConstVals.PPM
@@ -117,6 +127,7 @@ class ProtomanTest : DescribeSpec({
         frame = InputFrame.RELEASED
         buttons.forEach { (button, status) -> frame = frame.with(button, status) }
         controllerSystem.update(DELTA)
+        behaviorStep()
         worldStep()
         proto.buster.update(DELTA)
         proto.sabre.update(DELTA)
@@ -141,6 +152,7 @@ class ProtomanTest : DescribeSpec({
     beforeEach {
         frame = InputFrame.RELEASED
         worldStep = {}
+        behaviorStep = {}
         overGround = true
         spawned = mutableListOf()
         val engine = mockk<GameEngine>(relaxed = true)
@@ -196,6 +208,7 @@ class ProtomanTest : DescribeSpec({
     afterEach {
         MegaEntityFactory.reset()
         unmockkAll()
+        clearAllMocks(answers = false, recordedCalls = true, childMocks = false)
     }
 
     describe("the run") {
@@ -445,7 +458,8 @@ class ProtomanTest : DescribeSpec({
                     runOffsetX = 0f,
                     airOffsetY = 0f,
                     crouchOffset = null,
-                    climbOffset = null
+                    climbOffset = null,
+                    slideOffset = null
                 )
             )
             shouldThrow<BusterCrouchOffsetMissingException> {
@@ -453,6 +467,34 @@ class ProtomanTest : DescribeSpec({
             }
             shouldThrow<BusterClimbOffsetMissingException> {
                 buster.shoot(MegaChargeStatus.NOT_CHARGED, climbing = true)
+            }
+            shots() shouldBe 0
+        }
+
+        it("throws on a slide shot when the params have no slide offset") {
+            val buster = PlayerBuster(
+                proto, BusterParams(
+                    notCharged = BusterShot(
+                        speed = ProtomanValues.SHOT_SPEED,
+                        wait = ProtomanValues.SHOT_WAIT,
+                        poseTime = ProtomanValues.SHOT_POSE_TIME,
+                        limit = null,
+                        sound = SoundAsset.MEGA_BUSTER_BULLET_SHOT_SOUND,
+                        fetch = { MegaEntityFactory.fetch(ProtoBuster::class)!! }
+                    ),
+                    halfCharged = null,
+                    fullyCharged = null,
+                    offsetX = ProtomanValues.SHOT_OFFSET_X,
+                    offsetY = ProtomanValues.SHOT_OFFSET_Y,
+                    runOffsetX = 0f,
+                    airOffsetY = 0f,
+                    crouchOffset = PROTOMAN_BUSTER.crouchOffset,
+                    climbOffset = PROTOMAN_BUSTER.climbOffset,
+                    slideOffset = null
+                )
+            )
+            shouldThrow<BusterSlideOffsetMissingException> {
+                buster.shoot(MegaChargeStatus.NOT_CHARGED, sliding = true)
             }
             shots() shouldBe 0
         }
@@ -1174,6 +1216,23 @@ class ProtomanTest : DescribeSpec({
                 proto.animationKey("stand", ObjectMap()) shouldBe "crouch_shoot"
             }
 
+            it("fires a standing shot and stands on B after DOWN is released during a crouch shot") {
+                useBuster()
+                place()
+                step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
+                pressB()
+                step(MegaControllerButton.DOWN to ButtonStatus.JUST_RELEASED)
+                proto.animationKey("stand", ObjectMap()) shouldBe "crouch_shoot"
+                proto.buster.update(ProtomanValues.SHOT_WAIT)
+                body.setBodySense(BodySense.FEET_ON_GROUND, true)
+                step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                shots().size shouldBe 2
+                val position = shots()[1].second.get(ConstKeys.POSITION, Vector2::class)!!
+                position.y shouldBe (ProtomanValues.SHOT_OFFSET_Y * ConstVals.PPM plusOrMinus TOLERANCE)
+                crouchedBoxes() shouldBe false
+                proto.animationKey("stand", ObjectMap()) shouldBe "stand_shoot"
+            }
+
             it("does a crouch slash, not the UP slash, on UP, DOWN and B on the ground with the sabre slot") {
                 step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
                 guardStep(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
@@ -1503,6 +1562,580 @@ class ProtomanTest : DescribeSpec({
             proto.sabre.reset()
             spawned.clear()
             hitsToBreak { fullSlash() } shouldBe 4
+        }
+    }
+
+    describe("the slide") {
+        val ppm = ConstVals.PPM.toFloat()
+        val slideSpeed = ProtomanValues.GROUND_SLIDE_VEL * ppm
+
+        fun sliding() = proto.isBehaviorActive(BehaviorType.GROUND_SLIDING)
+
+        fun startSlide(vararg others: Pair<MegaControllerButton, ButtonStatus>) = step(
+            MegaControllerButton.DOWN to ButtonStatus.PRESSED, MegaControllerButton.A to ButtonStatus.JUST_PRESSED, *others
+        )
+
+        fun holdBoth(vararg others: Pair<MegaControllerButton, ButtonStatus>) = step(
+            MegaControllerButton.DOWN to ButtonStatus.PRESSED, MegaControllerButton.A to ButtonStatus.PRESSED, *others
+        )
+
+        fun holdBothFor(seconds: Float) {
+            var time = DELTA
+            while (time < seconds - TOLERANCE) {
+                holdBoth()
+                time += DELTA
+            }
+        }
+
+        beforeEach {
+            val behaviors = BehaviorsSystem()
+            behaviors.add(proto)
+            behaviorStep = { behaviors.update(DELTA) }
+            worldStep = { body.preProcess() }
+            body.setBodySense(BodySense.FEET_ON_GROUND, true)
+            step()
+            step()
+        }
+
+        it("has Megaman's slide numbers") {
+            ProtomanValues.GROUND_SLIDE_VEL shouldBe MegamanValues.GROUND_SLIDE_VEL
+            ProtomanValues.WATER_GROUND_SLIDE_VEL shouldBe MegamanValues.WATER_GROUND_SLIDE_VEL
+            ProtomanValues.GROUND_SLIDE_MIN_TIME shouldBe MegamanValues.GROUND_SLIDE_MIN_TIME
+            ProtomanValues.GROUND_SLIDE_MAX_TIME shouldBe MegamanValues.GROUND_SLIDE_MAX_TIME
+            ProtomanValues.GROUND_SLIDE_COOLDOWN shouldBe MegamanValues.GROUND_SLIDE_COOLDOWN
+        }
+
+        it("slides on DOWN and A on the ground at the slide speed, with a 0.9 tile body") {
+            startSlide()
+            sliding() shouldBe true
+            proto.isBehaviorActive(BehaviorType.JUMPING) shouldBe false
+            body.physics.velocity.x shouldBe (slideSpeed plusOrMinus TOLERANCE)
+            body.getHeight() shouldBe (ProtomanValues.SLIDE_HEIGHT * ppm plusOrMinus TOLERANCE)
+        }
+
+        it("slides to the left when he faces left") {
+            proto.facing = Facing.LEFT
+            startSlide()
+            body.physics.velocity.x shouldBe (-slideSpeed plusOrMinus TOLERANCE)
+        }
+
+        it("slides at the water speed in water") {
+            body.setBodySense(BodySense.IN_WATER, true)
+            startSlide()
+            body.physics.velocity.x shouldBe (ProtomanValues.WATER_GROUND_SLIDE_VEL * ppm plusOrMinus TOLERANCE)
+        }
+
+        it("still jumps on A alone") {
+            step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+            sliding() shouldBe false
+            proto.isBehaviorActive(BehaviorType.JUMPING) shouldBe true
+        }
+
+        it("does not slide on DOWN and A in the air") {
+            overGround = false
+            startSlide()
+            sliding() shouldBe false
+        }
+
+        it("does not slide on sand") {
+            body.setBodySense(BodySense.FEET_ON_SAND, true)
+            startSlide()
+            sliding() shouldBe false
+        }
+
+        it("ends at the max time with DOWN and A held, and stands up") {
+            startSlide()
+            holdBothFor(ProtomanValues.GROUND_SLIDE_MAX_TIME)
+            sliding() shouldBe true
+            holdBoth()
+            sliding() shouldBe false
+            body.getHeight() shouldBe (ProtomanValues.BODY_HEIGHT * ppm plusOrMinus TOLERANCE)
+        }
+
+        it("ends after the min time when DOWN is released") {
+            startSlide()
+            step(MegaControllerButton.A to ButtonStatus.PRESSED)
+            sliding() shouldBe true
+            holdBothFor(ProtomanValues.GROUND_SLIDE_MIN_TIME)
+            step(MegaControllerButton.A to ButtonStatus.PRESSED)
+            sliding() shouldBe false
+        }
+
+        it("waits the cooldown before the next slide") {
+            startSlide()
+            holdBothFor(ProtomanValues.GROUND_SLIDE_MAX_TIME + DELTA)
+            sliding() shouldBe false
+            startSlide()
+            sliding() shouldBe false
+            step()
+            startSlide()
+            sliding() shouldBe true
+        }
+
+        it("stays on under a low ceiling past the max time, until the head is clear") {
+            startSlide()
+            body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
+            holdBothFor(ProtomanValues.GROUND_SLIDE_MAX_TIME + 4f * DELTA)
+            step()
+            sliding() shouldBe true
+            body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, false)
+            step()
+            sliding() shouldBe false
+        }
+
+        it("keeps the speed after the end on ice") {
+            body.setBodySense(BodySense.FEET_ON_ICE, true)
+            startSlide()
+            holdBothFor(ProtomanValues.GROUND_SLIDE_MIN_TIME + DELTA)
+            step(MegaControllerButton.A to ButtonStatus.PRESSED)
+            sliding() shouldBe false
+            proto.require(PostActionMomentumComponent::class).timer.isFinished() shouldBe false
+            body.physics.velocity.x shouldBe (ProtomanValues.RUN_MAX_SPEED * ppm plusOrMinus TOLERANCE)
+        }
+
+        it("is not slowed by the post-action momentum") {
+            worldStep = {
+                body.preProcess()
+                proto.updatePostActionMomentum(DELTA, proto.running)
+            }
+            startSlide()
+            holdBoth()
+            sliding() shouldBe true
+            body.physics.velocity.x shouldBe (slideSpeed plusOrMinus TOLERANCE)
+        }
+
+        it("does not start while a slash is active") {
+            step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            proto.sabre.active shouldBe true
+            startSlide()
+            sliding() shouldBe false
+        }
+
+        it("ends on a hit") {
+            startSlide()
+            hurt()
+            holdBoth()
+            sliding() shouldBe false
+        }
+
+        it("shows the slide key, and the slide shoot key during a shot pose") {
+            val animations = ObjectMap<String, IAnimation>()
+            startSlide()
+            proto.animationKey("stand", animations) shouldBe "groundslide"
+            proto.animationKey("groundslide", animations) shouldBe "groundslide"
+            proto.buster.shoot(MegaChargeStatus.NOT_CHARGED, sliding = true) shouldBe true
+            proto.animationKey("groundslide", animations) shouldBe "groundslide_shoot"
+            proto.animationKey("groundslide_shoot", animations) shouldBe "groundslide_shoot"
+        }
+
+        describe("with the guard and B") {
+            fun shield() = body.getFixtures(Array<IFixture>(), FixtureType.SHIELD).first() as Fixture
+
+            fun bodyBox() = (body.getProperty(ConstKeys.BODY, Fixture::class)!!.rawShape as GameRectangle)
+
+            fun shots() = spawned.filter { it.first is ProtoBuster }
+
+            fun useBuster() = step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
+
+            fun pullOut(frames: Int) {
+                step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
+                repeat(frames) { step(MegaControllerButton.DOWN to ButtonStatus.PRESSED) }
+            }
+
+            listOf(1, ProtomanValues.GUARD_CROUCH_TURN_FRAMES + 2).forEach { frames ->
+                it("starts from the crouch guard after $frames guard frames: no shield, no put-away, the slide body box") {
+                    pullOut(frames)
+                    if (frames > ProtomanValues.GUARD_CROUCH_TURN_FRAMES) proto.guarding shouldBe true
+                    startSlide()
+                    sliding() shouldBe true
+                    shield().isActive() shouldBe false
+                    proto.guarding shouldBe false
+                    proto.puttingAwayGuard shouldBe false
+                    bodyBox().getHeight() shouldBe (ProtomanValues.SLIDE_HEIGHT * ppm plusOrMinus TOLERANCE)
+                    body.physics.velocity.x shouldBe (slideSpeed plusOrMinus TOLERANCE)
+                    proto.animationKey("guard_crouch", ObjectMap()) shouldBe "groundslide"
+                    holdBoth()
+                    proto.puttingAwayGuard shouldBe false
+                    bodyBox().getHeight() shouldBe (ProtomanValues.SLIDE_HEIGHT * ppm plusOrMinus TOLERANCE)
+                }
+            }
+
+            it("uses the slide body box, not the crouch box, in a slide that starts during a crouch shot") {
+                useBuster()
+                pullOut(1)
+                step(MegaControllerButton.DOWN to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                shots().size shouldBe 1
+                startSlide()
+                sliding() shouldBe true
+                bodyBox().getHeight() shouldBe (ProtomanValues.SLIDE_HEIGHT * ppm plusOrMinus TOLERANCE)
+                proto.animationKey("groundslide", ObjectMap()) shouldBe "groundslide_shoot"
+            }
+
+            listOf(Facing.RIGHT, Facing.LEFT).forEach { side ->
+                it("fires one shot from the slide offset facing $side on B with the buster slot, and the slide goes on") {
+                    useBuster()
+                    proto.facing = side
+                    startSlide()
+                    val center = body.getCenter().cpy()
+                    holdBoth(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                    shots().size shouldBe 1
+                    val position = shots()[0].second.get(ConstKeys.POSITION) as Vector2
+                    position.x shouldBe (center.x + ProtomanValues.SHOT_SLIDE_OFFSET_X * ppm * side.value plusOrMinus TOLERANCE)
+                    position.y shouldBe (center.y + ProtomanValues.SHOT_SLIDE_OFFSET_Y * ppm plusOrMinus TOLERANCE)
+                    sliding() shouldBe true
+                    proto.sabre.active shouldBe false
+                    proto.animationKey("groundslide", ObjectMap()) shouldBe "groundslide_shoot"
+                }
+            }
+
+            it("ends the slide and does the single slash on UP and B with the buster slot") {
+                useBuster()
+                startSlide()
+                holdBoth(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                sliding() shouldBe false
+                shots().size shouldBe 0
+                proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_1
+                step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                var time = DELTA
+                while (time < ProtomanSabreMoves.SLASH_1.duration) {
+                    step()
+                    time += DELTA
+                }
+                proto.sabre.active shouldBe false
+            }
+
+            listOf(null, MegaControllerButton.UP).forEach { held ->
+                it("ends the slide and starts the floor slash on B with the sabre slot and $held held") {
+                    startSlide()
+                    if (held == null) holdBoth(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                    else holdBoth(held to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                    sliding() shouldBe false
+                    proto.sabre.state shouldBe SabreState.FLOOR
+                    proto.sabre.move shouldBe ProtomanSabreMoves.SLASH_1
+                    shots().size shouldBe 0
+                    body.getHeight() shouldBe (ProtomanValues.BODY_HEIGHT * ppm plusOrMinus TOLERANCE)
+                }
+            }
+
+            listOf(
+                "B with the sabre slot" to false,
+                "UP and B with the buster slot" to true
+            ).forEach { (name, buster) ->
+                it("does nothing on $name under a low ceiling, and the slide goes on") {
+                    if (buster) useBuster()
+                    startSlide()
+                    body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
+                    if (buster) holdBoth(MegaControllerButton.UP to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                    else holdBoth(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                    sliding() shouldBe true
+                    proto.sabre.active shouldBe false
+                    shots().size shouldBe 0
+                }
+            }
+
+            it("fires the slide shot on B with the buster slot under a low ceiling") {
+                useBuster()
+                startSlide()
+                body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
+                holdBoth(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                sliding() shouldBe true
+                shots().size shouldBe 1
+            }
+
+            it("starts the full ground pull-out after the slide-to-crouch delay with DOWN still held") {
+                startSlide()
+                holdBothFor(ProtomanValues.GROUND_SLIDE_MIN_TIME + DELTA)
+                step(MegaControllerButton.DOWN to ButtonStatus.PRESSED)
+                sliding() shouldBe false
+                var delaySteps = 1
+                while (proto.animationKey("groundslide", ObjectMap()) != "guard_crouch_start" && delaySteps < 20) {
+                    proto.guarding shouldBe false
+                    shield().isActive() shouldBe false
+                    body.physics.velocity.x shouldNotBe 0f
+                    step(MegaControllerButton.DOWN to ButtonStatus.PRESSED)
+                    delaySteps++
+                }
+                delaySteps * DELTA shouldBe (ProtomanValues.GROUND_SLIDE_TO_CROUCH_DELAY plusOrMinus TOLERANCE)
+                ProtomanValues.GROUND_SLIDE_TO_CROUCH_DELAY shouldBe MegamanValues.GROUND_SLIDE_TO_CROUCH_DELAY
+                body.physics.velocity.x shouldBe 0f
+                proto.guarding shouldBe false
+                var steps = 0
+                while (!proto.guarding && steps < 20) {
+                    step(MegaControllerButton.DOWN to ButtonStatus.PRESSED)
+                    steps++
+                }
+                steps shouldBe ProtomanValues.GUARD_CROUCH_TURN_FRAMES
+                shield().isActive() shouldBe true
+            }
+
+            it("stands with no guard at the slide end with DOWN released") {
+                startSlide()
+                holdBothFor(ProtomanValues.GROUND_SLIDE_MIN_TIME)
+                step(MegaControllerButton.A to ButtonStatus.PRESSED)
+                sliding() shouldBe false
+                repeat(ProtomanValues.GUARD_CROUCH_TURN_FRAMES + 1) { step() }
+                proto.guarding shouldBe false
+                proto.puttingAwayGuard shouldBe false
+                shield().isActive() shouldBe false
+                body.getHeight() shouldBe (ProtomanValues.BODY_HEIGHT * ppm plusOrMinus TOLERANCE)
+            }
+
+            it("does no crouch attack on DOWN and B in a slide with the sabre slot under a low ceiling") {
+                startSlide()
+                body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
+                holdBoth(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                proto.sabre.state shouldNotBe SabreState.CROUCH
+                proto.sabre.active shouldBe false
+            }
+        }
+    }
+
+    describe("the ladder") {
+        val ppm = ConstVals.PPM.toFloat()
+        lateinit var ladderBody: Body
+
+        fun climbing() = proto.isBehaviorActive(BehaviorType.CLIMBING)
+
+        fun shield() = body.getFixtures(Array<IFixture>(), FixtureType.SHIELD).first() as Fixture
+
+        fun shots() = spawned.filter { it.first is ProtoBuster }
+
+        fun place(x: Float, y: Float) = body.setPosition(x * ppm, y * ppm)
+
+        fun touch(head: Boolean, feet: Boolean) {
+            body.setBodySense(BodySense.HEAD_TOUCHING_LADDER, head)
+            body.setBodySense(BodySense.FEET_TOUCHING_LADDER, feet)
+        }
+
+        fun grab() {
+            overGround = false
+            place(4.2f, 2f)
+            touch(head = true, feet = true)
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED)
+            climbing() shouldBe true
+        }
+
+        fun useBuster() = step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
+
+        beforeEach {
+            val behaviors = BehaviorsSystem()
+            behaviors.add(proto)
+            behaviorStep = { behaviors.update(DELTA) }
+            worldStep = { body.preProcess() }
+            ladderBody = Body(BodyType.ABSTRACT).also { it.set(4f * ppm, 0f, 1f * ppm, 6f * ppm) }
+            val ladder = mockk<IBodyEntity>(relaxed = true)
+            every { ladder.body } returns ladderBody
+            body.putProperty(ConstKeys.LADDER, ladder)
+            body.preProcess()
+        }
+
+        it("has Megaman's climb speed") {
+            ProtomanValues.CLIMB_VEL shouldBe MegamanValues.CLIMB_VEL
+        }
+
+        it("grabs on UP when his head touches a ladder, and snaps to its center") {
+            place(4.2f, 0f)
+            touch(head = true, feet = true)
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED)
+            climbing() shouldBe true
+            body.getCenter().x shouldBe (4.5f * ppm plusOrMinus TOLERANCE)
+        }
+
+        it("grabs on DOWN at a ladder top with his feet") {
+            place(4.2f, 6f)
+            touch(head = false, feet = true)
+            step(MegaControllerButton.DOWN to ButtonStatus.PRESSED)
+            climbing() shouldBe true
+        }
+
+        it("grabs on DOWN in the air when his feet touch a ladder, with no air guard") {
+            overGround = false
+            place(4.2f, 3f)
+            touch(head = false, feet = true)
+            step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
+            climbing() shouldBe true
+            repeat(6) { step(MegaControllerButton.DOWN to ButtonStatus.PRESSED) }
+            climbing() shouldBe true
+            proto.guarding shouldBe false
+            shield().isActive() shouldBe false
+        }
+
+        it("raises the air guard on DOWN in the air away from a ladder") {
+            overGround = false
+            place(10f, 3f)
+            touch(head = false, feet = false)
+            step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED)
+            repeat(ProtomanValues.GUARD_JUMP_TURN_FRAMES + 1) { step(MegaControllerButton.DOWN to ButtonStatus.PRESSED) }
+            climbing() shouldBe false
+            proto.guarding shouldBe true
+        }
+
+        it("climbs up and down at the climb speed, and stops with no direction") {
+            grab()
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED)
+            body.physics.velocity.y shouldBe (ProtomanValues.CLIMB_VEL * ppm plusOrMinus TOLERANCE)
+            step(MegaControllerButton.DOWN to ButtonStatus.PRESSED)
+            body.physics.velocity.y shouldBe (-ProtomanValues.CLIMB_VEL * ppm plusOrMinus TOLERANCE)
+            step()
+            body.physics.velocity.y shouldBe 0f
+        }
+
+        it("lets go on A with no jump") {
+            grab()
+            step(MegaControllerButton.A to ButtonStatus.JUST_PRESSED)
+            climbing() shouldBe false
+            proto.isBehaviorActive(BehaviorType.JUMPING) shouldBe false
+        }
+
+        it("does not leave the ladder on DOWN at its foot") {
+            grab()
+            overGround = true
+            place(4f, 0f)
+            body.setBodySense(BodySense.FEET_ON_GROUND, true)
+            step(MegaControllerButton.DOWN to ButtonStatus.PRESSED)
+            climbing() shouldBe true
+        }
+
+        it("climbs over the top in the climb finish pose, and lets go half a tile over the top") {
+            grab()
+            place(4f, 5.4f)
+            touch(head = false, feet = true)
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED)
+            climbing() shouldBe true
+            proto.animationKey("climb", ObjectMap()) shouldBe "climb_finish"
+            place(4f, 5.8f)
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED)
+            climbing() shouldBe false
+        }
+
+        it("shows the climb key while he moves and the still key when he stops") {
+            grab()
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED)
+            proto.animationKey("climb_still", ObjectMap()) shouldBe "climb"
+            step()
+            proto.animationKey("climb", ObjectMap()) shouldBe "climb_still"
+        }
+
+        it("keeps the climb key through a room transition") {
+            grab()
+            proto.services.levelState.roomTransition = true
+            proto.animationKey("climb", ObjectMap()) shouldBe "climb"
+            proto.animationKey("climb_still", ObjectMap()) shouldBe "climb_still"
+        }
+
+        it("has no guard with DOWN held: no shield, no pull-out, no guard pose") {
+            grab()
+            repeat(ProtomanValues.GUARD_CROUCH_TURN_FRAMES + 2) { step(MegaControllerButton.DOWN to ButtonStatus.PRESSED) }
+            climbing() shouldBe true
+            shield().isActive() shouldBe false
+            proto.guarding shouldBe false
+            proto.puttingAwayGuard shouldBe false
+            proto.animationKey("climb", ObjectMap()) shouldBe "climb"
+        }
+
+        it("ends the crouch shot pose when he grabs the ladder at its foot") {
+            useBuster()
+            place(4.2f, 0f)
+            body.setBodySense(BodySense.FEET_ON_GROUND, true)
+            step(MegaControllerButton.DOWN to ButtonStatus.JUST_PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            shots().size shouldBe 1
+            proto.animationKey("stand", ObjectMap()) shouldBe "crouch_shoot"
+            touch(head = true, feet = true)
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED)
+            climbing() shouldBe true
+            proto.animationKey("climb", ObjectMap()) shouldBe "climb_still_shoot"
+        }
+
+        listOf(ProtomanWeapon.SABRE, ProtomanWeapon.BUSTER).forEach { weapon ->
+            listOf(null, MegaControllerButton.UP, MegaControllerButton.DOWN).forEach { held ->
+                it("fires one shot from the climb offset on B with the $weapon slot and $held held, and holds still") {
+                    if (weapon == ProtomanWeapon.BUSTER) useBuster()
+                    grab()
+                    val center = body.getCenter().cpy()
+                    if (held == null) step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                    else step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED, held to ButtonStatus.PRESSED)
+                    shots().size shouldBe 1
+                    val position = shots()[0].second.get(ConstKeys.POSITION) as Vector2
+                    position.x shouldBe (center.x + ProtomanValues.SHOT_CLIMB_OFFSET_X * ppm plusOrMinus TOLERANCE)
+                    position.y shouldBe (center.y + ProtomanValues.SHOT_CLIMB_OFFSET_Y * ppm plusOrMinus TOLERANCE)
+                    proto.sabre.active shouldBe false
+                    climbing() shouldBe true
+                    if (held == null) step() else step(held to ButtonStatus.PRESSED)
+                    body.physics.velocity.y shouldBe 0f
+                    proto.animationKey("climb", ObjectMap()) shouldBe "climb_still_shoot"
+                }
+            }
+        }
+
+        it("fires the ladder shot to the left from the mirrored climb offset") {
+            grab()
+            proto.facing = Facing.LEFT
+            val center = body.getCenter().cpy()
+            step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            val position = shots()[0].second.get(ConstKeys.POSITION) as Vector2
+            position.x shouldBe (center.x - ProtomanValues.SHOT_CLIMB_OFFSET_X * ppm plusOrMinus TOLERANCE)
+        }
+
+        listOf(ProtomanWeapon.SABRE, ProtomanWeapon.BUSTER).forEach { weapon ->
+            it("does no crouch attack on DOWN and B at the ladder foot with the $weapon slot") {
+                if (weapon == ProtomanWeapon.BUSTER) useBuster()
+                grab()
+                overGround = true
+                body.setBodySense(BodySense.FEET_ON_GROUND, true)
+                val center = body.getCenter().cpy()
+                step(MegaControllerButton.DOWN to ButtonStatus.PRESSED, MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+                climbing() shouldBe true
+                proto.sabre.active shouldBe false
+                shots().size shouldBe 1
+                val position = shots()[0].second.get(ConstKeys.POSITION) as Vector2
+                position.y shouldBe (center.y + ProtomanValues.SHOT_CLIMB_OFFSET_Y * ppm plusOrMinus TOLERANCE)
+            }
+        }
+
+        it("changes the slot on SELECT, and B stays the buster") {
+            grab()
+            step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
+            proto.weapon shouldBe ProtomanWeapon.BUSTER
+            step(MegaControllerButton.SELECT to ButtonStatus.JUST_RELEASED)
+            proto.weapon shouldBe ProtomanWeapon.SABRE
+            step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            shots().size shouldBe 1
+            proto.sabre.active shouldBe false
+        }
+
+        it("does not grab during a slash") {
+            overGround = false
+            step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            proto.sabre.active shouldBe true
+            place(4.2f, 2f)
+            touch(head = true, feet = true)
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED)
+            climbing() shouldBe false
+        }
+
+        it("ends the climb on a hit") {
+            grab()
+            hurt()
+            step(MegaControllerButton.UP to ButtonStatus.PRESSED)
+            climbing() shouldBe false
+        }
+
+        it("never throws for a shot pose on the ladder, also in the climb finish key") {
+            grab()
+            step(MegaControllerButton.B to ButtonStatus.JUST_PRESSED)
+            proto.services.levelState.roomTransition = true
+            proto.animationKey("climb_finish", ObjectMap()) shouldBe "climb_still_shoot"
+            proto.animationKey("climb", ObjectMap()) shouldBe "climb_still_shoot"
+        }
+    }
+
+    describe("the behaviors") {
+        it("are in Megaman's order: the jump, the slide, then the climb") {
+            proto.defineBehaviorsComponent().behaviors.keys().toList() shouldBe listOf(
+                BehaviorType.JUMPING,
+                BehaviorType.GROUND_SLIDING,
+                BehaviorType.CLIMBING
+            )
         }
     }
 

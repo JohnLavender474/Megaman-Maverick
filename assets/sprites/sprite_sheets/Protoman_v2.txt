@@ -1,18 +1,46 @@
 Protoman_v2.png
-size: 212, 2199
+size: 212, 2397
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 ProtoBuster
   rotate: false
-  xy: 1, 2165
+  xy: 1, 2363
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+climb
+  rotate: false
+  xy: 105, 1821
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+climb_finish
+  rotate: false
+  xy: 1, 2063
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+climb_still
+  rotate: false
+  xy: 1, 2113
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+climb_still_shoot
+  rotate: false
+  xy: 105, 2115
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 crouch_shoot
   rotate: false
-  xy: 1, 1965
+  xy: 1, 2163
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -31,9 +59,23 @@ crouch_slash_arc
   orig: 106, 160
   offset: 0, 0
   index: -1
+groundslide
+  rotate: false
+  xy: 105, 1919
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+groundslide_shoot
+  rotate: false
+  xy: 105, 2165
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 guard_crouch
   rotate: false
-  xy: 105, 1821
+  xy: 1, 1965
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -54,7 +96,7 @@ guard_crouch_start
   index: -1
 guard_jump
   rotate: false
-  xy: 1, 2015
+  xy: 1, 2213
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -75,14 +117,14 @@ guard_jump_start
   index: -1
 jump
   rotate: false
-  xy: 105, 2017
+  xy: 105, 2215
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 jump_shoot
   rotate: false
-  xy: 1, 2065
+  xy: 1, 2263
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -103,14 +145,14 @@ run_shoot
   index: -1
 run_trans
   rotate: false
-  xy: 105, 2067
+  xy: 105, 2265
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 run_trans_shoot
   rotate: false
-  xy: 1, 2115
+  xy: 1, 2313
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -180,14 +222,14 @@ sabre_air_land
   index: -1
 stand
   rotate: false
-  xy: 105, 1919
+  xy: 105, 2017
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 stand_shoot
   rotate: false
-  xy: 105, 2117
+  xy: 105, 2315
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

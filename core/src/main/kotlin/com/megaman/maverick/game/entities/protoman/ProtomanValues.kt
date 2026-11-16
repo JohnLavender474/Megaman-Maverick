@@ -4,6 +4,7 @@ object ProtomanValues {
 
     const val BODY_WIDTH = 1f
     const val BODY_HEIGHT = 1.5f
+    const val SLIDE_HEIGHT = 0.9f
 
     const val CLAMP_X = 16f
     const val CLAMP_Y = 40f
@@ -23,6 +24,15 @@ object ProtomanValues {
 
     const val JUMP_VEL = 25f
 
+    const val GROUND_SLIDE_COOLDOWN = 0.075f
+    const val GROUND_SLIDE_MIN_TIME = 0.2f
+    const val GROUND_SLIDE_MAX_TIME = 0.5f
+    const val GROUND_SLIDE_VEL = 10f
+    const val WATER_GROUND_SLIDE_VEL = 6f
+    const val GROUND_SLIDE_TO_CROUCH_DELAY = 0.15f
+
+    const val CLIMB_VEL = 5f
+
     const val GROUND_GRAVITY = -0.15f
     const val JUMP_GRAVITY = -30f
     const val FALL_GRAVITY = -75f
@@ -39,6 +49,8 @@ object ProtomanValues {
     const val STAND_FLICK_TIME = 0.15f
     const val STEP_TIME = 0.1f
     const val RUN_FRAME_TIME = 0.125f
+    const val GROUND_SLIDE_FRAME_TIME = 0.125f
+    const val CLIMB_FRAME_TIME = 0.125f
 
     const val SHOT_SPEED = 12f
     const val SHOT_WAIT = 0.1f
@@ -56,6 +68,18 @@ object ProtomanValues {
         SHOT_OFFSET_X + (CROUCH_SHOOT_MUZZLE_X - STAND_SHOOT_MUZZLE_X) * SPRITE_SIZE / ART_FRAME_PX
     const val SHOT_CROUCH_OFFSET_Y =
         SHOT_OFFSET_Y - (CROUCH_SHOOT_MUZZLE_Y - STAND_SHOOT_MUZZLE_Y) * SPRITE_SIZE / ART_FRAME_PX
+    const val SLIDE_SHOOT_MUZZLE_X = 37
+    const val SLIDE_SHOOT_MUZZLE_Y = 34
+    const val SHOT_SLIDE_OFFSET_X =
+        SHOT_OFFSET_X + (SLIDE_SHOOT_MUZZLE_X - STAND_SHOOT_MUZZLE_X) * SPRITE_SIZE / ART_FRAME_PX
+    const val SHOT_SLIDE_OFFSET_Y = SHOT_OFFSET_Y -
+        (SLIDE_SHOOT_MUZZLE_Y - STAND_SHOOT_MUZZLE_Y) * SPRITE_SIZE / ART_FRAME_PX + (BODY_HEIGHT - SLIDE_HEIGHT) / 2f
+    const val CLIMB_SHOOT_MUZZLE_X = 39
+    const val CLIMB_SHOOT_MUZZLE_Y = 29
+    const val SHOT_CLIMB_OFFSET_X =
+        SHOT_OFFSET_X + (CLIMB_SHOOT_MUZZLE_X - STAND_SHOOT_MUZZLE_X) * SPRITE_SIZE / ART_FRAME_PX
+    const val SHOT_CLIMB_OFFSET_Y = SHOT_OFFSET_Y -
+        (CLIMB_SHOOT_MUZZLE_Y - STAND_SHOOT_MUZZLE_Y) * SPRITE_SIZE / ART_FRAME_PX + AIR_SPRITE_OFFSET_Y
 
     const val GUARD_TURN_FRAME_TIME = 0.05f
     const val GUARD_CROUCH_TURN_FRAMES = 4

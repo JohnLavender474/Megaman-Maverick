@@ -8,7 +8,7 @@
 ## Do not
 
 - Do not call code that needs the LibGDX natives. They are not loaded, and the call throws `UnsatisfiedLinkError`. Example: `OrthographicCamera.update()` calls `Matrix4.prj`. Set `camera.position` and the viewport fields, and do not call `update()`: `CameraView` reads those fields.
-- Do not make many calls to a MockK mock. MockK keeps each call with a full stack trace, and a mock held in a static field keeps them for the whole run. The test heap is 512 MB. Example: each spawn of `QuickSand` reads a mocked `Texture` for each 1-tile cell, and the regions are static, so keep test sand small.
+- Do not make many calls to a MockK mock. MockK keeps each call with a full stack trace, and a mock held in a static field keeps them for the whole run. The test heap is 1 GB (`core/build.gradle`). A spec with many steps can call `clearAllMocks(answers = false)` in `afterEach` to drop the recorded calls and keep the stubs (`ProtomanTest`). Example: each spawn of `QuickSand` reads a mocked `Texture` for each 1-tile cell, and the regions are static, so keep test sand small.
 
 ## What the test setup does not do
 

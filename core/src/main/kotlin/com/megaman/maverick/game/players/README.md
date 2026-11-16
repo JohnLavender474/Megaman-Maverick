@@ -21,8 +21,9 @@ The examples in this file are hypothetical. The real code is in `MegaPlayer.kt`.
 
 `Megaman`, `MegamanX` (`081b`) and `Protoman` (`060b`) are the player classes, all on `MegaPlayer` (`060j`). The
 classes show the two forms of a class: X has its own body and run (the X6 feet and walk); `Protoman` moves like Megaman,
-so it has no move code of its own. It calls `playerBody`, `playerRunButton` and `playerJumpBehavior` with its own
-values file, and gives only its values, its sprites and its list of moves. `MegaPlayer` reads the
+so it has no move code of its own. It calls `playerBody`, `playerRunButton`, `playerJumpBehavior`,
+`playerGroundSlideBehavior` and `playerClimbBehavior` with its own values file, and gives only its values, its sprites
+and its list of moves. `MegaPlayer` reads the
 shared values (damage time, start health, freeze) from `MegamanValues` until a character needs other values. Some rules still have another owner, and a `TODO` at the
 function names it: the difficulty change of the damage (`023`), the owner chain of a shot (`030`), the death event
 (`119`), the health base class (`048`), and the locks for stun, freeze and damage (`126`). Only slot 0 can change its character, at the level start (`047` for co-op, `113` for a select screen).
@@ -33,7 +34,7 @@ function names it: the difficulty change of the damage (`023`), the owner chain 
 flowchart LR
     Class["a player class<br/>(for example Megaman or Protoman)"] -- "extends" --> Base["MegaPlayer<br/>lifecycle, shared components,<br/>damage rules, hooks"]
     Base -- "damageNegotiator" --> Negotiator["PlayerDamageNegotiator<br/>the damage table for players"]
-    Class -- "its behaviors call" --> Moves["PlayerJump.kt, PlayerWallSlide.kt,<br/>PlayerAirDash.kt, PlayerClimb.kt<br/>each with the class's params"]
+    Class -- "its behaviors call" --> Moves["PlayerJump.kt, PlayerWallSlide.kt,<br/>PlayerAirDash.kt, PlayerClimb.kt,<br/>PlayerGroundSlide.kt<br/>each with the class's params"]
     Class -- "its run buttons" --> Run["PlayerRun.kt<br/>the run gate and buttons"]
     Run -- "calls" --> Step["entities/movement/Run.kt<br/>runStep, maxRunSpeed, RunParams<br/>for any body"]
     Class -- "defineBodyComponent" --> Body["PlayerBody.kt<br/>shared fixtures and pre-step,<br/>with PlayerBodyParams and hooks"]
@@ -109,7 +110,8 @@ class Dasher(services: MegaServices) : MegaPlayer(services) {
 - **The gravity set comes before the lock clears** in the spawn start of `MegaPlayer`. The gravity set can start a camera turn
   that locks `MOVEMENT`, and the lock clear must remove it.
 - **One copy.** A rule that two player classes need goes here, not into each class. A difference between the
-  classes is a parameter (for example `JumpParams`, `WallSlideParams`, `AirDashParams`, `ClimbParams`), not a type check in the
+  classes is a parameter (for example `JumpParams`, `WallSlideParams`, `AirDashParams`, `ClimbParams`,
+  `GroundSlideParams`), not a type check in the
   shared code. A shared behavior keeps the gate and the physics that every class has; the params give the class's own start
   rules, speeds, timers and side effects.
 - **The body keeps its fixture order.** The order of the fixtures sets the order of the contacts. `playerBody` adds
@@ -129,9 +131,11 @@ class Dasher(services: MegaServices) : MegaPlayer(services) {
 - **The buster gives the shot; the class gives the button.** `PlayerBuster` spawns the shot of a charge level from
   its `BusterParams` (the shot class, the cap or none, the wait and pose times, the speed, the spawn offset). A
   `null` half- or full-charge shot falls back to the shot below it, so a class with no charge passes only the
-  uncharged shot. A class that shoots from a crouch or a ladder passes a crouch or climb offset and asks for it per
-  shot (`shoot(status, crouched = true)`, `shoot(status, climbing = true)`); such a shot with no offset for it is a
-  mistake and throws. The fire rule
+  uncharged shot. A class that shoots from a crouch, a ladder or a slide passes a crouch, climb or slide offset and
+  asks for it per shot (`shoot(status, crouched = true)`, `shoot(status, climbing = true)`,
+  `shoot(status, sliding = true)`); such a shot with no offset for it is a mistake and throws. A class reads each
+  offset from the muzzle point of its shot art, relative to the body center of that pose (Proto Man:
+  `ProtomanValues`). The fire rule
   (on the press or on the release)
   stays in each class's `B` actuator, because X's actuator also drives the sabre. A class reads the charge with
   `playerChargeStatus` and stops it with `stopCharging()`; Megaman adds his weapon gate on top. Megaman's own shots
@@ -157,7 +161,7 @@ class Dasher(services: MegaServices) : MegaPlayer(services) {
   so the class does not turn it again. A `HIT_BY_PROJECTILE` receiver runs before `hitShield`, so it only records
   the contact; the class shows its feedback after the contact pass, and only when the projectile reacted (it turned
   back or died). The guard is computed: it is up while its button is held and no break holds (an attack, a hit, a
-  stun, a freeze, a teleport, a room transition), after a pull-out time; the button and the breaks are read live, so
+  stun, a freeze, a teleport, a room transition, a slide, a ladder), after a pull-out time; the button and the breaks are read live, so
   a release drops it at once. The class reads the shield box from its art in one place (Proto Man: `ArtBox` values
   in `ProtomanValues`), so new art changes one value. A class that crouches in its guard owns its crouch box: it
   resizes the shared `BODY` and `DAMAGEABLE` fixtures in its own pre-step, which must run after the `playerBody`

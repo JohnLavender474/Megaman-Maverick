@@ -50,5 +50,6 @@ internal val MEGAMAN_X_BUSTER = BusterParams(
         MegamanXValues.SHOT_OFFSET_X + MegamanXValues.SHOT_OFFSET_X_CROUCH,
         MegamanXValues.SHOT_OFFSET_Y
     ),
-    climbOffset = BusterOffset(MegamanXValues.SHOT_OFFSET_X, MegamanXValues.SHOT_OFFSET_Y_CLIMB)
+    climbOffset = BusterOffset(MegamanXValues.SHOT_OFFSET_X, MegamanXValues.SHOT_OFFSET_Y_CLIMB),
+    slideOffset = null
 )

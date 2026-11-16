@@ -38,7 +38,8 @@ class BusterParams(
     val runOffsetX: Float,
     val airOffsetY: Float,
     val crouchOffset: BusterOffset?,
-    val climbOffset: BusterOffset?
+    val climbOffset: BusterOffset?,
+    val slideOffset: BusterOffset?
 )
 
 class BusterCrouchOffsetMissingException :
@@ -46,6 +47,9 @@ class BusterCrouchOffsetMissingException :
 
 class BusterClimbOffsetMissingException :
     IllegalStateException("A shot on a ladder needs a climb offset. Set climbOffset in the BusterParams of the player.")
+
+class BusterSlideOffsetMissingException :
+    IllegalStateException("A shot in a slide needs a slide offset. Set slideOffset in the BusterParams of the player.")
 
 // TODO: widen the player type when an enemy clone calls this (item 121)
 class PlayerBuster(private val player: MegaPlayer, private val params: BusterParams) {
@@ -92,10 +96,16 @@ class PlayerBuster(private val player: MegaPlayer, private val params: BusterPar
         return waitTimer.isFinished() && (limit == null || liveShots() < limit)
     }
 
-    fun shoot(status: MegaChargeStatus, crouched: Boolean = false, climbing: Boolean = false): Boolean {
+    fun shoot(
+        status: MegaChargeStatus,
+        crouched: Boolean = false,
+        climbing: Boolean = false,
+        sliding: Boolean = false
+    ): Boolean {
         val poseOffset = when {
             crouched -> params.crouchOffset ?: throw BusterCrouchOffsetMissingException()
             climbing -> params.climbOffset ?: throw BusterClimbOffsetMissingException()
+            sliding -> params.slideOffset ?: throw BusterSlideOffsetMissingException()
             else -> null
         }
         if (!canShoot(status)) return false

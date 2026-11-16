@@ -33,6 +33,7 @@ import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.drawables.sprites.splitAndFlatten
 import com.maverick.game.engine.entities.IGameEntity
+import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.entities.input
 import com.maverick.game.engine.entities.isBehaviorActive
@@ -75,13 +76,19 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             "stand" pairTo "stand_shoot",
             "run_trans" pairTo "run_trans_shoot",
             "run" pairTo "run_shoot",
-            "jump" pairTo "jump_shoot"
+            "jump" pairTo "jump_shoot",
+            "groundslide" pairTo "groundslide_shoot",
+            "climb" pairTo "climb_still_shoot",
+            "climb_still" pairTo "climb_still_shoot",
+            "climb_finish" pairTo "climb_still_shoot"
         )
         private val BASE_POSES = objectMapOf(
             "stand_shoot" pairTo "stand",
             "run_trans_shoot" pairTo "run_trans",
             "run_shoot" pairTo "run",
             "jump_shoot" pairTo "jump",
+            "groundslide_shoot" pairTo "groundslide",
+            "climb_still_shoot" pairTo "climb_still",
             "crouch_shoot" pairTo "stand",
             "guard_crouch_start" pairTo "stand",
             "guard_crouch" pairTo "stand",
@@ -146,6 +153,8 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
 
     private val guardPullOut = Timer(ProtomanValues.GUARD_CROUCH_PULL_OUT_TIME)
     private val guardPutAway = Timer(ProtomanValues.GUARD_CROUCH_PUT_AWAY_TIME)
+    private val slideToCrouchDelay =
+        Timer(ProtomanValues.GROUND_SLIDE_TO_CROUCH_DELAY).setToEnd(allowJustFinished = false)
     private var guardRaised = false
     private var guardUp = false
     private var shieldUp = false
@@ -158,8 +167,14 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
     internal val guarding: Boolean
         get() = shieldUp && guardWanted()
 
+    private val sliding: Boolean
+        get() = isBehaviorActive(BehaviorType.GROUND_SLIDING)
+
+    private val climbing: Boolean
+        get() = isBehaviorActive(BehaviorType.CLIMBING)
+
     private val crouchShooting: Boolean
-        get() = crouchShot && buster.shooting
+        get() = crouchShot && buster.shooting && !sliding && !climbing
 
     private val crouchAttacking: Boolean
         get() = sabre.state == SabreState.CROUCH || crouchShooting
@@ -190,6 +205,7 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         canMakeLandSound = false
         weapon = ProtomanWeapon.SABRE
         crouchShot = false
+        slideToCrouchDelay.setToEnd(allowJustFinished = false)
         dropGuard()
         deflects.clear()
         buster.reset()
@@ -216,16 +232,15 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         dropGuard()
     }
 
-    private fun crouchBlocked() = !inPlay || damaged || stunned || frozen || teleporting ||
-        services.levelState.roomTransition
+    private fun crouchBlocked() = !inPlay || damaged || stunned || frozen || teleporting || sliding ||
+        !slideToCrouchDelay.isFinished() || climbing || services.levelState.roomTransition
 
     private fun guardBroken() = crouchBlocked() || sabre.active || buster.shooting
 
-    // TODO: no guard on a ladder, where DOWN climbs down (060d)
     private fun guardWanted() = input.isPressed(MegaControllerButton.DOWN) && !guardBroken()
 
-    private fun crouchAttackWanted() = bodyOverGround &&
-        (crouchShooting || (input.isPressed(MegaControllerButton.DOWN) && !crouchBlocked()))
+    private fun crouchAttackWanted() =
+        bodyOverGround && input.isPressed(MegaControllerButton.DOWN) && !crouchBlocked()
 
     private fun crouchAttack() {
         when (weapon) {
@@ -236,6 +251,17 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
                 running = false
                 setSideSpeed(0f)
             }
+        }
+    }
+
+    private fun slideAttack() {
+        val upSlash = weapon == ProtomanWeapon.BUSTER && input.isPressed(MegaControllerButton.UP)
+        when {
+            weapon == ProtomanWeapon.BUSTER && !upSlash -> if (playerCanAttack) buster.shoot(
+                MegaChargeStatus.NOT_CHARGED, sliding = true
+            )
+            body.isSensing(BodySense.HEAD_TOUCHING_BLOCK) || !sabre.canStart() -> Unit
+            else -> sabre.start(chains = !upSlash)
         }
     }
 
@@ -263,7 +289,8 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         input.isJustPressed(MegaControllerButton.B) || guardBroken()
 
     internal fun updateGuard(delta: Float) {
-        if (!buster.shooting || !bodyOverGround) crouchShot = false
+        if (sliding) slideToCrouchDelay.reset() else slideToCrouchDelay.update(delta)
+        if (!buster.shooting || !bodyOverGround || sliding || climbing) crouchShot = false
         if (guardWanted()) {
             puttingAwayGuard = false
             raiseGuard(delta)
@@ -326,7 +353,7 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             PlayerBodyParams(
                 width = ProtomanValues.BODY_WIDTH,
                 height = ProtomanValues.BODY_HEIGHT,
-                crouchHeight = ProtomanValues.BODY_HEIGHT,
+                crouchHeight = ProtomanValues.SLIDE_HEIGHT,
                 gravity = playerGravity,
                 waterGravityScalar = ProtomanValues.WATER_GRAVITY_SCALAR,
                 clampX = ProtomanValues.CLAMP_X,
@@ -402,7 +429,7 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         maxSpeed = { runParams.maxSpeed() },
         overGround = { bodyOverGround },
         facingBlock = { FacingUtils.isFacingBlock(this) },
-        groundSliding = { false }
+        groundSliding = { sliding }
     )
 
     // TODO: Megaman's knockback and stun values until Protoman's own damage reaction (item 060e)
@@ -438,10 +465,38 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
                     wallJumpAllowed = { false },
                     ignoreRelease = { false },
                     startPressed = { input.isJustPressed(MegaControllerButton.A) },
-                    // TODO: DOWN + A on the ground does nothing until the ground slide (060d)
                     downBlocksGroundJump = true,
                     endKeepsFall = false,
                     onJump = { canMakeLandSound = true }
+                )
+            )
+        )
+        component.addBehavior(
+            BehaviorType.GROUND_SLIDING, playerGroundSlideBehavior(
+                this,
+                GroundSlideParams(
+                    minTime = ProtomanValues.GROUND_SLIDE_MIN_TIME,
+                    maxTime = ProtomanValues.GROUND_SLIDE_MAX_TIME,
+                    cooldown = ProtomanValues.GROUND_SLIDE_COOLDOWN,
+                    speed = {
+                        if (body.isSensing(BodySense.IN_WATER)) ProtomanValues.WATER_GROUND_SLIDE_VEL
+                        else ProtomanValues.GROUND_SLIDE_VEL
+                    },
+                    blocked = { sabre.active }
+                )
+            )
+        )
+        component.addBehavior(
+            BehaviorType.CLIMBING, playerClimbBehavior(
+                this,
+                ClimbParams(
+                    speed = { ProtomanValues.CLIMB_VEL },
+                    blocked = { sabre.active },
+                    feetGrabAllowed = { true },
+                    holdStill = { buster.shooting },
+                    leavesOnFloor = false,
+                    onStart = { canMakeLandSound = false },
+                    onEnd = {}
                 )
             )
         )
@@ -455,11 +510,12 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         MegaControllerButton.RIGHT pairTo playerRunButton(
             this, Facing.RIGHT, runParams, blocked = { holdsStill() }, onBlocked = { turnInPlace(it) }
         ),
-        // TODO: on a ladder B is always the buster (060d)
         MegaControllerButton.B pairTo ButtonActuator(
             onJustPressed = {
                 when {
                     sabre.active -> sabre.chain()
+                    climbing -> if (playerCanAttack) buster.shoot(MegaChargeStatus.NOT_CHARGED, climbing = true)
+                    sliding -> slideAttack()
                     crouchAttackWanted() -> crouchAttack()
                     guardWanted() -> Unit
                     weapon == ProtomanWeapon.SABRE -> if (sabre.canStart()) sabre.start()
@@ -525,6 +581,12 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         animations.put("run_shoot", Animation(frames("run_shoot", 4), ProtomanValues.RUN_FRAME_TIME))
         animations.put("jump_shoot", Animation(frames("jump_shoot", 1), 1f))
         animations.put("crouch_shoot", Animation(frames("crouch_shoot", 1), 1f))
+        animations.put("groundslide", Animation(frames("groundslide", 2), ProtomanValues.GROUND_SLIDE_FRAME_TIME))
+        animations.put("groundslide_shoot", Animation(frames("groundslide_shoot", 1), 1f))
+        animations.put("climb", Animation(frames("climb", 2), ProtomanValues.CLIMB_FRAME_TIME))
+        animations.put("climb_still", Animation(frames("climb_still", 1), 1f))
+        animations.put("climb_still_shoot", Animation(frames("climb_still_shoot", 1), 1f))
+        animations.put("climb_finish", Animation(frames("climb_finish", 1), 1f))
         animations.put(
             "guard_crouch",
             Animation(frames("guard_crouch", 2), gdxArrayOf(ProtomanValues.STAND_OPEN_TIME, ProtomanValues.STAND_FLICK_TIME))
@@ -589,10 +651,20 @@ class Protoman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         !inPlay -> null
         // TODO: no frozen key; the normal frame shows while frozen until his frozen art (item 060e)
         damaged || stunned -> "damaged"
+        climbing -> climbPose()
+        sliding -> "groundslide"
         isBehaviorActive(BehaviorType.JUMPING) || !bodyOverGround -> "jump"
         running -> "run"
         current == "run_trans" && playing?.isFinished() == false -> "run_trans"
         current == "run_trans" || current == "stand" -> "stand"
         else -> "run_trans"
+    }
+
+    private fun climbPose(): String {
+        val ladder = body.getProperty(ConstKeys.LADDER, IBodyEntity::class)
+        val inLadder = ladder != null && ladder.body.getBounds().contains(body.getCenter())
+        if (!inLadder && !buster.shooting) return "climb_finish"
+        val movement = if (direction.isHorizontal()) body.physics.velocity.x else body.physics.velocity.y
+        return if (movement != 0f) "climb" else "climb_still"
     }
 }
