@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.drawables.backgrounds
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -97,6 +98,7 @@ open class Background(
                 pixelPerfect -> PixelPerfectFitViewport(width, height, camera)
                 else -> FitViewport(width, height, camera)
             }
+            viewport.update(Gdx.graphics.width, Gdx.graphics.height)
         }
     }
 
