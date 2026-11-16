@@ -170,6 +170,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 160 | [Ladder shot height at a ladder foot](items/160-ladder-foot-shot/ITEM.md) | feature | `O9` | idea | none | | |
 | 161 | [A type-aware check for direct random calls](items/161-random-call-lint/ITEM.md) | tooling | `O6`, `O2` | active | `011` | 2026-11-16 | |
 | 162 | [LibGDX collections in the launch options and level overrides](items/162-launch-loadout-collections/ITEM.md) | refactor | `O1` | idea | none | | |
+| 163 | [One shot pose in `PlayerBuster`](items/163-buster-pose-enum/ITEM.md) | refactor | `O1` | idea | none | | |
 
 ## Branches
 
@@ -182,7 +183,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-060d-protoman-slide-ladder`](items/060-proto-man/branches/mega-refactor-060d-protoman-slide-ladder/process-log.md) | 060 | Proto Man's slide and ladder, with Megaman's shared rules | merged | 2026-11-14 | 2026-11-15 |
 | [`mega-refactor-060l-protoman-one-input`](items/060-proto-man/branches/mega-refactor-060l-protoman-one-input/process-log.md) | 060 | One input in place of Proto Man's 2 weapon slots: `B` buster, `UP`+`B` sabre, as X | merged | 2026-11-15 | 2026-11-16 |
 | [`mega-refactor-060k-protoman-frame-edits`](items/060-proto-man/branches/mega-refactor-060k-protoman-frame-edits/process-log.md) | 060 | The owner's own edits of the Proto Man frames; Claude does the tooling only | active | 2026-11-16 | |
-| [`mega-refactor-060m-protoman-moves`](items/060-proto-man/branches/mega-refactor-060m-protoman-moves/process-log.md) | 060 | Megaman's moves for Proto Man: wall slide, air dash, swim (no Rush Jet) | active | 2026-11-16 | |
+| [`mega-refactor-060m-protoman-moves`](items/060-proto-man/branches/mega-refactor-060m-protoman-moves/process-log.md) | 060 | Megaman's moves for Proto Man: wall slide, air dash, swim (no Rush Jet) | merged | 2026-11-16 | 2026-11-16 |
 | [`mega-refactor-060j-mega-player`](items/060-proto-man/branches/mega-refactor-060j-mega-player/process-log.md) | 060 | Refactor only: an abstract `MegaPlayer` base class that owns the shared player wiring and is the receiver of the shared `players/` functions; `Megaman` and X move onto it and play the same | merged | 2026-11-10 | 2026-11-11 |
 | [`mega-refactor-024a-weapon-defs`](items/024-weapon-defs/branches/mega-refactor-024a-weapon-defs/process-log.md) | 024 | Refactor only: Megaman's 10 weapons become `WeaponDef` objects in a registry; Megaman plays the same | merged | 2026-11-14 | 2026-11-15 |
 | [`mega-refactor-024b-character-loadouts`](items/024-weapon-defs/branches/mega-refactor-024b-character-loadouts/process-log.md) | 024 | A weapon loadout per character: owned weapons and boss rewards keyed by character; the `is Megaman` weapon workarounds go | merged | 2026-11-15 | 2026-11-16 |

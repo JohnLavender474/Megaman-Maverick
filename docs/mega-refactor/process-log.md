@@ -2557,3 +2557,23 @@ newest entry at the bottom.
 - Not fixed, recorded by the scan: `MegaLevelScreen.eventKeyMask` is a hash `ObjectSet`, so the delivery order of
   `SHOW_BACKGROUNDS` and `HIDE_BACKGROUNDS` events in one frame can change between launches. The current maps cannot
   reach it.
+
+## 2026-11-16 — mega-refactor-060m-protoman-moves
+
+- Summary: squash `3592bb7d7`. Proto Man wall slides (with the wall jump), air dashes (one per jump) and swims, with
+  Megaman's rules, through the shared `PlayerWallSlide`, `PlayerAirDash` and the new `players/PlayerSwim.kt`.
+  Megaman's swim and his `A` task (`players/PlayerAButton.kt`: `AButtonTask`, `PlayerAButtonComponent`, named rule
+  functions) and the camera turn on a gravity change (`turnBodyAndCamera`) moved into `players/`, rule for rule. In the
+  moves: `B` shoots; `UP`+`B` is the wall slash on a wall and the air slash in a dash and in water; `DOWN` guards in all
+  3 (wall guard, a shielded air dash, the air guard in water). 12 new strips by a Fable 5.2 art agent (one round, the
+  owner kept all); `Protoman_v2` repacked. `RefactorTest060` rooms `wall` and `airdash`.
+- Contract check: Megaman tests first on the old code (swim, `A` task, camera turn); mutation checks, from the owner's
+  new rule (few, batched runs) on; review before the play test by 2 subagents (no bug; a camera turn test, a
+  test-only API, README and contract control checks fixed); owner play test passed; Diffity round 1 with 0 threads.
+  `master` merged into the branch (`024b` and others; one conflict in `Megaman.kt`: the typed `WeaponDef<Megaman>` and
+  the weapons component kept, the old `aButtonTask` field dropped). Checks on the branch: `engine:test` 702,
+  `core:test` 2381, `core:smokeTest` 469, `lwjgl3:jar`.
+- Follow-up: new item `163` (one shot pose in `PlayerBuster`); the teleport `A` task folds into `060e`; issue
+  `2026-11-16-swim-stroke-sign-down-right.md`. Owner at the merge: `060k` also takes Proto Man's trailing sprites and a
+  cleanup of almost all his frames. The main checkout had 1 modified file of another session
+  (`DesertMan_16x14_v4.tmx`); it stays unstaged.

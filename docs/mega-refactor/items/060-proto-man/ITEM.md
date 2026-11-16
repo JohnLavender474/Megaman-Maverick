@@ -5,7 +5,7 @@
 - Objectives: `O8`
 - Depends on: `081a`, `084`; `024` only for `060h`; `081` (`CharacterDef`) only for `060i`
 - Related: `029`, `031`, `047`, `048`, `146`
-- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (merged, 2026-11-11), `mega-refactor-060c-protoman-buster` (merged, 2026-11-14), `mega-refactor-060d-protoman-slide-ladder` (merged, 2026-11-15), `mega-refactor-060l-protoman-one-input` (merged, 2026-11-16), `mega-refactor-060k-protoman-frame-edits` (active, 2026-11-16), `mega-refactor-060m-protoman-moves` (active, 2026-11-16), `mega-refactor-060j-mega-player` (merged, 2026-11-11)
+- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (merged, 2026-11-11), `mega-refactor-060c-protoman-buster` (merged, 2026-11-14), `mega-refactor-060d-protoman-slide-ladder` (merged, 2026-11-15), `mega-refactor-060l-protoman-one-input` (merged, 2026-11-16), `mega-refactor-060k-protoman-frame-edits` (active, 2026-11-16), `mega-refactor-060m-protoman-moves` (merged, 2026-11-16), `mega-refactor-060j-mega-player` (merged, 2026-11-11)
 
 ## Goal
 
@@ -102,6 +102,9 @@ similar playable characters (Bass, Axl, Zero, etc.) in the future."
   phase `060n`. Who draws the new frames is chosen at the start of each phase.
 - (2026-11-16, owner, at the `060m` start) A Fable 5.2 art agent draws the new frames of `060m`.
 
+- (2026-11-16, owner, at the `060m` merge) `060k` also takes Proto Man's trailing sprites and a general cleanup and
+  refinement of almost all his frames (with the touch-ups of the `060m` strips).
+
 ## Proposed phases
 
 Not approved. One branch per phase. `060a` is a refactor only. `060b` to `060e` build the MM9/MM10 baseline to
@@ -115,13 +118,13 @@ as refined as possible before co-op (`060i`) (owner, 2026-11-10).
 | `060b` | `Protoman` in slot 0 on a test level: idle, step, walk, jump, fall; sliced atlas | `060j` |
 | `060c` | Buster and sabre, X6 Zero style (owner, 2026-11-12): the standing buster shot on `UP`+`B`, the sabre on `B` with a 3-slash ground combo | |
 | `060d` | Slide and ladder, with Mega's rules | |
-| `060e` | Proto Shield; his damage reaction, stun, collapse, teleport in and out; his damaged, stunned, frozen and teleport animations (and his beam color) | |
+| `060e` | Proto Shield; his damage reaction, stun, collapse, teleport in and out; his damaged, stunned, frozen and teleport animations (and his beam color); his `A` task at a teleport, as Megaman's (from `060m`) | |
 | `060f` | Folded into `060c` (owner, 2026-11-12) | |
 | `060g` | Experiments: settings, moves and behaviors, from the sheet scan and play tests. Can be more than one branch | |
 | `060h` | Weapon poses and the loadout: Proto Man's variants of the special weapons | `024` |
 | `060i` | `CharacterDef` as the third caller (if `081` has not done it); co-op with mixed characters | `047` |
 | `060l` | One input in place of the 2 weapon slots (owner, 2026-11-15): `B` is the buster, `UP`+`B` is the sabre, as X; `ProtomanWeapon`, the 2 HUD slot icons and the slot branches go | `060d` |
-| `060k` | The owner's own edits of the Proto Man frames (owner, 2026-11-14: Claude's art rounds went in circles). Claude does no drawing: atlas repack, strip size and frame-count checks, muzzle points and shot offsets, and the smoke test on request | `060d` |
+| `060k` | The owner's own edits of the Proto Man frames (owner, 2026-11-14: Claude's art rounds went in circles). Claude does no drawing: atlas repack, strip size and frame-count checks, muzzle points and shot offsets, and the smoke test on request Also (owner, 2026-11-16): Proto Man's trailing sprites (as Megaman's trail sprite), and a general cleanup and refinement of almost all frames, with the touch-ups of the `060m` strips | `060d` |
 | `060m` | Megaman's moves for Proto Man (owner, 2026-11-16): wall slide and air dash through the shared `PlayerWallSlide` and `PlayerAirDash`, swim (Megaman's swim moves into `players/` first), no Rush Jet; the camera turn on a gravity change; the frames of these moves | `060d` |
 | `060o` | Sabre hit box tuning (owner, 2026-11-16): a slash drawn over an enemy must hit it; research the balance between the slash damager fixtures and the enemies' damageable fixtures. The slash is shared, so X changes too. Damage values per target stay in `141` | |
 | `060n` | Proto Man in real levels (owner, 2026-11-16): real levels can start with him in slot 0, and a play-test pass of his full move set there; the last phase before `060i`. The player's character choice stays `113` | `060e`, `060m` |

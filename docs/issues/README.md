@@ -171,3 +171,4 @@ related-items: [<mega-refactor item IDs>]
 | [Moon Scythes of a new shot sort as the oldest and fade first](2026-11-14-moon-scythes-stale-spawn-order.md) | yes | core | closed |
 | [Reactor Shot burst pieces sometimes die in mid-air](2026-11-16-reactor-shot-pieces-die-mid-air.md) | no | core | open |
 | [All level backgrounds stop drawing after a pixel-perfect change in game](2026-11-16-background-hidden-after-pixel-perfect-toggle.md) | yes | core | closed |
+| [The swim stroke pushes the wrong way in `DOWN` and `RIGHT` gravity](2026-11-16-swim-stroke-sign-down-right.md) | yes | core | open |
