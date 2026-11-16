@@ -39,3 +39,8 @@ between shots, so that 4 or fewer stay alive after each shot. Then fire again an
 The fix is to clear `outArray` before the early return (or at the start of the function). `024a` kept the behavior,
 because it is a refactor with the contract "Megaman plays the same". `011a` changes the sort key of the same function
 (`spawnOrder` in place of `timeSpawned`).
+
+## Short contract
+
+The fix is in branch `fix/moon-scythes`, with the stale spawn order fault. The short contract is in
+`2026-11-14-moon-scythes-stale-spawn-order.md`.
