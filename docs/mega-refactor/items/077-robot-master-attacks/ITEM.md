@@ -62,6 +62,11 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - 2026-11-13 (owner): merge target: each branch squash-merges directly into `master`.
 - 2026-11-13 (owner): a boss with health phases gets its harder attacks in its last phase in place of the panic
   attack under 25%. A boss with 1 phase keeps the panic attack.
+- 2026-11-15 (owner, `077b`): a boss that newly gets 2 health phases keeps its time to kill 1-for-1 with `master`:
+  each weapon takes the same number of hits as before. If 10 full charges killed it on `master`, 10 full charges kill
+  it with 2 phases. So each damage value is 2 × the `master` value (a weapon that did 0 still does 0). In the branch
+  brief, ask the owner as an optional question whether to change this. With no answer, apply 1-for-1. (`077b` first
+  used the `077a` values on 2 phases, and Desert Man died with 1.5 × fewer hits: 10 full charges in place of 15.)
 
 - 2026-11-10: the item covers every boss (robot masters, Wily bosses, mini bosses, intro bosses), and it also covers
   aiming and death animations. This answers the open question about the mini bosses and the Wily bosses.
