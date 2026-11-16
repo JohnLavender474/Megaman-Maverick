@@ -5,7 +5,7 @@
 - Objectives: `O8`
 - Depends on: `081a`, `084`; `024` only for `060h`; `081` (`CharacterDef`) only for `060i`
 - Related: `029`, `031`, `047`, `048`, `146`
-- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (merged, 2026-11-11), `mega-refactor-060c-protoman-buster` (merged, 2026-11-14), `mega-refactor-060d-protoman-slide-ladder` (merged, 2026-11-15), `mega-refactor-060l-protoman-one-input` (merged, 2026-11-16), `mega-refactor-060k-protoman-frame-edits` (active, 2026-11-16), `mega-refactor-060j-mega-player` (merged, 2026-11-11)
+- Branches: `mega-refactor-060a-shared-run-body` (merged, 2026-11-10), `mega-refactor-060b-protoman-move` (merged, 2026-11-11), `mega-refactor-060c-protoman-buster` (merged, 2026-11-14), `mega-refactor-060d-protoman-slide-ladder` (merged, 2026-11-15), `mega-refactor-060l-protoman-one-input` (merged, 2026-11-16), `mega-refactor-060k-protoman-frame-edits` (active, 2026-11-16), `mega-refactor-060m-protoman-moves` (active, 2026-11-16), `mega-refactor-060j-mega-player` (merged, 2026-11-11)
 
 ## Goal
 
@@ -100,6 +100,7 @@ similar playable characters (Bass, Axl, Zero, etc.) in the future."
   Jet) are a new phase `060m`; his damaged, stunned, frozen and teleport animations fold into `060e`; the sabre hit
   box tuning against enemy damageable fixtures is a new phase `060o` (not `141`); play tests in real levels are a new
   phase `060n`. Who draws the new frames is chosen at the start of each phase.
+- (2026-11-16, owner, at the `060m` start) A Fable 5.2 art agent draws the new frames of `060m`.
 
 ## Proposed phases
 
