@@ -2382,7 +2382,8 @@ newest entry at the bottom.
   1). `RefactorTest060` rooms `slide` and `ladder`. `ProtomanTest` calls `clearAllMocks` in `afterEach` (test heap).
 - Contract check: automated checks on the branch after `master` was merged in (no conflicts): `engine:test` 689,
   `core:test` 2125, `core:smokeTest` 468, `lwjgl3:jar`; review before the play test by 3 subagents; owner play test
-  passed; Diffity round 1 with 0 threads.
+  passed; Diffity round 1 with 0 threads. The same checks pass on `master` after the squash (689 / 2125 / 468, 0
+  failures; the jar builds; the main checkout's 2 unstaged files of another session were in the tree).
 - Follow-up: new item `160` (the ladder shot at a ladder foot). Bug filed:
   `docs/issues/2026-11-14-x-landing-probe-one-way-down.md`. Overlap: `024a` changes the slide block line in
   `GroundSlideBehavior.kt`; the owner chose to merge `060d` first, and `024a` resolves it as
