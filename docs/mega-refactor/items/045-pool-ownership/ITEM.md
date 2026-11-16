@@ -1,11 +1,11 @@
 # 045: Clear ownership rules and debug checks for `GameObjectPools`, and no per-frame allocation of pooled types
 
-- Status: planned
+- Status: active
 - Type: refactor
 - Objectives: `O1`, `O5`
 - Depends on: none
 - Related: `009`, `010`, `019`, `022`
-- Branches: none yet
+- Branches: `mega-refactor-045a-pool-ownership` (active)
 
 ## Goal
 
@@ -48,6 +48,10 @@ The owner chose to add this to `045` and not to make a new item. The `011a` site
 
 - Is a debug-only NaN poison acceptable?
 - Must the arena reclaim on ticks or on frames once `010` lands?
+
+## Decisions
+
+- (2026-11-16) Merge target: each branch of this item squash-merges directly into `master`. The owner asked for the work end to end by a subagent; Claude chose the recommended target, and the owner can change it.
 
 ## Sources
 

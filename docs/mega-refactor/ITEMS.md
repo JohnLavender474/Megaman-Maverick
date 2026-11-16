@@ -24,7 +24,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 014 | [Table-driven contact and collision rules](items/014-contact-rules-table/ITEM.md) | refactor | `O1` | done | none | 2026-10-22 | 2026-10-22 |
 | 015 | [One entity state machine (enter/update/exit, state-owned timers)](items/015-entity-fsm/ITEM.md) | refactor | `O1`, `O4` | planned | none | | |
 | 016 | [Narrow services instead of `game` everywhere](items/016-narrow-services/ITEM.md) | refactor | `O1`, `O2` | done | none | 2026-10-28 | 2026-10-30 |
-| 017 | [Shared entity logic as systems and world-step hooks](items/017-world-step-hooks/ITEM.md) | refactor | `O1`, `O5` | planned | none | | |
+| 017 | [Shared entity logic as systems and world-step hooks](items/017-world-step-hooks/ITEM.md) | refactor | `O1`, `O5` | active | none | 2026-11-16 | |
 | 018 | [Event-driven system membership; component IDs when needed](items/018-ecs-membership/ITEM.md) | refactor | `O5`, `O1` | idea | none | | |
 | 019 | [One spawn phase per tick with destroy notifications](items/019-spawn-phase/ITEM.md) | refactor | `O1`, `O2` | done | none | 2026-10-22 | 2026-11-03 |
 | 020 | [Cheaper broad phase with stable contact order](items/020-broad-phase/ITEM.md) | refactor | `O5`, `O2` | planned | none | | |
@@ -168,7 +168,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 158 | [A shared lead-aim helper for bosses](items/158-boss-lead-aim-helper/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 159 | [New hand and head art for the intro boss](items/159-intro-boss-hand-art/ITEM.md) | feature | `O4`, `O9` | done | none | 2026-11-15 | 2026-11-15 |
 | 160 | [Ladder shot height at a ladder foot](items/160-ladder-foot-shot/ITEM.md) | feature | `O9` | idea | none | | |
-| 161 | [A type-aware check for direct random calls](items/161-random-call-lint/ITEM.md) | tooling | `O6`, `O2` | idea | `011` | | |
+| 161 | [A type-aware check for direct random calls](items/161-random-call-lint/ITEM.md) | tooling | `O6`, `O2` | active | `011` | 2026-11-16 | |
 
 ## Branches
 
@@ -277,3 +277,5 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-011a-game-random`](items/011-game-random/branches/mega-refactor-011a-game-random/process-log.md) | 011 | One seedable, interceptable random source with named streams | merged | 2026-11-14 | 2026-11-15 |
 | [`mega-refactor-159a-intro-boss-art`](items/159-intro-boss-hand-art/branches/mega-refactor-159a-intro-boss-art/process-log.md) | 159 | A cracked death head for the intro boss (the new fist frames were dropped) | merged | 2026-11-15 | 2026-11-15 |
 | [`mega-refactor-077b-desert-man`](items/077-robot-master-attacks/branches/mega-refactor-077b-desert-man/process-log.md) | 077 | A richer Desert Man boss fight on the shared boss parts of `077a` | active | 2026-11-15 | |
+| [`mega-refactor-045a-pool-ownership`](items/045-pool-ownership/branches/mega-refactor-045a-pool-ownership/process-log.md) | 045 | Pool ownership rules and debug checks for `GameObjectPools`; per-frame allocations of pooled types move to the pool or owned fields; a `CODE_STYLE.md` rule | active | 2026-11-16 | |
+| [`mega-refactor-161a-random-call-lint`](items/161-random-call-lint/branches/mega-refactor-161a-random-call-lint/process-log.md) | 161 | A type-aware check for direct random calls | active | 2026-11-16 | |

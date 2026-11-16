@@ -1,11 +1,11 @@
 # 161: A type-aware check for direct random calls
 
-- Status: idea
+- Status: active
 - Type: tooling
 - Objectives: `O6`, `O2`
 - Depends on: `011`
 - Related: `100`
-- Branches: none yet
+- Branches: `mega-refactor-161a-random-call-lint` (active)
 
 ## Goal
 
@@ -30,6 +30,10 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 ## Open questions
 
 - Does the project want detekt in the build (CI time, a baseline for the existing code)?
+
+## Decisions
+
+- (2026-11-16) Merge target: each branch of this item squash-merges directly into `master`. The owner asked for the work end to end by a subagent; Claude chose the recommended target, and the owner can change it.
 
 ## Sources
 
