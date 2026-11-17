@@ -1,68 +1,66 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>076a Desert Man Tileset</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 076 · Branch 076a · Objectives O9, O4 · <span class="chip ok">approved 2026-11-17</span></p>
+    <h1>Desert Man tileset</h1>
+    <p class="lead">Desert Man gets one new, original tileset, built from the five accepted art phases (rock, steel, props, sandstone, oasis), and its map is repainted with it. No code changes.</p>
+    <p class="meta"><b>In play:</b> every tile of Desert Man looks new. Blocks, ladders, spikes, water and gates stay where they are.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>One tileset of its own in place of two shared ones</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: the map uses two shared tilesets">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  T1["Tileset1 (shared by 11 levels)"] --> M["DesertMan_16x14_v4.tmx"]
+  T2["tomahawk_man_stage_tileset"] --> M
+  M --> R["TiledMapLevelRenderer"]
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>A mix of asset-pack art and a semi-transparent back wall.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: one new tileset, written by a remap script">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  S["make_desert_man_tileset.py (temp/)"] --> P["desert_man_tileset.png + .tsx"]
+  S -->|remap by gid and neighbors| M["DesertMan_16x14_v4.tmx"]
+  P --> M
+  M --> R["TiledMapLevelRenderer"]
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>Only the tile layers and the tileset list of the map change. The other levels keep the old tilesets.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
-    <p>After:</p>
-<pre><code><new code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>The TMX tileset list is the only structural change</h2></div>
+    <p>Today, <code>DesertMan_16x14_v4.tmx</code>:</p>
+<pre><code>&lt;tileset firstgid="1" source="../tsx/Tileset1.tsx"/&gt;
+&lt;tileset firstgid="1025" source="../tsx/tomahawk_man_stage_tileset.tsx"/&gt;</code></pre>
+    <p>After (each cell of the 5 tile layers is rewritten by the remap):</p>
+<pre><code>&lt;tileset firstgid="1" source="../tsx/desert_man_tileset.tsx"/&gt;</code></pre>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>Six decisions, all on the recommendation</h2></div>
+    <p><span class="chip ok">Chosen</span> D1: draw the 2 gate-column tiles in this branch, so the map paints no old art.</p>
+    <p><span class="chip ok">Chosen</span> D2: a calmer bloom head, so it does not read as a pickup.</p>
+    <p><span class="chip ok">Chosen</span> D3: the generator and remap script and its README are temporary files in <code>temp/076-desert-tiles/tools/</code>, not in git <span class="chip warn">changed 2026-11-17</span>; Tiled automapping is a backlog candidate.</p>
+    <p><span class="chip ok">Chosen</span> D4: the new back wall is opaque (86 cells no longer show the sunset faintly through).</p>
+    <p><span class="chip ok">Chosen</span> D5: the map uses only the new tileset.</p>
+    <p><span class="chip ok">Chosen</span> D6: check the spikes under water at the play test, and fix them in this branch if needed.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>A wrong tile in a cell is the main risk</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>Wrong tile.</b> A missing edge or a wrong grid-position tile. The script fails on any unmapped gid; previews of every room; the play test.</li>
+      <li><span class="chip warn">risk</span> <b>Other map data.</b> The script changes only the tileset list and the 5 layer CSVs; a check proves all other lines are unchanged.</li>
+      <li><span class="chip warn">risk</span> <b>Hand edits later.</b> The rock and soil fill use a 2x2 block by cell parity; a hand edit in Tiled must follow the rule in the README.</li>
     </ul>
   </section>
 
@@ -70,14 +68,21 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-076a-desert-man-tileset</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level DESERT_MAN --room room1</code>: rock, rope fence, crates, ropes, plants.</li>
+      <li><code>./run-game-alpha.sh --level DESERT_MAN --room room3</code>: crates on ropes, ladder, spikes; climb to the gate column in room 5.</li>
+      <li><code>./run-game-alpha.sh --level DESERT_MAN --room room9</code>: ladder, girder, rock blocks, back wall.</li>
+      <li><code>./run-game-alpha.sh --level DESERT_MAN --room room10</code>: girders and pillars; lines between tiles while the camera scrolls.</li>
+      <li><code>./run-game-alpha.sh --level DESERT_MAN --room room11</code>: climb into the rope shaft.</li>
+      <li><code>./run-game-alpha.sh --level DESERT_MAN --room room14</code>: the gate column.</li>
+      <li><code>./run-game-alpha.sh --level DESERT_MAN --room room15</code>: oasis, bloom, sandstone, spikes above and under water.</li>
+      <li><code>./run-game-alpha.sh --level DESERT_MAN --room room16 --heartTanks all --healthTanks all</code>: go through the gate and fight.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
-    <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-076a-desert-man-tileset/docs/SCOPE.md</code></p>
+    <p>The full scan and the full contract are in the branch folder:</p>
+    <p><code>docs/mega-refactor/items/076-final-stage-tileset/branches/mega-refactor-076a-desert-man-tileset/docs/SCOPE.md</code></p>
     <p><code>.../mega-refactor-076a-desert-man-tileset/docs/CONTRACT.md</code></p>
   </section>
 </main>
