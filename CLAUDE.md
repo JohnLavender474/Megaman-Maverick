@@ -157,7 +157,7 @@ The ways of working (the owner's preferences for the approach to a task) are in 
 | Task | Read |
 |---|---|
 | Every task (commits, merges, Gradle, processes) | `docs/ways-of-working/git.md` |
-| Art: sprites, tiles, backgrounds | `docs/ways-of-working/art.md` |
+| Art: sprites, tiles, backgrounds, art credits | `docs/ways-of-working/art.md` |
 | Frames, atlases, other asset files | `docs/ways-of-working/assets.md` |
 | Helper scripts, generators, drafts | `docs/ways-of-working/temp-files.md` |
 | Gameplay that the owner play-tests in rounds | `docs/ways-of-working/gameplay.md` |

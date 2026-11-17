@@ -3,6 +3,31 @@
 Read this file before you draw, fix or convert art (sprites, tiles, backgrounds). Atlases and packing are in
 `assets.md`.
 
+- **Credit the original and the update.** When new art in the game builds on existing art (a tileset, a sprite sheet
+  or a background used as the premise), the `CREDITS` section of the root `README.md` names both, with the pattern
+  that it already uses:
+
+  ```markdown
+  - Desert Man
+    - Original by [<artist>](<link>) ([<work>](<link>))
+    - Updated by <who made the update>
+  ```
+
+  - **Original:** the artist and the work that the new art builds on, with links. When the work is a rip of
+    commercial art (for example a Spriters Resource sheet of a Capcom game), credit the ripper and the work as the
+    README does for the other rips. When the source is unknown, ask the owner; do not guess an artist.
+  - **Update by AI:** name the model with its full name and version (for example "Claude Fable 5.2, an AI model by
+    Anthropic"), and say that the developer directed it. When a person and an AI made the update together, name
+    both. Do not present AI-made art as the work of a human artist, and do not leave out the original artist
+    because the AI changed every pixel.
+  - **When:** in the branch that adds the art to the game, before its merge. The brief or the contract lists the
+    credit lines. A draft in `temp/` needs no credit until it goes into the game.
+  - Keep a record of the source of each new piece of art (the files or the pack it builds on) in the branch docs,
+    so that the credit can be checked later.
+
+  Example (owner, 2026-11-17, after `076a`): the new Desert Man tileset builds on the Mega 8-Bit Pixel Pack by Super
+  Icon Ltd, and Claude Fable 5.2 redrew and refined it. The README credits both under the Super Icon Ltd entry.
+
 - **Fix art in the art, not in code.** When a sprite frame sits wrong (a pose a few pixels off center, a frame that
   is not aligned with the frames next to it), move the pixels in the sprite files: the frame strip in
   `assets/sprites/frames/`, the packed atlas in `assets/sprites/sprite_sheets/`, and the slicer data file in

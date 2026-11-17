@@ -281,6 +281,9 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - [Timber Woman](https://ansimuz.itch.io/mega-bot)
 - [Super Icon Ltd](https://assetstore.unity.com/publishers/5990) 
   - [Mega 8-Bit Pixel Pack](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158)
+  - Desert Man
+    - Original by [Super Icon Ltd](https://assetstore.unity.com/publishers/5990) ([Mega 8-Bit Pixel Pack](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158))
+    - Updated by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
 - [Gektorne](https://gektorne.itch.io/)
   - [Wily Stage 2](https://gektorne.itch.io/8bit-tileset-for-action-platformer)
 - [Anokolisa](https://anokolisa.itch.io)
