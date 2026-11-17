@@ -90,7 +90,7 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   half 4 / full 6 (equal to the half and full charge, the rule of the boss tables on `master`).
 - Shared parts that later boss branches can use: `AbstractBoss.healthPhases` and `onHealthPhaseStart` (a phased bar
   and intro fill in passes), the per-difficulty, per-phase tuning row pattern, and the rule that a fight's damage to
-  the player goes in `PlayerDamageNegotiator` (`docs/WAYS_OF_WORKING.md`). Owner decisions of `077a` are in its branch
+  the player goes in `PlayerDamageNegotiator` (`docs/ways-of-working/gameplay.md`). Owner decisions of `077a` are in its branch
   `docs/NOTES.md` "Decisions".
 
 - (2026-11-16) `077b` merged. `DesertManTuning.punchExtendSpeed` never changed the punch (every row was faster than

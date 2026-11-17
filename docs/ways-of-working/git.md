@@ -1,0 +1,29 @@
+# Git and processes
+
+Read this file before you commit, merge, run Gradle or stop a process. It applies to every task.
+
+- **Stage by path.** Never use `git add -A` or `git add .`. The owner keeps local edits during a play test (for
+  example a muted run script), and other sessions change files. Run `git status --short` before each commit. Before a
+  squash merge, run `git diff --stat <base> <branch>` with no path filter, and confirm the list of files.
+- **The main checkout is shared.** All sessions that work on `master` use the same index there, and a plain
+  `git commit` takes what another session staged. Before a merge or a commit in the main checkout, run
+  `git status --short`. If a change is staged or modified that is not yours, stop and ask the owner. Commit with
+  explicit paths where you can, and check `git show --stat HEAD` after the commit.
+- **Select a process by its PID.** Several sessions run Gradle at once on this machine. List the candidates with
+  the PID, the age (`etimes`), the working folder (`readlink /proc/<pid>/cwd`) and the parent, keep only those whose
+  folder is your worktree, and act on those PIDs. Never use `pkill -f <name>`, and never take `pgrep ... | head -1`
+  as yours. (A `pkill -f` on 2026-11-11 stopped the test JVMs of other sessions.) A `pgrep -f` pattern also matches
+  the shell whose command line holds it. A Gradle daemon's folder is `~/.gradle/daemon/<version>`, not the worktree.
+- **Mutation checks: few, batched runs** (owner, 2026-11-16). A mutation check shows that a new test fails when its
+  rule breaks. Each run recompiles `core`, so the cost is the number of Gradle runs, not the number of tests:
+  - Scope: one mutation per rule (or per group of asserts on one rule), only for new or changed rules. Rules that a
+    move keeps "rule for rule" are covered by the tests written on the old code; a move needs no new mutations.
+  - Batch: put 3 to 6 independent mutations in one run. Each mutation breaks a different rule, and the failing case
+    names show which mutation each failure belongs to. Split a batch only when 2 mutations make the same case fail.
+  - Run only the target specs: `--tests 'full.package.ClassName'` (a `*Name` pattern finds nothing with Kotest).
+  - Keep the compiler warm for the loop: run it with the daemon and the Kotlin compiler in the daemon, and a short
+    idle time, so the daemon stops by itself after the loop:
+    `./gradlew --daemon -Dorg.gradle.daemon.idletimeout=120000 -Pkotlin.compiler.execution.strategy=in-process ...`.
+    Do not use `./gradlew --stop`: it stops the daemons of every session.
+  - Restore the code exactly after each run (`git diff` of the mutated file is empty, or equal to the uncommitted
+    change it had before), and write the mutations and the failing cases in the branch process log.

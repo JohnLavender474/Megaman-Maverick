@@ -22,7 +22,7 @@ A multi-branch effort on `engine/` and `core/` is in progress. It includes refac
 
 Put temporary work files in `temp/` at the repo root (git-ignored by `**/temp/`), one subfolder per task, for example `temp/x-sabre-gifs/`. This includes GIFs, sprite drafts, contact sheets, previews, level drafts and one-off helper scripts. Use it in place of a session scratchpad under `/tmp`, so that the owner can find the files later. Subagents write there too. Never commit files from `temp/`.
 
-A script that makes or converts content once (for example a tile or sprite generator, a map remap or repaint, a check of a single change) is a temporary file, also when a branch uses it: keep it and its notes in `temp/<task>/`, not in the branch folder or elsewhere in git. Commit only its output (the assets, the map). A tool goes in git only when it is meant for reuse, and then it goes in `utils/` with a `run.sh` and a `run_tests.sh`, like the other Python tools there.
+One-time scripts (generators, remaps) also go in `temp/`: see `docs/ways-of-working/temp-files.md`.
 
 ## Modules
 
@@ -140,7 +140,7 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 - `assets/TextureAsset.kt` (atlases in `assets/sprites/sprite_sheets/`), `SoundAsset.kt` (`assets/sounds/`), `MusicAsset.kt` (`assets/music/`). All implement `IAsset` (`source`, `assClass`).
 - Get a texture region with `services.assets.getTextureAtlas(TextureAsset.X.source).findRegion("$TAG/name")` (in a screen, `game.assets`).
 - The `generateAssetList` Gradle task writes `assets/assets.txt` on each build.
-- Atlases are packed with TexturePacker (`TexturePacker` CLI, the `.tps` projects in `assets/sprites/texture_packer/`, which pack a folder of `assets/sprites/frames/`). Use only the `Basic` algorithm, the setting in the projects. Do not use `MaxRects` or rotation, also not as a command-line override. When the frames do not fit the maximum page size of a project with `Basic`, move frames into a new atlas (a new frames folder, `.tps` project and `TextureAsset`) (owner, 2026-11-17).
+- Atlases are packed with TexturePacker from `assets/sprites/frames/`; the packing rules are in `docs/ways-of-working/assets.md`.
 
 ### Constants (`Constants.kt`)
 
@@ -152,7 +152,18 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 
 The code style rules (LibGDX collections, named arguments, fail fast, one entry point per interface method, layout, comments, tests) are in `docs/CODE_STYLE.md`. Read it before you write or review Kotlin code, and give it to each subagent that writes or reviews code.
 
-The ways of working (the owner's preferences for the approach to a task, for example where an art fault gets fixed) are in `docs/WAYS_OF_WORKING.md`. Read it before you start a task, and give it to each subagent that does one.
+The ways of working (the owner's preferences for the approach to a task) are in `docs/ways-of-working/`, one file per topic. Before a task, read the files that match it, and give them to each subagent that does such a task:
+
+| Task | Read |
+|---|---|
+| Every task (commits, merges, Gradle, processes) | `docs/ways-of-working/git.md` |
+| Art: sprites, tiles, backgrounds | `docs/ways-of-working/art.md` |
+| Frames, atlases, other asset files | `docs/ways-of-working/assets.md` |
+| Helper scripts, generators, drafts | `docs/ways-of-working/temp-files.md` |
+| Gameplay that the owner play-tests in rounds | `docs/ways-of-working/gameplay.md` |
+| Levels (TMX), entities that read places from their room | `docs/ways-of-working/levels.md` |
+
+`docs/ways-of-working/README.md` is the index and says how to add a rule.
 
 - Each entity has `companion object { const val TAG = "ClassName" }`. `TAG` is also the atlas region prefix.
 - Tags are a `core` idea, held by `TagsComponent` (`entities/state/`), which `MegaGameEntity.init()` adds from `defineTagsComponent()`, so an `init()` override calls `super.init()`. The default is one tag, the runtime class name, so an entity class needs no tag code. A base class can give its subclasses its own name as a second tag (for example `Block`), and a class whose tag differs from its name overrides `defineTagsComponent()`. An entity can have several tags: match with `hasTag(x)` or `hasAnyTag(set)`, never with one "first" tag; `MegaGameEntities.getOfTag` finds an entity under each tag. A class that needs its own name (an atlas key, a lookup of its own kind) uses its `TAG`. `core/src/smokeTest/resources/entity-tags.txt` lists the tags of every entity class; update it when a class or its tags change.
