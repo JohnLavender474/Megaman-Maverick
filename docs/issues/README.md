@@ -178,3 +178,4 @@ related-items: [<mega-refactor item IDs>]
 | [`PreciousTron` can pick its current spot as its next spot](2026-11-17-precious-tron-can-pick-current-spot.md) | question | core | open |
 | [`DemonMet` crashes when its map object has no `target` property](2026-11-17-demon-met-no-target-npe.md) | yes | core | open |
 | [Two gate-column tiles of `tomahawk_man_stage_tileset` have magenta pixels](2026-11-17-tomahawk-tileset-magenta-pixels.md) | yes | content | open |
+| [The floating-points combo carries over into the next level](2026-11-17-floating-points-combo-carries-over.md) | yes | core | open |

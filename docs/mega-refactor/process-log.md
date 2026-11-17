@@ -2759,3 +2759,22 @@ newest entry at the bottom.
 - Follow-up: `076` is `done` (its later work is in `078`). New items `167` (per-frame allocations in the backgrounds,
   `O5`) and `168` (`allowRotation` off in the `.tps` projects, `O6`). No change to the current state of `O4`, `O9`,
   `O5` or `O6`.
+
+## 2026-11-17 — mega-refactor-047i-transition-path
+
+- Summary: with 2 players, at a side room exit that every live player touches, each player keeps its own height
+  through the room transition and takes only the coordinate along the pan from the shared point. Before, every
+  player moved to one point at the lead's height. The first design put a field on `LevelState`; after a review by 6
+  read-only agents the owner chose D3: `CameraRoomTransition.axisOnly` (engine), set by `start()` and cleared at the
+  end and by `cancel()`, sent on `BEGIN`/`CONTINUE_ROOM_TRANS` with `RoomTransitionEventKeys.AXIS_ONLY`. A vertical
+  axis-only start throws until phase 3. New test rooms `coop_ledge` and `coop_ledge_next` in `RefactorTest047.tmx`.
+  Squash `9079ef4a7`.
+- Contract check: automated checks pass on the branch (`engine:test` 716, `core:test` 2420, `core:smokeTest`,
+  `lwjgl3:jar`, `detektMain`, `core:verifyRandomRule`); 9 mutations in 4 runs, each failed its named case; reviews
+  before the play test by 4 subagents over 2 rounds (no bug; 2 test gaps fixed); owner play test passed; 0 Diffity
+  threads; a pre-merge review agent found nothing. `master` had changed 67 files since the branch start, none shared
+  with the branch, so `master` was not merged into the branch first.
+- Follow-up: new item `169` (`LevelState` by lifetime and owner, `O1`, `O2`); new issue
+  `2026-11-17-floating-points-combo-carries-over.md`. Owner decision in `047` `ITEM.md`: a gate needs every live
+  player (phase 4, next). `O2-R5` current state updated.
+

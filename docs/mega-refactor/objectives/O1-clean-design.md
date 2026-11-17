@@ -176,6 +176,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `157` | idea | [D-1000 overdrive on the shared boss health phases](../items/157-d1000-health-phases/ITEM.md) (main) |
 | `158` | idea | [A shared lead-aim helper for bosses](../items/158-boss-lead-aim-helper/ITEM.md) (main) |
 | `163` | idea | [One shot pose in `PlayerBuster`](../items/163-buster-pose-enum/ITEM.md) (main) |
+| `169` | idea | [`LevelState` by lifetime and owner](../items/169-level-state-lifetimes/ITEM.md) (main) |
 
 ## Gaps with no item
 

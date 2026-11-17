@@ -5,7 +5,7 @@
 - Objectives: `O2`
 - Depends on: `029`, `031`
 - Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`, `118`, `119`, `120`
-- Branches: `047a` (merged), `047b` (merged), `047g` (merged), `047h` (merged), `047j` (merged), `047c` (merged), `047i` (active)
+- Branches: `047a` (merged), `047b` (merged), `047g` (merged), `047h` (merged), `047j` (merged), `047c` (merged), `047i` (merged)
 
 ## Goal
 
@@ -58,6 +58,14 @@ Item `029` research (2026-10-23, verbatim):
 - 2026-11-06: per-player transition path (`047i`, after `047h` merges). Found at the `047h` play test: slot 1 jumped into the exit wall while slot 0 stood on the floor, and slot 1 "teleported" to slot 0, because the carry moves every player to one point that starts at slot 0's center. When every live player is at the exit, each player takes only the transition-axis coordinate of that point and keeps its own other coordinate (its own path). When not every player is at the exit (a gate, which any one player triggers; later vertical exits), the shared point stays, so no player lands inside a solid; phases 3 and 4 decide more. This revises "warp next to that player" below for gathered exits. With 1 player, nothing changes. The spread of the players after a transition stays a separate backlog candidate.
 - 2026-11-06: side exits with 2 players (phase 2, `047h`): "gather at the exit". A side room exit is a wall for every player. It opens only when every live player touches it from inside; then slot 0 crosses, the transition runs, and the other players are carried. Chosen over "only slot 1 waits" and "any player leads". Found at the play test of the `coop_*` route: slot 1 ran into the next room alone.
 - 2026-11-06: build the shared screen in phases. Each phase adds one mechanic and gets play tested before the next: (1) one room with no exits, group camera and edge walls; (2) side exits; (3) vertical exits (ladders, jumps, falls); (4) gates; (5) camera sections (`051`); (6) death and respawn. The first co-op maps use only side and ladder exits, until phase 3 tests jump and fall exits.
+
+- 2026-11-17 (`047i`): at a gathered side exit, the transition pans each player only on its axis
+  (`CameraRoomTransition.axisOnly`, sent on the transition events); a vertical axis-only pan throws until phase 3
+  adds the y branch. The value belongs to the transition, not to `LevelState` or a co-op holder (6-agent review;
+  the `LevelState` findings are item `169`).
+- 2026-11-17 (owner, at the `047i` play test): a gate works like a side room exit with 2 players: it needs every live
+  player at the gate before it opens. This is phase 4 of the shared screen (gates). It answers "Who triggers a room
+  transition?" (Open questions, "Rooms") for gates.
 
 ### Decisions (owner, 2026-11-09, at the `047c` brief)
 
