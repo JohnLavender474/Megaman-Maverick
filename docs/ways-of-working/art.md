@@ -20,13 +20,25 @@ Read this file before you draw, fix or convert art (sprites, tiles, backgrounds)
     Anthropic"), and say that the developer directed it. When a person and an AI made the update together, name
     both. Do not present AI-made art as the work of a human artist, and do not leave out the original artist
     because the AI changed every pixel.
+  - **Inspired by:** when the new art copies no pixels but takes its look from other art (for example AI-made art
+    drawn after old art of the game), credit the maker and add an "Inspired by" line for each source. Use it where
+    the new art clearly follows a source, also when the AI made 100% of the pixels:
+
+    ```markdown
+    - Desert Man Backgrounds
+      - Made by Claude Fable 5.2, an AI model by Anthropic, directed by the developer
+      - Inspired by [<artist>](<link>) ([<work>](<link>)): the hills
+    ```
+
   - **When:** in the branch that adds the art to the game, before its merge. The brief or the contract lists the
     credit lines. A draft in `temp/` needs no credit until it goes into the game.
   - Keep a record of the source of each new piece of art (the files or the pack it builds on) in the branch docs,
     so that the credit can be checked later.
 
   Example (owner, 2026-11-17, after `076a`): the new Desert Man tileset builds on the Mega 8-Bit Pixel Pack by Super
-  Icon Ltd, and Claude Fable 5.2 redrew and refined it. The README credits both under the Super Icon Ltd entry.
+  Icon Ltd, and Claude Fable 5.2 redrew and refined it. The README credits both under the Super Icon Ltd entry. The
+  new Desert Man backgrounds of `076b` are AI-made and inspired by the old ones: the hills by Super Icon Ltd and the
+  sunset by Capcom. The README credits them with "Inspired by" lines.
 
 - **Fix art in the art, not in code.** When a sprite frame sits wrong (a pose a few pixels off center, a frame that
   is not aligned with the frames next to it), move the pixels in the sprite files: the frame strip in
