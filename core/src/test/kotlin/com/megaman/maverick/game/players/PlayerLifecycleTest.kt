@@ -27,6 +27,7 @@ import com.megaman.maverick.game.entities.state.PostActionMomentumComponent
 import com.megaman.maverick.game.entities.state.RoomTransitionCarryComponent
 import com.megaman.maverick.game.entities.state.TeleportableComponent
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.RoomTransitionEventKeys
 import com.megaman.maverick.game.events.PlayerEventKeys
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
@@ -161,8 +162,12 @@ class PlayerLifecycleTest : DescribeSpec({
             first.addComponent(PostActionMomentumComponent(0.1f, 1f, { 1f }, { true }, { false }, { false }))
         }
 
-        fun transition(key: EventType, position: Vector2? = null) =
-            Event(key, if (position != null) props(ConstKeys.POSITION pairTo position) else props())
+        fun transition(key: EventType, position: Vector2? = null, axisOnly: Boolean = false) = Event(
+            key,
+            if (position != null)
+                props(ConstKeys.POSITION pairTo position, RoomTransitionEventKeys.AXIS_ONLY pairTo axisOnly)
+            else props()
+        )
 
         it("centers the body on the path and turns gravity off") {
             first.onEvent(transition(EventType.BEGIN_ROOM_TRANS, Vector2(50f, 60f)))
@@ -171,6 +176,23 @@ class PlayerLifecycleTest : DescribeSpec({
 
             first.onEvent(transition(EventType.CONTINUE_ROOM_TRANS, Vector2(70f, 60f)))
             first.body.getCenter(Vector2()) shouldBe Vector2(70f, 60f)
+        }
+
+        it("keeps its own y and takes only the path x in an axis-only pan") {
+            first.body.setCenter(10f, 200f)
+
+            first.onEvent(transition(EventType.BEGIN_ROOM_TRANS, Vector2(50f, 60f), axisOnly = true))
+            first.body.getCenter(Vector2()) shouldBe Vector2(50f, 200f)
+
+            first.onEvent(transition(EventType.CONTINUE_ROOM_TRANS, Vector2(70f, 60f), axisOnly = true))
+            first.body.getCenter(Vector2()) shouldBe Vector2(70f, 200f)
+        }
+
+        it("takes the shared path point when the pan is not axis-only") {
+            first.body.setCenter(10f, 200f)
+
+            first.onEvent(transition(EventType.BEGIN_ROOM_TRANS, Vector2(50f, 60f)))
+            first.body.getCenter(Vector2()) shouldBe Vector2(50f, 60f)
         }
 
         it("turns gravity on at the end, except while climbing") {

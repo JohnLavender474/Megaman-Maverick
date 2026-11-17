@@ -107,7 +107,12 @@ class CameraRoomBounds(
         return false
     }
 
-    fun transitionToRoom(camera: Camera, roomName: String, transDirection: Direction? = null): Boolean {
+    fun transitionToRoom(
+        camera: Camera,
+        roomName: String,
+        transDirection: Direction? = null,
+        axisOnly: Boolean = false
+    ): Boolean {
         if (currentGameRoom == null) throw IllegalStateException(
             "Cannot transition to room $roomName because the current game room is null"
         )
@@ -122,7 +127,13 @@ class CameraRoomBounds(
 
         GameLogger.debug(TAG, "transitionToRoom(): transition direction = $direction")
 
-        transition.start(camera, nextGameRoom.rectangle, direction, subject!!.getSubjectBounds().getCenter(tempVec1))
+        transition.start(
+            camera,
+            nextGameRoom.rectangle,
+            direction,
+            subject!!.getSubjectBounds().getCenter(tempVec1),
+            axisOnly
+        )
 
         priorGameRoom = currentGameRoom
         currentGameRoom = nextGameRoom

@@ -1,68 +1,74 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>047i Transition Path</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 047 · Branch 047i · Objectives O2 · <span class="chip ok">approved 2026-11-17</span></p>
+    <h1>Each player keeps its own height at a gathered exit</h1>
+    <p class="lead">At a side room exit that every player touches, the room transition moves each player only along the exit axis. A transition that 1 player starts (1-player play, a gate, the room scan) keeps the one shared point.</p>
+    <p class="meta"><b>Changed 2026-11-17 (D3):</b> the transition owns the axis-only mark; LevelState gets no field.</p>
+    <p class="meta"><b>In play:</b> with 2 players, a player who jumps into the exit wall pans into the next room at its own height and then falls. It no longer jumps to the other player.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>Only a gathered exit gets per-player paths</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: every player goes to one point">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  E["CameraRoomExits<br/>(all players at exit)"] -->|transitionToRoom| T["CameraRoomTransition<br/>one shared point"]
+  T -->|POSITION| H["LevelRoomHandler"]
+  H -->|"BEGIN / CONTINUE_ROOM_TRANS"| P0["slot 0: setCenter(point)"]
+  H -->|"BEGIN / CONTINUE_ROOM_TRANS"| P1["slot 1: setCenter(point)"]
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>Both players get the same x and y, so a player in the air jumps to the shared point.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After (D3): the transition owns the axis-only mark">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  E["CameraRoomExits"] -->|"axisOnly = true"| T["CameraRoomTransition<br/>clears at end, cancel"]
+  T -->|"POSITION, AXIS_ONLY"| H["LevelRoomHandler"]
+  H -->|"BEGIN / CONTINUE_ROOM_TRANS"| P["each player<br/>true: x only<br/>false: x and y"]
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After (changed by D3)</span>The transition holds the mark for one pan and drops it at the end; no LevelState field and no manual clears.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>The player sets one axis when the exit is gathered</h2></div>
+    <p>Today, <code>MegaPlayer.playerOnRoomTransition</code>:</p>
+<pre><code>val position = event.getProperty(ConstKeys.POSITION, Vector2::class)!!
+body.setCenter(position)</code></pre>
     <p>After:</p>
-<pre><code><new code></code></pre>
+<pre><code>val position = event.getProperty(ConstKeys.POSITION, Vector2::class)!!
+val axisOnly = event.getProperty(RoomTransitionEventKeys.AXIS_ONLY)!!
+if (axisOnly) body.setCenter(position.x, body.getCenter().y)
+else body.setCenter(position)</code></pre>
+    <p>In <code>CameraRoomExits</code>, when every player is at the exit (changed by D3):</p>
+<pre><code>roomBounds.transitionToRoom(
+    camera, exit.next!!.name, exit.side, axisOnly = true
+)</code></pre>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>4 decisions</h2></div>
+    <p>The player must know that the exit is gathered. The rule O1-R4 asks for a typed field, not a new event key.</p>
+    <p><span class="chip ok">Chosen</span> D1: a typed field LevelState.gatheredExitSide. <b>Replaced by D3.</b></p>
+    <p>The jump into the exit wall in <code>coop_start</code> already shows the fault. A standing height difference needs a ledge at an exit.</p>
+    <p><span class="chip ok">Chosen</span> D2: add a room pair coop_ledge and coop_ledge_next with a 3-tile ledge at the right exit.</p>
+    <p>After a review by 6 agents, the field turned out to describe one transition, not the level or the co-op mode.</p>
+    <p><span class="chip ok">Chosen</span> D3: the transition owns the mark. CameraRoomTransition.axisOnly is cleared at the end and on cancel, and it goes to the players on the transition events.</p>
+    <p><span class="chip ok">Chosen</span> D4: the other LevelState findings (a floating-points combo bug, copied state, values kept after a level) become new items on master after this branch.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>A player keeps a height that the next room may block</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>A block at the player's height in the next room.</b> The height is inside the exit span of both rooms, but a block next to the edge can hold the player. Slot 0 has the same risk today.</li>
+      <li><span class="chip warn">risk</span> <b>The engine gets a flag for one core caller.</b> "Players follow the pan on its axis only" is a genre idea, so the engine may hold it. Tests check that the end and cancel clear it.</li>
     </ul>
   </section>
 
@@ -70,14 +76,18 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-047i-transition-path</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-test-coop.sh --room coop_ledge</code>: one player on the ledge, one on the floor at the right exit. Each keeps its own height; the high player falls at the end.</li>
+      <li><code>./run-game-test-coop.sh --room coop_start</code>: slot 0 stands at the right exit, slot 1 jumps into the wall. Slot 1 pans at its own height and falls at the end.</li>
+      <li><code>./run-game-test-coop.sh --room coop_wide</code>: the same jump at the left exit back to coop_start.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_047 --room coop_start</code>: 1 player, jump out of the right exit: as before.</li>
+      <li><code>./run-game-alpha.sh --level DESERT_MAN --room room14 --players 2</code>: a gate with 2 players: one shared point, as before.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
     <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-047i-transition-path/docs/SCOPE.md</code></p>
+    <p><code>docs/mega-refactor/items/047-co-op/branches/mega-refactor-047i-transition-path/docs/SCOPE.md</code></p>
     <p><code>.../mega-refactor-047i-transition-path/docs/CONTRACT.md</code></p>
   </section>
 </main>

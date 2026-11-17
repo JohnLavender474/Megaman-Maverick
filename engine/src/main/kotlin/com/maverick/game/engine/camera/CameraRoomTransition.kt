@@ -41,11 +41,26 @@ class CameraRoomTransition(
     val transitioning: Boolean
         get() = state != null
 
+    var axisOnly = false
+        private set
+
     fun getTransitionInterpolation(out: Vector2): Vector2? =
         if (state == null) null else interpolate(focusStart, focusTarget, transTimer.getRatio(), out)
 
-    fun start(camera: Camera, next: Rectangle, direction: Direction?, subjectCenter: Vector2) {
+    fun start(
+        camera: Camera,
+        next: Rectangle,
+        direction: Direction?,
+        subjectCenter: Vector2,
+        axisOnly: Boolean = false
+    ) {
+        // TODO: a vertical axis-only pan needs the y branch in the players; phase 3 of the shared screen (item 047)
+        if (axisOnly && direction != Direction.LEFT && direction != Direction.RIGHT) throw IllegalArgumentException(
+            "An axis-only room transition supports only LEFT or RIGHT; direction=$direction"
+        )
+
         state = ProcessState.BEGIN
+        this.axisOnly = axisOnly
 
         camera.position.toVector2(start)
         target.set(start)
@@ -76,6 +91,7 @@ class CameraRoomTransition(
 
     fun cancel() {
         state = null
+        axisOnly = false
     }
 
     override fun update(camera: Camera, delta: Float): Boolean {
@@ -85,6 +101,7 @@ class CameraRoomTransition(
             ProcessState.END -> {
                 GameLogger.debug(TAG, "update(): transition target = $target")
                 state = null
+                axisOnly = false
 
                 delayTimer.reset()
                 transTimer.reset()

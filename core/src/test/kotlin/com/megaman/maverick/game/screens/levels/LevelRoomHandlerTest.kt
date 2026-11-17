@@ -26,6 +26,7 @@ import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.state.RunComponent
 import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.RoomTransitionEventKeys
 import com.megaman.maverick.game.players.SecondPlayerEntity
 import com.maverick.game.engine.camera.CameraLimitStage
 import com.maverick.game.engine.camera.CameraRoomBounds
@@ -48,9 +49,11 @@ private class Focus : IFocusable, IRoomSubject {
 
 private class Keys : IEventListener {
     val keys = ArrayList<Any>()
+    val events = ArrayList<Event>()
     override val eventKeyMask = ObjectSet<Any>().apply { EventType.entries.forEach { add(it) } }
     override fun onEvent(event: Event) {
         keys.add(event.key)
+        events.add(event)
     }
 }
 
@@ -91,9 +94,9 @@ private class Rig(next: RectangleMapObject) {
         controller.update(0.01f)
     }
 
-    fun runTransition(name: String) {
-        roomBounds.transitionToRoom(camera, name, Direction.RIGHT)
-        repeat(4) { controller.update(0.02f) }
+    fun runTransition(name: String, axisOnly: Boolean = false, delta: Float = 0.02f) {
+        roomBounds.transitionToRoom(camera, name, Direction.RIGHT, axisOnly)
+        repeat(4) { controller.update(delta) }
         services.events.run()
     }
 }
@@ -112,6 +115,22 @@ class LevelRoomHandlerTest : DescribeSpec({
             rig.runTransition("next")
             rig.keys.keys shouldContain EventType.TURN_CONTROLLER_ON
             rig.behaviors shouldBe listOf(false, true)
+        }
+
+        it("puts the axis-only value of the transition on the begin and continue events") {
+            val transitionKeys = listOf(EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS)
+
+            val gathered = Rig(next())
+            gathered.runTransition("next", axisOnly = true, delta = 0.004f)
+            val gatheredEvents = gathered.keys.events.filter { it.key in transitionKeys }
+            gatheredEvents.map { it.key } shouldContain EventType.CONTINUE_ROOM_TRANS
+            gatheredEvents.map { it.getProperty(RoomTransitionEventKeys.AXIS_ONLY) }.toSet() shouldBe setOf(true)
+
+            val shared = Rig(next())
+            shared.runTransition("next", delta = 0.004f)
+            val sharedEvents = shared.keys.events.filter { it.key in transitionKeys }
+            sharedEvents.map { it.key } shouldContain EventType.CONTINUE_ROOM_TRANS
+            sharedEvents.map { it.getProperty(RoomTransitionEventKeys.AXIS_ONLY) }.toSet() shouldBe setOf(false)
         }
 
         it("stops the run of a player that is not Megaman") {

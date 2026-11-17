@@ -21,6 +21,7 @@ import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
 import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.RoomTransitionEventKeys
 import com.megaman.maverick.game.players.asPlayer
 import com.maverick.game.engine.camera.CameraRoomBounds
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -65,6 +66,7 @@ class LevelRoomHandler(
                         ConstKeys.NAME pairTo current.name,
                         "${ConstKeys.PRIOR}_${ConstKeys.NAME}" pairTo prior?.name,
                         ConstKeys.POSITION pairTo transition.getTransitionInterpolation(GameObjectPools.fetch(Vector2::class)),
+                        RoomTransitionEventKeys.AXIS_ONLY pairTo transition.axisOnly
                     )
                 )
             )
@@ -87,7 +89,8 @@ class LevelRoomHandler(
                     props(
                         ConstKeys.PRIOR pairTo roomBounds.priorGameRoom,
                         ConstKeys.ROOM pairTo roomBounds.currentGameRoom,
-                        ConstKeys.POSITION pairTo transition.getTransitionInterpolation(GameObjectPools.fetch(Vector2::class))
+                        ConstKeys.POSITION pairTo transition.getTransitionInterpolation(GameObjectPools.fetch(Vector2::class)),
+                        RoomTransitionEventKeys.AXIS_ONLY pairTo transition.axisOnly
                     )
                 )
             )

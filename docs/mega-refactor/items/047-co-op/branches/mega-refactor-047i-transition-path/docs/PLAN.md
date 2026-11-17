@@ -1,12 +1,23 @@
 # Plan: mega-refactor-047i-transition-path
 
-How to do the work in `SCOPE.md`. Write this file after the owner approves the brief. It needs
-no approval. When the plan changes, write the reason in the process log.
+Revised 2026-11-17 for D3 (see `SCOPE.md`). Steps 1 to 7 of the first plan are done (process log); this plan
+replaces the `LevelState` field.
 
-## Steps
+New API and its first production caller:
 
-### 1. <step>
+| API | First caller |
+|-----|--------------|
+| `CameraRoomTransition.axisOnly` and `start(..., axisOnly)` | `CameraRoomBounds.transitionToRoom` |
+| `CameraRoomBounds.transitionToRoom(..., axisOnly)` | `CameraRoomExits.update` |
+| `RoomTransitionEventKeys.AXIS_ONLY` | written by `LevelRoomHandler`, read by `MegaPlayer` |
 
-- Changes:
-- Check:
-- Done: no
+1. **Remove the field.** `LevelState.gatheredExitSide`, its 3 clears, the `LevelState` argument of `CameraRoomExits`.
+2. **Engine.** `CameraRoomTransition.axisOnly`; `CameraRoomBounds.transitionToRoom(..., axisOnly)`. Check: new
+   `CameraRoomTransitionTest`.
+3. **Writer.** `CameraRoomExits` passes `axisOnly = true`. Check: `CameraRoomExitsTest`.
+4. **Events.** `RoomTransitionEventKeys.AXIS_ONLY` on `BEGIN` and `CONTINUE`. Check: `LevelRoomHandlerTest`.
+5. **Reader.** `MegaPlayer` reads the key. Check: `PlayerLifecycleTest`.
+6. **Mutation checks.** One batch (engine clear, writer, event, reader). Check: each fails its named case.
+7. **Automated checks** of `CONTRACT.md`.
+8. **Review before the play test** (diff only; the map and the manual checks are unchanged). Then the play checks
+   and Diffity.

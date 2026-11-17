@@ -94,6 +94,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.objects.props
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.RoomTransitionEventKeys
 import com.maverick.game.engine.events.Event
 import com.megaman.maverick.game.players.SabreMove
 import com.megaman.maverick.game.players.PlayerAButtonComponent
@@ -1198,7 +1199,12 @@ class ProtomanTest : DescribeSpec({
                 "a room transition" to {
                     proto.addComponent(RoomTransitionCarryComponent(ConstVals.ROOM_TRANS_DELAY_DURATION) { false })
                     proto.services.levelState.roomTransition = true
-                    proto.onEvent(Event(EventType.BEGIN_ROOM_TRANS, props(ConstKeys.POSITION pairTo Vector2())))
+                    proto.onEvent(
+                        Event(
+                            EventType.BEGIN_ROOM_TRANS,
+                            props(ConstKeys.POSITION pairTo Vector2(), RoomTransitionEventKeys.AXIS_ONLY pairTo false)
+                        )
+                    )
                 }
             ).forEach { (name, breakAttack) ->
                 it("ends the crouch shot on $name and puts the stand boxes back") {

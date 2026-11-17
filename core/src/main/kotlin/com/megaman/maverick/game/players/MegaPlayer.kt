@@ -49,6 +49,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.RoomTransitionEventKeys
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.locks.MegaLockReason
 import com.megaman.maverick.game.locks.behaviorsLockHook
@@ -319,7 +320,9 @@ abstract class MegaPlayer(services: MegaServices) : AbstractHealthEntity(service
                 val position = event.getProperty(ConstKeys.POSITION, Vector2::class)!!
                 if (event.key == EventType.BEGIN_ROOM_TRANS)
                     GameLogger.debug(logTag, "playerOnRoomTransition(): begin: position=$position")
-                body.setCenter(position)
+                // TODO: a vertical axis-only pan sets only y; phase 3 of the shared screen adds its caller (item 047)
+                val axisOnly = event.getProperty(RoomTransitionEventKeys.AXIS_ONLY)!!
+                if (axisOnly) body.setCenter(position.x, body.getCenter().y) else body.setCenter(position)
 
                 if (event.key == EventType.BEGIN_ROOM_TRANS) beginRoomTransitionCarry()
 

@@ -105,7 +105,9 @@ class CameraRoomExits(
             if (everyoneAt(exit)) {
                 removeBlocks()
                 room = null
-                roomBounds.transitionToRoom(camera, exit.next!!.name, exit.side)
+                // TODO: a held player is not at the exit but also keeps its own height; this happens only with 3 or
+                //  more players (item 047, branch 047i)
+                roomBounds.transitionToRoom(camera, exit.next!!.name, exit.side, axisOnly = true)
                 return false
             }
 

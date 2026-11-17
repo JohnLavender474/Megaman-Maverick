@@ -169,6 +169,14 @@ class CameraRoomExitsTest : DescribeSpec({
             rig.roomBounds.currentGameRoom shouldBe rig.next
         }
 
+        it("starts an axis-only pan at a gathered exit") {
+            val rig = ExitsRig()
+            rig.atRightExit(rig.first)
+            rig.atRightExit(rig.second)
+            rig.update()
+            rig.transition.axisOnly shouldBe true
+        }
+
         it("counts a player past the edge as at the exit") {
             val rig = ExitsRig()
             rig.second.body.setX(130f)
