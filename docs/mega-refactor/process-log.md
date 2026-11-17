@@ -2696,3 +2696,4 @@ newest entry at the bottom.
   the text-scan guards of `O2-R1`, `045a` and `045b` to detekt; move to a stable detekt 2.0.0). The stale
   `RandomSourceGuardTest` mention in `045` `ITEM.md` is fixed. No bug candidates. The main checkout had 2 modified files
   of other sessions (`README.md`, `DesertMan_16x14_v4.tmx`); they stay unstaged.
+- Checks on `master` after the squash: `engine:test` 710, `core:test` 2416, `core:smokeTest` 469 (0 failures), `lwjgl3:jar`, `detektMain` and `core:verifyRandomRule` pass.
