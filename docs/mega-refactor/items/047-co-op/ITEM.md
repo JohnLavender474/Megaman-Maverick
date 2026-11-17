@@ -5,7 +5,7 @@
 - Objectives: `O2`
 - Depends on: `029`, `031`
 - Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`, `118`, `119`, `120`
-- Branches: `047a` (merged), `047b` (merged), `047g` (merged), `047h` (merged), `047j` (merged), `047c` (merged), `047i` (merged)
+- Branches: `047a` (merged), `047b` (merged), `047g` (merged), `047h` (merged), `047j` (merged), `047c` (merged), `047i` (merged), `047k` (active)
 
 ## Goal
 
@@ -93,6 +93,7 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 | `047h` `side-exits` | Shared screen phase 2: side room exits with 2 players, "gather at the exit" (2026-11-06) |
 | `047j` | The co-op default `bottom=WARP` for tall rooms (2026-11-06): `SessionRules` for `COOP` (and `PVP`?), with checks in `coop_shaft` and `group_tall` |
 | `047i` | Per-player transition path at a gathered exit (2026-11-06), after `047h`. Changes `playerOnRoomTransition` (`PlayerLifecycle.kt`) and the event data from `LevelRoomHandler`, with 1-player control checks |
+| `047k` `gate-gather` | Shared screen phase 4: a gate opens only when every live player is at it (owner decision 2026-11-17) |
 
 `038` comes before the end of phase 1 if a death must not reset the room for the other player.
 
