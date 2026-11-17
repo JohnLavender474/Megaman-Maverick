@@ -22,6 +22,8 @@ A multi-branch effort on `engine/` and `core/` is in progress. It includes refac
 
 Put temporary work files in `temp/` at the repo root (git-ignored by `**/temp/`), one subfolder per task, for example `temp/x-sabre-gifs/`. This includes GIFs, sprite drafts, contact sheets, previews, level drafts and one-off helper scripts. Use it in place of a session scratchpad under `/tmp`, so that the owner can find the files later. Subagents write there too. Never commit files from `temp/`.
 
+A script that makes or converts content once (for example a tile or sprite generator, a map remap or repaint, a check of a single change) is a temporary file, also when a branch uses it: keep it and its notes in `temp/<task>/`, not in the branch folder or elsewhere in git. Commit only its output (the assets, the map). A tool goes in git only when it is meant for reuse, and then it goes in `utils/` with a `run.sh` and tests (see "Python tools" below).
+
 ## Modules
 
 `settings.gradle` includes three Gradle modules:
