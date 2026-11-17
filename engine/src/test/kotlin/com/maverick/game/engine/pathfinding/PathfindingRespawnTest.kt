@@ -77,11 +77,13 @@ class PathfindingRespawnTest : DescribeSpec({
 
     describe("AsyncPathfindingSystem") {
         it("drops the search of an entity that leaves, so its next spawn gets no old path") {
+            val started = CountDownLatch(1)
             val release = CountDownLatch(1)
             val finished = CountDownLatch(1)
             val factory = object : IPathfinderFactory {
                 override fun getPathfinder(params: PathfinderParams) = object : IPathfinder {
                     override fun call(): PathfinderResult {
+                        started.countDown()
                         try {
                             release.await(5, TimeUnit.SECONDS)
                         } finally {
@@ -101,6 +103,7 @@ class PathfindingRespawnTest : DescribeSpec({
 
             engine.spawn(entity)
             engine.update(1f)
+            started.await(5, TimeUnit.SECONDS) shouldBe true
             engine.destroy(entity)
             engine.update(0f)
             release.countDown()
