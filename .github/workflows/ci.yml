@@ -27,7 +27,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Test and build
-        run: ./gradlew --continue engine:test core:test core:smokeTest lwjgl3:jar
+        run: ./gradlew --continue engine:test core:test core:smokeTest lwjgl3:jar detektMain core:verifyRandomRule
 
       - name: Upload test reports on failure
         if: failure()
@@ -38,6 +38,7 @@ jobs:
             engine/build/reports/tests/test/
             core/build/reports/tests/test/
             core/build/reports/tests/smokeTest/
+            */build/reports/detekt/
           retention-days: 7
 
   utils-pytest:

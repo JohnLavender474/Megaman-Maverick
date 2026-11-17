@@ -22,7 +22,16 @@ flowchart LR
 ## Rules for a change
 
 - Do not call `MathUtils.random*`, `java.util.Random`, `kotlin.random.Random`, a collection `.random()`,
-  `.shuffle()` or `.shuffled()` outside this package. `RandomSourceGuardTest` (`core/src/test`) fails on them.
+  `.shuffle()` or `.shuffled()` outside this package. The detekt rule `ForbiddenMethodCall` fails `detektMain` on
+  them. It resolves types, so it also sees a call with no receiver (`shuffle()` in an `Array` subclass or in
+  `with(array)`) and a call with an argument (`list.shuffle(rng)`). `config/detekt/detekt.yml` holds the list.
+- A new way to make a random value (a new library call) goes into that list, with a line in the fixture
+  `core/src/detektFixture/`. `core:verifyRandomRule` checks the rule against the fixture; after a deliberate change,
+  run it once with `-PupdateRandomRuleFixture` and read the diff of `expected-findings.txt`.
+- Only the game makes the session source: `SeededRandom(...)` is also on the list, and its one call in
+  `MegamanMaverickGame` has `@Suppress("ForbiddenMethodCall")`.
+- Limits of the check: it reads only `.kt` files (not Java), and it skips a call that it cannot resolve (for
+  example when a library is not on the classpath of `detektMain`).
 - A helper with no `services` takes a `GameRandom` parameter; it does not reach for a global.
 - One stream: a cosmetic draw (debris, leaves) also moves the values that gameplay draws after it. A split into
   streams is a later decision.

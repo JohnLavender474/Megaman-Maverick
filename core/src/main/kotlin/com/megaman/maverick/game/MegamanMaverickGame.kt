@@ -449,7 +449,7 @@ class MegamanMaverickGame(
             cameraView,
             cameraController,
             launch.rules,
-            SeededRandom(launch.randSeed ?: System.currentTimeMillis())
+            @Suppress("ForbiddenMethodCall") SeededRandom(launch.randSeed ?: System.currentTimeMillis())
         )
 
         MegaEntityFactory.init(services)

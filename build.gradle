@@ -12,6 +12,7 @@ buildscript {
   }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    classpath "dev.detekt:detekt-gradle-plugin:$detektVersion"
   }
 }
 
@@ -63,6 +64,16 @@ configure(subprojects) {
     options.release.set(17)
   }
   kotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+
+  apply plugin: 'dev.detekt'
+  detekt {
+    toolVersion = detektVersion
+    buildUponDefaultConfig = false
+    config.setFrom(rootProject.file('config/detekt/detekt.yml'))
+    basePath = rootProject.layout.projectDirectory
+  }
+  tasks.named('detekt') { enabled = false }
+  tasks.named('check') { dependsOn 'detektMain' }
 
   tasks.withType(Test).configureEach {
     jvmArgs '-XX:+ExitOnOutOfMemoryError'

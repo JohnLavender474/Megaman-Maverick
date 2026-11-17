@@ -66,3 +66,47 @@ testing {
 }
 
 tasks.named('check') { dependsOn testing.suites.smokeTest }
+
+def randomRuleFixture = tasks.register('detektRandomRuleFixture', dev.detekt.gradle.Detekt) {
+  description = 'Runs the detekt random-call rules on a fixture of forbidden and allowed calls'
+  setSource(files('src/detektFixture/kotlin'))
+  classpath.setFrom(sourceSets.main.compileClasspath)
+  jvmTarget = '17'
+  config.setFrom(rootProject.file('config/detekt/detekt.yml'), file('src/detektFixture/detekt-fixture.yml'))
+  ignoreFailures = true
+  reports {
+    html.required = false
+    markdown.required = false
+    sarif.required = false
+    checkstyle.required = true
+  }
+}
+
+tasks.register('verifyRandomRule') {
+  description = 'Checks that the detekt random-call rules find exactly the calls in src/detektFixture/expected-findings.txt'
+  group = 'verification'
+  dependsOn randomRuleFixture
+  def report = randomRuleFixture.flatMap { it.reports.checkstyle.outputLocation }
+  def expected = file('src/detektFixture/expected-findings.txt')
+  def update = project.hasProperty('updateRandomRuleFixture')
+  inputs.file(report)
+  inputs.file(expected)
+  doLast {
+    def found = new XmlSlurper().parse(report.get().asFile).file.error.collect { error ->
+      def method = (error.@message.text() =~ /`([^`]+)`/)[0][1]
+      "${new File(error.parent().@name.text()).name}:${error.@line}:${error.@column} ${method}"
+    }.sort()
+    if (update) {
+      expected.text = found.join('\n') + '\n'
+      return
+    }
+    def wanted = expected.readLines().findAll { it.trim() }.sort()
+    if (found != wanted) {
+      throw new GradleException("The random-call rules found other calls than expected-findings.txt lists.\n" +
+        "Missing: ${wanted - found}\nNew: ${found - wanted}\n" +
+        "Fix config/detekt/detekt.yml, or run with -PupdateRandomRuleFixture after a deliberate change.")
+    }
+  }
+}
+
+tasks.named('check') { dependsOn 'verifyRandomRule' }
