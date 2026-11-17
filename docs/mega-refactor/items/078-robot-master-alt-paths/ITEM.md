@@ -103,9 +103,9 @@ The owner calls it "Gravity Man's stage".
   and `076`. The boss fights stay in `077`, so stages and boss fights stay separate items. The scope has one section
   per stage, and the branches are `078a`, `078b`, ..., one or more per stage.
 - 2026-11-17 (owner): the aeroplane enemy of the Desert Man stage is `Jetto`.
-- 2026-11-17 (Claude, for the owner to confirm): `076b` (Desert Man backgrounds, active) finishes under its own name
-  and ID. When it merges, `076` is `done`. All later tileset and background work is a branch of `078`. The merged
-  branch folders of `076` stay in `076` as history.
+- 2026-11-17 (owner): `076b` (Desert Man backgrounds) finishes under its own name and ID, and then `076` is `done`.
+  All later tileset and background work is a branch of `078`. The merged branch folders of `076` stay in `076` as
+  history. Done: `076b` merged on 2026-11-17 (squash `6bb2606da`), and `076` is `done`.
 
 Decisions carried over from `076` (they apply to the tileset and background work):
 

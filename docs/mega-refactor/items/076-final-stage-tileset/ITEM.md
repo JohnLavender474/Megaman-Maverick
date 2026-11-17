@@ -8,9 +8,9 @@
 - Branches: `mega-refactor-076a-desert-man-tileset` (merged, 2026-11-17, squash `2bede4d69`), `mega-refactor-076b-desert-man-backgrounds` (merged, 2026-11-17, squash `6bb2606da`)
 
 > **Merged into `078`, 2026-11-17.** The owner merged this item into `078` (Stage redesigns, an epic for all
-> stages). `078` `ITEM.md` holds the goal, the decisions and the open questions now. `076b` (active) finishes under
-> its own name; when it merges, this item is `done`. All later tileset and background work is a branch of `078`.
-> The text below is kept as history.
+> stages). `078` `ITEM.md` holds the goal, the decisions and the open questions now. `076b` merged on 2026-11-17
+> (squash `6bb2606da`), and this item is `done`. All later tileset and background work is a branch of `078`. The
+> text below is kept as history.
 
 ## Goal
 
