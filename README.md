@@ -23,13 +23,22 @@ Special thanks to these creators for helping make this dream project become a re
 
 ## RUNNING THE GAME
 
-Currently, there is no "official" release of this game since it is still under active development. However, see the
-section below on how to run the game using the source code.
+### DOWNLOAD A RELEASE
+
+Releases are on [itch.io](https://oldlavygenes474.itch.io/mega-man-maverick). There is a zip file for Windows and a zip
+file for Linux. Each zip file contains a Java runtime, so you do not need to install Java.
+
+1. Download the zip file for your platform.
+2. Extract the zip file to a folder.
+3. Run the executable in the extracted folder. Do not move the executable out of this folder, because it needs the other
+   files in the folder.
+
+The game is still in active development, so new releases come out regularly.
 
 ### BUILDING THE GAME FROM SOURCE
 
-Since the game runs using gradle and JRE, you can build a JAR of the game yourself. Keep in mind that in order to run
-the generated JAR, you will need Java 17+ installed on your local machine.
+Since the game runs using gradle and JRE, you can build a JAR of the game yourself. To build from source and to run the
+generated JAR, you need Java 17+ on your local machine. Gradle runs on JDK 17 or 21, not on JDK 25.
 
 #### Pre-requisites:
 
@@ -52,14 +61,20 @@ the generated JAR, you will need Java 17+ installed on your local machine.
    git clone https://github.com/JohnLavender474/Megaman-Maverick.git
    ```
 2. From the root directory of the game project, run one of the following:
-   1. Mac/Linux (edit the shell script to change settings):
+   1. Mac/Linux:
       ```bash
-      build-run-desktop-debug.sh
+      ./run-game-alpha.sh
       ```
+      The other run scripts are `./run-game-debug.sh` (debug text, debug window and diagnostics) and
+      `./run-game-test.sh` (starts the test level). The scripts pass extra arguments to the game, for example
+      `./run-game-alpha.sh --level DESERT_MAN`.
    2. Windows (will have to pass program args if you want to change any settings):
       ```bash
-      ./gradlew lwjgl:run
+      ./gradlew lwjgl3:run
       ```
+3. To build a runnable JAR, run `./gradlew lwjgl3:jar`. The output is `lwjgl3/build/libs/Megaman-Maverick-<version>.jar`.
+4. To build a release zip with a Java runtime, run `./build-game-linux.sh`, `./build-game-windows.sh` or
+   `./build-game-mac.sh`.
 - See the [GDX Liftoff](#GDX-Liftoff) section for more gradle commands and details.
 
 ---
@@ -77,11 +92,20 @@ value is the "in-game" action:
 - J: B
 - K: A
 - ENTER: START
+- L: SELECT
 
-These can be remapped through the keyboard settings screen accessed from the main menu. Use the keys for "UP" and "DOWN"
-(by default the "W" and "S" keys respectively) to navigate to the game button you wish to remap and press the key for
-"START" (by default the "ENTER" key). You will be prompted to press any key on the keyboard to assign that key's code
-to the in-game button action.
+Some keys always do the same action and cannot be remapped: the arrow keys are the D-pad, ENTER and NUMPAD ENTER are
+START, and ESC is BACK.
+
+These can be remapped through the keyboard settings screen. To open it, select "SETTINGS" in the main menu or in the
+pause menu, then select "KEYBOARD SETTINGS". Use the keys for "UP" and "DOWN" (by default the "W" and "S" keys
+respectively) to navigate to the game button you wish to remap and press the key for "START" (by default the "ENTER"
+key). You will be prompted to press any key on the keyboard to assign that key's code to the in-game button action.
+
+The same screen also has these options:
+- SELECT ACTION: sets the action of the SELECT button (by default, the next weapon).
+- LOAD SAVED SETTINGS: loads the mappings that you saved before.
+- RESET TO DEFAULTS: sets the default mappings again.
 
 <img src="img/KeyboardSettings.png" width="600px"/>
 <img src="img/PressToReassignKey.png" width="600px"/>
@@ -93,14 +117,21 @@ to work even when a controller is connected. The game has been tested with the f
 - NES-style USB controller
 
 When a controller is connected, default mappings are assigned. Most likely, you will want to configure these mappings.
-In the "Controller Settings" screen, you can reassign the mappings for the controller similarly to how the same is done
-for the keyboard mappings.
+In the "CONTROLLER SETTINGS" screen (in "SETTINGS"), you can reassign the mappings for the controller similarly to how
+the same is done for the keyboard mappings. This screen opens only when a controller is connected.
+
+### GAME MODES
+
+- When you start a new game, you select the difficulty: NORMAL or HARD.
+- After you complete a level, you can save the game. Select "LOAD SAVE FILE" in the main menu to continue a saved game.
+- The "EXTRAS" menu has more levels, for example a stage where you play as X.
 
 ---
 
 ## THE STORY
 
-The story is still in progress and nothing has been finalized yet.
+The game takes place late in Megaman's life, as Dr. Light has begun development of the parts that will eventually be
+used to build X. Megaman in this game has the ability to air dash and wall jump.
 
 ---
 
@@ -121,6 +152,11 @@ comprehensive listing of the credits for the artwork used in this game.
 #### Megaman
 
 - Megaman spritesheet - [SamuelX4](https://www.deviantart.com/samuelx4) and [oldlavygenes](https://www.deviantart.com/oldlavygenes474)
+
+#### Proto Man
+
+- Hansungkee, from Mister Mike, Red Flash, Molly, Warner Movie, Team MM8BDM, Rockman 7 FC Team, Medaru Daka,
+  Team Megaman Maker, Sprites Inc, Yiey20, Aburtos
 
 #### Robot Masters
 
@@ -152,9 +188,8 @@ comprehensive listing of the credits for the artwork used in this game.
 - Inferno Dragon - [Ansimuz](https://ansimuz.itch.io/mega-bot)
 - Moon Head - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
 - Reactor Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
-- Bospider - [Bean and Shawn](https://www.spriters-resource.com/game_boy_gbc/mmxtreme/sheet/480/?source=genre)
-- Elec Devil = [boberatu](https://www.deviantart.com/boberatu/art/Elec-Devil-276493565)
-- Guts Tank - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/) (currently not used)
+- Elec Devil - [boberatu](https://www.deviantart.com/boberatu/art/Elec-Devil-276493565)
+- Guts Tank - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
 - Penpen Maker - [Mister Mike](https://www.spriters-resource.com/nes/mm3/sheet/77911/) (currently not used)
 - Sphinx - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/) (currently not used)
 
@@ -268,7 +303,6 @@ List of creators and the stages in which their artwork is used. Some stages cont
 ### Music
 
 - [Famitard](https://www.youtube.com/@FamiTard)
-  - Main Menu - [MMX3 Intro Stage 8-Bit](https://youtu.be/jEPimSadiRE)
   - Reactor Man Stage - [Original Composition 1 8-Bit](https://youtu.be/UwyhXokv8zw?si=arpFaqewqTtV1PXJ)
   - Rodent Man Stage - [Original Composition 2 8-Bit](https://youtu.be/x8RDDcdzs-4)
   - Moon Man Stage - [MMX5 Dark Necrobat 8-Bit](https://youtu.be/RosxPCxVOyk)
@@ -277,6 +311,7 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Wily Stage 3 - [MMX6 Gate Laboratory 8-Bit](https://youtu.be/Zdtp6f57E_c?list=RDZdtp6f57E_c)
   - X6 Intro Stage - [MMX6 Intro Stage 8-Bit](https://youtu.be/EZrqRIRTA2I)
   - X6 D-1000 - [MMX6 D-1000 8-Bit](https://www.youtube.com/watch?v=KivGaSyTalc)
+  - Gauntlet 1 - [MMX5 Volt Kraken 8-Bit](https://www.youtube.com/watch?v=xi7Odov_rek)
 - [vinnyz29](https://soundcloud.com/mega-vinnyz279)
   - Main Menu
   - Intro Stage 
@@ -336,15 +371,20 @@ Works by Metallic Warrior:
 
 <img src="./img/permissions/metallic_warrior.png" width="300">
 
+Works by Wyatt:
+
+<img src="./img/permissions/Wyatt.png" width="300">
+
 ---
 
 ## GDX Liftoff
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+This project was first generated with the GDX Liftoff template.
 
-### Platforms
+### Modules
 
-- `core`: Main module with the application logic shared by all platforms.
+- `engine`: The "Maverick Engine", a custom ECS engine for Mega Man-like games.
+- `core`: Main module with the game logic. Depends on `engine`.
 - `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
 
 ### Gradle
@@ -365,7 +405,8 @@ Useful Gradle tasks and flags:
 - `idea`: generates IntelliJ project data.
 - `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
 - `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+- `test`: runs unit tests (`engine:test` and `core:test`).
+- `core:smokeTest`: builds every entity class headless and checks its sprite regions.
 
 Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should 
 be replaced with the ID of a specific project. For example, `core:clean` removes `build` folder only from the `core` 
