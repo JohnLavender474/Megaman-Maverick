@@ -2607,3 +2607,11 @@ newest entry at the bottom.
   failed twice in the full run on `PathfindingRespawnTest` (async latch, 5 s) and passed alone twice (main checkout
   and `045b` worktree; code identical to the passing branch tip). Filed:
   `docs/issues/2026-11-16-async-pathfinding-respawn-test-flaky.md`.
+
+## 2026-11-17 — `076` scope widened (docs only)
+
+- The owner asked for an item that replaces the tilesets from free asset packs with art of the same quality as the
+  commissioned tilesets. No item had this goal. The owner chose to widen `076` (final stage only), as `077` was
+  widened to cover every boss. The folder slug `076-final-stage-tileset` stays.
+- `076` `ITEM.md`: goal, scope, the owner's words, a decision, open questions. `NOTES.md`: the tilesets of each live
+  level. Title changed in `ITEMS.md`, `O4` and `O9` (also the `O9` problem `P4`).

@@ -8,8 +8,8 @@
   progress.
 - `P2`: Some settings are lost on quit or come only from CLI flags (`034`).
 - `P3`: Control settings are too restrictive for a modern pad or a keyboard (`070`).
-- `P4`: The game has no dialogue or cutscenes (`082`), and some areas look unfinished, for example the final stage
-  (`076`).
+- `P4`: The game has no dialogue or cutscenes (`082`), and some areas look unfinished, for example
+  the levels whose tilesets come from free asset packs (`076`).
 
 ## Goal
 
@@ -74,7 +74,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `007` | planned | [Versioned JSON save slots with legacy import](../items/007-json-save-slots/ITEM.md) (main) |
 | `034` | planned | [Persisted settings file](../items/034-persisted-settings/ITEM.md) (main) |
 | `070` | idea | [More flexible controller settings](../items/070-flexible-controls/ITEM.md) (main) |
-| `076` | idea | [A new tileset for the final stage](../items/076-final-stage-tileset/ITEM.md) (main) |
+| `076` | idea | [Better tileset art for every level](../items/076-final-stage-tileset/ITEM.md) (main) |
 | `082` | planned | [Dialogue boxes, in-level dialogue scenes and cutscenes](../items/082-dialogue-and-cutscenes/ITEM.md) (main) |
 | `031` | done | [Input frames per player (`InputFrame`), devices and bindings](../items/031-input-frames/ITEM.md) |
 | `113` | idea | [Character select screen](../items/113-character-select/ITEM.md) |
