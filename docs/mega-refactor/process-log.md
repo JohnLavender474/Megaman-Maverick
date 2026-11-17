@@ -2677,3 +2677,4 @@ newest entry at the bottom.
   frame (the contract on `master` records this).
 - Contract check: after `master` was merged into the fix, `engine:test` 710, `core:test` 2400, `core:smokeTest` 469,
   `lwjgl3:jar` pass. Owner diff review done; no play check (test only).
+- Checks on `master` after the squash (with `fix/pause-restores-systems` of another session): `engine:test` 710, `core:test` 2418, `core:smokeTest` 469 (0 failures), `lwjgl3:jar` builds.
