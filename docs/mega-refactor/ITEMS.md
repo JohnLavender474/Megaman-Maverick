@@ -172,6 +172,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 162 | [LibGDX collections in the launch options and level overrides](items/162-launch-loadout-collections/ITEM.md) | refactor | `O1` | idea | none | | |
 | 163 | [One shot pose in `PlayerBuster`](items/163-buster-pose-enum/ITEM.md) | refactor | `O1` | idea | none | | |
 | 164 | [Move the text-scan guards to detekt](items/164-guards-to-detekt/ITEM.md) | tooling | `O6`, `O2`, `O5` | idea | `161` | | |
+| 165 | [Tiled automapping rules for the Desert Man tileset](items/165-desert-tileset-automapping/ITEM.md) | tooling | `O9` | idea | none | | |
 
 ## Branches
 
@@ -273,7 +274,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-047j-coop-bottom-warp`](items/047-co-op/branches/mega-refactor-047j-coop-bottom-warp/process-log.md) | 047 | The co-op default `bottom=WARP` for tall rooms | merged | 2026-11-06 | 2026-11-07 |
 | [`mega-refactor-047c-slot-respawn`](items/047-co-op/branches/mega-refactor-047c-slot-respawn/process-log.md) | 047 | A dead co-op player respawns near the lead, at a safe spot (shared screen phase 6) | merged | 2026-11-09 | 2026-11-09 |
 | [`mega-refactor-047i-transition-path`](items/047-co-op/branches/mega-refactor-047i-transition-path/process-log.md) | 047 | Per-player transition path at a gathered room exit | active | 2026-11-17 | |
-| [`mega-refactor-076a-desert-man-tileset`](items/076-final-stage-tileset/branches/mega-refactor-076a-desert-man-tileset/process-log.md) | 076 | A new original tileset for Desert Man, and the map repainted with it | active | 2026-11-17 | |
+| [`mega-refactor-076a-desert-man-tileset`](items/076-final-stage-tileset/branches/mega-refactor-076a-desert-man-tileset/process-log.md) | 076 | A new original tileset for Desert Man, and the map repainted with it | merged | 2026-11-17 | 2026-11-17 |
 | [`mega-refactor-134a-draw-interpolation`](items/134-render-interpolation/branches/mega-refactor-134a-draw-interpolation/process-log.md) | 134 | Draw bodies and the camera between the last 2 physics steps, with `--interpolation` (on by default) | merged | 2026-11-07 | 2026-11-09 |
 | [`mega-refactor-134b-interpolation-audit`](items/134-render-interpolation/branches/mega-refactor-134b-interpolation-audit/process-log.md) | 134 | Fix the known render interpolation hitches: bodies placed outside the world steps, bodiless sprites, the shape renderer, snaps | merged | 2026-11-09 | 2026-11-09 |
 | [`mega-refactor-151a-level-completed-rename`](items/151-level-completed-rename/branches/mega-refactor-151a-level-completed-rename/process-log.md) | 151 | Rename `levelsDefeated`, `isLevelDefeated`, `onLevelDefeated` and the rest of the family to "completed"; delete `allLevelsDefeated` | merged | 2026-11-11 | 2026-11-11 |

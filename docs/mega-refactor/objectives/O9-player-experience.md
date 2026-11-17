@@ -75,6 +75,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `034` | planned | [Persisted settings file](../items/034-persisted-settings/ITEM.md) (main) |
 | `070` | idea | [More flexible controller settings](../items/070-flexible-controls/ITEM.md) (main) |
 | `076` | active | [Better tileset art for every level](../items/076-final-stage-tileset/ITEM.md) (main) |
+| `165` | idea | [Tiled automapping rules for the Desert Man tileset](../items/165-desert-tileset-automapping/ITEM.md) (main) |
 | `082` | planned | [Dialogue boxes, in-level dialogue scenes and cutscenes](../items/082-dialogue-and-cutscenes/ITEM.md) (main) |
 | `031` | done | [Input frames per player (`InputFrame`), devices and bindings](../items/031-input-frames/ITEM.md) |
 | `113` | idea | [Character select screen](../items/113-character-select/ITEM.md) |

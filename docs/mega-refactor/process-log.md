@@ -2697,3 +2697,18 @@ newest entry at the bottom.
   `RandomSourceGuardTest` mention in `045` `ITEM.md` is fixed. No bug candidates. The main checkout had 2 modified files
   of other sessions (`README.md`, `DesertMan_16x14_v4.tmx`); they stay unstaged.
 - Checks on `master` after the squash: `engine:test` 710, `core:test` 2416, `core:smokeTest` 469 (0 failures), `lwjgl3:jar`, `detektMain` and `core:verifyRandomRule` pass.
+
+## 2026-11-17 — mega-refactor-076a-desert-man-tileset
+
+- Summary: squash `2bede4d69`. Desert Man gets a new original tileset: `desert_man_tileset.png` and `.tsx` (113 tiles:
+  cobble rock with 2x2 fill blocks, steel, crates, ladder, rope with ends, brass spikes, sandstone, oasis, rope fence,
+  gate column), drawn in 5 accepted art phases by Fable subagents. `DesertMan_16x14_v4.tmx` uses only the new tileset;
+  its 5 tile layers are remapped by gid and neighbors, and no other line changed. The back wall is opaque (86 cells no
+  longer show the sunset through it). The generator and remap script stays in `temp/076-desert-tiles/tools/`.
+- Contract check: script checks (only tile data changed; the same painted cells per layer; every old gid mapped);
+  `engine:test` 710, `core:test` 2416, `core:smokeTest` 469, `lwjgl3:jar`, `detektMain`, `core:verifyRandomRule`
+  pass; review before the play test by 1 subagent (1 README finding, fixed); Diffity round 1 with 1 remark (tool
+  scripts moved to `temp/`, also a new rule in the root `CLAUDE.md`); owner play test passed.
+- Follow-up: item `076` stays active (`076b`: the Desert Man backgrounds). New item `165` (Tiled automapping rules for
+  the tileset). New issue `2026-11-17-tomahawk-tileset-magenta-pixels.md`. No change to the current state of `O4` or
+  `O9`.

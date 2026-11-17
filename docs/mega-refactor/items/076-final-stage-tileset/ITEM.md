@@ -5,7 +5,7 @@
 - Objectives: `O9`, `O4`
 - Depends on: none
 - Related: `067`, `077`
-- Branches: `mega-refactor-076a-desert-man-tileset` (active, 2026-11-17)
+- Branches: `mega-refactor-076a-desert-man-tileset` (merged, 2026-11-17, squash `2bede4d69`)
 
 ## Goal
 
