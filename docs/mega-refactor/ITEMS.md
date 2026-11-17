@@ -83,7 +83,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 073 | [More gravity-block puzzles in Moon Man's stage](items/073-moon-man-gravity-puzzles/ITEM.md) | feature | `O4` | idea | none | | |
 | 074 | [More Starkner sections in Moon Man's stage](items/074-moon-man-starkner-sections/ITEM.md) | feature | `O4` | idea | none | | |
 | 075 | [A larger oasis section in Desert Man's stage](items/075-desert-man-oasis/ITEM.md) | feature | `O4` | idea | none | | |
-| 076 | [Better tileset art for every level](items/076-final-stage-tileset/ITEM.md) | feature | `O9`, `O4` | idea | none | | |
+| 076 | [Better tileset art for every level](items/076-final-stage-tileset/ITEM.md) | feature | `O9`, `O4` | active | none | 2026-11-17 | |
 | 077 | [Better boss fights for every boss: new and panic attacks, aiming, death animations](items/077-robot-master-attacks/ITEM.md) | feature | `O4` | active | none | 2026-11-13 | |
 | 078 | [Alt paths in the robot master stages](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4` | idea | none | | |
 | 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | `O4` | idea | none | | |
@@ -273,6 +273,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-047j-coop-bottom-warp`](items/047-co-op/branches/mega-refactor-047j-coop-bottom-warp/process-log.md) | 047 | The co-op default `bottom=WARP` for tall rooms | merged | 2026-11-06 | 2026-11-07 |
 | [`mega-refactor-047c-slot-respawn`](items/047-co-op/branches/mega-refactor-047c-slot-respawn/process-log.md) | 047 | A dead co-op player respawns near the lead, at a safe spot (shared screen phase 6) | merged | 2026-11-09 | 2026-11-09 |
 | [`mega-refactor-047i-transition-path`](items/047-co-op/branches/mega-refactor-047i-transition-path/process-log.md) | 047 | Per-player transition path at a gathered room exit | active | 2026-11-17 | |
+| [`mega-refactor-076a-desert-man-tileset`](items/076-final-stage-tileset/branches/mega-refactor-076a-desert-man-tileset/process-log.md) | 076 | A new original tileset for Desert Man, and the map repainted with it | active | 2026-11-17 | |
 | [`mega-refactor-134a-draw-interpolation`](items/134-render-interpolation/branches/mega-refactor-134a-draw-interpolation/process-log.md) | 134 | Draw bodies and the camera between the last 2 physics steps, with `--interpolation` (on by default) | merged | 2026-11-07 | 2026-11-09 |
 | [`mega-refactor-134b-interpolation-audit`](items/134-render-interpolation/branches/mega-refactor-134b-interpolation-audit/process-log.md) | 134 | Fix the known render interpolation hitches: bodies placed outside the world steps, bodiless sprites, the shape renderer, snaps | merged | 2026-11-09 | 2026-11-09 |
 | [`mega-refactor-151a-level-completed-rename`](items/151-level-completed-rename/branches/mega-refactor-151a-level-completed-rename/process-log.md) | 151 | Rename `levelsDefeated`, `isLevelDefeated`, `onLevelDefeated` and the rest of the family to "completed"; delete `allLevelsDefeated` | merged | 2026-11-11 | 2026-11-11 |

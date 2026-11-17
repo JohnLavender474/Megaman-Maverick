@@ -1,11 +1,11 @@
 # 076: Better tileset art for every level
 
-- Status: idea
+- Status: active
 - Type: feature
 - Objectives: `O9`, `O4`
 - Depends on: none
 - Related: `067`, `077`
-- Branches: none yet
+- Branches: `mega-refactor-076a-desert-man-tileset` (active, 2026-11-17)
 
 ## Goal
 
@@ -47,6 +47,9 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 ## Decisions
 
 - 2026-11-17 (owner): the item covers the tilesets of every level, not only the final stage.
+- 2026-11-17 (owner): the first level is Desert Man. Its tileset is fully new and original art, based on the current Desert Man tilesets, drawn in phases (rock, steel, props, sand, oasis). Drafts: `temp/076-desert-tiles/` in the main checkout.
+- 2026-11-17 (owner): keep the gap-0 vertical rock joins (a rock mass that stands on another keeps the sand lip between them).
+- 2026-11-17 (owner): merge target: each branch squash-merges directly into `master`.
 
 ## Open questions
 
@@ -55,7 +58,6 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - Where does the new art come from: commissioned art, new art made in the repo, or an existing tileset in
   `assets/tiled_maps/tsx/`?
 - Does this wait for `067` (PPM 16 with 1x pixel art)? New art made at 2x before `067` can need a second change.
-- Which level goes first?
 
 ## Sources
 
