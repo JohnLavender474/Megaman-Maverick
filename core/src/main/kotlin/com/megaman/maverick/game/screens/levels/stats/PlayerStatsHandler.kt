@@ -12,7 +12,6 @@ import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.IDrawable
-import com.maverick.game.engine.drawables.sprites.SpritesSystem
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.players.IPlayer
 import com.maverick.game.engine.players.PlayerSlot
@@ -29,13 +28,17 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.players.CharacterLoadouts
 import com.megaman.maverick.game.players.PlayerWeaponsComponent
 import com.megaman.maverick.game.players.weapons
+import com.megaman.maverick.game.screens.levels.LevelStateHandler
 import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.weapons.WeaponLook
 import com.megaman.maverick.game.entities.translateHealth
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.events.PlayerEventKeys
 
-class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable, Updatable, IDrawable<Batch> {
+class PlayerStatsHandler(
+    private val game: MegamanMaverickGame,
+    private val levelStateHandler: LevelStateHandler
+) : Initializable, Updatable, IDrawable<Batch> {
 
     companion object {
         const val TAG = "PlayerStatsHandler"
@@ -43,7 +46,6 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
     }
 
     private val state = game.gameState
-    private val engine = game.engine
     private val assMan = game.assets
     private val eventsMan = game.events
     private val audioMan = game.audio
@@ -122,7 +124,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             .setRunOnFirstupdate {
                 audioMan.playSound(SoundAsset.LIFE_SOUND, false)
 
-                engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
+                levelStateHandler.turnOffAllSystemsButSprites()
             }
             .setRunOnJustFinished {
                 state.addHeartTank(heartTank)
@@ -138,7 +140,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
                     )
                 )
 
-                engine.systems.forEach { it.on = true }
+                levelStateHandler.turnOnAllSystems()
             }
         timerQueue.addLast(timer)
     }
@@ -157,12 +159,12 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
             .setRunOnFirstupdate {
                 audioMan.playSound(SoundAsset.LIFE_SOUND, false)
 
-                engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
+                levelStateHandler.turnOffAllSystemsButSprites()
             }
             .setRunOnJustFinished {
                 state.putHealthTank(healthTank, 0)
 
-                engine.systems.forEach { it.on = true }
+                levelStateHandler.turnOnAllSystems()
             }
         timerQueue.addLast(timer)
     }
@@ -301,7 +303,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
         timerQueue.addLast(timer)
         GameLogger.debug(TAG, "addHealth(): add timer to queue: queue.size=${timerQueue.size}")
 
-        engine.systems.forEach { if (it !is SpritesSystem) it.on = false }
+        levelStateHandler.turnOffAllSystemsButSprites()
         GameLogger.debug(TAG, "addHealth(): shut off all systems expect sprites system")
     }
 
@@ -318,7 +320,7 @@ class PlayerStatsHandler(private val game: MegamanMaverickGame) : Initializable,
 
         if (timerQueue.isEmpty) {
             GameLogger.debug(TAG, "update(): timer queue just emptied: turn on all systems")
-            engine.systems.forEach { it.on = true }
+            levelStateHandler.turnOnAllSystems()
         }
     }
 

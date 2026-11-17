@@ -293,7 +293,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         )
         bossSpawnEventHandler = BossSpawnEventHandler(game)
 
-        playerStatsHandler = PlayerStatsHandler(game)
+        playerStatsHandler = PlayerStatsHandler(game, levelStateHandler)
         playerStatsHandler.init()
 
         bossHealthHandler = BossHealthHandler(game)
@@ -1049,6 +1049,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         fights.cancel()
         engine.reset()
+        levelStateHandler.clear()
 
         spawnsMan.reset()
         playerCheckpointMan.reset()
