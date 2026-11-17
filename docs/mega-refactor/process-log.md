@@ -2637,3 +2637,29 @@ newest entry at the bottom.
   to `044` (lazy logging); the guard moves to detekt with `161`; message pooling is noted in `045` `ITEM.md`. The main
   checkout had 2 modified files of other sessions (`README.md`, `DesertMan_16x14_v4.tmx`); they stay unstaged.
 - Checks on `master` after the squash: `engine:test` 710, `core:test` 2400, `core:smokeTest` 469 (0 failures), `lwjgl3:jar` builds.
+
+## 2026-11-17 — fix/pause-restores-systems
+
+- Summary: closes `docs/issues/2026-10-22-pause-during-gate-reenables-physics.md` and
+  `docs/issues/2026-10-22-health-fill-end-unpauses-systems.md` (squash commit `165ee4510`). `LevelStateHandler` saves
+  the `on` value of each system at pause and restores it at resume, in place of turning all systems on. The health
+  fill, the heart tank and the health tank change systems through it; while paused they change the saved values only.
+  The level screen `reset()` clears the saved values. Visible change: a pause during a gate opening or a fill no longer
+  turns the world on early; a fill that ends during a pause no longer runs the world under the pause menu.
+- A read-only scan by 1 subagent found that a plain save and restore leaves the level frozen for good when a fill ends
+  during the pause. A first plan froze the fill during a pause; that would lose a heart tank or health tank picked up
+  just before a pause and an exit from the pause menu. The owner chose that the fill keeps running and writes into the
+  snapshot.
+- Tests: `PauseRestoresSystemsTest` (18 cases, real handlers, real engine systems, a real `Megaman`). Mutation checks
+  in 2 runs (5 mutations: live writes while paused, a second pause saves again, `clear()` empty, resume turns all on,
+  the fill end does not turn systems on); each made at least one case fail. Not unit tested: the `clear()` call in
+  the level screen `reset()`.
+- Play checks used a temporary hook, not committed: with `MAVERICK_AUTO_PAUSE=1`, the level screen paused at
+  `GATE_INIT_OPENING`, `ADD_PLAYER_HEALTH`, `ATTAIN_HEART_TANK` and `ATTAIN_HEALTH_TANK`. Removed before the merge.
+- Contract check after `master` was merged into the branch: `engine:test` 710, `core:test` 2418, `core:smokeTest` 469
+  (0 failures), `lwjgl3:jar` builds. In an earlier run on the branch, `PathfindingRespawnTest` failed once in the full
+  run and once in 2 `engine:test` runs: the known flaky test (`2026-11-16-async-pathfinding-respawn-test-flaky.md`).
+  Owner play checks passed (experimental and control).
+- Not changed: a pause no longer turns on a system that some other bug left off. The other writers of `GameSystem.on`
+  (level start, respawn, fight steps, the gate events, `TURN_CONTROLLER_OFF` and `ON`) stay as they were; item `012`
+  replaces these flags with named freezes.

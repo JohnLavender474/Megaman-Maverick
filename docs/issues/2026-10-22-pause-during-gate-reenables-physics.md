@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -102,3 +102,12 @@ Checks:
     pause. The world freezes during the fill and moves again after it, as before.
   - Control: `./run-game-alpha.sh --level DESERT_MAN --room room14`: pause with START during play, wait, resume.
     Mega Man, the enemies and the sounds continue as before.
+
+## Resolution
+
+Fixed in `fix/pause-restores-systems`, squash commit `165ee4510` (2026-11-17), with
+`2026-10-22-health-fill-end-unpauses-systems.md`. `LevelStateHandler` saves the `on` value of each system at pause and
+restores it at resume. `PlayerStatsHandler` turns systems on and off through it; while paused, it changes the saved
+values only. The level screen `reset()` clears them. `PauseRestoresSystemsTest` (18 cases) covers the rules; 5
+mutations each made a case fail. The owner's play checks passed (experimental, with a temporary auto-pause hook that
+was not committed, and control).

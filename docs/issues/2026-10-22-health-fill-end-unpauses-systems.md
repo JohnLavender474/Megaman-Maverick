@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -32,3 +32,9 @@ outside the `!game.clock.paused` block, and turns all systems on at `PlayerStats
 
 The fix is in `fix/pause-restores-systems`, with the short contract in
 `2026-10-22-pause-during-gate-reenables-physics.md`.
+
+## Resolution
+
+Fixed in `fix/pause-restores-systems`, squash commit `165ee4510` (2026-11-17). The fill still runs while paused, as
+before (owner decision, 2026-11-16). While paused, its system changes go into the pause snapshot of
+`LevelStateHandler`, and `resume()` applies them. See `2026-10-22-pause-during-gate-reenables-physics.md`.
