@@ -2663,3 +2663,17 @@ newest entry at the bottom.
 - Not changed: a pause no longer turns on a system that some other bug left off. The other writers of `GameSystem.on`
   (level start, respawn, fight steps, the gate events, `TURN_CONTROLLER_OFF` and `ON`) stay as they were; item `012`
   replaces these flags with named freezes.
+
+## 2026-11-17 — fix/async-pathfinding-test-race
+
+- Summary: closes `docs/issues/2026-11-16-async-pathfinding-respawn-test-flaky.md` (squash `6bb2dcf41`, test only).
+  `PathfindingRespawnTest` destroyed the entity right after the async search was submitted; when the pool thread had
+  not started the task, `cancel(true)` stopped it before `call()` ran, and the 5 s latch timed out. The test now waits
+  on a `started` latch before the destroy. The production code was correct.
+- Research by a read-only subagent (a harness: 295 of 300 warm loops lost the race in the old order); fix by a
+  subagent. Proof: 10 of 10 filtered runs pass; the harness with the new wait passes 300 of 300; the test fails with
+  the `onEntityLeft` override removed (the code before `fix/small-bugs-3`). Removing only the `cancel(true)` line does
+  not fail it: `onEntityLeft` also removes the submit time, and the timeout branch then drops the search in the same
+  frame (the contract on `master` records this).
+- Contract check: after `master` was merged into the fix, `engine:test` 710, `core:test` 2400, `core:smokeTest` 469,
+  `lwjgl3:jar` pass. Owner diff review done; no play check (test only).

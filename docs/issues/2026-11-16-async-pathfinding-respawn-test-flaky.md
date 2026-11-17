@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: build
 gameplay-change: no
@@ -72,3 +72,8 @@ Checks:
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
 
 No play check: the change is in a test only, and the game code does not change.
+
+## Resolution
+
+Fixed by `fix/async-pathfinding-test-race` (squash `6bb2dcf41`, 2026-11-17): the test waits on a `started` latch
+until `call()` runs, so the destroy always cancels a running search. Test-only change; no production code changed.

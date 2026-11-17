@@ -173,7 +173,7 @@ related-items: [<mega-refactor item IDs>]
 | [All level backgrounds stop drawing after a pixel-perfect change in game](2026-11-16-background-hidden-after-pixel-perfect-toggle.md) | yes | core | closed |
 | [The swim stroke pushes the wrong way in `DOWN` and `RIGHT` gravity](2026-11-16-swim-stroke-sign-down-right.md) | yes | core | open |
 | [The engine `Pool` double-free check slows down far faster than linear with many free entries](2026-11-16-engine-pool-identity-map-cost.md) | yes | engine | open |
-| [`PathfindingRespawnTest` "drops the search of an entity that leaves" fails in some full runs](2026-11-16-async-pathfinding-respawn-test-flaky.md) | yes | build | open |
+| [`PathfindingRespawnTest` "drops the search of an entity that leaves" fails in some full runs](2026-11-16-async-pathfinding-respawn-test-flaky.md) | yes | build | closed |
 | [`LightSourceEntity` and a `Spike` with `cull_events` never cull on events, and leak one listener per reuse](2026-11-17-light-source-event-cull-never-acts.md) | yes | core | open |
 | [`PreciousTron` can pick its current spot as its next spot](2026-11-17-precious-tron-can-pick-current-spot.md) | question | core | open |
 | [`DemonMet` crashes when its map object has no `target` property](2026-11-17-demon-met-no-target-npe.md) | yes | core | open |
