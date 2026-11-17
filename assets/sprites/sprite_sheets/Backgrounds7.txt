@@ -1,0 +1,26 @@
+Backgrounds7.png
+size: 1024, 1988
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Desert/SunSky
+  rotate: false
+  xy: 0, 0
+  size: 1024, 448
+  orig: 1024, 448
+  offset: 0, 0
+  index: -1
+SunriseHills
+  rotate: false
+  xy: 0, 450
+  size: 1024, 1024
+  orig: 1024, 1024
+  offset: 0, 0
+  index: -1
+SunsetHills
+  rotate: false
+  xy: 0, 1476
+  size: 256, 512
+  orig: 256, 512
+  offset: 0, 0
+  index: -1

@@ -177,16 +177,19 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
             )
         },
         "SunriseHills" pairTo {
-            Background(
+            AnimatedBackground(
                 game = params.game,
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
-                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "SunriseHills"),
+                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_7.source, "SunriseHills"),
                 modelWidth = 16f * ConstVals.PPM,
                 modelHeight = 32f * ConstVals.PPM,
                 rows = 1,
                 columns = 50,
+                animRows = 2,
+                animColumns = 4,
+                duration = 0.2f,
                 priority = DrawingPriority(DrawingSection.BACKGROUND, 2),
                 parallaxX = 0.1f,
                 parallaxY = 0f
@@ -198,7 +201,7 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
                 it.name,
                 startX = it.rectangle.x,
                 startY = it.rectangle.y,
-                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_6.source, "SunsetHills"),
+                model = params.game.assets.getTextureRegion(TextureAsset.BACKGROUNDS_7.source, "SunsetHills"),
                 modelWidth = 16f * ConstVals.PPM,
                 modelHeight = 32f * ConstVals.PPM,
                 rows = 1,

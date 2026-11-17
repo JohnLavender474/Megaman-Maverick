@@ -302,6 +302,10 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - [Megaman 9 - Magma Man](https://www.spriters-resource.com/wii/mm9/sheet/197901/)
 - Megaman Maker
   - [Crystal Cave Background](https://wiki.megamanmaker.com/index.php/File:SprBGCrystal5_0.png)
+- Desert Man Backgrounds (`SunriseHills`, `DesertSunSky`, `SunsetHills`)
+  - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
+  - Inspired by [Super Icon Ltd](https://assetstore.unity.com/publishers/5990) ([Mega 8-Bit Pixel Pack](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158)): the hills
+  - Inspired by Capcom: the sunset
 
 ### Music
 
