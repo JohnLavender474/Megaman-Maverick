@@ -5,7 +5,7 @@
 - Objectives: `O9`, `O4`
 - Depends on: none
 - Related: `067`, `077`
-- Branches: `mega-refactor-076a-desert-man-tileset` (merged, 2026-11-17, squash `2bede4d69`)
+- Branches: `mega-refactor-076a-desert-man-tileset` (merged, 2026-11-17, squash `2bede4d69`), `mega-refactor-076b-desert-man-backgrounds` (active, 2026-11-17)
 
 ## Goal
 
@@ -50,6 +50,7 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - 2026-11-17 (owner): the first level is Desert Man. Its tileset is fully new and original art, based on the current Desert Man tilesets, drawn in phases (rock, steel, props, sand, oasis). Drafts: `temp/076-desert-tiles/` in the main checkout.
 - 2026-11-17 (owner): keep the gap-0 vertical rock joins (a rock mass that stands on another keeps the sand lip between them).
 - 2026-11-17 (owner): merge target: each branch squash-merges directly into `master`.
+- 2026-11-17 (owner): the item also covers the level backgrounds where they do not match the new tiles. Desert Man first (`076b`): a simpler, Mega Man-like style; the round shapes are hills, not buildings; the sunset with heat haze only after the cave section.
 
 ## Open questions
 
