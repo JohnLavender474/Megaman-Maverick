@@ -5,7 +5,7 @@
 - Objectives: `O1`, `O5`
 - Depends on: none
 - Related: `009`, `010`, `019`, `022`
-- Branches: `mega-refactor-045a-pool-ownership` (merged 2026-11-16), `mega-refactor-045b-spawn-allocations` (active)
+- Branches: `mega-refactor-045a-pool-ownership` (merged 2026-11-16), `mega-refactor-045b-spawn-allocations` (merged 2026-11-17), `mega-refactor-045c-spawn-allocations-rest` (planned)
 
 ## Goal
 
@@ -53,7 +53,8 @@ The owner chose to add this to `045` and not to make a new item. The `011a` site
 
 - (2026-11-16) `045a` merged with the owner's approval after the play test and the diff review. Its decisions `D1` to `D6` (`045a` `SCOPE.md`: scratch-only pool with owned fields and `OwnedArray`; no `borrow {}` yet; NaN poison behind `--poolChecks`; lifetime stays 3; a guard for pooled defaults; the stored-scratch faults fixed in the branch) were Claude's choices; the owner reviewed the brief and the diff and did not change them.
 - (2026-11-16, owner, `045a` review) A pooled entity makes its objects once; the per-spawn and per-event `new` sweep is `045b`.
-- Remaining after `045b`: `borrow {}` with its first caller, and a measure of the scratch fetch count per frame (`009`).
+- (2026-11-17, owner) `045b` merged after the play test (10 checks) and the diff review; its decisions `D1` to `D5` accepted (`045b` `SCOPE.md`). Spawn and event messages (`Event`, `props(...)`) stay as they are: a pool for them is an engine design (the receiver must not keep them).
+- Remaining after `045b`: `045c` (planned), and `borrow {}` with its first caller, and a measure of the scratch fetch count per frame (`009`).
 
 - (2026-11-16) Merge target: each branch of this item squash-merges directly into `master`. The owner asked for the work end to end by a subagent; Claude chose the recommended target, and the owner can change it.
 

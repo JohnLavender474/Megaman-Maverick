@@ -29,6 +29,8 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 ## Open questions
 
+- From `045b` (2026-11-17): `SpawnAllocationGuardTest` (constructor calls in `onSpawn`, `onDestroy` and `onEvent`, with a baseline file) is a text scan too; a `TODO` at the test moves it to this detekt setup.
+
 - From `045a` (2026-11-16): `PoolOwnershipGuardTest` (a one-line text scan for pooled default parameters) has the same gap as the old random scan: a default split over 2 lines, or one that calls a scratch helper, passes. The detekt setup of this item could cover it.
 
 - Does the project want detekt in the build (CI time, a baseline for the existing code)?

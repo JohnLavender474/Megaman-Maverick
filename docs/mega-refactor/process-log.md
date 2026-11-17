@@ -2615,3 +2615,24 @@ newest entry at the bottom.
   widened to cover every boss. The folder slug `076-final-stage-tileset` stays.
 - `076` `ITEM.md`: goal, scope, the owner's words, a decision, open questions. `NOTES.md`: the tilesets of each live
   level. Title changed in `ITEMS.md`, `O4` and `O9` (also the `O9` problem `P4`).
+
+## 2026-11-17 — mega-refactor-045b-spawn-allocations
+
+- Summary: squash `80572fc59`. Pooled entities make their objects once. `AbstractEnemy`, `AbstractProjectile`,
+  `AbstractItem`, `Block` and `Spike` reuse their cullables, event sets and destroy lambdas; 44 often-spawned classes
+  keep owned objects; the `045a` per-frame leftovers are gone (`LaserContacts` and a caller-owned
+  `intersectRectangleAndLine`, the swing debug shapes, the `Darkness` light circle); `delayRun` uses pooled runs.
+  `SpawnAllocationGuardTest` keeps a baseline that only shrinks: 158 constructor calls in 73 files before, 85 in 38
+  after. Intended changes: a reused out-of-view cullable starts at 0; a `Block` with `cull_room` no longer leaks a
+  listener per reuse; the swing hazards no longer add debug suppliers per spawn; clear errors for `Popoheli` with no
+  target and `SmallIceCube` with a null property.
+- Done end to end by a subagent (with 3 sweep subagents and a review); mutation batch of 7 (6 failed their test; the
+  one that did not is a defensive repeat of a component reset). Test map `REFACTOR_TEST_045` gained the room `swing`.
+- Contract check: owner play test passed (10 checks); diff review with 0 threads; decisions `D1` to `D5` accepted.
+  After `master` was merged in (docs only): `engine:test` 710, `core:test` 2400, `core:smokeTest` 469, `lwjgl3:jar`
+  pass. No other active branch calls a changed API.
+- Follow-up: `045c` (planned; branch folder). Bugs filed: `2026-11-17-light-source-event-cull-never-acts.md`,
+  `2026-11-17-precious-tron-can-pick-current-spot.md` (question for the owner), `2026-11-17-demon-met-no-target-npe.md`;
+  the trajectory `Saw` was already filed. Backlog: the 402 eager log strings in spawn, destroy and event bodies belong
+  to `044` (lazy logging); the guard moves to detekt with `161`; message pooling is noted in `045` `ITEM.md`. The main
+  checkout had 2 modified files of other sessions (`README.md`, `DesertMan_16x14_v4.tmx`); they stay unstaged.
