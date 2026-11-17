@@ -80,14 +80,14 @@ statuses and column meanings are in `CLAUDE.md`.
 | 070 | [More flexible controller settings](items/070-flexible-controls/ITEM.md) | feature | `O9` | idea | `031` | | |
 | 071 | [`getEntity()` without a cast to `MegaGameEntity`](items/071-typed-get-entity/ITEM.md) | refactor | `O1` | idea | none | | |
 | 072 | [Remove `IMegaGameEntity`](items/072-remove-imegagameentity/ITEM.md) | refactor | `O1` | planned | `016` | | |
-| 073 | [More gravity-block puzzles in Moon Man's stage](items/073-moon-man-gravity-puzzles/ITEM.md) | feature | `O4` | idea | none | | |
-| 074 | [More Starkner sections in Moon Man's stage](items/074-moon-man-starkner-sections/ITEM.md) | feature | `O4` | idea | none | | |
+| 073 | [More gravity-block puzzles in Moon Man's stage](items/073-moon-man-gravity-puzzles/ITEM.md) | feature | `O4` | dropped | none | | 2026-11-17 |
+| 074 | [More Starkner sections in Moon Man's stage](items/074-moon-man-starkner-sections/ITEM.md) | feature | `O4` | dropped | none | | 2026-11-17 |
 | 075 | [A larger oasis section in Desert Man's stage](items/075-desert-man-oasis/ITEM.md) | feature | `O4` | dropped | none | | 2026-11-17 |
 | 076 | [Better tileset art for every level](items/076-final-stage-tileset/ITEM.md) | feature | `O9`, `O4` | active | none | 2026-11-17 | |
 | 077 | [Better boss fights for every boss: new and panic attacks, aiming, death animations](items/077-robot-master-attacks/ITEM.md) | feature | `O4` | active | none | 2026-11-13 | |
-| 078 | [Alt paths in the robot master stages (not Desert Man)](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4` | idea | none | | |
+| 078 | [Stage redesigns (epic)](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4`, `O9` | idea | none | | |
 | 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | `O4` | idea | none | | |
-| 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | `O4` | idea | none | | |
+| 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | `O4` | dropped | none | | 2026-11-17 |
 | 081 | [Playable X for the extra levels, with `CharacterDef`, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | `O8` | active | `047b`, `084` | 2026-11-06 | |
 | 082 | [Dialogue boxes, in-level dialogue scenes and cutscenes](items/082-dialogue-and-cutscenes/ITEM.md) | feature | `O9` | planned | `012`, `031` | | |
 | 083 | [`PathfinderResult.targetReached` means what it says](items/083-pathfinder-target-reached/ITEM.md) | refactor | `O1` | done | none | 2026-11-14 | 2026-11-14 |
@@ -106,7 +106,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 096 | [Session-owned entity factories and lists, in place of statics](items/096-session-owned-entity-services/ITEM.md) | refactor | `O1` | idea | none | | |
 | 097 | [Stable order for event keys in `EventsManager`](items/097-stable-event-key-order/ITEM.md) | refactor | `O2`, `O1` | idea | none | | |
 | 098 | [Typed fixture and body state in place of property bags](items/098-typed-fixture-state/ITEM.md) | refactor | `O1` | idea | none | | |
-| 099 | [Use camera zones and scroll sections in real stages](items/099-camera-sections-in-stages/ITEM.md) | feature | `O4` | idea | `051` | | |
+| 099 | [Use camera zones and scroll sections in real stages](items/099-camera-sections-in-stages/ITEM.md) | feature | `O4` | dropped | `051` | | 2026-11-17 |
 | 100 | [CI result before a merge](items/100-ci-before-merge/ITEM.md) | tooling | `O6` | idea | `002` | | |
 | 101 | [Typed Tiled fields and checks for camera sections and rooms](items/101-map-object-schema/ITEM.md) | tooling | `O7`, `O6` | idea | `022` | | |
 | 102 | [A game mode concept](items/102-game-modes/ITEM.md) | feature | `O8`, `O2` | idea | none | | |
@@ -173,7 +173,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 163 | [One shot pose in `PlayerBuster`](items/163-buster-pose-enum/ITEM.md) | refactor | `O1` | idea | none | | |
 | 164 | [Move the text-scan guards to detekt](items/164-guards-to-detekt/ITEM.md) | tooling | `O6`, `O2`, `O5` | idea | `161` | | |
 | 165 | [Tiled automapping rules for the Desert Man tileset](items/165-desert-tileset-automapping/ITEM.md) | tooling | `O9` | dropped | none | | 2026-11-17 |
-| 166 | [Desert Man's stage rework (epic)](items/166-desert-man-stage/ITEM.md) | feature | `O4`, `O9` | idea | none | | |
+| 166 | [Desert Man's stage rework (epic)](items/166-desert-man-stage/ITEM.md) | feature | `O4`, `O9` | dropped | none | | 2026-11-17 |
 
 ## Branches
 

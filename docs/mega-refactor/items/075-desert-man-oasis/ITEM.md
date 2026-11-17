@@ -1,6 +1,6 @@
 # 075: A larger oasis section in Desert Man's stage
 
-- Status: dropped (2026-11-17): merged into `166`
+- Status: dropped (2026-11-17): merged into `166`, then into `078`
 - Type: feature
 - Objectives: `O4`
 - Depends on: none

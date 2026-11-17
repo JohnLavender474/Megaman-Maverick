@@ -2727,3 +2727,20 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: the open questions in `166` `ITEM.md`, among them the open issue
   `docs/issues/2026-10-27-desert-man-enemies-on-wrong-layers.md` in the same map.
+
+## 2026-11-17 — `078` widened to the stage redesign epic (docs only)
+
+- Summary: the owner chose one epic for all stage work, so that the stages and the boss fights (`077`) stay separate
+  items. `078` ("Alt paths in the robot master stages") is now "Stage redesigns (epic)" for all stages, with one scope
+  section per stage and sections for work across stages (alt paths, camera sections, tileset art and backgrounds).
+  It took in `073`, `074`, `080`, `099` and `166` (made earlier the same day from `075`, `165` and the Desert Man part
+  of `078`); they are dropped with a pointer to `078`. `076` also merged in: `076b` (active) finishes under its own
+  name, and `076` is `done` when it merges; all later tileset and background work is a branch of `078`. The folder
+  slug `078-robot-master-alt-paths` stays, as `076` kept its slug when it was widened.
+- Files: `078` `ITEM.md` (goal, scope, decisions, the owner's words of all merged items, open questions); the drop
+  notices in `073`, `074`, `075`, `080`, `099`, `165`, `166` `ITEM.md`; the merge note in `076` `ITEM.md`;
+  `ITEMS.md`; the items tables of `O4` and `O9`, the `O4` problem `P3` and the `O9` problem `P4`; the content line in
+  `ROADMAP.md`.
+- Contract check: not needed (docs only).
+- Follow-up: the owner confirms the `076b` handling (decision marked "Claude, for the owner to confirm" in `078`).
+  The merge target of the map branches is an open question in `078`.

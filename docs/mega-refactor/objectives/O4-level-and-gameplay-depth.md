@@ -8,7 +8,7 @@
   games. Robot master stages are fully linear (`078`).
 - `P2`: Some players criticize enemy and boss patterns as basic. For example, `Starkner` only runs toward Megaman, and
   `Met` runs into a bottomless pit (`079`).
-- `P3`: Levels have too little variety, and some good mechanics get little use (`073`, `074`, `166`, `080`). Before
+- `P3`: Levels have too little variety, and some good mechanics get little use (`078`). Before
   `051`, the camera could only follow within room bounds.
 
 ## Goal
@@ -67,14 +67,14 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | Item | Status | Note |
 |------|--------|------|
 | `051` | done | [X-style camera bounds, auto-scroll and other camera behaviors](../items/051-camera-behaviors/ITEM.md) (main) |
-| `073` | idea | [More gravity-block puzzles in Moon Man's stage](../items/073-moon-man-gravity-puzzles/ITEM.md) (main) |
-| `074` | idea | [More Starkner sections in Moon Man's stage](../items/074-moon-man-starkner-sections/ITEM.md) (main) |
+| `073` | dropped | [More gravity-block puzzles in Moon Man's stage](../items/073-moon-man-gravity-puzzles/ITEM.md) (main) |
+| `074` | dropped | [More Starkner sections in Moon Man's stage](../items/074-moon-man-starkner-sections/ITEM.md) (main) |
 | `075` | dropped | [A larger oasis section in Desert Man's stage](../items/075-desert-man-oasis/ITEM.md) (main) |
 | `077` | active | [Better boss fights for every boss: new and panic attacks, aiming, death animations](../items/077-robot-master-attacks/ITEM.md) (main) |
-| `078` | idea | [Alt paths in the robot master stages (not Desert Man)](../items/078-robot-master-alt-paths/ITEM.md) (main) |
-| `166` | idea | [Desert Man's stage rework (epic)](../items/166-desert-man-stage/ITEM.md) (main) |
+| `078` | idea | [Stage redesigns (epic)](../items/078-robot-master-alt-paths/ITEM.md) (main) |
+| `166` | dropped | [Desert Man's stage rework (epic)](../items/166-desert-man-stage/ITEM.md) (main) |
 | `079` | idea | [Smarter behavior for simple enemies](../items/079-smarter-enemies/ITEM.md) (main) |
-| `080` | idea | [A larger MockingBit and MockingByte section in Timber Woman's stage](../items/080-timber-woman-mocking-section/ITEM.md) (main) |
+| `080` | dropped | [A larger MockingBit and MockingByte section in Timber Woman's stage](../items/080-timber-woman-mocking-section/ITEM.md) (main) |
 | `089` | idea | [Conditional crush surfaces](../items/089-conditional-crush-surfaces/ITEM.md) (main) |
 | `015` | planned | [One entity state machine (enter/update/exit, state-owned timers)](../items/015-entity-fsm/ITEM.md) |
 | `026` | planned | [Per-level render layers and an allocation-free draw queue](../items/026-render-layers/ITEM.md) |
@@ -86,7 +86,7 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `124` | idea | [Slope pass-through from below](../items/124-slope-pass-through/ITEM.md) (main) |
 | `076` | active | [Better tileset art for every level](../items/076-final-stage-tileset/ITEM.md) |
 | `086` | idea | [Player movement modifiers as a component](../items/086-player-movement-modifiers/ITEM.md) |
-| `099` | idea | [Use camera zones and scroll sections in real stages](../items/099-camera-sections-in-stages/ITEM.md) (main) |
+| `099` | dropped | [Use camera zones and scroll sections in real stages](../items/099-camera-sections-in-stages/ITEM.md) (main) |
 | `115` | idea | [Partial sink and stuck behavior in sand](../items/115-partial-sink-stuck-in-sand/ITEM.md) (main) |
 | `117` | idea | [Crush with a falling pushable block](../items/117-pushable-block-crush/ITEM.md) (main) |
 | `118` | done | [Boss fights as routines, rules and leases](../items/118-boss-fight-routines/ITEM.md) |

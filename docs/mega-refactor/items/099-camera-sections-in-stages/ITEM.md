@@ -1,11 +1,14 @@
 # 099: Use camera zones and scroll sections in real stages
 
-- Status: idea
+- Status: dropped (2026-11-17): merged into `078`
 - Type: feature
 - Objectives: `O4`
 - Depends on: `051`
 - Related: `073`, `074`, `075`, `078`, `080`, `089`
 - Branches: none yet
+
+> **Dropped, 2026-11-17.** The owner merged this item into `078` (Stage redesigns, an epic for all stages).
+> `078` `ITEM.md` holds the goal, the owner's words and the open questions now. The text below is kept as history.
 
 ## Goal
 

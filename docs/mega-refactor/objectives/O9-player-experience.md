@@ -9,7 +9,7 @@
 - `P2`: Some settings are lost on quit or come only from CLI flags (`034`).
 - `P3`: Control settings are too restrictive for a modern pad or a keyboard (`070`).
 - `P4`: The game has no dialogue or cutscenes (`082`), and some areas look unfinished, for example
-  the levels whose tilesets come from free asset packs (`076`).
+  the levels whose tilesets come from free asset packs (`078`).
 
 ## Goal
 
@@ -76,7 +76,8 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `070` | idea | [More flexible controller settings](../items/070-flexible-controls/ITEM.md) (main) |
 | `076` | active | [Better tileset art for every level](../items/076-final-stage-tileset/ITEM.md) (main) |
 | `165` | dropped | [Tiled automapping rules for the Desert Man tileset](../items/165-desert-tileset-automapping/ITEM.md) (main) |
-| `166` | idea | [Desert Man's stage rework (epic)](../items/166-desert-man-stage/ITEM.md) |
+| `166` | dropped | [Desert Man's stage rework (epic)](../items/166-desert-man-stage/ITEM.md) |
+| `078` | idea | [Stage redesigns (epic)](../items/078-robot-master-alt-paths/ITEM.md) |
 | `082` | planned | [Dialogue boxes, in-level dialogue scenes and cutscenes](../items/082-dialogue-and-cutscenes/ITEM.md) (main) |
 | `031` | done | [Input frames per player (`InputFrame`), devices and bindings](../items/031-input-frames/ITEM.md) |
 | `113` | idea | [Character select screen](../items/113-character-select/ITEM.md) |

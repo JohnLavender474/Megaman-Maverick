@@ -1,6 +1,6 @@
 # 165: Tiled automapping rules for the Desert Man tileset
 
-- Status: dropped (2026-11-17): merged into `166`
+- Status: dropped (2026-11-17): merged into `166`, then into `078`
 - Type: tooling
 - Objectives: `O9`
 - Depends on: none
