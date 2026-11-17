@@ -26,7 +26,7 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
   scratch (the contract: spawn props never pass ownership). On `master` (2026-11-15), `core/src/main` has 238
   `Vector2()` calls and 301 `GameObjectPools.fetch(Vector2` calls; the scan sorts them into per-frame and one-time.
 - Docs (added 2026-11-15): a rule in `docs/CODE_STYLE.md` for when to use `new`, an owned field or the pool, with
-  examples; the package README of `GameObjectPools`. Consider a source-scan test like `RandomSourceGuardTest`
+  examples; the package README of `GameObjectPools`. Consider a source-scan test (the random rule moved from such a test to detekt in `161a`; item `164` moves the pool guards too)
   (`011a`) if the rule can be found by text.
 
 ## Owner's input

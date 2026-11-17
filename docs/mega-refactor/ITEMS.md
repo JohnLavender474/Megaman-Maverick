@@ -168,9 +168,10 @@ statuses and column meanings are in `CLAUDE.md`.
 | 158 | [A shared lead-aim helper for bosses](items/158-boss-lead-aim-helper/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 159 | [New hand and head art for the intro boss](items/159-intro-boss-hand-art/ITEM.md) | feature | `O4`, `O9` | done | none | 2026-11-15 | 2026-11-15 |
 | 160 | [Ladder shot height at a ladder foot](items/160-ladder-foot-shot/ITEM.md) | feature | `O9` | idea | none | | |
-| 161 | [A type-aware check for direct random calls](items/161-random-call-lint/ITEM.md) | tooling | `O6`, `O2` | active | `011` | 2026-11-16 | |
+| 161 | [A type-aware check for direct random calls](items/161-random-call-lint/ITEM.md) | tooling | `O6`, `O2` | done | `011` | 2026-11-16 | 2026-11-17 |
 | 162 | [LibGDX collections in the launch options and level overrides](items/162-launch-loadout-collections/ITEM.md) | refactor | `O1` | idea | none | | |
 | 163 | [One shot pose in `PlayerBuster`](items/163-buster-pose-enum/ITEM.md) | refactor | `O1` | idea | none | | |
+| 164 | [Move the text-scan guards to detekt](items/164-guards-to-detekt/ITEM.md) | tooling | `O6`, `O2`, `O5` | idea | `161` | | |
 
 ## Branches
 
@@ -282,6 +283,6 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-159a-intro-boss-art`](items/159-intro-boss-hand-art/branches/mega-refactor-159a-intro-boss-art/process-log.md) | 159 | A cracked death head for the intro boss (the new fist frames were dropped) | merged | 2026-11-15 | 2026-11-15 |
 | [`mega-refactor-077b-desert-man`](items/077-robot-master-attacks/branches/mega-refactor-077b-desert-man/process-log.md) | 077 | A richer Desert Man boss fight on the shared boss parts of `077a` | merged | 2026-11-15 | 2026-11-16 |
 | [`mega-refactor-045a-pool-ownership`](items/045-pool-ownership/branches/mega-refactor-045a-pool-ownership/process-log.md) | 045 | Pool ownership rules and debug checks for `GameObjectPools`; per-frame allocations of pooled types move to the pool or owned fields; a `CODE_STYLE.md` rule | merged | 2026-11-16 | 2026-11-16 |
-| [`mega-refactor-161a-random-call-lint`](items/161-random-call-lint/branches/mega-refactor-161a-random-call-lint/process-log.md) | 161 | A type-aware check for direct random calls | active | 2026-11-16 | |
+| [`mega-refactor-161a-random-call-lint`](items/161-random-call-lint/branches/mega-refactor-161a-random-call-lint/process-log.md) | 161 | A type-aware check for direct random calls | merged | 2026-11-16 | 2026-11-17 |
 | [`mega-refactor-045b-spawn-allocations`](items/045-pool-ownership/branches/mega-refactor-045b-spawn-allocations/process-log.md) | 045 | A pooled entity makes its objects once: no constructor call in `onSpawn`, `onDestroy` or an event handler | merged | 2026-11-16 | 2026-11-17 |
 | [`mega-refactor-045c-spawn-allocations-rest`](items/045-pool-ownership/branches/mega-refactor-045c-spawn-allocations-rest/process-log.md) | 045 | The rest of the spawn sweep: bosses, level objects, child entities made with a constructor, `Block` extras, shared label helpers | planned | | |

@@ -2678,3 +2678,21 @@ newest entry at the bottom.
 - Contract check: after `master` was merged into the fix, `engine:test` 710, `core:test` 2400, `core:smokeTest` 469,
   `lwjgl3:jar` pass. Owner diff review done; no play check (test only).
 - Checks on `master` after the squash (with `fix/pause-restores-systems` of another session): `engine:test` 710, `core:test` 2418, `core:smokeTest` 469 (0 failures), `lwjgl3:jar` builds.
+
+## 2026-11-17 — mega-refactor-161a-random-call-lint
+
+- Summary: squash `cdb560d7f`. detekt `2.0.0-alpha.3` runs `ForbiddenMethodCall` with type resolution
+  (`detektMain`) on `engine`, `core` and `lwjgl3` for direct random calls outside `engine/.../common/random/` (also
+  calls with no receiver, with an argument or on a subclass, and `SeededRandom(...)`). `core:verifyRandomRule` checks
+  the rule against a fixture and golden findings. `RandomSourceGuardTest` is deleted. CI runs both tasks.
+- Done end to end by a subagent (detekt 1.23.8 cannot read Kotlin 2.3 metadata; Konsist has no type resolution).
+  Review by 1 subagent: no bugs; 2 should-fix and 4 nits fixed.
+- Contract check: owner diff review done; decisions `D1` to `D5` accepted; no play check (no game behavior changes).
+  After `master` was merged in (no conflict; `master` had gained `045a`, `045b` and other branches):
+  `engine:test` 710, `core:test` 2416 (2 fewer: the deleted guard test), `core:smokeTest` 469, `lwjgl3:jar`,
+  `detektMain` (0 findings) and `core:verifyRandomRule` pass. No other active branch adds a random call or changes
+  build files.
+- Follow-up: item `161` done; rule `O2-R2` "Check" and current state now name the detekt check. New item `164` (move
+  the text-scan guards of `O2-R1`, `045a` and `045b` to detekt; move to a stable detekt 2.0.0). The stale
+  `RandomSourceGuardTest` mention in `045` `ITEM.md` is fixed. No bug candidates. The main checkout had 2 modified files
+  of other sessions (`README.md`, `DesertMan_16x14_v4.tmx`); they stay unstaged.

@@ -1,11 +1,11 @@
 # 161: A type-aware check for direct random calls
 
-- Status: active
+- Status: done
 - Type: tooling
 - Objectives: `O6`, `O2`
 - Depends on: `011`
 - Related: `100`
-- Branches: `mega-refactor-161a-random-call-lint` (active)
+- Branches: `mega-refactor-161a-random-call-lint` (merged 2026-11-17)
 
 ## Goal
 
@@ -29,13 +29,15 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 ## Open questions
 
-- From `045b` (2026-11-17): `SpawnAllocationGuardTest` (constructor calls in `onSpawn`, `onDestroy` and `onEvent`, with a baseline file) is a text scan too; a `TODO` at the test moves it to this detekt setup.
-
-- From `045a` (2026-11-16): `PoolOwnershipGuardTest` (a one-line text scan for pooled default parameters) has the same gap as the old random scan: a default split over 2 lines, or one that calls a scratch helper, passes. The detekt setup of this item could cover it.
-
-- Does the project want detekt in the build (CI time, a baseline for the existing code)?
+- Answered (2026-11-17): detekt is in the build. Measured in `161a`: `core:detektMain` 1m27s, `engine:detektMain` 32s
+  (21s on a second run), `lwjgl3:detektMain` under 1 s; the tasks are up to date when sources, classpath and config do
+  not change. No baseline: only one rule is on, with 0 findings.
+- The text-scan guards of `045a` and `045b` (`PoolOwnershipGuardTest`, `SpawnAllocationGuardTest`) and the `O2-R1`
+  search move to item `164`.
 
 ## Decisions
+
+- (2026-11-17, owner) `161a` merged after the diff review; its decisions `D1` to `D5` accepted: detekt `2.0.0-alpha.3`, `RandomSourceGuardTest` deleted, a fixture check (`core:verifyRandomRule`), main sources only, `SeededRandom(...)` forbidden outside the random package.
 
 - (2026-11-16) Merge target: each branch of this item squash-merges directly into `master`. The owner asked for the work end to end by a subagent; Claude chose the recommended target, and the owner can change it.
 
