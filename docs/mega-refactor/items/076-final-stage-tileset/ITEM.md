@@ -1,11 +1,11 @@
 # 076: Better tileset art for every level
 
-- Status: active
+- Status: done
 - Type: feature
 - Objectives: `O9`, `O4`
 - Depends on: none
 - Related: `067`, `077`, `078`
-- Branches: `mega-refactor-076a-desert-man-tileset` (merged, 2026-11-17, squash `2bede4d69`), `mega-refactor-076b-desert-man-backgrounds` (active, 2026-11-17)
+- Branches: `mega-refactor-076a-desert-man-tileset` (merged, 2026-11-17, squash `2bede4d69`), `mega-refactor-076b-desert-man-backgrounds` (merged, 2026-11-17, squash `6bb2606da`)
 
 > **Merged into `078`, 2026-11-17.** The owner merged this item into `078` (Stage redesigns, an epic for all
 > stages). `078` `ITEM.md` holds the goal, the decisions and the open questions now. `076b` (active) finishes under

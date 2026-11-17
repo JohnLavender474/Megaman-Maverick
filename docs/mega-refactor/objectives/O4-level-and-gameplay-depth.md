@@ -84,7 +84,7 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `068` | done | [Floor slopes for extra levels](../items/068-slopes/ITEM.md) |
 | `123` | idea | [X6 flat step-down off a slope](../items/123-slope-flat-step-down/ITEM.md) (main) |
 | `124` | idea | [Slope pass-through from below](../items/124-slope-pass-through/ITEM.md) (main) |
-| `076` | active | [Better tileset art for every level](../items/076-final-stage-tileset/ITEM.md) |
+| `076` | done | [Better tileset art for every level](../items/076-final-stage-tileset/ITEM.md) |
 | `086` | idea | [Player movement modifiers as a component](../items/086-player-movement-modifiers/ITEM.md) |
 | `099` | dropped | [Use camera zones and scroll sections in real stages](../items/099-camera-sections-in-stages/ITEM.md) (main) |
 | `115` | idea | [Partial sink and stuck behavior in sand](../items/115-partial-sink-stuck-in-sand/ITEM.md) (main) |

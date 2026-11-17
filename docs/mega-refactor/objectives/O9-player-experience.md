@@ -74,7 +74,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `007` | planned | [Versioned JSON save slots with legacy import](../items/007-json-save-slots/ITEM.md) (main) |
 | `034` | planned | [Persisted settings file](../items/034-persisted-settings/ITEM.md) (main) |
 | `070` | idea | [More flexible controller settings](../items/070-flexible-controls/ITEM.md) (main) |
-| `076` | active | [Better tileset art for every level](../items/076-final-stage-tileset/ITEM.md) (main) |
+| `076` | done | [Better tileset art for every level](../items/076-final-stage-tileset/ITEM.md) (main) |
 | `165` | dropped | [Tiled automapping rules for the Desert Man tileset](../items/165-desert-tileset-automapping/ITEM.md) (main) |
 | `166` | dropped | [Desert Man's stage rework (epic)](../items/166-desert-man-stage/ITEM.md) |
 | `078` | idea | [Stage redesigns (epic)](../items/078-robot-master-alt-paths/ITEM.md) |

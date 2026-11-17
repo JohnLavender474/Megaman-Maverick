@@ -2744,3 +2744,18 @@ newest entry at the bottom.
 - Contract check: not needed (docs only).
 - Follow-up: the owner confirms the `076b` handling (decision marked "Claude, for the owner to confirm" in `078`).
   The merge target of the map branches is an open question in `078`.
+
+## 2026-11-17 — mega-refactor-076b-desert-man-backgrounds
+
+- Summary: new animated Desert Man backgrounds: `SunriseHills` (dusk sky, 8 frames), `DesertSunSky` (sun with heat
+  haze, 8 frames) and a new static `SunsetHills`. The 3 regions moved to a new `Backgrounds7` atlas (TexturePacker
+  `Basic`, no rotation); `Backgrounds6` keeps its other 12 regions pixel-identical. `README.md` credits the art: made
+  by Claude Fable 5.2, directed by the developer, inspired by Super Icon Ltd (the hills) and Capcom (the sunset), as
+  the new credit rule in `docs/ways-of-working/art.md` asks. Squash `6bb2606da`.
+- Contract check: automated checks pass on the branch (`engine:test`, `core:test`, `core:smokeTest`, `lwjgl3:jar`,
+  `detektMain`, `core:verifyRandomRule`); review before the play test by 1 subagent (no bug, 2 check wordings fixed);
+  no open Diffity thread. The owner asked for the merge on 2026-11-17. `master` had only docs changes since the
+  branch start, so `master` was not merged into the branch first.
+- Follow-up: `076` is `done` (its later work is in `078`). New items `167` (per-frame allocations in the backgrounds,
+  `O5`) and `168` (`allowRotation` off in the `.tps` projects, `O6`). No change to the current state of `O4`, `O9`,
+  `O5` or `O6`.

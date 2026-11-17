@@ -95,6 +95,7 @@ None found.
 | `106` | idea | [Make a new line in the known-failures list visible](../items/106-known-failures-growth-check/ITEM.md) (main) |
 | `107` | idea | [Tighter floor on the entity class count in the smoke test](../items/107-tighter-entity-class-floor/ITEM.md) (main) |
 | `142` | idea | [Remove the reflection from `FriendlyFireTest` and `EntityExistenceTest`](../items/142-tests-no-reflection/ITEM.md) (main) |
+| `168` | idea | [`allowRotation` off in the TexturePacker projects](../items/168-texture-packer-no-rotation/ITEM.md) (main) |
 
 ## Gaps with no item
 

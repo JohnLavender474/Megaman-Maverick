@@ -77,6 +77,7 @@ None found. Numbers for merged hot-path work (`014c`, `031c`, `031d`, `051b`, `0
 | `128` | idea | [Cull near players, not only by the camera view](../items/128-cull-near-players/ITEM.md) |
 | `134` | done | [Draw bodies and the camera between physics steps (render interpolation)](../items/134-render-interpolation/ITEM.md) |
 | `147` | idea | [Render interpolation for riders and for bodies that move once per frame](../items/147-interpolation-riders-frame-moved/ITEM.md) |
+| `167` | idea | [No per-frame allocations in `AnimatedBackground` and `Background`](../items/167-background-frame-allocations/ITEM.md) (main) |
 
 ## Gaps with no item
 
