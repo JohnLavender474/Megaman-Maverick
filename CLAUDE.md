@@ -140,6 +140,7 @@ Entity packages match `EntityType` (`entities/EntityType.kt`): `blocks`, `enemie
 - `assets/TextureAsset.kt` (atlases in `assets/sprites/sprite_sheets/`), `SoundAsset.kt` (`assets/sounds/`), `MusicAsset.kt` (`assets/music/`). All implement `IAsset` (`source`, `assClass`).
 - Get a texture region with `services.assets.getTextureAtlas(TextureAsset.X.source).findRegion("$TAG/name")` (in a screen, `game.assets`).
 - The `generateAssetList` Gradle task writes `assets/assets.txt` on each build.
+- Atlases are packed with TexturePacker (`TexturePacker` CLI, the `.tps` projects in `assets/sprites/texture_packer/`, which pack a folder of `assets/sprites/frames/`). Use only the `Basic` algorithm, the setting in the projects. Do not use `MaxRects` or rotation, also not as a command-line override. When the frames do not fit the maximum page size of a project with `Basic`, move frames into a new atlas (a new frames folder, `.tps` project and `TextureAsset`) (owner, 2026-11-17).
 
 ### Constants (`Constants.kt`)
 
