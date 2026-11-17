@@ -2712,3 +2712,18 @@ newest entry at the bottom.
 - Follow-up: item `076` stays active (`076b`: the Desert Man backgrounds). New item `165` (Tiled automapping rules for
   the tileset). New issue `2026-11-17-tomahawk-tileset-magenta-pixels.md`. No change to the current state of `O4` or
   `O9`.
+
+## 2026-11-17 — new item `166`: Desert Man's stage rework (docs only)
+
+- Summary: the owner asked to widen the oasis item `075` with a hatch on `Jetto` (open while it drops bombs) and a
+  branch in the stage (the darkness cave or a sandstorm with sand tornadoes). The owner chose to merge `075`, the
+  Desert Man part of `078` and every other item about Desert Man's stage into one epic item, `166`. `165` (Tiled
+  automapping rules for `desert_man_tileset`) is part of it. `075` and `165` are dropped with a pointer to `166`.
+  `078` keeps the alt paths of the other 7 robot master stages (title now "(not Desert Man)"). `076` and `077` keep
+  their Desert Man branches, because they cover every level and every boss. A separate epic item can exist for each
+  other level (or batch of levels).
+- Files: `166` `ITEM.md` and `NOTES.md`; `075`, `078`, `165` `ITEM.md`; `ITEMS.md`; the items tables of `O4` and
+  `O9`, and the `O4` problem `P3`.
+- Contract check: not needed (docs only).
+- Follow-up: the open questions in `166` `ITEM.md`, among them the open issue
+  `docs/issues/2026-10-27-desert-man-enemies-on-wrong-layers.md` in the same map.

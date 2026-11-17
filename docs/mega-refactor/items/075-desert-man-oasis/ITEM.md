@@ -1,11 +1,15 @@
 # 075: A larger oasis section in Desert Man's stage
 
-- Status: idea
+- Status: dropped (2026-11-17): merged into `166`
 - Type: feature
 - Objectives: `O4`
 - Depends on: none
-- Related: `078`
+- Related: `078`, `166`
 - Branches: none yet
+
+> **Dropped, 2026-11-17.** The owner merged this item into `166` (Desert Man's stage rework, an epic for all of
+> Desert Man's stage). `166` `ITEM.md` holds the goal, the owner's words and the open questions now. The text below
+> is kept as history.
 
 ## Goal
 

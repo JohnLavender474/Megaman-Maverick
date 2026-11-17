@@ -1,11 +1,14 @@
 # 165: Tiled automapping rules for the Desert Man tileset
 
-- Status: idea
+- Status: dropped (2026-11-17): merged into `166`
 - Type: tooling
 - Objectives: `O9`
 - Depends on: none
-- Related: `076`
+- Related: `076`, `166`
 - Branches: none yet
+
+> **Dropped, 2026-11-17.** The owner merged the Desert Man items into `166` (Desert Man's stage rework, an epic for
+> all of Desert Man's stage). The automapping rules are part 4 of `166`. The text below is kept as history.
 
 ## Goal
 

@@ -8,7 +8,7 @@
   games. Robot master stages are fully linear (`078`).
 - `P2`: Some players criticize enemy and boss patterns as basic. For example, `Starkner` only runs toward Megaman, and
   `Met` runs into a bottomless pit (`079`).
-- `P3`: Levels have too little variety, and some good mechanics get little use (`073`, `074`, `075`, `080`). Before
+- `P3`: Levels have too little variety, and some good mechanics get little use (`073`, `074`, `166`, `080`). Before
   `051`, the camera could only follow within room bounds.
 
 ## Goal
@@ -69,9 +69,10 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `051` | done | [X-style camera bounds, auto-scroll and other camera behaviors](../items/051-camera-behaviors/ITEM.md) (main) |
 | `073` | idea | [More gravity-block puzzles in Moon Man's stage](../items/073-moon-man-gravity-puzzles/ITEM.md) (main) |
 | `074` | idea | [More Starkner sections in Moon Man's stage](../items/074-moon-man-starkner-sections/ITEM.md) (main) |
-| `075` | idea | [A larger oasis section in Desert Man's stage](../items/075-desert-man-oasis/ITEM.md) (main) |
+| `075` | dropped | [A larger oasis section in Desert Man's stage](../items/075-desert-man-oasis/ITEM.md) (main) |
 | `077` | active | [Better boss fights for every boss: new and panic attacks, aiming, death animations](../items/077-robot-master-attacks/ITEM.md) (main) |
-| `078` | idea | [Alt paths in the robot master stages](../items/078-robot-master-alt-paths/ITEM.md) (main) |
+| `078` | idea | [Alt paths in the robot master stages (not Desert Man)](../items/078-robot-master-alt-paths/ITEM.md) (main) |
+| `166` | idea | [Desert Man's stage rework (epic)](../items/166-desert-man-stage/ITEM.md) (main) |
 | `079` | idea | [Smarter behavior for simple enemies](../items/079-smarter-enemies/ITEM.md) (main) |
 | `080` | idea | [A larger MockingBit and MockingByte section in Timber Woman's stage](../items/080-timber-woman-mocking-section/ITEM.md) (main) |
 | `089` | idea | [Conditional crush surfaces](../items/089-conditional-crush-surfaces/ITEM.md) (main) |

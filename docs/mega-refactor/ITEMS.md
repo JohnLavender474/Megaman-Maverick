@@ -82,10 +82,10 @@ statuses and column meanings are in `CLAUDE.md`.
 | 072 | [Remove `IMegaGameEntity`](items/072-remove-imegagameentity/ITEM.md) | refactor | `O1` | planned | `016` | | |
 | 073 | [More gravity-block puzzles in Moon Man's stage](items/073-moon-man-gravity-puzzles/ITEM.md) | feature | `O4` | idea | none | | |
 | 074 | [More Starkner sections in Moon Man's stage](items/074-moon-man-starkner-sections/ITEM.md) | feature | `O4` | idea | none | | |
-| 075 | [A larger oasis section in Desert Man's stage](items/075-desert-man-oasis/ITEM.md) | feature | `O4` | idea | none | | |
+| 075 | [A larger oasis section in Desert Man's stage](items/075-desert-man-oasis/ITEM.md) | feature | `O4` | dropped | none | | 2026-11-17 |
 | 076 | [Better tileset art for every level](items/076-final-stage-tileset/ITEM.md) | feature | `O9`, `O4` | active | none | 2026-11-17 | |
 | 077 | [Better boss fights for every boss: new and panic attacks, aiming, death animations](items/077-robot-master-attacks/ITEM.md) | feature | `O4` | active | none | 2026-11-13 | |
-| 078 | [Alt paths in the robot master stages](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4` | idea | none | | |
+| 078 | [Alt paths in the robot master stages (not Desert Man)](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4` | idea | none | | |
 | 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | `O4` | idea | none | | |
 | 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | `O4` | idea | none | | |
 | 081 | [Playable X for the extra levels, with `CharacterDef`, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | `O8` | active | `047b`, `084` | 2026-11-06 | |
@@ -172,7 +172,8 @@ statuses and column meanings are in `CLAUDE.md`.
 | 162 | [LibGDX collections in the launch options and level overrides](items/162-launch-loadout-collections/ITEM.md) | refactor | `O1` | idea | none | | |
 | 163 | [One shot pose in `PlayerBuster`](items/163-buster-pose-enum/ITEM.md) | refactor | `O1` | idea | none | | |
 | 164 | [Move the text-scan guards to detekt](items/164-guards-to-detekt/ITEM.md) | tooling | `O6`, `O2`, `O5` | idea | `161` | | |
-| 165 | [Tiled automapping rules for the Desert Man tileset](items/165-desert-tileset-automapping/ITEM.md) | tooling | `O9` | idea | none | | |
+| 165 | [Tiled automapping rules for the Desert Man tileset](items/165-desert-tileset-automapping/ITEM.md) | tooling | `O9` | dropped | none | | 2026-11-17 |
+| 166 | [Desert Man's stage rework (epic)](items/166-desert-man-stage/ITEM.md) | feature | `O4`, `O9` | idea | none | | |
 
 ## Branches
 
