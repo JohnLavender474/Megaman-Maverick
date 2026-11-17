@@ -75,13 +75,13 @@ class LavaBeam(services: MegaServices) : MegaGameEntity(services), IBodyEntity, 
             Direction.RIGHT -> body.setCenterRightToPoint(spawn)
         }
         val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
-        val trajectory = when (direction) {
-            Direction.UP -> Vector2(0f, speed)
-            Direction.DOWN -> Vector2(0f, -speed)
-            Direction.LEFT -> Vector2(-speed, 0f)
-            Direction.RIGHT -> Vector2(speed, 0f)
+        val velocity = body.physics.velocity
+        when (direction) {
+            Direction.UP -> velocity.set(0f, speed)
+            Direction.DOWN -> velocity.set(0f, -speed)
+            Direction.LEFT -> velocity.set(-speed, 0f)
+            Direction.RIGHT -> velocity.set(speed, 0f)
         }
-        body.physics.velocity.set(trajectory)
     }
 
     private fun defineBodyComponent(): BodyComponent {

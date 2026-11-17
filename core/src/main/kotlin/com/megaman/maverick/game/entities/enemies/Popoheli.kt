@@ -49,6 +49,7 @@ import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.OwnedArray
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -78,7 +79,11 @@ class Popoheli(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
 
     private enum class PopoheliState { WAITING, APPROACHING, ATTACKING, FLEEING, FROZEN }
 
-    private class TriggerDef(val trigger: GameRectangle, val start: Vector2, val target: Vector2)
+    private class TriggerDef {
+        val trigger = GameRectangle()
+        val start = Vector2()
+        val target = Vector2()
+    }
 
     override lateinit var facing: Facing
 
@@ -107,7 +112,7 @@ class Popoheli(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
     private lateinit var faceOnEnd: Facing
 
     private val target = Vector2()
-    private val triggers = Array<TriggerDef>()
+    private val triggers = OwnedArray { TriggerDef() }
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -131,15 +136,12 @@ class Popoheli(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
         val triggerable = spawnProps.getOrDefault(ConstKeys.TRIGGERABLE, false, Boolean::class)
         when {
             triggerable -> {
-                spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TRIGGER) }.forEach {
-                    val value = it.second
-                    if (value is RectangleMapObject) {
-                        val trigger = value.rectangle.toGameRectangle(GameRectangle())
-                        val start =
-                            (value.properties.get(ConstKeys.START) as RectangleMapObject).rectangle.getCenter(Vector2())
-                        val target =
-                            (value.properties.get(ConstKeys.TARGET) as RectangleMapObject).rectangle.getCenter(Vector2())
-                        triggers.add(TriggerDef(trigger, start, target))
+                spawnProps.forEach { key, value ->
+                    if (key.toString().startsWith(ConstKeys.TRIGGER) && value is RectangleMapObject) {
+                        val def = triggers.add()
+                        value.rectangle.toGameRectangle(def.trigger)
+                        (value.properties.get(ConstKeys.START) as RectangleMapObject).rectangle.getCenter(def.start)
+                        (value.properties.get(ConstKeys.TARGET) as RectangleMapObject).rectangle.getCenter(def.target)
                     }
                 }
                 facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
@@ -147,12 +149,19 @@ class Popoheli(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
             else -> {
                 val center = targetPlayer.body.getCenter()
 
-                val targets =
-                    PriorityQueue<Vector2> { target1, target2 -> target1.dst2(center).compareTo(target2.dst2(center)) }
-                spawnProps.getAllMatching { it.toString().startsWith(ConstKeys.TARGET) }.forEach {
-                    targets.add((it.second as RectangleMapObject).rectangle.getCenter())
+                var found = false
+                var bestDst2 = 0f
+                spawnProps.forEach { key, value ->
+                    if (!key.toString().startsWith(ConstKeys.TARGET)) return@forEach
+                    val candidate = (value as RectangleMapObject).rectangle.getCenter()
+                    val dst2 = candidate.dst2(center)
+                    if (!found || dst2 < bestDst2) {
+                        found = true
+                        bestDst2 = dst2
+                        target.set(candidate)
+                    }
                 }
-                target.set(targets.poll())
+                if (!found) throw IllegalStateException("No target in spawn props")
 
                 facing = if (target.x < body.getX()) Facing.LEFT else Facing.RIGHT
             }

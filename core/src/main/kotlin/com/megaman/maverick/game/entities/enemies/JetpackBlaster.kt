@@ -98,7 +98,7 @@ class JetpackBlaster(services: MegaServices) : AbstractEnemy(services, size = Si
         get() = !body.isSensing(BodySense.HEAD_TOUCHING_BLOCK)
 
     private lateinit var distanceType: DistanceType
-    private lateinit var target: Vector2
+    private val target = Vector2()
 
     private var aimLine: GameLine? = null
 
@@ -127,21 +127,21 @@ class JetpackBlaster(services: MegaServices) : AbstractEnemy(services, size = Si
 
         distanceType = DistanceType.FAR
 
-        target = when {
+        when {
             spawnProps.containsKey(ConstKeys.TARGET) -> spawnProps.get(
                 ConstKeys.TARGET,
                 RectangleMapObject::class
-            )!!.rectangle.getCenter(Vector2())
+            )!!.rectangle.getCenter(target)
 
             else -> {
-                val target1 =
-                    spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!.rectangle.getCenter(Vector2())
-                val target2 =
-                    spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!.rectangle.getCenter(Vector2())
+                val target1 = spawnProps.get("${ConstKeys.TARGET}_1", RectangleMapObject::class)!!
+                    .rectangle.getCenter(GameObjectPools.fetch(Vector2::class))
+                val target2 = spawnProps.get("${ConstKeys.TARGET}_2", RectangleMapObject::class)!!
+                    .rectangle.getCenter(GameObjectPools.fetch(Vector2::class))
 
                 val megamanCenter = targetPlayer.body.getCenter()
 
-                if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2
+                target.set(if (target1.dst2(megamanCenter) < target2.dst2(megamanCenter)) target1 else target2)
             }
         }
         setVelocityToTarget()

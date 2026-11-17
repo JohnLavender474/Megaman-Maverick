@@ -47,7 +47,7 @@ class Flame(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
 
     override lateinit var direction: Direction
 
-    private lateinit var cullTimer: Timer
+    private val cullTimer = Timer()
     private var perpetual = true
 
     override fun init(vararg params: Any) {
@@ -75,7 +75,7 @@ class Flame(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         when {
             spawnProps.containsKey(ConstKeys.CULL_TIME) -> {
                 perpetual = false
-                cullTimer = Timer(spawnProps.get(ConstKeys.CULL_TIME, Float::class)!!)
+                cullTimer.resetDuration(spawnProps.get(ConstKeys.CULL_TIME, Float::class)!!)
             }
 
             else -> perpetual = true

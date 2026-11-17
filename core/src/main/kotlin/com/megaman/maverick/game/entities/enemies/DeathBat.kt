@@ -79,6 +79,7 @@ class DeathBat(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
     private val stateTimers = OrderedMap<DeathBatState, Timer>()
     private val cacaFlameDelay = Timer(CACA_FLAME_DELAY)
 
+    private val triggerBounds = GameRectangle()
     private var trigger: GameRectangle? = null
     private var triggered = false
 
@@ -120,7 +121,7 @@ class DeathBat(services: MegaServices) : AbstractEnemy(services, size = Size.SMA
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.TOP_CENTER)
         body.setTopCenterToPoint(spawn)
 
-        trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)?.rectangle?.toGameRectangle(GameRectangle())
+        trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)?.rectangle?.toGameRectangle(triggerBounds)
         triggered = trigger == null
 
         loop.reset()

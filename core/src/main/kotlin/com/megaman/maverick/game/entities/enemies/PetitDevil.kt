@@ -73,6 +73,31 @@ class PetitDevil(services: MegaServices) : AbstractEnemy(services, size = Size.S
     private val startDelay = Timer()
     private var started = false
 
+    private val cullable = object : ICullable {
+
+        private var time = 0f
+
+        override fun shouldBeCulled(delta: Float): Boolean {
+            if (overlapsGameCamera()) {
+                time = 0f
+                return false
+            }
+            for (child in children) {
+                if ((child as PetitDevilChild).overlapsGameCamera()) {
+                    time = 0f
+                    return false
+                }
+            }
+            time += delta
+            return time >= CULL_TIME
+        }
+
+        override fun reset() {
+            super.reset()
+            time = 0f
+        }
+    }
+
     override fun init(vararg params: Any) {
         if (orangeRegion == null || greenRegion == null) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
@@ -109,30 +134,8 @@ class PetitDevil(services: MegaServices) : AbstractEnemy(services, size = Size.S
         body.physics.velocity.setZero()
         if (delay <= 0f) start()
 
-        putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, object : ICullable {
-
-            private var time = 0f
-
-            override fun shouldBeCulled(delta: Float): Boolean {
-                if (overlapsGameCamera()) {
-                    time = 0f
-                    return false
-                }
-                for (child in children) {
-                    if ((child as PetitDevilChild).overlapsGameCamera()) {
-                        time = 0f
-                        return false
-                    }
-                }
-                time += delta
-                return time >= CULL_TIME
-            }
-
-            override fun reset() {
-                super.reset()
-                time = 0f
-            }
-        })
+        cullable.reset()
+        putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullable)
     }
 
     override fun onDestroy() {
@@ -241,9 +244,17 @@ class PetitDevilChild(services: MegaServices) : AbstractEnemy(services, size = S
     override var parent: IGameEntity? = null
     override lateinit var facing: Facing
 
-    private lateinit var rotatingLine: RotatingLine
+    private val rotatingLine = RotatingLine(Vector2(), 0f, 0f)
     private lateinit var type: String
     private var scalar = START_SCALAR
+
+    private val cullable = object : ICullable {
+
+        override fun shouldBeCulled(delta: Float): Boolean {
+            if ((parent as PetitDevil).overlapsGameCamera()) return false
+            return !overlapsGameCamera()
+        }
+    }
 
     override fun init(vararg params: Any) {
         if (greenRegion == null || orangeRegion == null) {
@@ -267,7 +278,7 @@ class PetitDevilChild(services: MegaServices) : AbstractEnemy(services, size = S
 
         val origin = (parent as IBodyEntity).body.getCenter()
         val angle = spawnProps.get(ConstKeys.ANGLE, Float::class)!!
-        rotatingLine = RotatingLine(origin, ConstVals.PPM.toFloat(), SPINNING_SPEED * ConstVals.PPM, angle)
+        rotatingLine.set(origin, ConstVals.PPM.toFloat(), SPINNING_SPEED * ConstVals.PPM, angle)
 
         type = spawnProps.get(ConstKeys.TYPE, String::class)!!
         scalar = START_SCALAR
@@ -279,13 +290,7 @@ class PetitDevilChild(services: MegaServices) : AbstractEnemy(services, size = S
             Direction.RIGHT -> if (targetPlayer.body.getY() > body.getY()) Facing.LEFT else Facing.RIGHT
         }
 
-        putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, object : ICullable {
-
-            override fun shouldBeCulled(delta: Float): Boolean {
-                if ((parent as PetitDevil).overlapsGameCamera()) return false
-                return !overlapsGameCamera()
-            }
-        })
+        putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullable)
     }
 
     internal fun disintegrateAndDie() {

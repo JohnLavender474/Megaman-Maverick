@@ -125,7 +125,7 @@ class ChargedShot(services: MegaServices) : AbstractProjectile(services), IAnima
     }
 
     private fun spawnResidual() {
-        val spawn = trajectory.cpy().nor().scl(ConstVals.PPM.toFloat()).add(body.getCenter())
+        val spawn = GameObjectPools.fetch(Vector2::class).set(trajectory).nor().scl(ConstVals.PPM.toFloat()).add(body.getCenter())
 
         val residual = MegaEntityFactory.fetch(ChargedShotResidual::class)!!
         residual.spawn(
@@ -246,7 +246,7 @@ class ChargedShot(services: MegaServices) : AbstractProjectile(services), IAnima
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
-        body.physics.velocity.let { if (canMove) it.set(trajectory.cpy().scl(movementScalar)) else it.setZero() }
+        body.physics.velocity.let { if (canMove) it.set(trajectory).scl(movementScalar) else it.setZero() }
 
         if (canMove && body.physics.velocity.epsilonEquals(0f, 0f, 0.1f * ConstVals.PPM)) {
             noMoveCullTimer.update(delta)

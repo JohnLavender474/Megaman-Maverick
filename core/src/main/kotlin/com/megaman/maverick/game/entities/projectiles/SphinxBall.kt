@@ -32,6 +32,7 @@ import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.BlocksFactory
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 
 class SphinxBall(services: MegaServices) : AbstractProjectile(services) {
@@ -41,6 +42,9 @@ class SphinxBall(services: MegaServices) : AbstractProjectile(services) {
         private const val SPIN_DELAY = 0.1f
         private const val GRAVITY = -22.5f
         private const val SINK_SPEED = 0.75f
+        private val BLOCK_BODY_LABELS = objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY)
+        private val BLOCK_FIXTURE_LABELS =
+            objectSetOf(FixtureLabel.NO_SIDE_TOUCHIE, FixtureLabel.NO_PROJECTILE_COLLISION)
         private var region: TextureRegion? = null
     }
 
@@ -71,12 +75,10 @@ class SphinxBall(services: MegaServices) : AbstractProjectile(services) {
         block = EntityFactories.fetch(EntityType.BLOCK, BlocksFactory.STANDARD)!! as Block
         block!!.spawn(
             props(
-                ConstKeys.BOUNDS pairTo GameRectangle().setSize(1.35f * ConstVals.PPM, 0.1f * ConstVals.PPM),
-                ConstKeys.BODY_LABELS pairTo objectSetOf(BodyLabel.COLLIDE_DOWN_ONLY),
-                ConstKeys.FIXTURE_LABELS pairTo objectSetOf(
-                    FixtureLabel.NO_SIDE_TOUCHIE,
-                    FixtureLabel.NO_PROJECTILE_COLLISION
-                )
+                ConstKeys.BOUNDS pairTo GameObjectPools.fetch(GameRectangle::class)
+                    .setSize(1.35f * ConstVals.PPM, 0.1f * ConstVals.PPM),
+                ConstKeys.BODY_LABELS pairTo BLOCK_BODY_LABELS,
+                ConstKeys.FIXTURE_LABELS pairTo BLOCK_FIXTURE_LABELS
             )
         )
     }

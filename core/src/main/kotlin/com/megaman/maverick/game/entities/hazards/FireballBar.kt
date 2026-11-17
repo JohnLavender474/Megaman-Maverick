@@ -41,7 +41,7 @@ class FireballBar(services: MegaServices) : MegaGameEntity(services), IParentEnt
 
     override var children = Array<Fireball>()
 
-    private lateinit var rotatingLine: RotatingLine
+    private val rotatingLine = RotatingLine(Vector2(), 0f, 0f)
     private lateinit var spawnRoom: String
 
     override fun init(vararg params: Any) {
@@ -63,7 +63,7 @@ class FireballBar(services: MegaServices) : MegaGameEntity(services), IParentEnt
         if (flip) speed *= -1f
 
         val angle = spawnProps.getOrDefault(ConstKeys.ANGLE, 0f, Float::class)
-        rotatingLine = RotatingLine(spawn, RADIUS * ConstVals.PPM, speed * ConstVals.PPM, angle)
+        rotatingLine.set(spawn, RADIUS * ConstVals.PPM, speed * ConstVals.PPM, angle)
 
         (0 until BALLS).forEach { i ->
             val canDamage = i != 0

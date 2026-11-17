@@ -96,7 +96,7 @@ class ExplosionOrb(services: MegaServices) : MegaGameEntity(services), IBodyEnti
         body.setCenter(spawn)
 
         val speed = spawnProps.getOrDefault(ConstKeys.SPEED, DEFAULT_EXPLOSION_ORB_SPEED, Float::class)
-        body.physics.velocity = spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!.cpy().scl(speed * ConstVals.PPM)
+        body.physics.velocity.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!).scl(speed * ConstVals.PPM)
     }
 
     override fun onEvent(event: Event) {

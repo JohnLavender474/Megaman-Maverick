@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
@@ -41,6 +42,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getMotionValue
 import com.megaman.maverick.game.world.body.BodyComponentCreator
@@ -75,8 +77,8 @@ class YellowTiggerSquirt(services: MegaServices) : AbstractEnemy(services, size 
 
     private val freezeHandler = FreezableEntityHandler(this)
 
-    private lateinit var sineWaveX: SineWave
-    private lateinit var sineWaveY: SineWave
+    private val sineWaveX = SineWave(Vector2(), 0f, 0f, FREQUENCY_X)
+    private val sineWaveY = SineWave(Vector2(), 0f, 0f, FREQUENCY_Y)
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -96,9 +98,9 @@ class YellowTiggerSquirt(services: MegaServices) : AbstractEnemy(services, size 
         body.setCenter(spawn)
 
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, true, Boolean::class)
-        sineWaveX =
-            SineWave(spawn.cpy().swapped(), 0f, AMPLITUDE_X * ConstVals.PPM * if (left) -1f else 1f, FREQUENCY_X)
-        sineWaveY = SineWave(spawn.cpy(), 0f, AMPLITUDE_Y * ConstVals.PPM, FREQUENCY_Y)
+        val swappedSpawn = GameObjectPools.fetch(Vector2::class).set(spawn).swapped()
+        sineWaveX.set(swappedSpawn, 0f, AMPLITUDE_X * ConstVals.PPM * if (left) -1f else 1f, FREQUENCY_X)
+        sineWaveY.set(spawn, 0f, AMPLITUDE_Y * ConstVals.PPM, FREQUENCY_Y)
 
         frozen = false
     }

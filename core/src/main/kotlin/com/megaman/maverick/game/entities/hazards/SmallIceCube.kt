@@ -2,7 +2,6 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
@@ -149,8 +148,8 @@ class SmallIceCube(services: MegaServices) : AbstractProjectile(services), IFree
         maxHitTimes = spawnProps.getOrDefault(ConstKeys.MAX, DEFAULT_MAX_HIT_TIMES, Int::class)
         hitTimes = 0
 
-        val blockIds = spawnProps.getOrDefault("${ConstKeys.IGNORE}_${ConstKeys.HIT}", Array<Int>()) as Iterable<Int>
-        blockIds.forEach { ignoreHitsFromIds.add(it) }
+        val blockIds = spawnProps.get("${ConstKeys.IGNORE}_${ConstKeys.HIT}") as Iterable<Int>?
+        blockIds?.forEach { ignoreHitsFromIds.add(it) }
     }
 
     override fun onDamageInflictedTo(damageable: IDamageableEntity) = shatterAndDie()

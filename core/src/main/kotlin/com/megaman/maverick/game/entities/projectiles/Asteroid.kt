@@ -103,6 +103,7 @@ class Asteroid(services: MegaServices) : AbstractProjectile(services), IOwnable<
 
     private lateinit var type: String
 
+    private val ownedDelayTimer = Timer()
     private var delayTimer: Timer? = null
 
     private val blinkTimer = Timer(BLINK_DUR)
@@ -141,7 +142,7 @@ class Asteroid(services: MegaServices) : AbstractProjectile(services), IOwnable<
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
 
         val delay = spawnProps.get(ConstKeys.DELAY, Float::class)
-        delayTimer = if (delay != null) Timer(delay) else null
+        delayTimer = if (delay != null) ownedDelayTimer.resetDuration(delay) else null
 
         blinkTimer.reset()
         blink = false

@@ -54,7 +54,10 @@ class SwingingAxe(services: MegaServices) : MegaGameEntity(services), ISpritesEn
 
     private val deathCircle = GameCircle()
     private val shieldCircle = GameCircle()
+    private val anchor = Vector2()
     private lateinit var pendulum: Pendulum
+    private lateinit var pendulumDefinition: MotionComponent.MotionDefinition
+    private val debugLine = GameLine()
 
     private val debugSwingRotationTimer = Timer(DEBUG_SWING_ROTATION_SPEED)
 
@@ -67,6 +70,30 @@ class SwingingAxe(services: MegaServices) : MegaGameEntity(services), ISpritesEn
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(MotionComponent())
+
+        pendulum = Pendulum(
+            LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, anchor, 1 / 60f, services.random
+        )
+        pendulumDefinition = MotionComponent.MotionDefinition(motion = pendulum, function = { value, _ ->
+            deathCircle.setCenter(value)
+            shieldCircle.setCenter(value)
+        })
+
+        debugLine.drawingColor = Color.DARK_GRAY
+        debugLine.drawingShapeType = ShapeRenderer.ShapeType.Line
+        addDebugShapeSupplier { debugLine.set(pendulum.anchor, pendulum.getMotionValue()!!) }
+
+        val circle1 = GameCircle()
+        circle1.setRadius(ConstVals.PPM / 4f)
+        circle1.drawingShapeType = ShapeRenderer.ShapeType.Filled
+        circle1.drawingColor = Color.BROWN
+        addDebugShapeSupplier { circle1.setCenter(pendulum.anchor) }
+
+        val circle2 = GameCircle()
+        circle2.setRadius(ConstVals.PPM / 4f)
+        circle2.drawingShapeType = ShapeRenderer.ShapeType.Line
+        circle2.drawingColor = Color.DARK_GRAY
+        addDebugShapeSupplier { circle2.setCenter(pendulum.getMotionValue()!!) }
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -125,34 +152,9 @@ class SwingingAxe(services: MegaServices) : MegaGameEntity(services), ISpritesEn
     }
 
     private fun setPendulum(bounds: GameRectangle) {
-        pendulum = Pendulum(
-            LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, bounds.getCenter(Vector2()), 1 / 60f, services.random
-        )
-        putMotionDefinition(
-            ConstKeys.PENDULUM, MotionComponent.MotionDefinition(motion = pendulum, function = { value, _ ->
-                deathCircle.setCenter(value)
-                shieldCircle.setCenter(value)
-            })
-        )
-
-        addDebugShapeSupplier {
-            val line = GameLine(pendulum.anchor, pendulum.getMotionValue()!!)
-            line.drawingColor = Color.DARK_GRAY
-            line.drawingShapeType = ShapeRenderer.ShapeType.Line
-            line
-        }
-
-        val circle1 = GameCircle()
-        circle1.setRadius(ConstVals.PPM / 4f)
-        circle1.drawingShapeType = ShapeRenderer.ShapeType.Filled
-        circle1.drawingColor = Color.BROWN
-        addDebugShapeSupplier { circle1.setCenter(pendulum.anchor) }
-
-        val circle2 = GameCircle()
-        circle2.setRadius(ConstVals.PPM / 4f)
-        circle2.drawingShapeType = ShapeRenderer.ShapeType.Line
-        circle2.drawingColor = Color.DARK_GRAY
-        addDebugShapeSupplier { circle2.setCenter(pendulum.getMotionValue()!!) }
+        bounds.getCenter(anchor)
+        pendulum.reset()
+        putMotionDefinition(ConstKeys.PENDULUM, pendulumDefinition)
     }
 
     override fun getType() = EntityType.HAZARD

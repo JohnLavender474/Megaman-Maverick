@@ -59,6 +59,10 @@ class Adamski(services: MegaServices) : AbstractEnemy(services, size = Size.SMAL
 
     private var type = 0
 
+    private val sinePosition = Vector2()
+    private val sineWave = SineWave(sinePosition, 0f, 0f, 0f)
+    private val sineDefinition = MotionDefinition(sineWave, { position, _ -> body.setCenter(position) })
+
     override fun init(vararg params: Any) {
         if (purpleRegion == null || blueRegion == null || orangeRegion == null) {
             purpleRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_2.source, "$TAG/Purple")
@@ -81,13 +85,13 @@ class Adamski(services: MegaServices) : AbstractEnemy(services, size = Size.SMAL
 
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, targetPlayer.body.getX() <= body.getX(), Boolean::class)
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
-        val motion = SineWave(
-            body.getCenter(Vector2()),
+        sineWave.set(
+            body.getCenter(),
             (if (left) -SPEED else SPEED) * ConstVals.PPM,
             AMPLITUDE * ConstVals.PPM * if (flip) -1f else 1f,
             FREQUENCY
         )
-        putMotionDefinition("sineWave", MotionDefinition(motion, { position, _ -> body.setCenter(position) }))
+        putMotionDefinition("sineWave", sineDefinition)
 
         requestToPlaySound(SoundAsset.ALARM_SOUND, false)
     }

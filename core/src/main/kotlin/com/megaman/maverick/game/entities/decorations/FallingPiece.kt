@@ -29,6 +29,7 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
@@ -70,11 +71,11 @@ class FallingPiece(services: MegaServices) : MegaGameEntity(services), IBodyEnti
         }
 
         fun throwDebris(keys: Array<String>, position: Vector2, random: GameRandom) = keys.forEach { key ->
-            val velocity = Vector2(
+            val velocity = GameObjectPools.fetch(Vector2::class).set(
                 SPEEDS_X[random.nextInt(0, SPEEDS_X.size - 1)] * ConstVals.PPM,
                 SPEEDS_Y[random.nextInt(0, SPEEDS_Y.size - 1)] * ConstVals.PPM
             )
-            spawn(FallingPieceDef.DEBRIS, key, position.cpy(), velocity)
+            spawn(FallingPieceDef.DEBRIS, key, GameObjectPools.fetch(Vector2::class).set(position), velocity)
         }
     }
 

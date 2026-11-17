@@ -1,8 +1,8 @@
 package com.maverick.game.engine.common.shapes
 
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.ObjectSet
-import com.badlogic.gdx.utils.OrderedSet
+import com.badlogic.gdx.utils.Array
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
@@ -11,6 +11,12 @@ class ShapeUtilsTest : DescribeSpec({
 
     val out1 = Vector2()
     val out2 = Vector2()
+    val hitPoints = Array<Vector2>().apply { repeat(4) { add(Vector2()) } }
+
+    fun hits(rectangle: GameRectangle, line: GameLine): List<Vector2> {
+        val count = ShapeUtils.intersectRectangleAndLine(rectangle, line, hitPoints)
+        return (0 until count).map { hitPoints[it] }
+    }
 
     describe("ShapeUtils") {
 
@@ -20,9 +26,9 @@ class ShapeUtilsTest : DescribeSpec({
             it("should intersect when the line crosses the rectangle") {
                 val rectangle = GameRectangle(0f, 0f, 4f, 4f)
                 val line = GameLine(2f, 5f, 2f, -1f) // A vertical line crossing the rectangle
-                val intersections = OrderedSet<Vector2>()
 
-                val result = ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                val intersections = hits(rectangle, line)
+                val result = intersections.isNotEmpty()
 
                 result shouldBe true
                 intersections.size shouldBe 2 // The line should intersect at two points
@@ -33,9 +39,9 @@ class ShapeUtilsTest : DescribeSpec({
             it("should not intersect when the line is outside the rectangle") {
                 val rectangle = GameRectangle(0f, 0f, 4f, 4f)
                 val line = GameLine(5f, 5f, 6f, 6f) // A line outside and not touching the rectangle
-                val intersections = OrderedSet<Vector2>()
 
-                val result = ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                val intersections = hits(rectangle, line)
+                val result = intersections.isNotEmpty()
 
                 result shouldBe false
                 intersections.size shouldBe 0 // No intersection
@@ -44,9 +50,9 @@ class ShapeUtilsTest : DescribeSpec({
             it("should intersect at one point when the line is tangent to the rectangle") {
                 val rectangle = GameRectangle(0f, 0f, 4f, 4f)
                 val line = GameLine(2f, -1f, 2f, 0f) // A vertical line touching the bottom of the rectangle
-                val intersections = OrderedSet<Vector2>()
 
-                val result = ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                val intersections = hits(rectangle, line)
+                val result = intersections.isNotEmpty()
 
                 result shouldBe true
                 intersections.size shouldBe 1 // One point of intersection
@@ -56,9 +62,9 @@ class ShapeUtilsTest : DescribeSpec({
             it("should handle diagonal line intersecting the rectangle") {
                 val rectangle = GameRectangle(0f, 0f, 4f, 4f)
                 val line = GameLine(0f, 0f, 4f, 4f) // A diagonal line crossing from bottom-left to top-right
-                val intersections = OrderedSet<Vector2>()
 
-                val result = ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                val intersections = hits(rectangle, line)
+                val result = intersections.isNotEmpty()
 
                 result shouldBe true
                 intersections.size shouldBe 2 // The diagonal line intersects at two points
@@ -69,9 +75,9 @@ class ShapeUtilsTest : DescribeSpec({
             it("should handle case where line intersects two opposite corners of the rectangle") {
                 val rectangle = GameRectangle(0f, 0f, 4f, 4f)
                 val line = GameLine(-1f, -1f, 5f, 5f) // A diagonal line from outside touching two opposite corners
-                val intersections = OrderedSet<Vector2>()
 
-                val result = ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                val intersections = hits(rectangle, line)
+                val result = intersections.isNotEmpty()
 
                 result shouldBe true
                 intersections.size shouldBe 2 // Two intersections at opposite corners
@@ -82,12 +88,30 @@ class ShapeUtilsTest : DescribeSpec({
             it("should not intersect when line is completely inside rectangle") {
                 val rectangle = GameRectangle(0f, 0f, 4f, 4f)
                 val line = GameLine(1f, 1f, 3f, 3f) // A line completely inside the rectangle
-                val intersections = OrderedSet<Vector2>()
 
-                val result = ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                val intersections = hits(rectangle, line)
+                val result = intersections.isNotEmpty()
 
                 result shouldBe false
                 intersections.size shouldBe 0 // No intersection as the line is inside the rectangle
+            }
+
+            it("writes the hits into the given vectors and counts a corner hit once") {
+                val rectangle = GameRectangle(0f, 0f, 4f, 4f)
+                val line = GameLine(-1f, -1f, 5f, 5f)
+
+                val count = ShapeUtils.intersectRectangleAndLine(rectangle, line, hitPoints)
+
+                count shouldBe 2
+                (0 until count).map { hitPoints[it] }.toSet() shouldBe setOf(Vector2(0f, 0f), Vector2(4f, 4f))
+                hitPoints.size shouldBe 4
+            }
+
+            it("throws when the out array holds fewer than 4 vectors") {
+                val out = Array<Vector2>().apply { repeat(3) { add(Vector2()) } }
+                shouldThrow<IllegalArgumentException> {
+                    ShapeUtils.intersectRectangleAndLine(GameRectangle(0f, 0f, 4f, 4f), GameLine(2f, 5f, 2f, -1f), out)
+                }
             }
 
             describe("should intersect line world points") {
@@ -102,9 +126,7 @@ class ShapeUtilsTest : DescribeSpec({
 
                     val rectangle = GameRectangle(-3f, 2f, 2f, 2f)
                     println("rectangle=$rectangle")
-
-                    val intersections = ObjectSet<Vector2>()
-                    ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                    val intersections = hits(rectangle, line)
                     println("intersections=$intersections")
 
                     intersections.size shouldBe 2
@@ -122,9 +144,7 @@ class ShapeUtilsTest : DescribeSpec({
 
                     val rectangle = GameRectangle(-3f, -3f, 2f, 2f)
                     println("rectangle=$rectangle")
-
-                    val intersections = ObjectSet<Vector2>()
-                    ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                    val intersections = hits(rectangle, line)
                     println("intersections=$intersections")
 
                     intersections.size shouldBe 2
@@ -143,9 +163,7 @@ class ShapeUtilsTest : DescribeSpec({
 
                     val rectangle = GameRectangle(1f, 3f, 2f, 1f)
                     println("rectangle=$rectangle")
-
-                    val intersections = ObjectSet<Vector2>()
-                    ShapeUtils.intersectRectangleAndLine(rectangle, line, intersections)
+                    val intersections = hits(rectangle, line)
                     println("intersections=$intersections")
 
                     intersections.size shouldBe 2

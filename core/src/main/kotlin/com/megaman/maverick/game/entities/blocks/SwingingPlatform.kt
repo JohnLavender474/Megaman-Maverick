@@ -68,8 +68,12 @@ class SwingingPlatform(services: MegaServices) : Block(services), IParentEntity<
     override val eventKeyMask = objectSetOf<Any>(EventType.LEVEL_RESET)
     override var children = Array<MegaGameEntity>()
 
+    private val copyProps = Properties()
+    private val anchor = Vector2()
     private lateinit var pendulum: Pendulum
-    private var target: Vector2? = null
+    private lateinit var pendulumDefinition: MotionDefinition
+    private val target = Vector2()
+    private var hasTarget = false
 
     private val timeToSpawnEnemyTimer = Timer(TIME_TO_SPAWN_ENEMY)
     private var enemyToSpawn: String? = null
@@ -84,77 +88,28 @@ class SwingingPlatform(services: MegaServices) : Block(services), IParentEntity<
         addComponent(MotionComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineSpritesComponent())
-    }
 
-    override fun onSpawn(spawnProps: Properties) {
-        val copyProps = spawnProps.copy()
-
-        copyProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
-
-        val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-        val bounds = GameObjectPools.fetch(GameRectangle::class)
-            .setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
-            .setCenter(center)
-        copyProps.put(ConstKeys.BOUNDS, bounds)
-
-        super.onSpawn(copyProps)
-
-        setPendulum(bounds)
-
-        // spawn the enemy onto the platform after the timer has finished so that the platform position has
-        // been properly updated
-        enemyToSpawn = when {
-            spawnProps.containsKey(ConstKeys.ENEMY_SPAWN) -> spawnProps.get(ConstKeys.ENEMY_SPAWN, String::class)!!
-            else -> null
-        }
-
-        body.preProcess.put(ConstKeys.TARGET) {
-            target?.let {
-                body.physics.velocity.set(it)
-                    .sub(body.getPositionPoint(Position.TOP_CENTER))
-                    .scl(1f / services.settings.performance.fixedStep)
-            }
-        }
-
-        services.events.addListener(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        clearMotionDefinitions()
-
-        children.forEach { it.destroy() }
-        children.clear()
-
-        enemyToSpawn = null
-
-        target = null
-
-        services.events.removeListener(this)
-    }
-
-    override fun onEvent(event: Event) {
-        GameLogger.debug(TAG, "onEvent(): event=$event")
-        timeToSpawnEnemyTimer.reset()
-    }
-
-    private fun setPendulum(bounds: GameRectangle) {
         pendulum = Pendulum(
             length = DEFAULT_LENGTH * ConstVals.PPM,
             gravity = PENDULUM_GRAVITY * ConstVals.PPM,
-            anchor = bounds.getCenter(Vector2()).add(0f, DEFAULT_LENGTH * ConstVals.PPM),
+            anchor = anchor,
             targetFPS = 1 / 60f,
             random = services.random,
             defaultAngle = PI.toFloat() / 1.5f
         )
-        putMotionDefinition(
-            ConstKeys.PENDULUM,
-            MotionDefinition(
-                motion = pendulum,
-                function = { value, _ -> if (target == null) target = value.cpy() else target!!.set(value) }
-            )
+        pendulumDefinition = MotionDefinition(
+            motion = pendulum,
+            function = { value, _ ->
+                target.set(value)
+                hasTarget = true
+            }
         )
+
+        body.preProcess.put(ConstKeys.TARGET) {
+            if (hasTarget) body.physics.velocity.set(target)
+                .sub(body.getPositionPoint(Position.TOP_CENTER))
+                .scl(1f / services.settings.performance.fixedStep)
+        }
 
         val line = GameLine()
         addDebugShapeSupplier {
@@ -174,6 +129,59 @@ class SwingingPlatform(services: MegaServices) : Block(services), IParentEntity<
             if (value == null) return@addDebugShapeSupplier null
             circle2.setCenter(value)
         }
+    }
+
+    override fun onSpawn(spawnProps: Properties) {
+        copyProps.clear()
+        copyProps.putAll(spawnProps)
+
+        copyProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
+
+        val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
+        val bounds = GameObjectPools.fetch(GameRectangle::class)
+            .setSize(BODY_WIDTH * ConstVals.PPM, BODY_HEIGHT * ConstVals.PPM)
+            .setCenter(center)
+        copyProps.put(ConstKeys.BOUNDS, bounds)
+
+        super.onSpawn(copyProps)
+
+        setPendulum(bounds)
+        copyProps.clear()
+
+        // spawn the enemy onto the platform after the timer has finished so that the platform position has
+        // been properly updated
+        enemyToSpawn = when {
+            spawnProps.containsKey(ConstKeys.ENEMY_SPAWN) -> spawnProps.get(ConstKeys.ENEMY_SPAWN, String::class)!!
+            else -> null
+        }
+
+        services.events.addListener(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        clearMotionDefinitions()
+
+        children.forEach { it.destroy() }
+        children.clear()
+
+        enemyToSpawn = null
+
+        hasTarget = false
+
+        services.events.removeListener(this)
+    }
+
+    override fun onEvent(event: Event) {
+        GameLogger.debug(TAG, "onEvent(): event=$event")
+        timeToSpawnEnemyTimer.reset()
+    }
+
+    private fun setPendulum(bounds: GameRectangle) {
+        bounds.getCenter(anchor).add(0f, DEFAULT_LENGTH * ConstVals.PPM)
+        pendulum.reset()
+        putMotionDefinition(ConstKeys.PENDULUM, pendulumDefinition)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->

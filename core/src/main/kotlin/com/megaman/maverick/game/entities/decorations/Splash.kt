@@ -120,9 +120,7 @@ class Splash(services: MegaServices) : MegaGameEntity(services), ISpritesEntity,
         val size = spawnProps.getOrDefault(ConstKeys.SIZE, type.defaultSize, Float::class)
         val rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
         val alpha = spawnProps.getOrDefault(ConstKeys.ALPHA, type.defaultAlpha, Float::class)
-        val priority = spawnProps.getOrDefault(
-            ConstKeys.PRIORITY, DrawingPriority(type.defaultSection, type.defaultPriority), DrawingPriority::class
-        )
+        val priority = spawnProps.get(ConstKeys.PRIORITY, DrawingPriority::class)
 
         defaultSprite.let { sprite ->
             sprite.setSize(size)
@@ -133,8 +131,8 @@ class Splash(services: MegaServices) : MegaGameEntity(services), ISpritesEntity,
 
             sprite.setAlpha(alpha)
 
-            sprite.priority.section = priority.section
-            sprite.priority.value = priority.value
+            sprite.priority.section = priority?.section ?: type.defaultSection
+            sprite.priority.value = priority?.value ?: type.defaultPriority
         }
 
         cullTimer.reset()

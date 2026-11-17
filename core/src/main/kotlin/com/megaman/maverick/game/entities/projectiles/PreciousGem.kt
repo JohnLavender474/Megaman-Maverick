@@ -82,6 +82,7 @@ class PreciousGem(services: MegaServices) : AbstractHealthEntity(services), IPro
         private val IGNORE_DMG = objectSetOf<KClass<out IDamagerEntity>>(
             MoonScythe::class, Asteroid::class, PropellerPlatform::class
         )
+        private val NO_SHIELD_SHATTER_CLASSES = ObjectSet<KClass<out IGameEntity>>()
         private val regions = ObjectMap<PreciousGemColor, TextureRegion>()
     }
 
@@ -188,9 +189,9 @@ class PreciousGem(services: MegaServices) : AbstractHealthEntity(services), IPro
         blockShatter = spawnProps.getOrDefault(
             "${ConstKeys.BLOCK}_${ConstKeys.SHATTER}", false, Boolean::class
         )
-        shieldShatterClasses = spawnProps.getOrDefault(
-            "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}", ObjectSet<KClass<out IGameEntity>>(), ObjectSet::class
-        ) as ObjectSet<KClass<out IGameEntity>>
+        shieldShatterClasses = spawnProps.get(
+            "${ConstKeys.SHIELD}_${ConstKeys.SHATTER}", ObjectSet::class
+        ) as ObjectSet<KClass<out IGameEntity>>? ?: NO_SHIELD_SHATTER_CLASSES
     }
 
     override fun onDestroy() {
@@ -322,7 +323,7 @@ class PreciousGem(services: MegaServices) : AbstractHealthEntity(services), IPro
 
             when (stateIndex) {
                 0 -> {
-                    val trajectory = firstTarget.cpy().sub(body.getCenter()).nor().scl(speed)
+                    val trajectory = GameObjectPools.fetch(Vector2::class).set(firstTarget).sub(body.getCenter()).nor().scl(speed)
                     body.physics.velocity.set(trajectory)
 
                     if (body.getCenter().epsilonEquals(firstTarget, 0.1f * ConstVals.PPM)) {

@@ -1,34 +1,70 @@
 package com.megaman.maverick.game.utils
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.UtilMethods
+import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.time.Timer
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
-import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
 object MegaUtilMethods {
 
+    private class DelayedRun(val id: String) : Updatable {
+
+        val timer = Timer(1f)
+        var action: (() -> Unit)? = null
+        var finished = false
+        var services: MegaServices? = null
+
+        val remove: () -> Unit = {
+            services!!.updatables.remove(id)
+            release(this)
+        }
+
+        override fun update(delta: Float) {
+            timer.update(delta)
+            if (timer.isJustFinished()) {
+                finished = true
+                action!!.invoke()
+
+                services!!.runQueue.addLast(remove)
+            }
+        }
+    }
+
+    private val freeDelayedRuns = Array<DelayedRun>()
+    private var delayedRunCount = 0
+
+    private fun release(run: DelayedRun) {
+        run.action = null
+        run.services = null
+        freeDelayedRuns.add(run)
+    }
+
     fun delayRun(services: MegaServices, delay: Float, action: () -> Unit): String {
         if (delay <= 0f) throw IllegalArgumentException("Delay must be greater than 0: $delay")
 
-        val id = UUID.randomUUID().toString()
+        val run = if (freeDelayedRuns.isEmpty) DelayedRun("delay_run_${delayedRunCount++}") else freeDelayedRuns.pop()
+        run.services = services
+        run.action = action
+        run.finished = false
+        run.timer.resetDuration(delay)
 
-        val timer = Timer(delay)
+        services.updatables.put(run.id, run)
 
-        services.updatables.put(id) { delta ->
-            timer.update(delta)
-            if (timer.isJustFinished()) {
-                action()
+        return run.id
+    }
 
-                services.runQueue.addLast { services.updatables.remove(id) }
-            }
-        }
-
-        return id
+    fun cancelDelayRun(services: MegaServices, id: String) {
+        val run = services.updatables.get(id) ?: return
+        if (run !is DelayedRun) throw IllegalArgumentException("Not an id of delayRun: $id")
+        if (run.finished) return
+        services.updatables.remove(id)
+        release(run)
     }
 
     fun getSmallFontSize() = (ConstVals.PPM / 3f).roundToInt()

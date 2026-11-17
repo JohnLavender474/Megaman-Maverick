@@ -59,7 +59,7 @@ class ChargedShotExplosion(services: MegaServices) : AbstractProjectile(services
     var fullyCharged = false
         private set
 
-    private var durationTimer = Timer(FULLY_CHARGED_DURATION)
+    private val durationTimer = Timer(FULLY_CHARGED_DURATION)
     private val soundTimer = Timer(SOUND_INTERVAL)
 
     private lateinit var explosionFixture: Fixture
@@ -92,7 +92,7 @@ class ChargedShotExplosion(services: MegaServices) : AbstractProjectile(services
         val duration = spawnProps.getOrDefault(
             ConstKeys.DURATION, if (fullyCharged) FULLY_CHARGED_DURATION else HALF_CHARGED_DURATION, Float::class
         )
-        durationTimer = Timer(duration)
+        durationTimer.resetDuration(duration)
 
         val size = (if (fullyCharged) FULL_BODY_SIZE else HALF_BODY_SIZE) * ConstVals.PPM
         body.setSize(size)

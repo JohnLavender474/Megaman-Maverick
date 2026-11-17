@@ -47,6 +47,7 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.MagmaPellet
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
@@ -100,7 +101,7 @@ class MagmaGoopExplosion(services: MegaServices) : MegaGameEntity(services), IBo
         val spawn = body.getPositionPoint(position)
 
         for (i in 0 until PELLET_IMPULSES.size) {
-            val impulse = PELLET_IMPULSES[i].cpy().scl(ConstVals.PPM.toFloat()).rotateDeg(direction.rotation)
+            val impulse = GameObjectPools.fetch(Vector2::class).set(PELLET_IMPULSES[i]).scl(ConstVals.PPM.toFloat()).rotateDeg(direction.rotation)
 
             val pellet = MegaEntityFactory.fetch(MagmaPellet::class)!!
             pellet.spawn(

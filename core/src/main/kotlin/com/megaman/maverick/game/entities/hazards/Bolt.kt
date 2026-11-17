@@ -59,6 +59,8 @@ class Bolt(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IHaz
 
     var scale = 1f
 
+    private val cullOnOutOfBounds = getGameCameraCullingLogic(this, CULL_DUR)
+
     override fun init(vararg params: Any) {
         super.init()
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, "Bolt")
@@ -72,7 +74,7 @@ class Bolt(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IHaz
         super.onSpawn(spawnProps)
         parent = spawnProps.get(ConstKeys.PARENT) as GameEntity?
         scale = spawnProps.getOrDefault(ConstKeys.SCALE, 1f, Float::class)
-        body.setSize(BODY_SIZE.cpy().scl(scale))
+        body.setSize(BODY_SIZE.x * scale, BODY_SIZE.y * scale)
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, Direction.UP, Direction::class)
         when (direction) {
@@ -82,10 +84,10 @@ class Bolt(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IHaz
             Direction.RIGHT -> body.setCenterLeftToPoint(spawn)
         }
         body.physics.velocity.set(spawnProps.getOrDefault(ConstKeys.TRAJECTORY, Vector2.Zero, Vector2::class))
-        val cullOnOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
-        if (cullOnOutOfBounds) {
-            val cull = getGameCameraCullingLogic(this, CULL_DUR)
-            putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cull)
+        val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
+        if (cullOutOfBounds) {
+            cullOnOutOfBounds.reset()
+            putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfBounds)
         } else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
     }
 
@@ -104,7 +106,7 @@ class Bolt(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IHaz
         damagerFixture.drawingColor = Color.RED
         debugShapes.add { damagerFixture}
         body.preProcess.put(ConstKeys.DEFAULT) {
-            body.setSize(BODY_SIZE.cpy().scl(scale))
+            body.setSize(BODY_SIZE.x * scale, BODY_SIZE.y * scale)
             (damagerFixture.rawShape as GameRectangle).set(body)
         }
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))

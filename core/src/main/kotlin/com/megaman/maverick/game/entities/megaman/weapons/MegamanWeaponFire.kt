@@ -62,7 +62,7 @@ private fun computeShootingDown(megaman: Megaman): Boolean {
 
         if (megaman.hasProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}_${ConstKeys.ID}")) {
             val id = megaman.removeProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}_${ConstKeys.ID}", String::class)!!
-            services.updatables.remove(id)
+            MegaUtilMethods.cancelDelayRun(services, id)
 
             GameLogger.debug(
                 "${Megaman.TAG}_${ConstKeys.SHOOT}_${ConstKeys.DOWN}",
@@ -76,6 +76,7 @@ private fun computeShootingDown(megaman: Megaman): Boolean {
                 "shootMegaBuster(): set shoot down to false"
             )
             megaman.putProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", false)
+            megaman.removeProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}_${ConstKeys.ID}")
         }
 
         megaman.putProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}_${ConstKeys.ID}", id)

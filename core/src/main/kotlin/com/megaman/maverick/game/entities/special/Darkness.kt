@@ -115,6 +115,7 @@ class Darkness(services: MegaServices) : MegaGameEntity(services), ISpritesEntit
     )
 
     private val lightEventQueue = PriorityQueue<LightEvent>()
+    private val lightCircle = GameCircle()
     private val rooms = ObjectSet<String>()
 
     private lateinit var tiles: Matrix<BlackTile>
@@ -334,7 +335,7 @@ class Darkness(services: MegaServices) : MegaGameEntity(services), ISpritesEntit
 
                 val (light, center, radius, radiance) = lightEventDef
                 val adjustedRadius = radius.toFloat() * ConstVals.PPM
-                val circle = GameCircle(center, adjustedRadius)
+                val circle = lightCircle.setRadius(adjustedRadius).setCenter(center)
 
                 var startX = (((center.x - adjustedRadius) - bounds.getX()) / (ConstVals.PPM.toFloat() / ppmDivisor)).toInt()
                 startX = startX.coerceIn(0, tiles.columns - 1)

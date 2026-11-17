@@ -38,6 +38,9 @@ class FallingLeaves(services: MegaServices) : MegaGameEntity(services), ICullabl
     private val bounds = GameRectangle()
     private var spawnRoom: String? = null
     private val spawnTimer = Timer()
+    private val otherBounds = GameRectangle()
+    private val cullOnBody = getGameCameraCullingLogic(services.gameCamera, { bounds })
+    private val cullOnOther = getGameCameraCullingLogic(services.gameCamera, { otherBounds })
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -68,17 +71,14 @@ class FallingLeaves(services: MegaServices) : MegaGameEntity(services), ICullabl
             else -> CullBoundsType.BODY
         }
         when (cullBoundsType) {
-            CullBoundsType.BODY -> putCullable(
-                ConstKeys.CULL_OUT_OF_BOUNDS,
-                getGameCameraCullingLogic(services.gameCamera, { this.bounds })
-            )
+            CullBoundsType.BODY -> {
+                cullOnBody.reset()
+                putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnBody)
+            }
             CullBoundsType.OTHER -> {
-                val other =
-                    spawnProps.get(ConstKeys.OTHER, RectangleMapObject::class)!!.rectangle.toGameRectangle(GameRectangle())
-                putCullable(
-                    ConstKeys.CULL_OUT_OF_BOUNDS,
-                    getGameCameraCullingLogic(services.gameCamera, { other })
-                )
+                spawnProps.get(ConstKeys.OTHER, RectangleMapObject::class)!!.rectangle.toGameRectangle(otherBounds)
+                cullOnOther.reset()
+                putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOther)
             }
         }
 

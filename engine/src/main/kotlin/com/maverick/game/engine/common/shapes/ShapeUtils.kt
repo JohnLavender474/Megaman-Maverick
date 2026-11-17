@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
-import com.badlogic.gdx.utils.ObjectSet
 import kotlin.math.max
 import kotlin.math.min
 
@@ -29,28 +28,28 @@ object ShapeUtils {
         return intersect
     }
 
-    fun intersectRectangleAndLine(
-        rectangle: GameRectangle, line: GameLine, overlaps: ObjectSet<Vector2>
-    ): Boolean {
+    fun intersectRectangleAndLine(rectangle: GameRectangle, line: GameLine, out: Array<Vector2>): Int {
+        if (out.size < 4) throw IllegalArgumentException("Out must hold at least 4 vectors: size=${out.size}")
+
         line.calculateWorldPoints(out1, out2)
 
         outLines.clear()
         val lines = rectangle.getAsLines(outLines, line1, line2, line3, line4)
 
-        var intersects = false
+        var count = 0
 
         for (element in lines) {
             element.calculateWorldPoints(out3, out4)
 
-            val overlap = Vector2()
-            if (Intersector.intersectSegments(out1, out2, out3, out4, overlap)) {
-                overlaps.add(overlap)
-
-                intersects = true
+            val hit = out[count]
+            if (Intersector.intersectSegments(out1, out2, out3, out4, hit)) {
+                var duplicate = false
+                for (i in 0 until count) if (out[i] == hit) duplicate = true
+                if (!duplicate) count++
             }
         }
 
-        return intersects
+        return count
     }
 
     fun overlapCircleAndPolygon(circle: Circle, polygon: Polygon): Boolean {

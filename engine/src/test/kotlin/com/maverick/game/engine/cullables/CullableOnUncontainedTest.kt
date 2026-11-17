@@ -25,6 +25,16 @@ class CullableOnUncontainedTest :
                 cullableOnUncontained.shouldBeCulled(1f) shouldBe false
             }
 
+            it("clears the time out of the container at reset, as a new cullable") {
+                var containable = "out"
+                val cullable = CullableOnUncontained({ "within" }, { containable in it }, 1f)
+
+                cullable.shouldBeCulled(0.75f) shouldBe false
+                cullable.reset()
+                cullable.shouldBeCulled(0.5f) shouldBe false
+                cullable.shouldBeCulled(0.5f) shouldBe true
+            }
+
             it("should not be culled when contained") {
                 val container = "within"
                 var containable = "in"

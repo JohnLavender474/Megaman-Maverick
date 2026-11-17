@@ -56,6 +56,7 @@ import com.megaman.maverick.game.entities.projectiles.ProtoBuster
 import com.megaman.maverick.game.entities.utils.TickFrameDef
 import com.megaman.maverick.game.entities.utils.TickFrames
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
@@ -200,6 +201,7 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
         }
     }
     private val muzzleTimer = Timer(MUZZLE_DUR)
+    private val flyCullable = getGameCameraCullingLogic(this)
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -220,13 +222,14 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
         spawnProps.put(ConstKeys.CULL_OUT_OF_BOUNDS, false)
         super.onSpawn(spawnProps)
 
-        val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter(Vector2())
+        val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+            .getCenter(GameObjectPools.fetch(Vector2::class))
         body.setCenter(center)
 
         val direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.LEFT, String::class)
         facing = if (direction == ConstKeys.LEFT) Facing.LEFT else Facing.RIGHT
         state = if (facing == Facing.LEFT) HoverGunnerState.FLY else HoverGunnerState.WAIT
-        if (state == HoverGunnerState.FLY) putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
+        if (state == HoverGunnerState.FLY) putFlyCullable()
 
         range = RANGES[services.random.nextInt(0, RANGES.size - 1)] * ConstVals.PPM
         bursts = 0
@@ -234,6 +237,11 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
         poseKey = "fly"
         flyTimer.reset()
         muzzleTimer.setToEnd()
+    }
+
+    private fun putFlyCullable() {
+        flyCullable.reset()
+        putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, flyCullable)
     }
 
     override fun canDamage(damageable: IDamageableEntity) =
@@ -268,7 +276,7 @@ class HoverGunner(services: MegaServices) : AbstractEnemy(services, size = Size.
                 HoverGunnerState.WAIT -> {
                     body.physics.velocity.setZero()
                     if (player.x - center.x >= WAKE_DISTANCE * ConstVals.PPM) {
-                        putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
+                        putFlyCullable()
                         setState(HoverGunnerState.FLY)
                     }
                 }

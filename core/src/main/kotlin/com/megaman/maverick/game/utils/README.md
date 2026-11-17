@@ -49,7 +49,8 @@ entry, which waits for the next frame. It is not a license to keep a scratch.
 1. **A scratch is never stored.** Do not put it in a field, a list, a map, a delayed runnable or a lambda that runs
    later. Use it in the current frame and let it go.
 2. **Stored data is copied.** An entity copies a value it must keep into an owned field (`bounds.set(...)`), or into
-   an `OwnedArray` (`points.add().set(...)`). A value made once per spawn or per event can also be a plain `new`.
+   an `OwnedArray` (`points.add().set(...)`). A pooled entity makes these objects once and sets them on each spawn
+   or event; it does not make a new one per spawn (`docs/CODE_STYLE.md`, `SpawnAllocationGuardTest`).
 3. **Spawn props never pass ownership.** The sender may put a scratch in the props. The entity reads the props in
    `onSpawn` (the next engine update) and copies what it keeps. It never keeps a reference from the props.
 4. **A function with no `out` parameter that returns a pooled type returns a scratch**, for example

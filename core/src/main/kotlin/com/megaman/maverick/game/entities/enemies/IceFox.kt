@@ -86,6 +86,7 @@ class IceFox(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
         get() = loop.getCurrent()
 
     private lateinit var timers: ObjectMap<IceFoxState, Timer>
+    private var shots = SHOTS
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -95,6 +96,7 @@ class IceFox(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
         }
         super.init()
         addComponent(defineAnimationsComponent())
+        timers = defineTimers()
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -108,18 +110,21 @@ class IceFox(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
 
         loop.reset()
 
-        timers = orderedMapOf(
-            IceFoxState.STAND pairTo Timer(STAND_DUR),
-            IceFoxState.SHOOT pairTo Timer(if (services.gameState.hardMode) SHOOT_DUR_HARD else SHOOT_DUR).also { timer ->
-                val shots = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) SHOTS_HARD else SHOTS
-                for (i in 1..shots) {
-                    val time = i * SHOOT_DELAY
-                    val runnable = TimeMarkedRunnable(time) { shoot() }
-                    timer.addRunnable(runnable)
-                }
-            }
-        )
+        timers[IceFoxState.STAND]!!.reset()
+        timers[IceFoxState.SHOOT]!!.resetDuration(if (services.gameState.hardMode) SHOOT_DUR_HARD else SHOOT_DUR)
+        shots = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD) SHOTS_HARD else SHOTS
     }
+
+    private fun defineTimers() = orderedMapOf(
+        IceFoxState.STAND pairTo Timer(STAND_DUR),
+        IceFoxState.SHOOT pairTo Timer(SHOOT_DUR).also { timer ->
+            for (i in 1..maxOf(SHOTS, SHOTS_HARD)) {
+                val time = i * SHOOT_DELAY
+                val runnable = TimeMarkedRunnable(time) { if (i <= shots) shoot() }
+                timer.addRunnable(runnable)
+            }
+        }
+    )
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")

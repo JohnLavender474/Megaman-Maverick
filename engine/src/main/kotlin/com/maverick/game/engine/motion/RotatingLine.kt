@@ -42,6 +42,20 @@ class RotatingLine(
         line.rotation = degrees
     }
 
+    fun set(origin: Vector2, radius: Float, speed: Float, degreesOnReset: Float): RotatingLine {
+        val endX = origin.x + radius
+        val endY = origin.y
+        setOrigin(origin)
+        setStartPoint(origin)
+        setEndPoint(endX, endY)
+        scaleX = 1f
+        scaleY = 1f
+        this.speed = speed
+        this.degreesOnReset = degreesOnReset
+        reset()
+        return this
+    }
+
     fun set(origin: Vector2, endPoint: Vector2) {
         setOrigin(origin)
         setStartPoint(origin)

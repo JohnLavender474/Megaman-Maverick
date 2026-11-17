@@ -118,6 +118,19 @@ abstract class AbstractEnemy(
     override val damageNegotiator: IDamageNegotiator = SelfSizeDamageNegotiator(this)
 
     protected var movementScalar = 1f
+
+    private val defaultCullBoundsSupplier: () -> GameRectangle = { body.getBounds() }
+    private var cullBoundsSupplier = defaultCullBoundsSupplier
+    private val cullOnOutOfBounds =
+        getGameCameraCullingLogic(services.gameCamera, { cullBoundsSupplier() }, DEFAULT_CULL_TIME)
+    private val cullEventKeys = objectSetOf<Any>(
+        EventType.GAME_OVER, EventType.LEVEL_RESET, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
+    )
+    private val cullOnEvents = CullableOnEvent({ cullEventKeys.contains(it.key) }, cullEventKeys)
+    private val removeCullOnEvents: () -> Unit = {
+        services.events.removeListener(cullOnEvents)
+        GameLogger.debug(TAG, "Removed CullableOnEvent from EventsManager")
+    }
     protected var dropItemOnDeath = true
     protected var onDamageInflictedTo: ((IDamageableEntity) -> Unit)? = null
 
@@ -213,36 +226,22 @@ abstract class AbstractEnemy(
 
         val cullWhenOutOfCamBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         if (cullWhenOutOfCamBounds) {
-            val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME, Float::class)
-
-            val cullBoundsSupplier = spawnProps.getOrDefault(
-                "${ConstKeys.CULL}_${ConstKeys.BOUNDS}_${ConstKeys.SUPPLIER}",
-                { body.getBounds() }
-            ) as () -> GameRectangle
-
-            val cullOnOutOfBounds = getGameCameraCullingLogic(
-                services.gameCamera,
-                cullBoundsSupplier,
-                cullTime
-            )
-
+            cullOnOutOfBounds.timeToCull = spawnProps.getOrDefault(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME, Float::class)
+            @Suppress("UNCHECKED_CAST")
+            cullBoundsSupplier = spawnProps.get(
+                "${ConstKeys.CULL}_${ConstKeys.BOUNDS}_${ConstKeys.SUPPLIER}"
+            ) as (() -> GameRectangle)? ?: defaultCullBoundsSupplier
+            cullOnOutOfBounds.reset()
             putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfBounds)
         } else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
         val cullEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
         if (cullEvents) {
-            val eventsToCullOn = objectSetOf<Any>(
-                EventType.GAME_OVER, EventType.LEVEL_RESET, EventType.BEGIN_ROOM_TRANS, EventType.GATE_INIT_OPENING
-            )
-            val cullOnEvents = CullableOnEvent({ eventsToCullOn.contains(it.key) }, eventsToCullOn)
-
+            cullOnEvents.reset()
             services.events.addListener(cullOnEvents)
             GameLogger.debug(TAG, "Added CullableOnEvent from EventsManager")
 
-            runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) {
-                services.events.removeListener(cullOnEvents)
-                GameLogger.debug(TAG, "Removed CullableOnEvent from EventsManager")
-            }
+            runnablesOnDestroy.put(ConstKeys.CULL_EVENTS, removeCullOnEvents)
 
             putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
         } else removeCullable(ConstKeys.CULL_EVENTS)

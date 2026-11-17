@@ -126,7 +126,7 @@ class MetaWheelF(services: MegaServices) : AbstractEnemy(services, size = Size.L
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter(Vector2())
+        val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter(GameObjectPools.fetch(Vector2::class))
         body.setCenter(center)
         body.physics.velocity.setZero()
         val direction = spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.LEFT, String::class)

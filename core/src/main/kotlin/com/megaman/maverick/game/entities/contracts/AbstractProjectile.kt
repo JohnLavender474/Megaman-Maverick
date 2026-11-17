@@ -21,6 +21,10 @@ abstract class AbstractProjectile(services: MegaServices, override var size: Siz
     protected var onDamageInflictedTo: ((IDamageableEntity) -> Unit)? = null
     protected var movementScalar = 1f
 
+    private val cullOnOutOfGameCam = getCullOnOutOfGameCam()
+    private val cullOnEvents = getCullOnEventsCullable()
+    private val removeCullOnEvents: () -> Unit = { services.events.removeListener(cullOnEvents) }
+
     override fun init(vararg params: Any) {
         super.init()
         addComponent(defineBodyComponent())
@@ -38,8 +42,10 @@ abstract class AbstractProjectile(services: MegaServices, override var size: Siz
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         when {
             cullOutOfBounds -> {
-                val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, PROJECTILE_DEFAULT_CULL_TIME, Float::class)
-                putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getCullOnOutOfGameCam(cullTime))
+                cullOnOutOfGameCam.timeToCull =
+                    spawnProps.getOrDefault(ConstKeys.CULL_TIME, PROJECTILE_DEFAULT_CULL_TIME, Float::class)
+                cullOnOutOfGameCam.reset()
+                putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfGameCam)
             }
             else -> removeCullOnOutOfGameCam()
         }
@@ -47,16 +53,16 @@ abstract class AbstractProjectile(services: MegaServices, override var size: Siz
         val doCullOnEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
         when {
             doCullOnEvents -> {
-                val cullOnEvents = getCullOnEventsCullable()
+                cullOnEvents.reset()
                 putCullable(ConstKeys.CULL_EVENTS, cullOnEvents)
                 putProperty(ConstKeys.CULL_EVENTS, cullOnEvents)
                 services.events.addListener(cullOnEvents)
-                runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) { services.events.removeListener(cullOnEvents) }
+                runnablesOnDestroy.put(ConstKeys.CULL_EVENTS, removeCullOnEvents)
             }
             else -> {
                 removeCullOnEventCullable()
-                val cullOnEvents = getProperty(ConstKeys.CULL_EVENTS) as IEventListener?
-                if (cullOnEvents != null) services.events.removeListener(cullOnEvents)
+                val listener = getProperty(ConstKeys.CULL_EVENTS) as IEventListener?
+                if (listener != null) services.events.removeListener(listener)
                 runnablesOnDestroy.remove(ConstKeys.CULL_EVENTS)
             }
         }

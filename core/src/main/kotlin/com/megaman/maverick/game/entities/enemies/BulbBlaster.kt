@@ -56,6 +56,7 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
         const val TAG = "BulbBlaster"
         private const val STATE_DUR = 3f
         private const val RADIUS = 5
+        private val WHITESPACE = Regex("\\s+")
         private const val RADIANCE = 2f
         private var lightRegion: TextureRegion? = null
         private var darkRegion: TextureRegion? = null
@@ -81,6 +82,8 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
 
     private lateinit var spawnRoom: String
     private val timer = Timer(STATE_DUR)
+    private val spawnPosition = Vector2()
+    private var trajectoryDefinition: MotionDefinition? = null
     private var light = false
 
     override fun init(vararg params: Any) {
@@ -102,31 +105,30 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
 
         services.events.addListener(this)
 
-        val spawn = if (spawnProps.containsKey(ConstKeys.POSITION))
-            spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
-        else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
-        body.setCenter(spawn)
+        if (spawnProps.containsKey(ConstKeys.POSITION))
+            spawnPosition.set(spawnProps.get(ConstKeys.POSITION, Vector2::class)!!)
+        else spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter(spawnPosition)
+        body.setCenter(spawnPosition)
 
         light = spawnProps.getOrDefault(ConstKeys.LIGHT, false, Boolean::class)
-        lightSourceKeys.addAll(
-            spawnProps.get(ConstKeys.KEYS, String::class)!!
-            .replace(Regex("\\s+"), "")
+        spawnProps.get(ConstKeys.KEYS, String::class)!!
+            .replace(WHITESPACE, "")
             .split(",")
-            .map { it.toInt() }
-            .toObjectSet()
-        )
+            .forEach { lightSourceKeys.add(it.toInt()) }
         timer.reset()
 
         if (light) LightSourceUtils.sendLightSourceEvent(this)
 
         if (spawnProps.containsKey(ConstKeys.TRAJECTORY)) {
-            val trajectory = Trajectory(spawnProps.get(ConstKeys.TRAJECTORY) as String, ConstVals.PPM)
-            val motionDefinition = MotionDefinition(
-                motion = trajectory,
-                function = { value, _ -> if (!frozen) body.physics.velocity.set(value) },
-                doUpdate = { !frozen },
-                onReset = { body.setCenter(spawn) })
-            putMotionDefinition(ConstKeys.TRAJECTORY, motionDefinition)
+            val text = spawnProps.get(ConstKeys.TRAJECTORY) as String
+            val definition = trajectoryDefinition?.also { (it.motion as Trajectory).set(text) }
+                ?: MotionDefinition(
+                    motion = Trajectory(text, ConstVals.PPM),
+                    function = { value, _ -> if (!frozen) body.physics.velocity.set(value) },
+                    doUpdate = { !frozen },
+                    onReset = { body.setCenter(spawnPosition) }
+                ).also { trajectoryDefinition = it }
+            putMotionDefinition(ConstKeys.TRAJECTORY, definition)
         }
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!

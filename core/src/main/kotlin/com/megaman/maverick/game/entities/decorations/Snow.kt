@@ -25,6 +25,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 
 class Snow(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
@@ -40,7 +41,8 @@ class Snow(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
         private var region: TextureRegion? = null
     }
 
-    private lateinit var sine: SineWave
+    private val sinePosition = Vector2()
+    private val sine = SineWave(sinePosition, 0f, 0f, 0f)
 
     private val fadeTimer = Timer(FADE_DUR)
 
@@ -86,7 +88,7 @@ class Snow(services: MegaServices) : MegaGameEntity(services), ISpritesEntity {
         val speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
         val amplitude = services.random.nextFloat(minAmplitude, maxAmplitude)
         val frequency = services.random.nextFloat(minFrequency, maxFrequency)
-        sine = SineWave(spawn.cpy().swapped(), speed, amplitude, frequency)
+        sine.set(GameObjectPools.fetch(Vector2::class).set(spawn).swapped(), speed, amplitude, frequency)
 
         driftEachFrame = spawnProps.getOrDefault(ConstKeys.DRIFT, 0f, Float::class)
         accumulatedDrift = 0f

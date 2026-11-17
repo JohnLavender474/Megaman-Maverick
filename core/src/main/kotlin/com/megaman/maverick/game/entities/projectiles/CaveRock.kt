@@ -58,8 +58,7 @@ class CaveRock(services: MegaServices) : AbstractProjectile(services) {
         passThroughBlocks = spawnProps.getOrDefault(ConstKeys.PASS_THROUGH, false, Boolean::class)
 
         if (spawnProps.containsKey(ConstKeys.IMPULSE)) {
-            val impulse = spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!.cpy()
-            body.physics.velocity.set(impulse)
+            body.physics.velocity.set(spawnProps.get(ConstKeys.IMPULSE, Vector2::class)!!)
         }
 
         body.physics.gravity.y =

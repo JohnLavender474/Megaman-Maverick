@@ -41,6 +41,7 @@ class Smoke(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, 
     }
 
     private val bounds = GameRectangle()
+    private val smokeSprites = Array<GameSprite>()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -71,29 +72,35 @@ class Smoke(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        sprites.clear()
-        animators.clear()
         clearSpritePreProcess()
     }
 
     private fun defineDrawables(bounds: GameRectangle) {
         val count = ceil(bounds.getHeight() / (SPRITE_HEIGHT * ConstVals.PPM)).toInt()
-        for (i in 0 until count) {
-            val key = "$i"
-
-            val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 20))
+        while (smokeSprites.size < count) addSmokeSprite(smokeSprites.size)
+        for (i in 0 until smokeSprites.size) {
+            val sprite = smokeSprites[i]
+            sprite.hidden = i >= count
+            if (sprite.hidden) continue
             sprite.setBounds(
                 bounds.getX(),
                 bounds.getY() + i * SPRITE_HEIGHT * ConstVals.PPM,
                 SPRITE_WIDTH * ConstVals.PPM,
                 SPRITE_HEIGHT * ConstVals.PPM
             )
-            sprites.put(key, sprite)
-
-            val animation = Animation(regions, 0.1f, true)
-            val animator = Animator(animation)
-            putAnimator(key, sprite, animator)
         }
+    }
+
+    private fun addSmokeSprite(index: Int) {
+        val key = "$index"
+
+        val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 20))
+        smokeSprites.add(sprite)
+        sprites.put(key, sprite)
+
+        val animation = Animation(regions, 0.1f, true)
+        val animator = Animator(animation)
+        putAnimator(key, sprite, animator)
     }
 
     private fun defineCullablesComponent() = CullablesComponent(

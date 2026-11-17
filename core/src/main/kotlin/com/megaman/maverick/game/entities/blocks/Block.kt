@@ -11,6 +11,7 @@ import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.GamePair
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.cullables.CullableOnEvent
 import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
@@ -30,7 +31,6 @@ import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.state.tags
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.entities.utils.getStandardBodyDoUpdatePredicate
-import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.world.body.*
 
@@ -41,6 +41,7 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         const val TAG = "Block"
         const val STANDARD_FRICTION_X = 2.5f
         const val STANDARD_FRICTION_Y = 0f
+        private val WHITESPACE = Regex("\\s+")
     }
 
     lateinit var blockFixture: Fixture
@@ -52,6 +53,18 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
 
     private val fixturesToRemove = ObjectSet<Fixture>()
     private var hasContactFilter = false
+
+    private val cullOnOutOfBounds = getGameCameraCullingLogic(this)
+    private var cullRoomName: String? = null
+    private val cullRoomEvents = objectSetOf<Any>(EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS)
+    private val cullOnRoomChange = CullableOnEvent({ event ->
+        cullRoomEvents.contains(event.key) &&
+            event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)?.name != cullRoomName
+    }, cullRoomEvents)
+    private val removeCullOnRoomChange: () -> Unit = {
+        services.events.removeListener(cullOnRoomChange)
+        runnablesOnDestroy.remove(ConstKeys.CULL_EVENTS)
+    }
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -76,28 +89,21 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         when {
-            cullOutOfBounds -> putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
+            cullOutOfBounds -> {
+                cullOnOutOfBounds.reset()
+                putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfBounds)
+            }
             else -> removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
         }
 
         val cullRoom = spawnProps.containsKey(ConstKeys.CULL_ROOM)
         when {
             cullRoom -> {
-                val room = spawnProps.get(ConstKeys.CULL_ROOM, String::class)!!
-                val cullable = getStandardEventCullingLogic(
-                    this,
-                    objectSetOf(EventType.END_ROOM_TRANS, EventType.SET_TO_ROOM_NO_TRANS),
-                    predicate@{ event ->
-                        val nextRoom = event.getProperty(ConstKeys.ROOM, RectangleMapObject::class)?.name
-                        return@predicate nextRoom != room
-                    }
-                )
-                services.events.addListener(cullable)
-                runnablesOnDestroy.put(ConstKeys.CULL_EVENTS) {
-                    services.events.removeListener(cullable)
-                    runnablesOnDestroy.remove(ConstKeys.CULL_EVENTS)
-                }
-                putCullable(ConstKeys.CULL_ROOM, cullable)
+                cullRoomName = spawnProps.get(ConstKeys.CULL_ROOM, String::class)!!
+                cullOnRoomChange.reset()
+                services.events.addListener(cullOnRoomChange)
+                runnablesOnDestroy.put(ConstKeys.CULL_EVENTS, removeCullOnRoomChange)
+                putCullable(ConstKeys.CULL_ROOM, cullOnRoomChange)
             }
             else -> removeCullable(ConstKeys.CULL_ROOM)
         }
@@ -129,7 +135,7 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         if (spawnProps.containsKey(ConstKeys.BODY_LABELS)) {
             val labels = spawnProps.get(ConstKeys.BODY_LABELS)
             if (labels is String) {
-                val labelStrings = labels.replace(Regex("\\s+"), "").split(",")
+                val labelStrings = labels.replace(WHITESPACE, "").split(",")
                 labelStrings.forEach {
                     val bodyLabel = BodyLabel.valueOf(it.uppercase())
                     body.addBodyLabel(bodyLabel)
@@ -144,7 +150,7 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         if (spawnProps.containsKey(ConstKeys.FIXTURE_LABELS)) {
             val labels = spawnProps.get(ConstKeys.FIXTURE_LABELS)
             if (labels is String) {
-                val labelStrings = labels.replace(Regex("\\s+"), "").split(",")
+                val labelStrings = labels.replace(WHITESPACE, "").split(",")
                 labelStrings.forEach {
                     val fixtureLabel = FixtureLabel.valueOf(it.uppercase())
                     blockFixture.addFixtureLabel(fixtureLabel)
@@ -190,7 +196,7 @@ open class Block(services: MegaServices) : MegaGameEntity(services), IBodyEntity
             var filters = spawnProps.get(ConstKeys.BLOCK_FILTERS)
             when (filters) {
                 is String -> {
-                    filters = filters.replace(Regex("\\s+"), "").split(",")
+                    filters = filters.replace(WHITESPACE, "").split(",")
                     filters.forEach { tag ->
                         body.addBlockFilter { entity, _ ->
                             entity.hasTag(tag, ignoreCase = true)

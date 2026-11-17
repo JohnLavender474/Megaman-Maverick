@@ -7,9 +7,11 @@ import com.maverick.game.engine.common.extensions.toGdxArray
 data class TrajectoryDefinition(val xVelocity: Float, val yVelocity: Float, val time: Float)
 
 class Trajectory(
-    private val trajectoryDefinitions: Array<TrajectoryDefinition>,
+    trajectoryDefinitions: Array<TrajectoryDefinition>,
     private val ppm: Int = 1
 ) : IMotion {
+
+    private val trajectoryDefinitions = Array(trajectoryDefinitions)
 
     companion object {
 
@@ -27,11 +29,25 @@ class Trajectory(
         if (!trajectoryDefinitions.isEmpty) trajectoryDefinitions[0] else null
     private var duration = 0f
     private var index = 0
+    private var definitionText: String? = null
 
     constructor(
         trajectoryDefinitions: String,
         ppm: Int = 1
-    ) : this(parseTrajectoryDefinitions(trajectoryDefinitions), ppm)
+    ) : this(parseTrajectoryDefinitions(trajectoryDefinitions), ppm) {
+        definitionText = trajectoryDefinitions
+    }
+
+    fun set(trajectoryDefinitions: String): Trajectory {
+        if (trajectoryDefinitions != definitionText) {
+            this.trajectoryDefinitions.clear()
+            this.trajectoryDefinitions.addAll(parseTrajectoryDefinitions(trajectoryDefinitions))
+            definitionText = trajectoryDefinitions
+        }
+        currentDefinition = if (!this.trajectoryDefinitions.isEmpty) this.trajectoryDefinitions[0] else null
+        reset()
+        return this
+    }
 
     override fun getMotionValue(out: Vector2) =
         currentDefinition?.let { out.set(it.xVelocity, it.yVelocity).scl(ppm.toFloat()) }

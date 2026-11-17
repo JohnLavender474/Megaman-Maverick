@@ -88,6 +88,8 @@ open class Spike(services: MegaServices) : MegaGameEntity(services), IChildEntit
     // be destroyed when a boss is defeated.
     private var destroyOnBossDefeated = true
 
+    private val cullOnOutOfBounds = getGameCameraCullingLogic(this)
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (atlas == null) atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
@@ -143,7 +145,10 @@ open class Spike(services: MegaServices) : MegaGameEntity(services), IChildEntit
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         when {
-            cullOutOfBounds -> putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
+            cullOutOfBounds -> {
+                cullOnOutOfBounds.reset()
+                putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfBounds)
+            }
             else -> removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
         }
 

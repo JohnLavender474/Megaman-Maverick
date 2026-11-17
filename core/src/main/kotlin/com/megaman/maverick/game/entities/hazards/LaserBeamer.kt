@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
@@ -96,7 +97,7 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
     private val switchTimer = Timer()
 
     private lateinit var spawnRoom: String
-    private lateinit var rotatingLine: RotatingLine
+    private val rotatingLine = RotatingLine(Vector2(), 0f, 0f).also { it.line.drawingColor = Color.ORANGE }
 
     private var clockwise = true
     private var beaming = false
@@ -133,8 +134,7 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
         speed = spawnProps.getOrDefault(
             ConstKeys.SPEED, if (hardMode) DEFAULT_HARD_SPEED else DEFAULT_SPEED, Float::class
         )
-        rotatingLine = RotatingLine(spawn, maxRadius, speed * ConstVals.PPM, INIT_DEGREES + direction.rotation)
-        rotatingLine.line.drawingColor = Color.ORANGE
+        rotatingLine.set(spawn, maxRadius, speed * ConstVals.PPM, INIT_DEGREES + direction.rotation)
 
         spawnRoom = spawnProps.get(SpawnType.SPAWN_ROOM, String::class)!!
 

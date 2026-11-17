@@ -1,10 +1,8 @@
 package com.megaman.maverick.game.world.contacts.rules
 
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.utils.ObjectSet
+import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.enums.ProcessState
-import com.maverick.game.engine.common.objects.GamePair
-import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameLine
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.ShapeUtils
@@ -15,12 +13,13 @@ import com.maverick.game.engine.world.contacts.IContactRule
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.entities.blocks.Block
 import com.megaman.maverick.game.entities.contracts.ILaserEntity
+import com.megaman.maverick.game.entities.contracts.LaserContacts
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.world.body.*
 
 class LaserBlockRule : IContactRule {
 
-    private val tempVec2Set = ObjectSet<Vector2>()
+    private val hitPoints = Array<Vector2>().apply { repeat(4) { add(Vector2()) } }
 
     override fun onBegin(a: IFixture, b: IFixture, delta: Float) = begin(a, b)
 
@@ -39,13 +38,10 @@ class LaserBlockRule : IContactRule {
             val blockRectangle = blockFixture.getShape() as GameRectangle
             val laserLine = laserFixture.getShape() as GameLine
 
-            val intersections =
-                laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<GamePair<Vector2, IFixture>>
+            val contacts = laserFixture.getProperty(ConstKeys.COLLECTION) as LaserContacts
 
-            if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, tempVec2Set))
-                tempVec2Set.forEach { intersections.add(it pairTo blockFixture) }
-
-            tempVec2Set.clear()
+            val count = ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, hitPoints)
+            for (i in 0 until count) contacts.add(hitPoints[i], blockFixture)
         }
     }
 
@@ -62,13 +58,10 @@ class LaserBlockRule : IContactRule {
             val blockRectangle = blockFixture.getShape().getBoundingRectangle()
             val laserLine = laserFixture.getShape() as GameLine
 
-            val intersections =
-                laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<GamePair<Vector2, IFixture>>
+            val contacts = laserFixture.getProperty(ConstKeys.COLLECTION) as LaserContacts
 
-            if (ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, tempVec2Set))
-                tempVec2Set.forEach { intersections.add(it pairTo blockFixture) }
-
-            tempVec2Set.clear()
+            val count = ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, hitPoints)
+            for (i in 0 until count) contacts.add(hitPoints[i], blockFixture)
         }
     }
 }
@@ -91,7 +84,7 @@ object LaserBodyRule : IContactRule {
 
 class LaserShieldRule : IContactRule {
 
-    private val tempVec2Set = ObjectSet<Vector2>()
+    private val hitPoints = Array<Vector2>().apply { repeat(4) { add(Vector2()) } }
 
     override fun onBegin(a: IFixture, b: IFixture, delta: Float) = hit(a, b)
 
@@ -105,13 +98,10 @@ class LaserShieldRule : IContactRule {
             val shieldRectangle = shieldFixture.getShape().getBoundingRectangle()
             val laserLine = laserFixture.getShape() as GameLine
 
-            val intersections =
-                laserFixture.getProperty(ConstKeys.COLLECTION) as MutableCollection<GamePair<Vector2, IFixture>>
+            val contacts = laserFixture.getProperty(ConstKeys.COLLECTION) as LaserContacts
 
-            if (ShapeUtils.intersectRectangleAndLine(shieldRectangle, laserLine, tempVec2Set))
-                tempVec2Set.forEach { intersections.add(it pairTo shieldFixture) }
-
-            tempVec2Set.clear()
+            val count = ShapeUtils.intersectRectangleAndLine(shieldRectangle, laserLine, hitPoints)
+            for (i in 0 until count) contacts.add(hitPoints[i], shieldFixture)
         }
     }
 }

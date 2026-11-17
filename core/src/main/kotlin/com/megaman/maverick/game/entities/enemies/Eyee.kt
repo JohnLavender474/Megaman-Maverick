@@ -84,8 +84,8 @@ class Eyee(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL),
 
     private val waitTimer = Timer(WAIT_DUR)
 
-    private lateinit var start: Vector2
-    private lateinit var end: Vector2
+    private val start = Vector2()
+    private val end = Vector2()
 
     private var speed = 0f
     private var progress = 0f
@@ -110,10 +110,10 @@ class Eyee(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL),
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
 
-        start = spawn.cpy()
+        start.set(spawn)
         val endX = spawnProps.getOrDefault(ConstKeys.X, 0f, Float::class)
         val endY = spawnProps.getOrDefault(ConstKeys.Y, 0f, Float::class)
-        end = start.cpy().add(endX * ConstVals.PPM, endY * ConstVals.PPM)
+        end.set(start).add(endX * ConstVals.PPM, endY * ConstVals.PPM)
 
         loop.reset()
         waitTimer.reset()

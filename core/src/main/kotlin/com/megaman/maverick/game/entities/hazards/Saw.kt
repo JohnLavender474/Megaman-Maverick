@@ -84,6 +84,21 @@ class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpri
     private val out = Vector2()
     private lateinit var spawnRoom: String
 
+    private var type = PENDULUM_TYPE
+
+    private val anchor = Vector2()
+    private lateinit var pendulum: Pendulum
+    private lateinit var pendulumDefinition: MotionDefinition
+
+    private val rotation = RotatingLine(Vector2(), LENGTH * ConstVals.PPM, ROTATION_SPEED * ConstVals.PPM)
+    private lateinit var rotationDefinition: MotionDefinition
+
+    private val trajectorySpawn = Vector2()
+    private var trajectory: Trajectory? = null
+    private var trajectoryDefinition: MotionDefinition? = null
+
+    private val debugLine = GameLine()
+
     override fun init(vararg params: Any) {
         super.init()
         GameLogger.debug(TAG, "init()")
@@ -97,6 +112,29 @@ class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpri
         addComponent(defineSpritesCompoent())
         addComponent(defineAnimationsComponent())
         addComponent(defineCullablesComponent())
+        addComponent(defineDrawableShapesComponent())
+
+        pendulum = Pendulum(LENGTH * ConstVals.PPM, PENDULUM_GRAVITY * ConstVals.PPM, anchor, 1 / 60f, services.random)
+        pendulumDefinition = MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) })
+        rotationDefinition = MotionDefinition(motion = rotation, function = { value, _ -> body.setCenter(value) })
+
+        for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
+            when (type) {
+                PENDULUM_TYPE -> {
+                    sprite.hidden = services.levelState.roomTransition
+                    val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
+                    val center = pendulum.getPointFromAnchor(distance, GameObjectPools.fetch(Vector2::class))
+                    sprite.setCenter(center)
+                }
+                ROTATION_TYPE -> {
+                    sprite.hidden = services.levelState.roomTransition
+                    val scale = i.toFloat() / RING_COUNT.toFloat()
+                    val center = rotation.getScaledPosition(scale, GameObjectPools.fetch(Vector2::class))
+                    sprite.setCenter(center)
+                }
+                else -> sprite.hidden = true
+            }
+        }
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -107,8 +145,8 @@ class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpri
 
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
 
-        val type = spawnProps.get(ConstKeys.TYPE, String::class)!!
-        when (type.lowercase()) {
+        type = spawnProps.get(ConstKeys.TYPE, String::class)!!.lowercase()
+        when (type) {
             PENDULUM_TYPE -> setToPendulum(bounds, spawnProps)
             ROTATION_TYPE -> setToRotation(bounds, spawnProps)
             TRAJECTORY_TYPE -> {
@@ -125,97 +163,70 @@ class Saw(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpri
     private fun setToPendulum(bounds: GameRectangle, spawnProps: Properties) {
         val length = spawnProps.getOrDefault(ConstKeys.LENGTH, LENGTH, Float::class)
         val gravity = spawnProps.getOrDefault(ConstKeys.GRAVITY, PENDULUM_GRAVITY, Float::class)
-        val pendulum = Pendulum(length * ConstVals.PPM, gravity * ConstVals.PPM, bounds.getCenter(Vector2()), 1 / 60f, services.random)
+        bounds.getCenter(anchor)
+        pendulum.length = length * ConstVals.PPM
+        pendulum.gravity = gravity * ConstVals.PPM
+        pendulum.reset()
 
-        putMotionDefinition(
-            ConstKeys.PENDULUM, MotionDefinition(motion = pendulum, function = { value, _ -> body.setCenter(value) })
-        )
-
-        for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
-            sprite.hidden = services.levelState.roomTransition
-            val distance = (i.toFloat() / RING_COUNT.toFloat()) * pendulum.length
-            val center = pendulum.getPointFromAnchor(distance, GameObjectPools.fetch(Vector2::class))
-            sprite.setCenter(center)
-        }
-
-        val debugShapes = Array<() -> IDrawableShape?>()
-
-        debugShapes.add {
-            val line = GameLine(pendulum.anchor, body.getCenter())
-            line.drawingColor = Color.DARK_GRAY
-            line.drawingShapeType = ShapeRenderer.ShapeType.Filled
-            line
-        }
-
-        val circle1 = GameCircle()
-        circle1.setRadius(ConstVals.PPM / 8f)
-        circle1.drawingShapeType = ShapeRenderer.ShapeType.Filled
-        circle1.drawingColor = Color.DARK_GRAY
-        debugShapes.add { circle1.setCenter(pendulum.anchor) }
-
-        val circle2 = GameCircle()
-        circle2.setRadius(ConstVals.PPM / 4f)
-        circle2.drawingShapeType = ShapeRenderer.ShapeType.Filled
-        circle2.drawingColor = Color.DARK_GRAY
-        debugShapes.add { circle2.setCenter(body.getCenter()) }
-
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
+        putMotionDefinition(ConstKeys.PENDULUM, pendulumDefinition)
     }
 
     private fun setToRotation(bounds: GameRectangle, spawnProps: Properties) {
         val length = spawnProps.getOrDefault(ConstKeys.LENGTH, LENGTH, Float::class)
         val startRotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
         val speed = spawnProps.getOrDefault(ConstKeys.SPEED, ROTATION_SPEED, Float::class)
-        val rotation =
-            RotatingLine(bounds.getCenter(Vector2()), length * ConstVals.PPM, speed * ConstVals.PPM, startRotation)
-        putMotionDefinition(
-            ConstKeys.ROTATION, MotionDefinition(motion = rotation, function = { value, _ -> body.setCenter(value) })
-        )
+        rotation.set(bounds.getCenter(), length * ConstVals.PPM, speed * ConstVals.PPM, startRotation)
 
-        for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite ->
-            sprite.hidden = services.levelState.roomTransition
-            val scale = i.toFloat() / RING_COUNT.toFloat()
-            val center = rotation.getScaledPosition(scale, GameObjectPools.fetch(Vector2::class))
-            sprite.setCenter(center)
-        }
+        putMotionDefinition(ConstKeys.ROTATION, rotationDefinition)
+    }
 
+    private fun setToTrajectory(bounds: GameRectangle, definitions: String) {
+        bounds.getCenter(trajectorySpawn)
+        body.setCenter(trajectorySpawn)
+
+        val trajectory = this.trajectory?.set(definitions)
+            ?: Trajectory(definitions, ConstVals.PPM).also { this.trajectory = it }
+        val definition = trajectoryDefinition ?: MotionDefinition(
+            motion = trajectory,
+            function = { value, _ -> body.setCenter(value) },
+            onReset = { body.setCenter(trajectorySpawn) }
+        ).also { trajectoryDefinition = it }
+
+        putMotionDefinition(ConstKeys.TRAJECTORY, definition)
+    }
+
+    private fun defineDrawableShapesComponent(): DrawableShapesComponent {
         val debugShapes = Array<() -> IDrawableShape?>()
 
+        debugLine.drawingColor = Color.DARK_GRAY
+        debugLine.drawingShapeType = ShapeRenderer.ShapeType.Filled
         debugShapes.add {
-            val line = GameLine(rotation.getOrigin(out), body.getCenter())
-            line.drawingColor = Color.DARK_GRAY
-            line.drawingShapeType = ShapeRenderer.ShapeType.Filled
-            line
+            when (type) {
+                PENDULUM_TYPE -> debugLine.set(pendulum.anchor, body.getCenter())
+                ROTATION_TYPE -> debugLine.set(rotation.getOrigin(out), body.getCenter())
+                else -> null
+            }
         }
 
         val circle1 = GameCircle()
         circle1.setRadius(ConstVals.PPM / 8f)
-        circle1.drawingColor = Color.DARK_GRAY
         circle1.drawingShapeType = ShapeRenderer.ShapeType.Filled
-        debugShapes.add { circle1.setCenter(rotation.getOrigin(out)) }
+        circle1.drawingColor = Color.DARK_GRAY
+        debugShapes.add {
+            when (type) {
+                PENDULUM_TYPE -> circle1.setCenter(pendulum.anchor)
+                ROTATION_TYPE -> circle1.setCenter(rotation.getOrigin(out))
+                else -> null
+            }
+        }
 
         val circle2 = GameCircle()
         circle2.setRadius(ConstVals.PPM / 4f)
-        circle2.drawingColor = Color.DARK_GRAY
         circle2.drawingShapeType = ShapeRenderer.ShapeType.Filled
-        debugShapes.add { circle2.setCenter(body.getCenter()) }
+        circle2.drawingColor = Color.DARK_GRAY
+        debugShapes.add { if (type == TRAJECTORY_TYPE) null else circle2.setCenter(body.getCenter()) }
 
-        addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
-    }
-
-    private fun setToTrajectory(bounds: GameRectangle, trajectoryDefinition: String) {
-        val spawn = bounds.getCenter()
-        body.setCenter(spawn)
-
-        val trajectory = Trajectory(trajectoryDefinition, ConstVals.PPM)
-        putMotionDefinition(
-            ConstKeys.TRAJECTORY, MotionDefinition(
-                motion = trajectory,
-                function = { value, _ -> body.setCenter(value) },
-                onReset = { body.setCenter(spawn) })
-        )
-
-        for (i in 0..RING_COUNT) putSpritePreProcess("ring_$i") { _, sprite -> sprite.hidden = true }
+        return DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true)
     }
 
     private fun defineCullablesComponent() = CullablesComponent(

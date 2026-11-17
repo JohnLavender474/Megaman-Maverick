@@ -76,7 +76,8 @@ class TellySaucer(services: MegaServices) : AbstractEnemy(services, size = Size.
             body.direction = value
         }
 
-    private lateinit var sine: SineWave
+    private val sinePos = Vector2()
+    private val sine = SineWave(sinePos, 0f, 0f, FREQUENCY)
 
     private var ray: SaucerRay? = null
 
@@ -126,10 +127,10 @@ class TellySaucer(services: MegaServices) : AbstractEnemy(services, size = Size.
         val left = spawnProps.getOrDefault(ConstKeys.LEFT, targetPlayer.body.getX() <= body.getX(), Boolean::class)
         val flip = spawnProps.getOrDefault(ConstKeys.FLIP, false, Boolean::class)
 
-        val sinePos = body.getCenter(Vector2())
+        body.getCenter(sinePos)
         val speed = ConstVals.PPM * if (left) -SPEED else SPEED
         val amplitude = ConstVals.PPM * if (flip) -AMPLITUDE else AMPLITUDE
-        sine = SineWave(sinePos, speed, amplitude, FREQUENCY)
+        sine.set(sinePos, speed, amplitude, FREQUENCY)
 
         rayDelay.setToEnd()
         rayTimer.setToEnd()

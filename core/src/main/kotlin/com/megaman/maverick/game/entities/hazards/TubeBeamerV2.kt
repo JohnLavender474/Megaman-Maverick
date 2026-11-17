@@ -15,7 +15,6 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.extensions.*
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.interfaces.UpdateFunction
-import com.maverick.game.engine.common.objects.GamePair
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -52,6 +51,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.ReactorMan
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.ILaserEntity
+import com.megaman.maverick.game.entities.contracts.LaserContacts
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.explosions.TubeBeamExplosion
 import com.megaman.maverick.game.entities.state.mapObjectId
@@ -100,11 +100,8 @@ class TubeBeamerV2(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     private val actualLine = GameLine()
     private val actualClampEnd = Vector2()
 
-    private val contacts = PriorityQueue<GamePair<Vector2, IFixture?>> { p1, p2 ->
-        val (origin, _) = rawLine.getWorldPoints()
-        val d1 = p1.first.dst2(origin)
-        val d2 = p2.first.dst2(origin)
-        d1.compareTo(d2)
+    private val contacts = LaserContacts {
+        rawLine.getWorldPoints().first
     }
 
     private val ignoreIds = ObjectSet<Int>()
@@ -113,7 +110,7 @@ class TubeBeamerV2(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     // manual obstacle handling in the Laser class and acts as a reliable fallback when physics
     // contact detection intermittently fails to clamp the beam.
     private val obstacles = OwnedArray { GameRectangle() }
-    private val tempVec2Set = ObjectSet<Vector2>()
+    private val hitPoints = Array<Vector2>().apply { repeat(4) { add(Vector2()) } }
 
     private var spawnRoom: String? = null
 
@@ -315,12 +312,11 @@ class TubeBeamerV2(services: MegaServices) : MegaGameEntity(services), IBodyEnti
             actualLine.setFirstLocalPoint(lineStart)
 
             obstacles.forEach { obstacle ->
-                if (ShapeUtils.intersectRectangleAndLine(obstacle, rawLine, tempVec2Set))
-                    tempVec2Set.forEach { contacts.add(it pairTo null) }
-                tempVec2Set.clear()
+                val count = ShapeUtils.intersectRectangleAndLine(obstacle, rawLine, hitPoints)
+                for (i in 0 until count) contacts.add(hitPoints[i], null)
             }
 
-            actualClampEnd.set(if (!contacts.isEmpty()) contacts.peek().first else lineEnd)
+            actualClampEnd.set(if (!contacts.isEmpty) contacts.peek().first else lineEnd)
             updateDamager()
         }
 

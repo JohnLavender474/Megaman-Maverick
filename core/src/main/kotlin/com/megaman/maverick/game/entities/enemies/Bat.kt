@@ -123,6 +123,7 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
     private var flyToAttackSpeed = DEFAULT_FLY_TO_ATTACK_SPEED
     private var flyToRetreatSpeed = DEFAULT_FLY_TO_RETREAT_SPEED
 
+    private val triggerBounds = GameRectangle()
     private var trigger: GameRectangle? = null
     private var triggered = false
 
@@ -165,7 +166,8 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, "", String::class)
 
         val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.1f, Float::class)
-        gdxArrayOf(animations.get("Fly"), animations.get("SnowFly")).forEach { it.setFrameDuration(frameDuration) }
+        animations.get("Fly").setFrameDuration(frameDuration)
+        animations.get("SnowFly").setFrameDuration(frameDuration)
 
         flyToAttackSpeed = spawnProps.getOrDefault(
             "${ConstKeys.ATTACK}_${ConstKeys.SPEED}",
@@ -183,7 +185,7 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
 
-        trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)?.rectangle?.toGameRectangle(GameRectangle())
+        trigger = spawnProps.get(ConstKeys.TRIGGER, RectangleMapObject::class)?.rectangle?.toGameRectangle(triggerBounds)
         triggered = trigger == null
 
         spawnProps.forEach { key, value ->

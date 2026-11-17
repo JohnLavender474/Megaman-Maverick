@@ -96,6 +96,16 @@ class CarriCarry(services: MegaServices) : AbstractEnemy(services, size = Size.M
     )
     private val shakeTimer = Timer(SHAKE_DUR)
     private var centerX = 0f
+    private val sine = SineWave(Vector2(0f, 1f), SINE_SPEED, SINE_AMPLITUDE * ConstVals.PPM, SINE_FREQUENCY)
+    private val sineDefinition = MotionDefinition(
+        motion = sine,
+        function = { value, _ ->
+            if (frozen) return@MotionDefinition
+            body.setCenterX(centerX + value.y)
+            GameLogger.debug(TAG, "set to center x = ${body.getCenter().x}")
+        },
+        doUpdate = { !frozen && shakeTimer.isFinished() }
+    )
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -120,18 +130,8 @@ class CarriCarry(services: MegaServices) : AbstractEnemy(services, size = Size.M
         shakeTimer.setToEnd()
         centerX = body.getCenter().x
 
-        val sine = SineWave(Vector2(0f, 1f), SINE_SPEED, SINE_AMPLITUDE * ConstVals.PPM, SINE_FREQUENCY)
-        putMotionDefinition(
-            ConstKeys.MOVE, MotionDefinition(
-                motion = sine,
-                function = { value, _ ->
-                    if (frozen) return@MotionDefinition
-                    body.setCenterX(centerX + value.y)
-                    GameLogger.debug(TAG, "set to center x = ${body.getCenter().x}")
-                },
-                doUpdate = { !frozen && shakeTimer.isFinished() }
-            )
-        )
+        sine.reset()
+        putMotionDefinition(ConstKeys.MOVE, sineDefinition)
 
         frozen = false
     }

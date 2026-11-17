@@ -62,6 +62,8 @@ abstract class AbstractItem(services: MegaServices) : MegaGameEntity(services), 
     protected var gravity = GRAVITY
     protected var velClamp = VEL_CLAMP
 
+    private val cullOnOutOfBounds = getGameCameraCullingLogic(this)
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
@@ -104,7 +106,10 @@ abstract class AbstractItem(services: MegaServices) : MegaGameEntity(services), 
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
         when {
-            cullOutOfBounds -> putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(this))
+            cullOutOfBounds -> {
+                cullOnOutOfBounds.reset()
+                putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfBounds)
+            }
             else -> removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
         }
 

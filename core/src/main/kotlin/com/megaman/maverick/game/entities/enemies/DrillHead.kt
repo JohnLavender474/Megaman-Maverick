@@ -126,6 +126,9 @@ class DrillHead(services: MegaServices) : AbstractEnemy(services), IFreezableEnt
     private val hoverSpots = OwnedArray { Vector2() }
     private val tempVec2Set = OrderedSet<Vector2>()
 
+    private val cullBounds = GameRectangle()
+    private val cullBoundsSupplier: () -> GameRectangle = { cullBounds }
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
@@ -134,51 +137,54 @@ class DrillHead(services: MegaServices) : AbstractEnemy(services), IFreezableEnt
         }
         super.init()
         addComponent(defineAnimationsComponent())
+        stateTimers = defineStateTimers()
     }
+
+    private fun defineStateTimers() = orderedMapOf(
+        DrillHeadState.IDLE pairTo Timer(IDLE_DUR),
+        DrillHeadState.DRILL pairTo Timer(DRILL_DUR).also { drillTimer ->
+            val debrisRunnable: () -> Unit = {
+                if (Gdx.graphics.framesPerSecond >= FPS_GUARD) spawnDrillDebris()
+            }
+            val drillDebrisDelay = DRILL_DUR / DRILL_DEBRIS_OBJS
+            for (i in 1..DRILL_DEBRIS_OBJS) drillTimer.addRunnable(
+                TimeMarkedRunnable(i * drillDebrisDelay, debrisRunnable)
+            )
+
+            val explosionRunnable: () -> Unit = {
+                val explosion = MegaEntityFactory.fetch(AsteroidExplosion::class)!!
+                explosion.spawn(
+                    props(
+                        ConstKeys.OWNER pairTo this,
+                        ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER)
+                    )
+                )
+            }
+            val drillExplosionDelay = DRILL_DUR / DRILL_EXPLOSIONS
+            for (i in 0 until DRILL_EXPLOSIONS) drillTimer.addRunnable(
+                TimeMarkedRunnable(i * drillExplosionDelay, explosionRunnable)
+            )
+        }
+    )
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
         if (spawnProps.containsKey("${ConstKeys.CULL}_${ConstKeys.BOUNDS}")) {
-            val cullBounds = spawnProps.get(
+            spawnProps.get(
                 "${ConstKeys.CULL}_${ConstKeys.BOUNDS}",
                 RectangleMapObject::class
-            )!!.rectangle.toGameRectangle(GameRectangle())
+            )!!.rectangle.toGameRectangle(cullBounds)
 
             spawnProps.put(
                 "${ConstKeys.CULL}_${ConstKeys.BOUNDS}_${ConstKeys.SUPPLIER}",
-                { cullBounds }
+                cullBoundsSupplier
             )
         }
 
         super.onSpawn(spawnProps)
 
-        stateTimers = orderedMapOf(
-            DrillHeadState.IDLE pairTo Timer(if (services.gameState.hardMode) HARD_IDLE_DUR else IDLE_DUR),
-            DrillHeadState.DRILL pairTo Timer(DRILL_DUR).also { drillTimer ->
-                val debrisRunnable: () -> Unit = {
-                    if (Gdx.graphics.framesPerSecond >= FPS_GUARD) spawnDrillDebris()
-                }
-                val drillDebrisDelay = DRILL_DUR / DRILL_DEBRIS_OBJS
-                for (i in 1..DRILL_DEBRIS_OBJS) drillTimer.addRunnable(
-                    TimeMarkedRunnable(i * drillDebrisDelay, debrisRunnable)
-                )
-
-                val explosionRunnable: () -> Unit = {
-                    val explosion = MegaEntityFactory.fetch(AsteroidExplosion::class)!!
-                    explosion.spawn(
-                        props(
-                            ConstKeys.OWNER pairTo this,
-                            ConstKeys.POSITION pairTo body.getPositionPoint(Position.TOP_CENTER)
-                        )
-                    )
-                }
-                val drillExplosionDelay = DRILL_DUR / DRILL_EXPLOSIONS
-                for (i in 0 until DRILL_EXPLOSIONS) drillTimer.addRunnable(
-                    TimeMarkedRunnable(i * drillExplosionDelay, explosionRunnable)
-                )
-            }
-        )
+        stateTimers[DrillHeadState.IDLE]!!.resetDuration(if (services.gameState.hardMode) HARD_IDLE_DUR else IDLE_DUR)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)

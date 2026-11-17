@@ -54,6 +54,7 @@ import com.megaman.maverick.game.entities.projectiles.PreciousGem.PreciousGemCol
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
 import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.utils.OwnedArray
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.toGameRectangle
@@ -118,10 +119,18 @@ class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size
     private val currentState: PreciousTronState
         get() = stateMachine.getCurrentElement()
 
-    private lateinit var timers: ObjectMap<PreciousTronState, Timer>
+    private val timers: ObjectMap<PreciousTronState, Timer> = orderedMapOf(
+        PreciousTronState.APPEAR pairTo Timer(APPEAR_DUR),
+        PreciousTronState.DISAPPEAR pairTo Timer(DISAPPEAR_DUR),
+        PreciousTronState.SHOOT pairTo Timer(SHOOT_DUR).addRunnable(TimeMarkedRunnable(SHOOT_TIME) { throwGem() }),
+        PreciousTronState.STAND pairTo Timer(STAND_DUR)
+    )
+
+    private val cullBounds = GameRectangle()
+    private val cullBoundsSupplier: () -> GameRectangle = { cullBounds }
 
     private val currentPosition = Vector2()
-    private val positionSuppliers = Array<() -> Vector2>()
+    private val positions = OwnedArray { Vector2() }
     private val positionQueue = PriorityQueue(Comparator<Vector2> compare@{ o1, o2 ->
         val dist1 = o1.dst2(targetPlayer.body.getCenter())
         val dist2 = o2.dst2(targetPlayer.body.getCenter())
@@ -145,14 +154,14 @@ class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
         if (spawnProps.containsKey("${ConstKeys.CULL}_${ConstKeys.BOUNDS}")) {
-            val cullBounds = spawnProps.get(
+            spawnProps.get(
                 "${ConstKeys.CULL}_${ConstKeys.BOUNDS}",
                 RectangleMapObject::class
-            )!!.rectangle.toGameRectangle(GameRectangle())
+            )!!.rectangle.toGameRectangle(cullBounds)
 
             spawnProps.put(
                 "${ConstKeys.CULL}_${ConstKeys.BOUNDS}_${ConstKeys.SUPPLIER}",
-                { cullBounds }
+                cullBoundsSupplier
             )
         }
 
@@ -167,13 +176,10 @@ class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size
 
         val hardMode = services.gameState.getDifficultyMode() == DifficultyMode.HARD
 
-        timers = orderedMapOf(
-            PreciousTronState.APPEAR pairTo Timer(APPEAR_DUR),
-            PreciousTronState.DISAPPEAR pairTo Timer(DISAPPEAR_DUR),
-            PreciousTronState.SHOOT pairTo Timer(if (hardMode) SHOOT_DUR_HARD else SHOOT_DUR)
-                .addRunnable(TimeMarkedRunnable(SHOOT_TIME) { throwGem() }),
-            PreciousTronState.STAND pairTo Timer(if (hardMode) STAND_DUR_HARD else STAND_DUR)
-        )
+        timers[PreciousTronState.APPEAR].reset()
+        timers[PreciousTronState.DISAPPEAR].reset()
+        timers[PreciousTronState.SHOOT].resetDuration(if (hardMode) SHOOT_DUR_HARD else SHOOT_DUR)
+        timers[PreciousTronState.STAND].resetDuration(if (hardMode) STAND_DUR_HARD else STAND_DUR)
 
         stateMachine.reset()
 
@@ -181,15 +187,14 @@ class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size
 
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.POSITION)) {
-                val position = (value as RectangleMapObject)
+                (value as RectangleMapObject)
                     .rectangle
                     .toGameRectangle()
-                    .getPositionPoint(Position.BOTTOM_CENTER, Vector2())
-                positionSuppliers.add { position }
+                    .getPositionPoint(Position.BOTTOM_CENTER, positions.add())
             }
         }
 
-        GameLogger.debug(TAG, "onSpawn(): currentPosition=$currentPosition, positions=$positionSuppliers")
+        GameLogger.debug(TAG, "onSpawn(): currentPosition=$currentPosition, positions=${positions.size}")
 
         frozen = false
     }
@@ -199,7 +204,7 @@ class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size
         super.onDestroy()
 
         positionQueue.clear()
-        positionSuppliers.clear()
+        positions.clear()
 
         currentPosition.setZero()
 
@@ -356,7 +361,7 @@ class PreciousTron(services: MegaServices) : AbstractEnemy(services, size = Size
     }
 
     private fun setNextPosition() {
-        positionSuppliers.forEach { if (it != currentPosition) positionQueue.add(it.invoke()) }
+        positions.forEach { positionQueue.add(it) }
 
         GameLogger.debug(TAG, "setNextPosition(): positionQueue=$positionQueue")
 

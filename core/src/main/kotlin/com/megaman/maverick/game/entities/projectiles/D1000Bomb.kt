@@ -33,6 +33,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.decorations.D1000BombMarker
 import com.megaman.maverick.game.entities.hazards.D1000Pillar
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodyFixtureDef
 import com.megaman.maverick.game.world.body.FixtureType
@@ -118,7 +119,12 @@ class D1000Bomb(services: MegaServices) : AbstractProjectile(services, size = Si
             marker = given
         } else {
             val spawned = MegaEntityFactory.fetch(D1000BombMarker::class)!!
-            spawned.spawn(props(ConstKeys.POSITION pairTo Vector2(target, targetY), ConstKeys.ROTATION pairTo rotation))
+            spawned.spawn(
+                props(
+                    ConstKeys.POSITION pairTo GameObjectPools.fetch(Vector2::class).set(target, targetY),
+                    ConstKeys.ROTATION pairTo rotation
+                )
+            )
             marker = spawned
         }
     }
@@ -148,7 +154,7 @@ class D1000Bomb(services: MegaServices) : AbstractProjectile(services, size = Si
         val pillar = MegaEntityFactory.fetch(D1000Pillar::class)!!
         pillar.spawn(
             props(
-                ConstKeys.POSITION pairTo Vector2(body.getCenter().x, arena.getY()),
+                ConstKeys.POSITION pairTo GameObjectPools.fetch(Vector2::class).set(body.getCenter().x, arena.getY()),
                 ConstKeys.MAX_Y pairTo arena.getMaxY()
             )
         )
@@ -164,7 +170,7 @@ class D1000Bomb(services: MegaServices) : AbstractProjectile(services, size = Si
         val pillar = MegaEntityFactory.fetch(D1000Pillar::class)!!
         pillar.spawn(
             props(
-                ConstKeys.POSITION pairTo Vector2(targetX, targetY),
+                ConstKeys.POSITION pairTo GameObjectPools.fetch(Vector2::class).set(targetX, targetY),
                 ConstKeys.VERTICAL pairTo false,
                 ConstKeys.TARGET pairTo if (left) arena.getMaxX() else arena.getX()
             )

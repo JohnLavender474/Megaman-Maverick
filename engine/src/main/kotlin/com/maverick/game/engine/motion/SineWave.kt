@@ -20,4 +20,13 @@ class SineWave(var position: Vector2, var speed: Float, var amplitude: Float, va
         elapsedTime = 0f
         position.set(origin)
     }
+
+    fun set(origin: Vector2, speed: Float, amplitude: Float, frequency: Float): SineWave {
+        this.origin.set(origin)
+        this.speed = speed
+        this.amplitude = amplitude
+        this.frequency = frequency
+        reset()
+        return this
+    }
 }

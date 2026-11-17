@@ -126,7 +126,12 @@ them.
   its vectors, shapes, sprites, timers, motions and lambdas in field initializers or in `init()` (or the first time
   a spawn needs one more, then keep it). `onSpawn`, `onDestroy` and event handlers only `set(...)`, `reset()`,
   `clear()`, hide or show; they do not call a constructor, and `onDestroy` does not remove what the next spawn
-  makes again. A value that a spawn keeps (an anchor, a home point) is an owned field, never a pool scratch.
+  makes again. A value that a spawn keeps (an anchor, a home point) is an owned field, never a pool scratch. A timer
+  is set again with `resetDuration(...)`; a cullable with `reset()` before `putCullable(...)`; a motion with its
+  `set(...)` (`SineWave`, `Trajectory`, `RotatingLine`) or its fields and `reset()` (`Pendulum`). A list whose size
+  depends on the spawn grows only, and hides what this spawn does not use. A value that only goes into a child's spawn
+  props is a pool scratch (the child copies it). `SpawnAllocationGuardTest` scans these bodies for constructor calls
+  against a baseline that only shrinks.
 
   ```kotlin
   private val anchor = Vector2()

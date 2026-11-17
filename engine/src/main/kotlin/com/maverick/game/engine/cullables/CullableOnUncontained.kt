@@ -27,6 +27,7 @@ class CullableOnUncontained<T>(
 
     override fun reset() {
         super.reset()
+        timeUncontained = 0f
         shouldBeCulled = false
     }
 

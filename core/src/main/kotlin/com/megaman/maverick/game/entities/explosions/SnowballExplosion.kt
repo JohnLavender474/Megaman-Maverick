@@ -43,6 +43,7 @@ class SnowballExplosion(services: MegaServices) : MegaGameEntity(services), IBod
     companion object {
         const val TAG = "SnowballExplosion"
         const val DURATION = 0.015f
+        private val NO_DAMAGE_MASK = ObjectSet<KClass<out IDamageableEntity>>()
         private var region: TextureRegion? = null
     }
 
@@ -66,10 +67,7 @@ class SnowballExplosion(services: MegaServices) : MegaGameEntity(services), IBod
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
 
-        damageMask = spawnProps.getOrDefault(
-            ConstKeys.MASK,
-            ObjectSet<KClass<out IDamageableEntity>>()
-        ) as ObjectSet<KClass<out IDamageableEntity>>
+        damageMask = spawnProps.getOrDefault(ConstKeys.MASK, NO_DAMAGE_MASK) as ObjectSet<KClass<out IDamageableEntity>>
 
         timer.reset()
     }

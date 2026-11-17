@@ -33,8 +33,8 @@ class ExplosionField(services: MegaServices): MegaGameEntity(services), IOwnable
     override var owner: IGameEntity? = null
 
     private val bounds = GameRectangle()
-    private lateinit var timer: Timer
-    private lateinit var frequency: Timer
+    private val timer = Timer(DEFAULT_DUR)
+    private val frequency = Timer(DEFAULT_FREQUENCY)
 
     private var onFinished: (() -> Unit)? = null
     private var explodeOnStart = true
@@ -53,10 +53,10 @@ class ExplosionField(services: MegaServices): MegaGameEntity(services), IOwnable
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class) ?: this
 
         val dur = spawnProps.getOrDefault(ConstKeys.DURATION, DEFAULT_DUR, Float::class)
-        timer = Timer(dur)
+        timer.resetDuration(dur)
 
         val freq = spawnProps.getOrDefault(ConstKeys.FREQUENCY, DEFAULT_FREQUENCY, Float::class)
-        frequency = Timer(freq)
+        frequency.resetDuration(freq)
 
         explodeOnStart = spawnProps.getOrDefault(ConstKeys.START, DEFAULT_EXPLODE_ON_START, Boolean::class)
         onFinished = spawnProps.get(ConstKeys.END) as (() -> Unit)?

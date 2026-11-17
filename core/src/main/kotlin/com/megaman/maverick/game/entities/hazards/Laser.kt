@@ -82,6 +82,8 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
     companion object {
         const val TAG = "Laser"
 
+        private val WHITESPACE = Regex("\\s+")
+
         private const val DEFAULT_MAX_LENGTH = 20f
 
         private const val LIGHT_SOURCE_OFFSET = 0.5f
@@ -136,11 +138,8 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
     private lateinit var laserFixture: Fixture
     private lateinit var damagerFixture: Fixture
 
-    private val contacts = PriorityQueue<GamePair<Vector2, IFixture?>> { p1, p2 ->
-        val origin = getFirstLocalPoint()
-        val d1 = p1.first.dst2(origin)
-        val d2 = p2.first.dst2(origin)
-        d1.compareTo(d2)
+    private val contacts = LaserContacts {
+        getFirstLocalPoint()
     }
 
     private val obstacles = OwnedArray { GameRectangle() }
@@ -165,14 +164,16 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
     // Instead of using the built-in updater logic in SpritesComponent,
     // use a custom update setup in order to optimize the rendering of
     // many small "laser" sprites.
-    private val allSprites = ObjectMap<Any, GameSprite>()
-    private val spriteUpdaters = ObjectMap<Any, Updatable>()
+    private val pieceKeys = Array<String>()
+    private val pieceSprites = Array<GameSprite>()
+    private val pieceUpdaters = Array<Updatable>()
+    private var pieceCount = 0
     private val spriteOnDelay = Timer(LASER_SPRITE_ON_DELAY)
     private val spriteIndexLoop = Loop(0, 1)
     private val spriteIndexLoopTimer = Timer(LASER_SPRITE_LOOP_DUR)
     private var spritesHidden = false
 
-    private val tempVec2Set = ObjectSet<Vector2>()
+    private val hitPoints = Array<Vector2>().apply { repeat(4) { add(Vector2()) } }
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -223,7 +224,7 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         lightSourceKeyString = spawnProps.getOrDefault("${ConstKeys.LIGHT}_${ConstKeys.KEYS}", "", String::class)
         lightSourceKeys.addAll(
             lightSourceKeyString
-                .replace(Regex("\\s+"), "")
+                .replace(WHITESPACE, "")
                 .split(",")
                 .filter { it.isNotBlank() }
                 .map { it.toInt() }
@@ -250,9 +251,8 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         owner = null
         parent = null
 
-        allSprites.clear()
-        spriteUpdaters.clear()
-        sprites = OrderedMap()
+        pieceCount = 0
+        sprites.clear()
 
         contacts.clear()
 
@@ -266,8 +266,7 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         hitShieldFixture = null
 
         line.reset()
-        laserFixture.setShape(GameLine())
-        damagerFixture.setShape(GameLine())
+        (damagerFixture.rawShape as GameLine).reset()
 
         burst?.destroy()
         burst = null
@@ -375,7 +374,7 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
             body.forEachFixture { fixture -> fixture.setActive(on) }
 
             body.set(line.getBoundingRectangle())
-            laserFixture.setShape(line)
+            if (laserFixture.rawShape !== line) laserFixture.setShape(line)
 
             contacts.clear()
         }
@@ -388,13 +387,12 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
                 damager.setFirstLocalPoint(p1)
 
                 obstacles.forEach { obstacle ->
-                    if (ShapeUtils.intersectRectangleAndLine(obstacle, line, tempVec2Set))
-                        tempVec2Set.forEach { contacts.add(it pairTo null) }
-                    tempVec2Set.clear()
+                    val count = ShapeUtils.intersectRectangleAndLine(obstacle, line, hitPoints)
+                    for (i in 0 until count) contacts.add(hitPoints[i], null)
                 }
 
                 val p2 = when {
-                    contacts.isEmpty() || contacts.peek().first.dst(p1) > line.getLength() -> {
+                    contacts.isEmpty || contacts.peek().first.dst(p1) > line.getLength() -> {
                         val (_, endPoint) = line.getWorldPoints()
                         endPoint
                     }
@@ -472,12 +470,12 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
                 }
             } else if (!spritesHidden) {
                 spritesHidden = true
-                allSprites.values().forEach { it.hidden = true }
+                pieceSprites.forEach { it.hidden = true }
             }
         } else {
             if (!spritesHidden) {
                 spritesHidden = true
-                allSprites.values().forEach { it.hidden = true }
+                pieceSprites.forEach { it.hidden = true }
             }
             spriteOnDelay.reset()
             return@update
@@ -624,14 +622,14 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
 
         // GameLogger.debug(TAG, "buildLaserSprites(): maxRadius=$maxLength, count=$count")
 
-        for (i in 0 until count) {
-            val key = "${ConstKeys.PIECE}_$i"
+        for (i in pieceSprites.size until count) {
+            pieceKeys.add("${ConstKeys.PIECE}_$i")
 
             val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
             sprite.setSize(LASER_SPRITE_SIZE * ConstVals.PPM)
-            allSprites.put(key, sprite)
+            pieceSprites.add(sprite)
 
-            spriteUpdaters.put(key) update@{ _ ->
+            pieceUpdaters.add(Updatable update@{ _ ->
                 val laser = damagerFixture.getShape() as GameLine
 
                 if (i * LASER_SPRITE_SIZE * ConstVals.PPM > laser.getLength()) {
@@ -658,8 +656,10 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
                     .add(offset)
 
                 sprite.setCenter(center)
-            }
+            })
         }
+
+        pieceCount = count
     }
 
     private fun renderLaserSprites(delta: Float) {
@@ -670,10 +670,9 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
 
         var i = spriteIndexLoop.getCurrent()
 
-        while (i < allSprites.size && i * LASER_SPRITE_SIZE * ConstVals.PPM <= laserLength) {
-            val key = "${ConstKeys.PIECE}_$i"
-            sprites.put(key, allSprites[key])
-            spriteUpdaters[key].update(delta)
+        while (i < pieceCount && i * LASER_SPRITE_SIZE * ConstVals.PPM <= laserLength) {
+            sprites.put(pieceKeys[i], pieceSprites[i])
+            pieceUpdaters[i].update(delta)
             i += LASER_SPRITE_UPDATERS_STEP
         }
     }

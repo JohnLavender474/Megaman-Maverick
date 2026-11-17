@@ -48,7 +48,7 @@ class TubeBeam(services: MegaServices) : AbstractProjectile(services), IAnimated
     override lateinit var direction: Direction
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
 
-    private lateinit var cullTimer: Timer
+    private val cullTimer = Timer(DEFAULT_CULL_TIME)
     private val trajectory = Vector2()
 
     override fun init(vararg params: Any) {
@@ -83,7 +83,7 @@ class TubeBeam(services: MegaServices) : AbstractProjectile(services), IAnimated
         body.setCenter(spawn)
 
         val cullTime = spawnProps.getOrDefault(ConstKeys.CULL_TIME, DEFAULT_CULL_TIME, Float::class)
-        cullTimer = Timer(cullTime)
+        cullTimer.resetDuration(cullTime)
     }
 
     override fun onEvent(event: Event) {

@@ -40,6 +40,8 @@ open class LightSourceEntity(services: MegaServices) : MegaGameEntity(services),
 
     protected val bounds = GameRectangle()
 
+    private val cullOnOutOfBounds = getGameCameraCullingLogic(services.gameCamera, { bounds })
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
@@ -63,11 +65,13 @@ open class LightSourceEntity(services: MegaServices) : MegaGameEntity(services),
         }
 
         val cullOutOfBounds = spawnProps.getOrDefault(ConstKeys.CULL_OUT_OF_BOUNDS, true, Boolean::class)
-        if (cullOutOfBounds) putCullable(
-            ConstKeys.CULL_OUT_OF_BOUNDS, getGameCameraCullingLogic(services.gameCamera, { bounds })
-        ) else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
+        if (cullOutOfBounds) {
+            cullOnOutOfBounds.reset()
+            putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOnOutOfBounds)
+        } else removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
 
         val cullEvents = spawnProps.getOrDefault(ConstKeys.CULL_EVENTS, true, Boolean::class)
+        // TODO: made after super.onSpawn ran its add runnable: gets no events, leaks a listener (item 045, 045c)
         if (cullEvents) putCullable(
             ConstKeys.CULL_EVENTS, getStandardEventCullingLogic(this, objectSetOf(EventType.BEGIN_ROOM_TRANS))
         ) else removeCullable(ConstKeys.CULL_EVENTS)

@@ -56,6 +56,7 @@ import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.isSensing
 import kotlin.math.abs
@@ -143,8 +144,11 @@ class Junkroid(services: MegaServices) : AbstractEnemy(services, size = Size.MED
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-        val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter(Vector2())
-        body.setBottomCenterToPoint(Vector2(center.x, center.y - MAP_POINT_ABOVE_FEET * ConstVals.PPM))
+        val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
+            .getCenter(GameObjectPools.fetch(Vector2::class))
+        body.setBottomCenterToPoint(
+            GameObjectPools.fetch(Vector2::class).set(center.x, center.y - MAP_POINT_ABOVE_FEET * ConstVals.PPM)
+        )
         active = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class) || services.gameState.hardMode
         facing = if (targetPlayer.body.getCenter().x < center.x) Facing.LEFT else Facing.RIGHT
         engaged = false

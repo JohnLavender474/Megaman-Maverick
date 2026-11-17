@@ -35,6 +35,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.entities.utils.onMaxSpawnedByTag
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import kotlin.math.max
@@ -63,7 +64,8 @@ class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISprites
         private var region: TextureRegion? = null
     }
 
-    private lateinit var sine: SineWave
+    private val sinePosition = Vector2()
+    private val sine = SineWave(sinePosition, 0f, 0f, 0f)
 
     private val fadeTimer = Timer(FADE_DUR)
     private var fading = false
@@ -107,7 +109,7 @@ class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISprites
         val flipX = services.random.nextBoolean()
         val amplitude = services.random.nextFloat(MIN_AMPLITUDE, MAX_AMPLITUDE) * ConstVals.PPM * if (flipX) -1 else 1
         val frequency = services.random.nextFloat(MIN_FREQUENCY, MAX_FREQUENCY) * ConstVals.PPM
-        sine = SineWave(center.cpy().swapped(), speed, amplitude, frequency)
+        sine.set(GameObjectPools.fetch(Vector2::class).set(center).swapped(), speed, amplitude, frequency)
 
         onMaxSpawnedByTag(TAG, MAX_SPAWNED_ALLOWED) { set ->
             val iter = set.iterator()
