@@ -5,7 +5,7 @@
 - Objectives: `O4`
 - Depends on: none
 - Related: `015`, `023`, `118`
-- Branches: `mega-refactor-077a-intro-boss` (merged, 2026-11-15, squash `c4b402a80`), `mega-refactor-077b-desert-man` (merged, 2026-11-16, squash `740ef9101`), `mega-refactor-077c-elec-devil` (active, 2026-11-18)
+- Branches: `mega-refactor-077a-intro-boss` (merged, 2026-11-15, squash `c4b402a80`), `mega-refactor-077b-desert-man` (merged, 2026-11-16, squash `740ef9101`), `mega-refactor-077c-elec-devil` (active, 2026-11-18), `mega-refactor-077d-reactor-man` (planned)
 
 ## Goal
 
@@ -85,6 +85,10 @@ Not approved. The branch `SCOPE.md` decides the final scope.
     recoil, and others) and describe them and their integration with a proper state machine.
 
 ## Notes for active branches
+
+- `077d` (planned, owner 2026-11-18): the Reactor Man fight upgrade includes new laser and emitter art. When it is
+  done, update the Reactor Man refight in Wily Stage 1 (`078a` keeps the old `Reactor_Man_3` emitter tiles there as
+  a TODO).
 
 - (2026-11-15) `077a` merged. The `060c` note is done: the boss table has `ProtoBuster` 4 and `PlayerSabreSlash`
   half 4 / full 6 (equal to the half and full charge, the rule of the boss tables on `master`).
