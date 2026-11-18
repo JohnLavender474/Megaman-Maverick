@@ -322,6 +322,10 @@ skills `diffity-open`, `diffity-resolve` and `diffity-review` give the commands 
 1. Commit all branch work before you open it. When you give the owner the play checks, open the
    review with `diffity-open` from the branch worktree. The base is the merge base with the merge
    target (`master`, or the item's parent branch). Give the URL with the list of checks.
+   When the owner asks for the Diffity link, give the link of the review of the current worktree:
+   the full URL with the base, `http://localhost:<port>/diff?ref=<merge-base SHA>` (owner decision,
+   2026-11-18). The bare `/diff` URL shows only uncommitted changes. Find the instance with
+   `diffity list --json` (match `repoRoot`), or start it with `diffity-open`.
 2. When the owner says that the comments are ready, handle them with `diffity-resolve`. The fixes
    stay uncommitted until the round ends: a commit hides the open threads.
 3. A fix that changes code that a manual check runs means that the owner runs that check again.

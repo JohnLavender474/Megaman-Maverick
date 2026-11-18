@@ -2800,3 +2800,9 @@ newest entry at the bottom.
   objects (and `077c` its `serpent_paths` references) before it merges. `077c` and `079a` repack `Projectiles1` and
   `Enemies1` again at their merge. No change to the current state of `O4` or `O9`.
 
+
+## 2026-11-18 — Diffity link rule (docs only)
+
+- Summary: owner decision: when the owner asks for the Diffity link, give the review link of the current worktree, the
+  full URL with the base (`/diff?ref=<merge-base SHA>`). The bare `/diff` URL shows only uncommitted changes, and a
+  branch with all work committed shows "No changes found" there. Rule added to "Diff review" in `CLAUDE.md`.
