@@ -97,6 +97,22 @@ The owner calls it "Gravity Man's stage".
    and design each new room around one behavior of the enemies (for example the eggs from `MockingByteEgg` or the
    nest from `MockingByteNest`).
 
+### Wily Stage 1 (`WILY_STAGE_1`, `WilyStage1_v2.tmx`): art make-over (from `076`)
+
+The stage is a mix of Capcom rips and free assets (`MM10Endless`, `Reactor_Man_1`, `Reactor_Man_3`, `Tileset1`;
+`MegamanWanted_WilyStage1` is linked but paints no cell). New original tiles and backgrounds for its 5 areas:
+
+| Area | Rooms | Theme |
+|---|---|---|
+| Cliffside | `room1` | Red-night canyon, Wily scaffolding bolted into the cliff |
+| Pit | `room2` | A quarry shaft cut into the cliff, crossed on propeller platforms |
+| Fortress corridors | `room3` to `room6`, `reactor_man_room` | Violet-lit Wily steel; Reactor Man coolant in the refight room |
+| Sand | `room7` | The back of the fortress, half buried in dunes |
+| Dark cave | `room8` to `room10`, `desert_man_room`, `boss_room` | Basalt cavern; live power cables that end at the `ElecDevil` generator |
+
+Art only: the block geometry stays. Drafts: `temp/078-wily1-art/` in the main checkout (`STYLE.md` is the shared
+style guide).
+
 ## Decisions
 
 - 2026-11-17 (owner): `078` is the stage redesign epic for all stages. It took in `073`, `074`, `080`, `099`, `166`
@@ -106,6 +122,31 @@ The owner calls it "Gravity Man's stage".
 - 2026-11-17 (owner): `076b` (Desert Man backgrounds) finishes under its own name and ID, and then `076` is `done`.
   All later tileset and background work is a branch of `078`. The merged branch folders of `076` stay in `076` as
   history. Done: `076b` merged on 2026-11-17 (squash `6bb2606da`), and `076` is `done`.
+
+- 2026-11-18 (owner): Wily Stage 1 art make-over. Concept "the power line": one power cable motif runs through all
+  5 areas and ends at the generator of the `ElecDevil` boss room; each area also echoes its refight boss. Palette:
+  keep the current identity, redrawn (red-cloud night sky outside, violet-lit gunmetal inside, amber sand, a black
+  cave with electric blue-white cable light). Round 1: Claude Fable 5.2 agents draw draft tiles and backgrounds for
+  each area in parallel, from one shared style guide.
+- 2026-11-18 (owner): the cliffside and pit backgrounds become one scene: the fortress stands on the pit hills, with
+  mist/haze at their foot.
+- 2026-11-18 (owner accepted the recommendations of the round-1 review): one irregular-slab rock for the cliffside
+  and the pit; the cliffside crate and the cave cable set for the whole stage; brighter cable cores (art only, no
+  light code); the skull only on the cliffside keep; repaint by gid mapping plus position rules plus a decor tile
+  layer; a brighter corridor floor and green coolant goop pipes; steel-over-sand in the sand area with its own
+  background object; a smaller, dimmer generator core; `parallax_y` 0. Full list: `temp/078-wily1-art/STYLE.md`.
+- 2026-11-18 (owner): the `ElecDevil` boss-room generator is an object (an entity with its own sprite), not tiles or
+  background. Its core light and its intermittent coil-tip sparks send light events to `DarknessV2`. A "no lights, no
+  sparks" variant serves the boss's 2nd phase, which needs complete darkness. Overlap: `077c` (2 phases; its notes
+  say "no Blackout attack").
+- 2026-11-18 (owner accepted the recommendation): `078` adds the generator entity with an on/off state; `077c` adds
+  the phase-2 darkness and turns the generator off. Whichever branch merges second wires the call. `077c`
+  `docs/NOTES.md` and `docs/TODO.md` hold the matching note and task.
+- 2026-11-18 (owner accepted the recommendations of the round-2 review): cliff/pit background `parallax_y` 0.25;
+  tile animations for the cable sparks and sand pours; area candidates join the shared set; a static dunes object
+  with its own name and a hide trigger at `room8`; the skull crest at the corridor gates; a thick-junction corner
+  tile. New tile layer `decor` after `tiles1` for all new decor (`tiles2` already paints the corridors and draws
+  under `tiles1`). Full list: `temp/078-wily1-art/STYLE.md`.
 
 Decisions carried over from `076` (they apply to the tileset and background work):
 
