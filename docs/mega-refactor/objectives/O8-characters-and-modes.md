@@ -131,6 +131,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 | `146` | done | [A marker `IPlayer` interface, so a player has a type](../items/146-player-marker-interface/ITEM.md) |
 | `148` | done | [The last player reads take `IPlayer`](../items/148-last-player-reads/ITEM.md) |
 | `153` | idea | [A current-weapon icon on every player's HUD, and a HUD that fades when a player is behind it](../items/153-hud-weapon-icon-and-fade/ITEM.md) |
+| `172` | idea | [Mega Man picks up and wears a `Met` helmet](../items/172-wear-met-helmet/ITEM.md) |
 
 ## Gaps with no item
 

@@ -177,6 +177,8 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `158` | idea | [A shared lead-aim helper for bosses](../items/158-boss-lead-aim-helper/ITEM.md) (main) |
 | `163` | idea | [One shot pose in `PlayerBuster`](../items/163-buster-pose-enum/ITEM.md) (main) |
 | `169` | idea | [`LevelState` by lifetime and owner](../items/169-level-state-lifetimes/ITEM.md) (main) |
+| `171` | idea | [A shared ledge-walk helper for enemies](../items/171-ledge-walk-helper/ITEM.md) (main) |
+| `173` | idea | [Copied foot-sensor pairs to `GroundProbe`](../items/173-foot-sensors-to-ground-probe/ITEM.md) (main) |
 
 ## Gaps with no item
 

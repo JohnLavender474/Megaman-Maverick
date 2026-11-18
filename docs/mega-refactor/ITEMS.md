@@ -178,6 +178,9 @@ statuses and column meanings are in `CLAUDE.md`.
 | 168 | [`allowRotation` off in the TexturePacker projects](items/168-texture-packer-no-rotation/ITEM.md) | tooling | `O6` | idea | none | | |
 | 169 | [`LevelState` by lifetime and owner](items/169-level-state-lifetimes/ITEM.md) | refactor | `O1`, `O2` | idea | none | | |
 | 170 | [`UP` and `DOWN` gates in co-op](items/170-coop-vertical-gates/ITEM.md) | feature | `O2`, `O9` | idea | `047` | | |
+| 171 | [A shared ledge-walk helper for enemies](items/171-ledge-walk-helper/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
+| 172 | [Mega Man picks up and wears a `Met` helmet](items/172-wear-met-helmet/ITEM.md) | feature | `O4`, `O8` | idea | none | | |
+| 173 | [Copied foot-sensor pairs to `GroundProbe`](items/173-foot-sensors-to-ground-probe/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 
 ## Branches
 
@@ -299,4 +302,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-077c-elec-devil`](items/077-robot-master-attacks/branches/mega-refactor-077c-elec-devil/process-log.md) | 077 | A richer `ElecDevil` fight (Wily stage 1): 2 phases, the Spark Serpent and other new attacks, art polish | active | 2026-11-18 | |
 | [`mega-refactor-077d-reactor-man`](items/077-robot-master-attacks/branches/mega-refactor-077d-reactor-man/process-log.md) | 077 | A richer Reactor Man fight; new laser and emitter art; then the Wily Stage 1 refight room | planned | | |
 | [`mega-refactor-078a-wily-stage-1-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078a-wily-stage-1-art/process-log.md) | 078 | Wily Stage 1 art make-over: one tileset, the repainted map, new backgrounds, and the generator entity with light events | merged | 2026-11-18 | 2026-11-18 |
-| [`mega-refactor-079a-smarter-met`](items/079-smarter-enemies/branches/mega-refactor-079a-smarter-met/process-log.md) | 079 | A smarter `Met`: pit avoidance with a shared ground probe, safe jumps, charged-shot stagger, helmet break and a desperate phase | active | 2026-11-18 | |
+| [`mega-refactor-079a-smarter-met`](items/079-smarter-enemies/branches/mega-refactor-079a-smarter-met/process-log.md) | 079 | A smarter `Met`: pit avoidance with a shared ground probe, safe jumps, charged-shot stagger, helmet break and a desperate phase | merged | 2026-11-18 | 2026-11-18 |

@@ -2824,3 +2824,24 @@ newest entry at the bottom.
 - New item `170` (`UP` and `DOWN` gates in co-op), from the 2 backlog candidates of the branch (one item, because both
   are about the same gates). Owner rule in `docs/ways-of-working/levels.md`: a level for co-op has no vertical gate
   until `170` is done. `O2-R5` current state updated; no change to the redo risk.
+
+## 2026-11-18 — mega-refactor-079a-smarter-met
+
+- Summary: a smarter `Met` (item `079`, first enemy). New shared helpers in `entities/utils/`: `GroundProbe` (ground
+  ahead: `FLOOR`, `SAFE_DROP`, `PIT` or `WALL`), `JumpPlanner` (samples a jump arc with the engine fixed step),
+  `GravityFrame` (local and world frames) and `HalfDomeShield`. `Met` rewritten on `EnumStateMachineBuilder` with an
+  allowed-edge table: it stops or turns at a pit, jumps gaps, steps and to the player's platform; a charged hit
+  stops it and launches its helmet as its own entity (`MetHelmet`), which the `Met` fetches; the 3rd charged hit
+  breaks the helmet and starts a desperate phase; a hard-mode `Met` seeks the player and dodges some shots. New
+  `Enemies1` frames for `Met` and `SnowMet` (credits in `README.md`). Test map `RefactorTest079` (12 rooms) and
+  test-only entities `TestChargedShooter` and `TestHelmetMover`. Squash `7cd2c5325`.
+- Contract check: review before the play test and a final review by 3 subagents (code diff, play checks, test
+  writer), with fixes; owner play test passed (2026-11-18); full Gradle check (`engine:test core:test core:smokeTest
+  detektMain core:verifyRandomRule lwjgl3:jar`) passed after `master` was merged into the branch.
+- `master` merge into the branch: `master` (`078a`) changed the `Enemies1` atlas, the `README.md` credits and
+  `entity-tags.txt` too. `Enemies1` was repacked from the frames of both sides and checked region by region; the
+  credits and the tag lines of both sides kept.
+- New items `171` (shared ledge-walk helper), `172` (Mega Man picks up and wears a `Met` helmet) and `173` (copied
+  foot-sensor pairs to `GroundProbe`), from the 3 backlog candidates. 2 issues filed from the bug candidates (1-frame
+  visual lags of `MetHelmet` and of a desperate `Met`). `O4` current state and redo risk updated (`O4-R2`, `O4-R3`).
+  Item `079` stays `active` (more enemies, for example `Starkner`).

@@ -179,3 +179,5 @@ related-items: [<mega-refactor item IDs>]
 | [`DemonMet` crashes when its map object has no `target` property](2026-11-17-demon-met-no-target-npe.md) | yes | core | open |
 | [Two gate-column tiles of `tomahawk_man_stage_tileset` have magenta pixels](2026-11-17-tomahawk-tileset-magenta-pixels.md) | yes | content | open |
 | [The floating-points combo carries over into the next level](2026-11-17-floating-points-combo-carries-over.md) | yes | core | open |
+| [The `MetHelmet` spin lags 1 frame when the helmet seats or comes to rest](2026-11-18-met-helmet-spin-lags-one-frame.md) | yes | core | open |
+| [A desperate `Met` at a pit shows `NoHelmetRun` for 1 frame](2026-11-18-desperate-met-run-frame-at-pit.md) | yes | core | open |

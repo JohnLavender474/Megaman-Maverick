@@ -4,8 +4,8 @@
 - Type: feature
 - Objectives: `O4`
 - Depends on: none
-- Related: `015`, `074`, `117`
-- Branches: `mega-refactor-079a-smarter-met` (the `Met`)
+- Related: `015`, `074`, `117`, `171`, `172`, `173`
+- Branches: `mega-refactor-079a-smarter-met` (the `Met`; merged 2026-11-18, squash `7cd2c5325`)
 
 ## Goal
 

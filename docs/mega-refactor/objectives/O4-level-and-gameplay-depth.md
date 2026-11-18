@@ -55,12 +55,12 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | Rule | State | Evidence | Closing item |
 |------|-------|----------|--------------|
 | `O4-R1` | `partly` | `051` holds: `CameraSectionsLayerBuilder.kt:51-94` reads all zone, scroll and crush properties from the map. Old mechanics do not hold: low gravity is code for one level on 9 `MOON_MAN` lines (for example `AbstractItem.kt:112`, `BodyComponent.kt:432`), and the Inferno frozen variant is code (`FrozenBlock.kt:47`, `RisingLavaRiver.kt:165`). | `025` |
-| `O4-R2` | `holds` | `RefactorTest051.tmx` is live (`LevelDefinition.kt:157`). The `051` contracts name 37 rooms, and all 37 exist with a player spawn. All 12 rooms with a crush surface are in a contract. | none needed |
-| `O4-R3` | `not checked` (waiting) | The rule starts after `015`. `IState.kt:5-12` has transitions only. Of 158 enemy and boss files at `5b4d76c5a`, 24 use `StateMachine`, 30 use `Loop`, and 82 use `Timer(` with neither. 0 enemy or boss files were added since then. | `015` |
+| `O4-R2` | `holds` | `RefactorTest051.tmx` is live (`LevelDefinition.kt:157`). The `051` contracts name 37 rooms, and all 37 exist with a player spawn. All 12 rooms with a crush surface are in a contract. `079a` (2026-11-18): `RefactorTest079.tmx` is live (`REFACTOR_TEST_079`) with 12 rooms, one per `Met` check; each room respawns its enemies, so a check repeats with no restart. | none needed |
+| `O4-R3` | `not checked` (waiting) | The rule starts after `015`. `IState.kt:5-12` has transitions only. Of 158 enemy and boss files at `5b4d76c5a`, 24 use `StateMachine`, 30 use `Loop`, and 82 use `Timer(` with neither. 0 enemy or boss files were added since then. `079a` (2026-11-18): `Met` uses a hand-made request/enter pattern on `EnumStateMachineBuilder` (`requestState`, `enterState`, an allowed-edge table); it is a candidate for the first `015` branch (`items/015-entity-fsm/ITEM.md`, "Candidates for the first branch"). | `015` |
 
 ## Redo risk
 
-None found. `051` is data-driven, and no merged work adds an enemy or boss that `015` must convert.
+`015` must convert the `Met` of `079a` and the other hand-made state machines to `Fsm<S>`. The `Met` has an allowed-edge table and tests (`MetChargedHitTest`, `MetHelmetTest`, `MetMovementTest`), which lower the risk of the move. `051` is data-driven and needs no redo.
 
 ## Items
 
@@ -96,6 +96,9 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `157` | idea | [D-1000 overdrive on the shared boss health phases](../items/157-d1000-health-phases/ITEM.md) |
 | `158` | idea | [A shared lead-aim helper for bosses](../items/158-boss-lead-aim-helper/ITEM.md) |
 | `159` | done | [New hand and head art for the intro boss](../items/159-intro-boss-hand-art/ITEM.md) (main) |
+| `171` | idea | [A shared ledge-walk helper for enemies](../items/171-ledge-walk-helper/ITEM.md) |
+| `172` | idea | [Mega Man picks up and wears a `Met` helmet](../items/172-wear-met-helmet/ITEM.md) (main) |
+| `173` | idea | [Copied foot-sensor pairs to `GroundProbe`](../items/173-foot-sensors-to-ground-probe/ITEM.md) |
 
 ## Gaps with no item
 
