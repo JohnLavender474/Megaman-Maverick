@@ -5,7 +5,7 @@
 - Objectives: `O4`
 - Depends on: none
 - Related: `015`, `023`, `118`
-- Branches: `mega-refactor-077a-intro-boss` (merged, 2026-11-15, squash `c4b402a80`), `mega-refactor-077b-desert-man` (active, 2026-11-15)
+- Branches: `mega-refactor-077a-intro-boss` (merged, 2026-11-15, squash `c4b402a80`), `mega-refactor-077b-desert-man` (merged, 2026-11-16, squash `740ef9101`), `mega-refactor-077c-elec-devil` (active, 2026-11-18)
 
 ## Goal
 
