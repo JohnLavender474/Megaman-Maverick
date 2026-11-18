@@ -4579,7 +4579,7 @@
   </object>
  </objectgroup>
  <objectgroup id="4" name="enemies">
-  <object id="20" name="GreenUziJoe" x="1496" y="7152" width="16" height="16">
+  <object id="20" name="UziJoe" x="1496" y="7152" width="16" height="16">
    <properties>
     <property name="jump" type="bool" value="false"/>
    </properties>

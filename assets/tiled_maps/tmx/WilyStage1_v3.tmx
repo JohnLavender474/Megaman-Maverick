@@ -782,10 +782,10 @@
   <object id="336" name="Death" x="7776" y="1536" width="64" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="enemies">
-  <object id="32" name="GreenUziJoe" x="952" y="2864" width="16" height="16"/>
+  <object id="32" name="UziJoe" x="952" y="2864" width="16" height="16"/>
   <object id="33" name="DuoBallCanon" x="1272" y="2800" width="16" height="16"/>
   <object id="34" name="SpikeCopter" x="1592" y="2616" width="16" height="16"/>
-  <object id="35" name="GreenUziJoe" x="1944" y="2768" width="16" height="16"/>
+  <object id="35" name="UziJoe" x="1944" y="2768" width="16" height="16"/>
   <object id="36" name="SpikeCopter" x="1944" y="2616" width="16" height="16"/>
   <object id="37" name="DuoBallCanon" x="2520" y="2800" width="16" height="16"/>
   <object id="38" name="DuoBallCanon" x="2904" y="2864" width="16" height="16"/>
@@ -813,8 +813,8 @@
     <property name="value" type="float" value="-5"/>
    </properties>
   </object>
-  <object id="161" name="GreenUziJoe" x="6504" y="1456" width="16" height="16"/>
-  <object id="162" name="GreenUziJoe" x="6728" y="1232" width="16" height="16"/>
+  <object id="161" name="UziJoe" x="6504" y="1456" width="16" height="16"/>
+  <object id="162" name="UziJoe" x="6728" y="1232" width="16" height="16"/>
   <object id="163" name="ShieldAttacker" x="6200" y="1352" width="16" height="16">
    <properties>
     <property name="value" type="float" value="-4"/>
@@ -830,9 +830,9 @@
     <property name="value" type="float" value="-5"/>
    </properties>
   </object>
-  <object id="307" name="GreenUziJoe" x="7608" y="752" width="16" height="16"/>
+  <object id="307" name="UziJoe" x="7608" y="752" width="16" height="16"/>
   <object id="320" name="DuoBallCanon" x="8600" y="688" width="16" height="16"/>
-  <object id="321" name="GreenUziJoe" x="8920" y="624" width="16" height="16"/>
+  <object id="321" name="UziJoe" x="8920" y="624" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="11" name="player">
   <object id="60" name="0" x="96" y="2944" width="32" height="32"/>

@@ -258,8 +258,9 @@ class BackgroundLayerBuilder(private val params: MegaMapLayerBuildersParams) : I
             )
             val priority = props.getOrDefault(ConstKeys.PRIORITY, 0, Int::class)
 
-            val background = if (o.name == ANIMATED_BACKGROUND) {
-                val animRows = props.get("${ConstKeys.ANIMATION}_${ConstKeys.ROWS}", Int::class)!!
+            val animRowsKey = "${ConstKeys.ANIMATION}_${ConstKeys.ROWS}"
+            val background = if (o.name == ANIMATED_BACKGROUND || props.containsKey(animRowsKey)) {
+                val animRows = props.get(animRowsKey, Int::class)!!
                 val animColumns = props.get("${ConstKeys.ANIMATION}_${ConstKeys.COLUMNS}", Int::class)!!
                 val duration = props.get(ConstKeys.DURATION, Float::class)!!
                 AnimatedBackground(

@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.special
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
@@ -51,6 +52,7 @@ import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import kotlin.reflect.KClass
+import kotlin.math.ceil
 
 class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IEventListener,
     IGameShapeOverlappable {
@@ -61,6 +63,12 @@ class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
         private const val CAM_BOUNDS_BUFFER = 2f
 
         private const val DEFAULT_PPM_DIVISOR = 2
+
+        private const val TILE_LIGHT_GLOW = "glow"
+        private const val TILE_LIGHT_EXPOSED = "exposed"
+        private const val TILE_LIGHT_GLOW_RADIUS = 0.5f
+        private const val TILE_LIGHT_EXPOSED_RADIUS = 1f
+        private const val TILE_LIGHT_RADIANCE = 1f
 
         private const val MEGAMAN_HALF_CHARGING_RADIUS = 3
         private const val MEGAMAN_HALF_CHARGING_RADIANCE = 1.25f
@@ -167,8 +175,15 @@ class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
     var key = -1
         private set
 
+    private class TileLight {
+        val center = Vector2()
+        var radius = 0
+    }
+
     private val rooms = ObjectSet<String>()
     private val lightSourceQueue = Array<LightSourceDef>()
+    private val tileLights = Array<TileLight>()
+    private var tileLightCount = 0
 
     private val grid = DarknessGrid()
 
@@ -222,6 +237,9 @@ class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
         grid.reset(bounds, dividedPPM)
         GameLogger.debug(TAG, "onSpawn(): rows=${grid.rows}, columns=${grid.columns}")
 
+        loadTileLights()
+        GameLogger.debug(TAG, "onSpawn(): tileLights=$tileLightCount")
+
         darkMode = false
         anyTileLit = false
 
@@ -236,6 +254,7 @@ class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
 
         rooms.clear()
         grid.clear()
+        tileLightCount = 0
 
         drainLightSourceQueue()
 
@@ -323,6 +342,53 @@ class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
         }
     }
 
+    private fun loadTileLights() {
+        tileLightCount = 0
+        val map = services.levelState.tiledMapLoadResult!!.map
+        val minCol = (bounds.getX() / ConstVals.PPM).toInt()
+        val maxCol = ceil(bounds.getMaxX() / ConstVals.PPM).toInt() - 1
+        val minRow = (bounds.getY() / ConstVals.PPM).toInt()
+        val maxRow = ceil(bounds.getMaxY() / ConstVals.PPM).toInt() - 1
+        for (layer in map.layers) {
+            if (layer !is TiledMapTileLayer || !layer.isVisible) continue
+            for (col in minCol..maxCol) for (row in minRow..maxRow) {
+                val cell = layer.getCell(col, row) ?: continue
+                val properties = cell.tile?.properties ?: continue
+                val kind = properties.get(ConstKeys.LIGHT, String::class.java) ?: continue
+                val radius = when (kind) {
+                    TILE_LIGHT_GLOW -> TILE_LIGHT_GLOW_RADIUS
+                    TILE_LIGHT_EXPOSED -> TILE_LIGHT_EXPOSED_RADIUS
+                    else -> throw IllegalStateException("Unknown tile light \"$kind\" at col=$col, row=$row")
+                }
+                var localX = properties.get("${ConstKeys.LIGHT}_${ConstKeys.X}", Float::class.java)!!
+                var localY = ConstVals.PPM - properties.get("${ConstKeys.LIGHT}_${ConstKeys.Y}", Float::class.java)!!
+                if (cell.rotation != TiledMapTileLayer.Cell.ROTATE_0) {
+                    localX = ConstVals.PPM / 2f
+                    localY = ConstVals.PPM / 2f
+                }
+                if (cell.flipHorizontally) localX = ConstVals.PPM - localX
+                if (cell.flipVertically) localY = ConstVals.PPM - localY
+                if (tileLightCount == tileLights.size) tileLights.add(TileLight())
+                val tileLight = tileLights[tileLightCount++]
+                tileLight.center.set(col * ConstVals.PPM + localX, row * ConstVals.PPM + localY)
+                tileLight.radius = (radius * ConstVals.PPM).toInt()
+            }
+        }
+    }
+
+    private fun queueTileLights(camBounds: GameRectangle) {
+        for (i in 0 until tileLightCount) {
+            val tileLight = tileLights[i]
+            reusableCircle.setRadius(tileLight.radius.toFloat()).setCenter(tileLight.center)
+            if (!reusableCircle.overlaps(camBounds)) continue
+            val lightSourceDef = lightSourcePool.fetch()
+            lightSourceDef.center.set(tileLight.center)
+            lightSourceDef.radius = tileLight.radius
+            lightSourceDef.radiance = TILE_LIGHT_RADIANCE
+            lightSourceQueue.add(lightSourceDef)
+        }
+    }
+
     private fun drainLightSourceQueue() {
         for (i in 0 until lightSourceQueue.size) lightSourcePool.free(lightSourceQueue[i])
         lightSourceQueue.clear()
@@ -346,6 +412,8 @@ class DarknessV2(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
             val entities = MegaGameEntities.getOfTypes(reusableEntitiesSet, LIGHT_UP_ENTITY_TYPES)
             entities.forEach { entity -> tryToLightUp(entity) }
             entities.clear()
+
+            queueTileLights(camBounds)
 
             players.forEach { player ->
                 if (player.inPlay && player.body.getBounds().overlaps(bounds)) {

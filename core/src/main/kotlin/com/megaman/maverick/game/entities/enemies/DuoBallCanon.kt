@@ -44,6 +44,7 @@ import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.projectiles.Bullet
 import com.megaman.maverick.game.entities.projectiles.DuoBall
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -70,6 +71,7 @@ class DuoBallCanon(services: MegaServices) : AbstractEnemy(services), IFreezable
 
         private const val SHOOT_ANIM_DUR = 0.1f
         private const val SHOOT_SUFFIX = "_shoot"
+        private const val FROZEN = "frozen"
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
@@ -124,17 +126,22 @@ class DuoBallCanon(services: MegaServices) : AbstractEnemy(services), IFreezable
     private val shooting: Boolean
         get() = !shootAnimTimer.isFinished()
 
+    private var skin = SpriteSkin.DEFAULT
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            val keys = gdxArrayOf("frozen")
-            DuoBallCanonDirection.entries.forEach { direction ->
-                val key = direction.name.lowercase()
-                keys.add(key)
-                keys.add("${key}${SHOOT_SUFFIX}")
+            regions.put(FROZEN, atlas.findRegion("$TAG/$FROZEN"))
+            SpriteSkin.entries.forEach { skin ->
+                DuoBallCanonDirection.entries.forEach { direction ->
+                    val key = direction.name.lowercase()
+                    gdxArrayOf(key, "${key}${SHOOT_SUFFIX}").forEach { skinKey ->
+                        val name = skin.regionName(TAG, skinKey)
+                        regions.put(name, atlas.findRegion(name))
+                    }
+                }
             }
-            keys.forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -144,7 +151,9 @@ class DuoBallCanon(services: MegaServices) : AbstractEnemy(services), IFreezable
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
+        skin = SpriteSkin.of(spawnProps)
+
+        val spawn =spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
 
         FacingUtils.setFacingOf(this)
@@ -249,21 +258,23 @@ class DuoBallCanon(services: MegaServices) : AbstractEnemy(services), IFreezable
         .animator(
             AnimatorBuilder()
                 .setKeySupplier keySupplier@{
-                    if (frozen) return@keySupplier "frozen"
+                    if (frozen) return@keySupplier FROZEN
 
                     var key = canonDirection.name.lowercase()
                     if (shooting) key = "${key}${SHOOT_SUFFIX}"
-                    return@keySupplier key
+                    return@keySupplier skin.regionName(TAG, key)
                 }
                 .applyToAnimations { animations ->
-                    animations.put("frozen", Animation(regions["frozen"]))
+                    animations.put(FROZEN, Animation(regions[FROZEN]))
 
-                    DuoBallCanonDirection.entries.forEach { direction ->
-                        val key = direction.name.lowercase()
-                        animations.put(key, Animation(regions[key]))
+                    SpriteSkin.entries.forEach { skin ->
+                        DuoBallCanonDirection.entries.forEach { direction ->
+                            val key = skin.regionName(TAG, direction.name.lowercase())
+                            animations.put(key, Animation(regions[key]))
 
-                        val shootingKey = "${key}${SHOOT_SUFFIX}"
-                        animations.put(shootingKey, Animation(regions[shootingKey], 2, 1, 0.1f, false))
+                            val shootingKey = skin.regionName(TAG, "${direction.name.lowercase()}${SHOOT_SUFFIX}")
+                            animations.put(shootingKey, Animation(regions[shootingKey], 2, 1, 0.1f, false))
+                        }
                     }
                 }
                 .build()

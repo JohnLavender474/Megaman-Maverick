@@ -190,49 +190,49 @@
   </object>
   <object id="18" name="AbstractBlock" x="5824" y="384" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,GreenUziJoe"/>
+    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,UziJoe"/>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="19" name="AbstractBlock" x="5888" y="384" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,GreenUziJoe"/>
+    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,UziJoe"/>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="20" name="AbstractBlock" x="5952" y="384" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,GreenUziJoe"/>
+    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,UziJoe"/>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="21" name="AbstractBlock" x="6016" y="384" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,GreenUziJoe"/>
+    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,UziJoe"/>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="22" name="AbstractBlock" x="6080" y="384" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,GreenUziJoe"/>
+    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,UziJoe"/>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="23" name="AbstractBlock" x="6880" y="960" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,GreenUziJoe"/>
+    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,UziJoe"/>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="spawn_type" value="spawn_now"/>
    </properties>
   </object>
   <object id="24" name="AbstractBlock" x="7040" y="960" width="32" height="32">
    <properties>
-    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,GreenUziJoe"/>
+    <property name="block_filters" value="Met,SniperJoe,PicketJoe,SpringHead,UziJoe"/>
     <property name="cull_out_of_bounds" type="bool" value="false"/>
     <property name="spawn_type" value="spawn_now"/>
    </properties>
@@ -1195,7 +1195,7 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="173" name="GreenUziJoe" x="4416" y="448" width="32" height="32">
+  <object id="173" name="UziJoe" x="4416" y="448" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -1316,7 +1316,7 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="202" name="GreenUziJoe" x="5056" y="416" width="32" height="32">
+  <object id="202" name="UziJoe" x="5056" y="416" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -1440,12 +1440,12 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="232" name="GreenUziJoe" x="5824" y="384" width="32" height="32">
+  <object id="232" name="UziJoe" x="5824" y="384" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="233" name="GreenUziJoe" x="6080" y="384" width="32" height="32">
+  <object id="233" name="UziJoe" x="6080" y="384" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -1503,7 +1503,7 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="248" name="GreenUziJoe" x="6880" y="960" width="32" height="32">
+  <object id="248" name="UziJoe" x="6880" y="960" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -1556,12 +1556,12 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="261" name="GreenUziJoe" x="6784" y="1184" width="32" height="32">
+  <object id="261" name="UziJoe" x="6784" y="1184" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="262" name="GreenUziJoe" x="7136" y="1184" width="32" height="32">
+  <object id="262" name="UziJoe" x="7136" y="1184" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -1671,12 +1671,12 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="288" name="GreenUziJoe" x="6784" y="1184" width="32" height="32">
+  <object id="288" name="UziJoe" x="6784" y="1184" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="289" name="GreenUziJoe" x="7136" y="1184" width="32" height="32">
+  <object id="289" name="UziJoe" x="7136" y="1184" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>

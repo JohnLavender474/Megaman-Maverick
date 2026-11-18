@@ -45,6 +45,7 @@ import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.*
 
@@ -58,12 +59,20 @@ class ShieldAttacker(services: MegaServices) : AbstractEnemy(services, size = Si
         private const val CULL_TIME = 5f
         private const val TURN_DUR = 0.5f
 
+        private const val FROZEN = "frozen"
+
         private val animDefs = orderedMapOf(
-            "frozen" pairTo AnimationDef(),
+            FROZEN pairTo AnimationDef(),
             "turn" pairTo AnimationDef(1, 5, 0.1f, false),
             "attack" pairTo AnimationDef(1, 2, 0.1f, true)
         )
         private val regions = ObjectMap<String, TextureRegion>()
+
+        private fun regionName(skin: SpriteSkin, key: String) =
+            if (key == FROZEN) SpriteSkin.DEFAULT.regionName(TAG, key) else skin.regionName(TAG, key)
+
+        private fun animationKey(skin: SpriteSkin, key: String) =
+            if (key == FROZEN) key else skin.regionName(TAG, key)
     }
 
     override var frozen: Boolean
@@ -84,6 +93,7 @@ class ShieldAttacker(services: MegaServices) : AbstractEnemy(services, size = Si
         get() = !turnTimer.isFinished()
 
     private lateinit var animations: ObjectMap<String, IAnimation>
+    private var skin = SpriteSkin.DEFAULT
 
     private var min = 0f
     private var max = 0f
@@ -96,7 +106,11 @@ class ShieldAttacker(services: MegaServices) : AbstractEnemy(services, size = Si
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            SpriteSkin.entries.forEach { skin ->
+                animDefs.keys().forEach { key ->
+                    regions.put(animationKey(skin, key), atlas.findRegion(regionName(skin, key)))
+                }
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -106,6 +120,8 @@ class ShieldAttacker(services: MegaServices) : AbstractEnemy(services, size = Si
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         vertical = spawnProps.getOrDefault(ConstKeys.VERTICAL, false, Boolean::class)
@@ -311,12 +327,16 @@ class ShieldAttacker(services: MegaServices) : AbstractEnemy(services, size = Si
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (frozen) "frozen" else if (turning) "turn" else "attack" }
+        val keySupplier: (String?) -> String? = {
+            if (frozen) FROZEN else skin.regionName(TAG, if (turning) "turn" else "attack")
+        }
         animations = ObjectMap<String, IAnimation>().also { animations ->
-            animDefs.forEach { entry ->
-                val key = entry.key
-                val (rows, columns, durations, loop) = entry.value
-                animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+            SpriteSkin.entries.forEach { skin ->
+                animDefs.forEach { entry ->
+                    val key = animationKey(skin, entry.key)
+                    val (rows, columns, durations, loop) = entry.value
+                    animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+                }
             }
         }
         val animator = Animator(keySupplier, animations)

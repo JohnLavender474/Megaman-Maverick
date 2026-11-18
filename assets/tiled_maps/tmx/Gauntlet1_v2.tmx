@@ -848,7 +848,7 @@
     <property name="value" type="float" value="-12"/>
    </properties>
   </object>
-  <object id="430" name="GreenUziJoe" x="3696" y="992" width="32" height="32">
+  <object id="430" name="UziJoe" x="3696" y="992" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -905,12 +905,12 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="444" name="GreenUziJoe" x="4744" y="944" width="16" height="16">
+  <object id="444" name="UziJoe" x="4744" y="944" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="445" name="GreenUziJoe" x="5096" y="944" width="16" height="16">
+  <object id="445" name="UziJoe" x="5096" y="944" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -998,12 +998,12 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="463" name="GreenUziJoe" x="5832" y="464" width="16" height="16">
+  <object id="463" name="UziJoe" x="5832" y="464" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="464" name="GreenUziJoe" x="6056" y="464" width="16" height="16">
+  <object id="464" name="UziJoe" x="6056" y="464" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -1086,7 +1086,7 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="500" name="GreenUziJoe" x="4616" y="1136" width="16" height="16">
+  <object id="500" name="UziJoe" x="4616" y="1136" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -1233,7 +1233,7 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="537" name="GreenUziJoe" x="3760" y="992" width="32" height="32">
+  <object id="537" name="UziJoe" x="3760" y="992" width="32" height="32">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
@@ -1350,7 +1350,7 @@
     <property name="spawn_blink" type="float" value="1"/>
    </properties>
   </object>
-  <object id="561" name="GreenUziJoe" x="6136" y="560" width="16" height="16">
+  <object id="561" name="UziJoe" x="6136" y="560" width="16" height="16">
    <properties>
     <property name="spawn_blink" type="float" value="1"/>
    </properties>

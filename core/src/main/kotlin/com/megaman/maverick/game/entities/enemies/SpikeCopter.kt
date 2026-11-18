@@ -14,7 +14,6 @@ import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.epsilonEquals
-import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.interfaces.IFaceable
@@ -49,6 +48,7 @@ import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.hazards.SpikeTeeth
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -71,13 +71,21 @@ class SpikeCopter(services: MegaServices) : AbstractEnemy(services, size = Size.
 
         private const val MAX_SPAWNED = 2
 
+        private const val FROZEN = "frozen"
+
         private val animDefs = orderedMapOf(
             "drop" pairTo AnimationDef(),
             "fly" pairTo AnimationDef(2, 1, 0.1f, true),
             "drop_teeth" pairTo AnimationDef(3, 1, 0.1f, false),
-            "frozen" pairTo AnimationDef()
+            FROZEN pairTo AnimationDef()
         )
         private val regions = ObjectMap<String, TextureRegion>()
+
+        private fun regionName(skin: SpriteSkin, key: String) =
+            if (key == FROZEN) SpriteSkin.DEFAULT.regionName(TAG, key) else skin.regionName(TAG, key)
+
+        private fun animationKey(skin: SpriteSkin, key: String) =
+            if (key == FROZEN) key else skin.regionName(TAG, key)
     }
 
     private enum class SpikeCopterState { FLY, DROP_TEETH, DROP }
@@ -96,6 +104,7 @@ class SpikeCopter(services: MegaServices) : AbstractEnemy(services, size = Size.
     )
 
     private lateinit var state: SpikeCopterState
+    private var skin = SpriteSkin.DEFAULT
 
     private val dropTeethDelay = Timer(DROP_TEETH_DELAY)
     private val dropTeethTimer = Timer(DROP_TEETH_DUR)
@@ -105,9 +114,11 @@ class SpikeCopter(services: MegaServices) : AbstractEnemy(services, size = Size.
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            val keys = gdxArrayOf("frozen")
-            SpikeCopterState.entries.forEach { keys.add(it.name.lowercase()) }
-            keys.forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            SpriteSkin.entries.forEach { skin ->
+                animDefs.keys().forEach { key ->
+                    regions.put(animationKey(skin, key), atlas.findRegion(regionName(skin, key)))
+                }
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -119,6 +130,8 @@ class SpikeCopter(services: MegaServices) : AbstractEnemy(services, size = Size.
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
@@ -250,12 +263,14 @@ class SpikeCopter(services: MegaServices) : AbstractEnemy(services, size = Size.
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (frozen) "frozen" else state.name.lowercase() }
+                .setKeySupplier { if (frozen) FROZEN else skin.regionName(TAG, state.name.lowercase()) }
                 .applyToAnimations { animations ->
-                    animDefs.forEach { entry ->
-                        val key = entry.key
-                        val def = entry.value
-                        animations.put(key, Animation(regions[key], def.rows, def.cols, def.durations, def.loop))
+                    SpriteSkin.entries.forEach { skin ->
+                        animDefs.forEach { entry ->
+                            val key = animationKey(skin, entry.key)
+                            val def = entry.value
+                            animations.put(key, Animation(regions[key], def.rows, def.cols, def.durations, def.loop))
+                        }
                     }
                 }
                 .build()

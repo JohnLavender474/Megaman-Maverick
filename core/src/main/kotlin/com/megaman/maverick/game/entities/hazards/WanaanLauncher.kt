@@ -47,6 +47,7 @@ import com.megaman.maverick.game.entities.contracts.IBossListener
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -73,12 +74,18 @@ class WanaanLauncher(services: MegaServices) : AbstractHealthEntity(services), I
     private val launchDelay = Timer(LAUNCH_DELAY)
     private val sensor = GameRectangle()
     private var wanaan: Wanaan? = null
+    private var skin = SpriteSkin.DEFAULT
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-            gdxArrayOf("launcher", "bust").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
+            SpriteSkin.entries.forEach { skin ->
+                gdxArrayOf("launcher", "bust").forEach { key ->
+                    val name = skin.regionName(TAG, key)
+                    regions.put(name, atlas.findRegion(name))
+                }
+            }
         }
         super.init()
         addComponent(AudioComponent())
@@ -90,6 +97,8 @@ class WanaanLauncher(services: MegaServices) : AbstractHealthEntity(services), I
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
@@ -176,7 +185,7 @@ class WanaanLauncher(services: MegaServices) : AbstractHealthEntity(services), I
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             val bust = this.isHealthDepleted()
-            val region = if (bust) regions["bust"] else regions["launcher"]
+            val region = regions[skin.regionName(TAG, if (bust) "bust" else "launcher")]
             sprite.setRegion(region)
             sprite.setCenter(body.getCenter())
         }
@@ -203,6 +212,7 @@ class WanaanLauncher(services: MegaServices) : AbstractHealthEntity(services), I
             props(
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.DIRECTION pairTo direction,
+                ConstKeys.COLOR pairTo skin.name,
             )
         )
         wanaan!!.goingUpward = true

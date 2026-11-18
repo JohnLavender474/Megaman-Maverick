@@ -10,8 +10,8 @@ import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Size
-import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameCircle
@@ -32,9 +32,11 @@ import com.maverick.game.engine.world.body.*
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
+import com.megaman.maverick.game.animations.AnimationDef
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
@@ -43,17 +45,29 @@ class GreenPelletBlast(services: MegaServices) : AbstractProjectile(services, si
     companion object {
         const val TAG = "GreenPelletBlast"
         private const val BURST_DUR = 0.15f
+        private const val BLAST = "blast"
+        private const val BURST = "burst"
+        private val animDefs = orderedMapOf(
+            BLAST pairTo AnimationDef(2, 1, 0.1f, true),
+            BURST pairTo AnimationDef(3, 1, 0.05f, false)
+        )
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
     private val burstTimer = Timer(BURST_DUR)
     private var burst = false
+    private var skin = SpriteSkin.DEFAULT
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
-            gdxArrayOf("blast", "burst").forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            SpriteSkin.entries.forEach { skin ->
+                animDefs.keys().forEach { key ->
+                    val name = skin.regionName(TAG, key)
+                    regions.put(name, atlas.findRegion(name))
+                }
+            }
         }
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -63,6 +77,8 @@ class GreenPelletBlast(services: MegaServices) : AbstractProjectile(services, si
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -147,11 +163,16 @@ class GreenPelletBlast(services: MegaServices) : AbstractProjectile(services, si
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (burst) "burst" else "blast" }
-                .addAnimations(
-                    "blast" pairTo Animation(regions["blast"], 2, 1, 0.1f, true),
-                    "burst" pairTo Animation(regions["burst"], 3, 1, 0.05f, false)
-                )
+                .setKeySupplier { skin.regionName(TAG, if (burst) BURST else BLAST) }
+                .applyToAnimations { animations ->
+                    SpriteSkin.entries.forEach { skin ->
+                        animDefs.forEach { entry ->
+                            val key = skin.regionName(TAG, entry.key)
+                            val (rows, columns, durations, loop) = entry.value
+                            animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+                        }
+                    }
+                }
                 .build()
         )
         .build()

@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.enemies
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
@@ -40,6 +41,7 @@ import com.megaman.maverick.game.entities.contracts.IBossListener
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -58,9 +60,10 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
         private const val RADIUS = 5
         private val WHITESPACE = Regex("\\s+")
         private const val RADIANCE = 2f
-        private var lightRegion: TextureRegion? = null
-        private var darkRegion: TextureRegion? = null
-        private var frozenRegion: TextureRegion? = null
+        private const val LIGHT = "Light"
+        private const val DARK = "Dark"
+        private const val FROZEN = "frozen"
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override val eventKeyMask = objectSetOf<Any>(EventType.END_ROOM_TRANS)
@@ -85,14 +88,18 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
     private val spawnPosition = Vector2()
     private var trajectoryDefinition: MotionDefinition? = null
     private var light = false
+    private var skin = SpriteSkin.DEFAULT
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (lightRegion == null || darkRegion == null) {
+        if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            lightRegion = atlas.findRegion("$TAG/Light")
-            darkRegion = atlas.findRegion("$TAG/Dark")
-            frozenRegion = atlas.findRegion("$TAG/frozen")
+            SpriteSkin.entries.forEach { skin ->
+                gdxArrayOf(LIGHT, DARK).forEach { key ->
+                    val name = skin.regionName(TAG, key)
+                    regions.put(name, atlas.findRegion(name))
+                }
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -104,6 +111,8 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
         super.onSpawn(spawnProps)
 
         services.events.addListener(this)
+
+        skin = SpriteSkin.of(spawnProps)
 
         if (spawnProps.containsKey(ConstKeys.POSITION))
             spawnPosition.set(spawnProps.get(ConstKeys.POSITION, Vector2::class)!!)
@@ -206,16 +215,19 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = {
             when {
-                frozen -> "frozen"
-                light -> "light"
-                else -> "dark"
+                frozen -> "$FROZEN/${skin.name}"
+                light -> skin.regionName(TAG, LIGHT)
+                else -> skin.regionName(TAG, DARK)
             }
         }
-        val animations = objectMapOf<String, IAnimation>(
-            "frozen" pairTo Animation(darkRegion!!),
-            "light" pairTo Animation(lightRegion!!, 1, 4, 0.1f, true),
-            "dark" pairTo Animation(darkRegion!!, 1, 4, 0.1f, true)
-        )
+        val animations = objectMapOf<String, IAnimation>()
+        SpriteSkin.entries.forEach { skin ->
+            animations.put("$FROZEN/${skin.name}", Animation(regions[skin.regionName(TAG, DARK)]))
+            gdxArrayOf(LIGHT, DARK).forEach { key ->
+                val name = skin.regionName(TAG, key)
+                animations.put(name, Animation(regions[name], 1, 4, 0.1f, true))
+            }
+        }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

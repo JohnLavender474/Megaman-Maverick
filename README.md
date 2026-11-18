@@ -252,6 +252,12 @@ comprehensive listing of the credits for the artwork used in this game.
     - Nutt Glider
 - Mister Mike
   - [Sniper Joe Expanded](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/159822/)
+- Bulb Blaster (Wily Stage 1 skin)
+  - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
+  - Inspired by the earlier Bulb Blaster sprite of this game (the frame layout and the wing flap)
+- Wily Stage 1 skins of Uzi Joe and its shot, Duo-Ball Cannon, Spike Copter, Dragon Fly, Shield Attacker, Wanaan Launcher and its Wanaan, and Laser Beamer
+  - Recolored by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
+  - Original sprites by the artists credited above for each enemy
 - All other enemy sprites made by Capcom and sourced from https://www.spriters-resource.com/
 
 #### Blocks / Platforms
@@ -306,6 +312,10 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
   - Inspired by [Super Icon Ltd](https://assetstore.unity.com/publishers/5990) ([Mega 8-Bit Pixel Pack](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158)): the hills
   - Inspired by Capcom: the sunset
+- Wily Stage 1 (tileset, backgrounds and the generator)
+  - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
+  - Inspired by AxeW1eld3r ([Megaman 10 - Endless Attack](https://www.spriters-resource.com/wii/mm10/sheet/166546/)): the tile layout of the cliffside, the pit, the sand and the corridors
+  - Inspired by [Balloon Cart](https://balloon-cart.itch.io) ([Reactor Man](https://balloon-cart.itch.io/reactor-man-asset-pack)): the corridor ceiling pipes and the coolant pipes
 
 ### Music
 

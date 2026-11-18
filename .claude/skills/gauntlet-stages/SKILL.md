@@ -37,7 +37,7 @@ Reference stage: `assets/tiled_maps/tmx/Gauntlet1_v2.tmx` (design notes in
     gauntlet room is about as hard as the middle wave of the gauntlet room before it, never a reset
     to "two Mets". Inside a room, each wave is harder than the one before. Score each wave to check
     it: easy enemy 1 (Met, Bat, Screwie, Peat, FloatingCan), medium 2 (SniperJoe, ColtonJoe,
-    turrets, HeliMet, SpikeCopter, Ratton, Elecn), hard 3 (GreenUziJoe, LampeonBandito, PetitDevil, BikerKibbo,
+    turrets, HeliMet, SpikeCopter, Ratton, Elecn), hard 3 (UziJoe, LampeonBandito, PetitDevil, BikerKibbo,
     BuilderKibbo, DrillTankXT), big jumper 4 (BigJumpingJoe, Robbit). Use cheap hole drops (Mets)
     as filler next to harder enemies, not as a whole wave.
 

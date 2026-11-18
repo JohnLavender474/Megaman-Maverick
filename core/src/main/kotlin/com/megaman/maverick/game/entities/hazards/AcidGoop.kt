@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.hazards
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
@@ -10,10 +11,8 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
-import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
-import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.damage.IDamagerEntity
@@ -54,21 +53,31 @@ class AcidGoop(services: MegaServices) : MegaGameEntity(services), IDamagerEntit
         private const val FALL_GRAVITY = -22.5f
         private const val DISSIPATE_GRAVITY = -1.5f
         private const val DISSIPATE_DUR = 0.15f
-        private var fallingRegion: TextureRegion? = null
-        private var splatRegion: TextureRegion? = null
+        private const val REACTOR_BODY_SIZE = 0.5f
+        private const val COOLANT_BODY_SIZE = 0.25f
+        private const val COOLANT_SPRITE_SIZE = 0.5f
+        private val regions = ObjectMap<String, TextureRegion>()
     }
+
+    enum class AcidGoopType(val regionSuffix: String) { REACTOR(""), COOLANT("_green") }
+
+    var type = AcidGoopType.REACTOR
+        private set
 
     override val eventKeyMask = objectSetOf<Any>(EventType.BEGIN_ROOM_TRANS)
 
     private val dissipateTimer = Timer(DISSIPATE_DUR)
+    private lateinit var feetFixture: Fixture
     private var dissipating = false
 
     override fun init(vararg params: Any) {
         super.init()
-        if (fallingRegion == null || splatRegion == null) {
+        if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-            fallingRegion = atlas.findRegion("$TAG/falling")
-            splatRegion = atlas.findRegion("$TAG/landed")
+            AcidGoopType.entries.forEach { type ->
+                regions.put("falling${type.regionSuffix}", atlas.findRegion("$TAG/falling${type.regionSuffix}"))
+                regions.put("landed${type.regionSuffix}", atlas.findRegion("$TAG/landed${type.regionSuffix}"))
+            }
         }
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
@@ -81,6 +90,13 @@ class AcidGoop(services: MegaServices) : MegaGameEntity(services), IDamagerEntit
         super.onSpawn(spawnProps)
 
         services.events.addListener(this)
+
+        type = AcidGoopType.valueOf(
+            spawnProps.getOrDefault(ConstKeys.TYPE, AcidGoopType.REACTOR.name, String::class).uppercase()
+        )
+        val bodySize = if (type == AcidGoopType.COOLANT) COOLANT_BODY_SIZE else REACTOR_BODY_SIZE
+        body.setSize(bodySize * ConstVals.PPM)
+        feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setTopCenterToPoint(spawn)
@@ -129,7 +145,7 @@ class AcidGoop(services: MegaServices) : MegaGameEntity(services), IDamagerEntit
         val body = Body(BodyType.DYNAMIC)
         body.setSize(0.5f * ConstVals.PPM)
 
-        val feetFixture =
+        feetFixture =
             Fixture(body, FixtureType.FEET, GameRectangle().setSize(0.25f * ConstVals.PPM, 0.1f * ConstVals.PPM))
         feetFixture.offsetFromBodyAttachment.y = -body.getHeight() / 2f
         body.addFixture(feetFixture)
@@ -150,21 +166,31 @@ class AcidGoop(services: MegaServices) : MegaGameEntity(services), IDamagerEntit
 
     private fun defineSpritesComponent(): SpritesComponent {
         val sprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
-        sprite.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
-            val position = Position.BOTTOM_CENTER
-            sprite.setPosition(body.getPositionPoint(position), position)
+            if (type == AcidGoopType.COOLANT) {
+                sprite.setSize(COOLANT_SPRITE_SIZE * ConstVals.PPM, COOLANT_SPRITE_SIZE * ConstVals.PPM)
+                val position = if (dissipating) Position.BOTTOM_CENTER else Position.TOP_CENTER
+                sprite.setPosition(body.getPositionPoint(position), position)
+            } else {
+                sprite.setSize(2f * ConstVals.PPM, ConstVals.PPM.toFloat())
+                val position = Position.BOTTOM_CENTER
+                sprite.setPosition(body.getPositionPoint(position), position)
+            }
         }
         return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (dissipating) "dissipating" else "falling" }
-        val animations = objectMapOf<String, IAnimation>(
-            "falling" pairTo Animation(fallingRegion!!, 2, 3, 0.1f, false),
-            "dissipating" pairTo Animation(splatRegion!!, 1, 3, 0.05f, false)
-        )
+        val keySupplier: (String?) -> String? =
+            { (if (dissipating) "landed" else "falling") + type.regionSuffix }
+        val animations = ObjectMap<String, IAnimation>()
+        AcidGoopType.entries.forEach { type ->
+            val falling = "falling${type.regionSuffix}"
+            val landed = "landed${type.regionSuffix}"
+            animations.put(falling, Animation(regions[falling], 2, 3, 0.1f, false))
+            animations.put(landed, Animation(regions[landed], 1, 3, 0.05f, false))
+        }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

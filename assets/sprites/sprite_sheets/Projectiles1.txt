@@ -262,30 +262,44 @@ GreenPelletBlast/burst
   orig: 32, 96
   offset: 0, 0
   index: -1
-HalfChargedShot
+GreenPelletBlast/wily/blast
   rotate: false
   xy: 304, 260
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
-HomingMissile/angled
+GreenPelletBlast/wily/burst
+  rotate: false
+  xy: 480, 388
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+HalfChargedShot
   rotate: false
   xy: 336, 260
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
-HomingMissile/angled_flash
+HomingMissile/angled
   rotate: false
   xy: 368, 260
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+HomingMissile/angled_flash
+  rotate: false
+  xy: 400, 260
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 HomingMissile/straight
   rotate: false
-  xy: 432, 260
+  xy: 464, 260
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -306,7 +320,7 @@ HoneyDrip/drip
   index: -1
 HoneyDrip/splash
   rotate: false
-  xy: 480, 388
+  xy: 0, 484
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -369,7 +383,7 @@ LampeonBullet/4
   index: -1
 MeanTorpedo
   rotate: false
-  xy: 0, 484
+  xy: 32, 484
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -670,7 +684,7 @@ SealionBall
   index: -1
 SlashWave
   rotate: false
-  xy: 96, 484
+  xy: 128, 484
   size: 64, 96
   orig: 64, 96
   offset: 0, 0

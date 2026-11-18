@@ -113,6 +113,7 @@ decorations.Whack: Whack
 decorations.WhiteArrowPool: WhiteArrowPool
 decorations.WhiteArrow: WhiteArrow
 decorations.WhiteBurst: WhiteBurst
+decorations.WilyGenerator: WilyGenerator
 decorations.WilySkullHead: WilySkullHead
 decorations.WindyGrass: WindyGrass
 enemies.Adamski: Adamski
@@ -167,7 +168,6 @@ enemies.Gachappan: Gachappan
 enemies.Goomba: Goomba
 enemies.GreenKoopa: GreenKoopa
 enemies.GreenKoopaShell: GreenKoopaShell
-enemies.GreenUziJoe: GreenUziJoe
 enemies.Hanabiran: Hanabiran
 enemies.HeliMet: HeliMet
 enemies.HoverGunner: HoverGunner
@@ -241,6 +241,7 @@ enemies.TurnBlaster: TurnBlaster
 enemies.UFOhNoBot: UFOhNoBot
 enemies.UnderwaterPenguinBot: UnderwaterPenguinBot
 enemies.UpNDown: UpNDown
+enemies.UziJoe: UziJoe
 enemies.WalrusBot: WalrusBot
 enemies.Wanaan: Wanaan
 enemies.YellowTiggerSquirt: YellowTiggerSquirt

@@ -41,6 +41,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.world.body.*
 
 class Wanaan(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIUM), IAnimatedEntity, IFreezableEntity,
@@ -49,9 +50,16 @@ class Wanaan(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIU
     companion object {
         const val TAG = "Wanaan"
         private const val GRAVITY = 22.5f
+        private const val FROZEN = "frozen"
         private val animDefs =
-            orderedMapOf("frozen" pairTo AnimationDef(), "chomp" pairTo AnimationDef(2, 1, 0.1f, true))
+            orderedMapOf(FROZEN pairTo AnimationDef(), "chomp" pairTo AnimationDef(2, 1, 0.1f, true))
         private val regions = ObjectMap<String, TextureRegion>()
+
+        private fun regionName(skin: SpriteSkin, key: String) =
+            if (key == FROZEN) SpriteSkin.DEFAULT.regionName(TAG, key) else skin.regionName(TAG, key)
+
+        private fun animationKey(skin: SpriteSkin, key: String) =
+            if (key == FROZEN) key else skin.regionName(TAG, key)
     }
 
     override var direction: Direction
@@ -81,6 +89,8 @@ class Wanaan(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIU
 
     var goingUpward = false
 
+    private var skin = SpriteSkin.DEFAULT
+
     val cullPoint: Vector2
         get() = body.getCenter()
 
@@ -88,7 +98,11 @@ class Wanaan(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIU
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            animDefs.keys().forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
+            SpriteSkin.entries.forEach { skin ->
+                animDefs.keys().forEach { key ->
+                    regions.put(animationKey(skin, key), atlas.findRegion(regionName(skin, key)))
+                }
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -97,6 +111,8 @@ class Wanaan(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIU
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(spawnProps)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setBottomCenterToPoint(spawn)
@@ -200,12 +216,14 @@ class Wanaan(services: MegaServices) : AbstractEnemy(services, size = Size.MEDIU
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (frozen) "frozen" else "chomp" }
+                .setKeySupplier { if (frozen) FROZEN else animationKey(skin, "chomp") }
                 .applyToAnimations { animations ->
-                    animDefs.forEach { entry ->
-                        val key = entry.key
-                        val (rows, columns, durations, loop) = entry.value
-                        animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+                    SpriteSkin.entries.forEach { skin ->
+                        animDefs.forEach { entry ->
+                            val key = animationKey(skin, entry.key)
+                            val (rows, columns, durations, loop) = entry.value
+                            animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+                        }
                     }
                 }
                 .build()

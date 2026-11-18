@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
@@ -51,6 +52,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.state.inPlay
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.asPlayer
@@ -82,7 +84,7 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
         private const val MAX_DEGREES = 340f
         private const val INIT_DEGREES = 270f
 
-        private var region: TextureRegion? = null
+        private val regions = ObjectMap<SpriteSkin, TextureRegion>()
     }
 
     override var direction: Direction
@@ -102,10 +104,14 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
     private var clockwise = true
     private var beaming = false
     private var speed = 0f
+    private var skin = SpriteSkin.DEFAULT
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, TAG)
+        if (regions.isEmpty) SpriteSkin.entries.forEach { skin ->
+            val name = if (skin == SpriteSkin.DEFAULT) TAG else skin.regionName(TAG, TAG)
+            regions.put(skin, services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, name))
+        }
         super.init()
         addComponent(AudioComponent())
         addComponent(MotionComponent())
@@ -120,6 +126,8 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
         super.onSpawn(spawnProps)
 
         services.events.addListener(this)
+
+        skin = SpriteSkin.of(spawnProps)
 
         direction = Direction.valueOf(
             spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase()
@@ -228,8 +236,9 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
     }
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
-        .sprite(TAG, GameSprite(region!!).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
+        .sprite(TAG, GameSprite(regions[SpriteSkin.DEFAULT]).also { sprite -> sprite.setSize(2f * ConstVals.PPM) })
         .preProcess { _, sprite ->
+            sprite.setRegion(regions[skin])
             val position = DirectionPositionMapper.getPosition(direction).opposite()
             sprite.setPosition(rotatingLine.getOrigin(), position)
 

@@ -42,6 +42,7 @@ class AcidGoopSupplier(services: MegaServices) : MegaGameEntity(services), IHaza
     }
 
     private val spawnDelayTimer = Timer()
+    private var goopType = AcidGoop.AcidGoopType.REACTOR
     private val dropDelayTimer = Timer(DROP_DELAY)
     private var acidGoop: AcidGoop? = null
 
@@ -59,6 +60,10 @@ class AcidGoopSupplier(services: MegaServices) : MegaGameEntity(services), IHaza
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)
+
+        goopType = AcidGoop.AcidGoopType.valueOf(
+            spawnProps.getOrDefault(ConstKeys.TYPE, AcidGoop.AcidGoopType.REACTOR.name, String::class).uppercase()
+        )
 
         resetSpawnDelay()
 
@@ -89,7 +94,7 @@ class AcidGoopSupplier(services: MegaServices) : MegaGameEntity(services), IHaza
 
     private fun createAcidGoop() {
         val acidGoop = MegaEntityFactory.fetch(AcidGoop::class)!!
-        acidGoop.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        acidGoop.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.TYPE pairTo goopType.name))
         this.acidGoop = acidGoop
     }
 

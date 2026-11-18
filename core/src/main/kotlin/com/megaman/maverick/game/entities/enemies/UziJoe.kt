@@ -50,16 +50,19 @@ import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.*
 
-class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IScalableGravityEntity,
+class UziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableEntity, IScalableGravityEntity,
     IAnimatedEntity, IFaceable, IDirectional {
 
     companion object {
-        const val TAG = "GreenUziJoe"
+        const val TAG = "UziJoe"
+
+        private const val FROZEN = "frozen"
 
         private const val BLAST_START_DELAY = 0.5f
         private const val BLAST_DUR = 2.5f
@@ -85,13 +88,19 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
             "stand_shoot" pairTo AnimationDef(),
             "stand_shoot_start" pairTo AnimationDef(),
             "stand_shoot_blast" pairTo AnimationDef(2, 1, 0.1f, true),
-            "frozen" pairTo AnimationDef()
+            FROZEN pairTo AnimationDef()
         )
 
         private val regions = ObjectMap<String, TextureRegion>()
+
+        private fun regionName(skin: SpriteSkin, key: String) =
+            if (key == FROZEN) SpriteSkin.DEFAULT.regionName(TAG, key) else skin.regionName(TAG, key)
+
+        private fun animationKey(skin: SpriteSkin, key: String) =
+            if (key == FROZEN) key else skin.regionName(TAG, key)
     }
 
-    private enum class GreenUziJoeState { STAND, JUMP }
+    private enum class UziJoeState { STAND, JUMP }
 
     override var direction: Direction
         get() = body.direction
@@ -115,7 +124,8 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
         }
     )
 
-    private lateinit var state: GreenUziJoeState
+    private lateinit var state: UziJoeState
+    private var skin = SpriteSkin.DEFAULT
 
     private var canJump = true
 
@@ -158,9 +168,10 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            animDefs.forEach { entry ->
-                val key = entry.key
-                regions.put(key, atlas.findRegion("$TAG/$key"))
+            SpriteSkin.entries.forEach { skin ->
+                animDefs.keys().forEach { key ->
+                    regions.put(animationKey(skin, key), atlas.findRegion(regionName(skin, key)))
+                }
             }
         }
         super.init()
@@ -170,6 +181,8 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(spawnProps)
 
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
@@ -188,7 +201,7 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
         scaleBlastVelocity = spawnProps.getOrDefault("${ConstKeys.SCALE}_${ConstKeys.BLAST}", true, Boolean::class)
 
         GameLogger.debug(TAG, "onSpawn(): set state to STAND")
-        state = GreenUziJoeState.STAND
+        state = UziJoeState.STAND
 
         updateFacing()
 
@@ -236,7 +249,8 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo trajectory,
-                ConstKeys.DIRECTION pairTo direction
+                ConstKeys.DIRECTION pairTo direction,
+                ConstKeys.COLOR pairTo skin.name
             )
         )
 
@@ -283,12 +297,12 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
             }
 
             when (state) {
-                GreenUziJoeState.STAND -> if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
+                UziJoeState.STAND -> if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
                     GameLogger.debug(TAG, "update(): set state to JUMP")
-                    state = GreenUziJoeState.JUMP
+                    state = UziJoeState.JUMP
                 }
 
-                GreenUziJoeState.JUMP -> {
+                UziJoeState.JUMP -> {
                     if (!body.isSensing(BodySense.FEET_ON_GROUND)) return@add
 
                     val shouldStand = body.physics.velocity.let { velocity ->
@@ -301,7 +315,7 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
                     }
                     if (shouldStand) {
                         GameLogger.debug(TAG, "update(): set state to STAND")
-                        state = GreenUziJoeState.STAND
+                        state = UziJoeState.STAND
                     }
                 }
             }
@@ -353,7 +367,7 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
             (JUMP_SENSOR_HEIGHT * ConstVals.PPM / 2f) - (body.getHeight() / 2f)
         jumpTriggerFixture.setReceiver(Receivers.FILTER) { fixture -> fixture.getType() == FixtureType.PLAYER }
         jumpTriggerFixture.setReceiver(Receivers.CONSUMER) { processState, _ ->
-            if (canJump && state == GreenUziJoeState.STAND && processState == ProcessState.BEGIN) jump()
+            if (canJump && state == UziJoeState.STAND && processState == ProcessState.BEGIN) jump()
         }
         body.addFixture(jumpTriggerFixture)
         jumpTriggerFixture.drawingColor = Color.DARK_GRAY
@@ -426,7 +440,7 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
         .animator(
             AnimatorBuilder()
                 .setKeySupplier keySupplier@{
-                    if (frozen) return@keySupplier "frozen"
+                    if (frozen) return@keySupplier FROZEN
 
                     var key = state.name.lowercase()
 
@@ -436,14 +450,16 @@ class GreenUziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableE
                         else -> "_shoot"
                     }
 
-                    return@keySupplier key
+                    return@keySupplier animationKey(skin, key)
                 }
                 .applyToAnimations { animations ->
-                    animDefs.forEach { entry ->
-                        val key = entry.key
-                        val def = entry.value
-                        val animation = Animation(regions[key], def.rows, def.cols, def.durations, def.loop)
-                        animations.put(key, animation)
+                    SpriteSkin.entries.forEach { skin ->
+                        animDefs.forEach { entry ->
+                            val key = animationKey(skin, entry.key)
+                            val def = entry.value
+                            val animation = Animation(regions[key], def.rows, def.cols, def.durations, def.loop)
+                            animations.put(key, animation)
+                        }
                     }
                 }
                 .build()

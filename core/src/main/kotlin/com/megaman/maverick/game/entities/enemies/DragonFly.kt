@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.enemies
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.collision.BoundingBox
+import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
@@ -41,6 +42,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getBoundingRectangle
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -55,14 +57,17 @@ class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SM
 
     companion object {
         const val TAG = "DragonFly"
-        private var textureRegion: TextureRegion? = null
-        private var frozenRegion: TextureRegion? = null
+        private const val FROZEN = "frozen"
+        private val regions = ObjectMap<String, TextureRegion>()
         private const val CULL_TIME = 2f
         private const val VERT_SPEED = 18f
         private const val HORIZ_SPEED = 14f
         private const val CHANGE_BEHAV_DUR = 0.35f
         private const val VERT_SCANNER_OFFSET = 2f
         private const val HORIZ_SCANNER_OFFSET = 3f
+
+        private fun flyRegionName(skin: SpriteSkin) =
+            if (skin == SpriteSkin.DEFAULT) TAG else skin.regionName(TAG, TAG)
     }
 
     override lateinit var direction: Direction
@@ -82,12 +87,17 @@ class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SM
 
     private var toLeftBounds = false
 
+    private var skin = SpriteSkin.DEFAULT
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         super.init()
-        if (textureRegion == null) {
-            textureRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, "DragonFly")
-            frozenRegion = services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, "$TAG/frozen")
+        if (regions.isEmpty) {
+            SpriteSkin.entries.forEach { skin ->
+                val name = flyRegionName(skin)
+                regions.put(name, services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, name))
+            }
+            regions.put(FROZEN, services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, "$TAG/$FROZEN"))
         }
         addComponent(defineAnimationsComponent())
     }
@@ -96,6 +106,8 @@ class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SM
         spawnProps.put(ConstKeys.CULL_TIME, CULL_TIME)
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(spawnProps)
 
         when {
             spawnProps.containsKey(ConstKeys.DIRECTION) -> {
@@ -272,11 +284,12 @@ class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SM
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (frozen) "frozen" else "fly" }
-        val animations = objectMapOf<String, IAnimation>(
-            "fly" pairTo Animation(textureRegion!!, 1, 2, 0.1f, true),
-            "frozen" pairTo Animation(frozenRegion!!)
-        )
+        val keySupplier: (String?) -> String? = { if (frozen) FROZEN else flyRegionName(skin) }
+        val animations = objectMapOf<String, IAnimation>(FROZEN pairTo Animation(regions[FROZEN]))
+        SpriteSkin.entries.forEach { skin ->
+            val name = flyRegionName(skin)
+            animations.put(name, Animation(regions[name], 1, 2, 0.1f, true))
+        }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

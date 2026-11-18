@@ -7,7 +7,6 @@ bosses.PenguinMiniBoss # no region
 bosses.SigmaRat # no SigmaRat regions
 bosses.SigmaRatClaw # no SigmaRat regions
 enemies.BombPenguinBot # not implemented
-enemies.BulbBlaster # silent: no BulbBlaster/frozen region
 enemies.CanonMet # not implemented
 enemies.Coldier # silent: no Coldier/frozen region
 enemies.Merserker # no regions

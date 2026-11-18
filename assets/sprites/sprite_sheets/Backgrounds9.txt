@@ -1,0 +1,19 @@
+Backgrounds9.png
+size: 1024, 1922
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+WilyStage1/CaveWall
+  rotate: false
+  xy: 0, 0
+  size: 1024, 1024
+  orig: 1024, 1024
+  offset: 0, 0
+  index: -1
+WilyStage1/WilyWall
+  rotate: false
+  xy: 0, 1026
+  size: 1024, 896
+  orig: 1024, 896
+  offset: 0, 0
+  index: -1
