@@ -28,3 +28,12 @@ Read this file before you draft or edit a level (TMX), or an entity that reads p
   read its class: look for `invincible` (for example `SpringHead`) and other no-damage logic such as a permanent
   shield, and check that the enemy cannot be culled or stuck out of reach. Keep drafts simple, and check each enemy's
   real behavior in its code.
+- **A test room for an enemy lets the enemy respawn.** When a check kills or changes an enemy that the owner tests
+  again and again, make the room wide enough to respawn it without a restart. A destroyed enemy's spawner rearms when
+  its spawn rectangle is fully outside the camera view, and spawns again when the rectangle comes back into view
+  (`spawns/SpawnerForBoundsEntered.kt`). So put the player spawn near one wall and the enemy more than one view width
+  (16 tiles) plus a margin of about 8 tiles from that wall: the owner walks to the wall, the enemy goes off camera,
+  and walking back respawns it. Say it in the check: "walk to the left wall and back to respawn the enemies".
+
+  Example (owner, 2026-11-18, branch `079a`): `RefactorTest079` room `charged_stagger` became 40 tiles wide, with the
+  `Met`s 26 and 30 tiles from the left wall, so the charged-shot stun can be tried many times.
