@@ -10,7 +10,6 @@ import com.megaman.maverick.game.players.nonPlayer
 import com.megaman.maverick.game.players.registeredPlayer
 import com.megaman.maverick.game.world.body.FixtureType
 import io.kotest.core.spec.style.DescribeSpec
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
@@ -25,31 +24,23 @@ class GateRuleTest : DescribeSpec({
     }
 
     describe("GateRule") {
-        it("triggers a triggerable gate for a player") {
+        it("marks the touching player on the gate at the begin and each continue of a contact") {
             val gate = mockk<Gate>(relaxed = true)
-            every { gate.isTriggerable() } returns true
+            val player = registeredPlayer()
 
-            GateRule.onBegin(fixture(FixtureType.SIDE, registeredPlayer()), fixture(FixtureType.GATE, gate), 0f)
+            GateRule.onBegin(fixture(FixtureType.SIDE, player), fixture(FixtureType.GATE, gate), 0f)
+            GateRule.onContinue(fixture(FixtureType.FEET, player), fixture(FixtureType.GATE, gate), 0f)
 
-            verify(exactly = 1) { gate.trigger() }
+            verify(exactly = 2) { gate.markTouched(player) }
         }
 
-        it("does not trigger the gate for a player if the gate is not triggerable") {
+        it("marks nothing for another entity") {
             val gate = mockk<Gate>(relaxed = true)
-            every { gate.isTriggerable() } returns false
-
-            GateRule.onBegin(fixture(FixtureType.SIDE, registeredPlayer()), fixture(FixtureType.GATE, gate), 0f)
-
-            verify(exactly = 0) { gate.trigger() }
-        }
-
-        it("does not trigger the gate for another entity") {
-            val gate = mockk<Gate>(relaxed = true)
-            every { gate.isTriggerable() } returns true
 
             GateRule.onBegin(fixture(FixtureType.SIDE, nonPlayer()), fixture(FixtureType.GATE, gate), 0f)
+            GateRule.onContinue(fixture(FixtureType.SIDE, nonPlayer()), fixture(FixtureType.GATE, gate), 0f)
 
-            verify(exactly = 0) { gate.trigger() }
+            verify(exactly = 0) { gate.markTouched(any()) }
         }
     }
 })

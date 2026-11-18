@@ -54,7 +54,10 @@ private class RespawnRig(lives: Int = 3) {
     val center = Vector3(200f, 40f, 0f)
     val world = SimpleGridWorldContainer(32)
     val beams = Array(2) { mockk<BeamDown>(relaxed = true) }
-    val respawn = SlotRespawn(services, PartnerSpot(WarpSpotTest(32f, services.rules) { world }, view, center), beams)
+    var hold = false
+    val respawn = SlotRespawn(services, PartnerSpot(WarpSpotTest(32f, services.rules) { world }, view, center), beams) {
+        hold
+    }
     val first = player(0, 200f, 40f)
     val second = player(1, 230f, 40f)
 
@@ -163,14 +166,14 @@ class SlotRespawnTest : DescribeSpec({
     }
 
     describe("the respawn") {
-        it("waits while the room transition runs, and the delay goes on after it") {
+        it("waits while the hold is on (a room transition or a gate), and the delay goes on after it") {
             val rig = RespawnRig()
             rig.kill(rig.second)
-            rig.services.levelState.roomTransition = true
+            rig.hold = true
             rig.repeatUpdate(30)
             verify(exactly = 0) { rig.engine.spawn(any(), any()) }
 
-            rig.services.levelState.roomTransition = false
+            rig.hold = false
             rig.repeatUpdate(9)
             verify(exactly = 0) { rig.engine.spawn(any(), any()) }
             rig.repeatUpdate(2)

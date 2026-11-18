@@ -127,6 +127,12 @@ class CameraRoomBounds(
 
         GameLogger.debug(TAG, "transitionToRoom(): transition direction = $direction")
 
+        if (axisOnly && direction != Direction.LEFT && direction != Direction.RIGHT) throw IllegalArgumentException(
+            "The axis-only transition to room $roomName resolves to $direction" +
+                (if (transDirection == null) " from the room centers" else "") +
+                ": give it a LEFT or RIGHT transition direction, or place the rooms side by side"
+        )
+
         transition.start(
             camera,
             nextGameRoom.rectangle,

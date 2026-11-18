@@ -13,6 +13,7 @@ blocks.DynamicBlock: DynamicBlock
 blocks.FeetRiseSinkBlock: FeetRiseSinkBlock,Block
 blocks.FireballBlock: FireballBlock,Block
 blocks.FrozenBlock: FrozenBlock,Block
+blocks.GateBlock: GateBlock,Block
 blocks.GearTrolley: GearTrolley,Block
 blocks.GoldBlock: GoldBlock,Block
 blocks.GravityBlock: GravityBlock

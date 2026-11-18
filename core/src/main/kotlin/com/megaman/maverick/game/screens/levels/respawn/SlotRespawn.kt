@@ -26,7 +26,8 @@ import com.megaman.maverick.game.screens.levels.camera.PartnerSpot
 class SlotRespawn(
     private val services: MegaServices,
     private val spots: PartnerSpot,
-    private val beams: Array<BeamDown>
+    private val beams: Array<BeamDown>,
+    private val hold: () -> Boolean
 ) : Updatable, Resettable {
 
     companion object {
@@ -89,7 +90,7 @@ class SlotRespawn(
     }
 
     private fun waitForSpot(player: IPlayer, slot: Int, delta: Float) {
-        if (services.levelState.roomTransition || services.gameCamera.rotating) return
+        if (hold()) return
         times[slot] += delta
         if (times[slot] < DELAY) return
 

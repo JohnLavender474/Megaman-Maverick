@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
+import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
@@ -33,6 +34,8 @@ import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
 import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.events.IEventListener
+import com.maverick.game.engine.players.IPlayer
+import com.maverick.game.engine.players.forEach
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
@@ -47,7 +50,10 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.state.mapObjectId
+import com.megaman.maverick.game.entities.state.PlayPhase
+import com.megaman.maverick.game.entities.state.playPhase
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.RoomTransitionEventKeys
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
@@ -98,6 +104,7 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
     private val timer = Timer(DURATION)
 
     private var triggerable = true
+    private val touchedThisFrame = ObjectSet<IPlayer>()
     private var resettable = false
     private var showCloseEvent = true
     private var transitionFinished = false
@@ -215,15 +222,30 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
         state = GateState.OPENABLE
         transitionFinished = false
         triggerable = isUnlockedByDefault()
+        touchedThisFrame.clear()
+    }
+
+    fun markTouched(player: IPlayer) {
+        touchedThisFrame.add(player)
     }
 
     private fun isUnlockedByDefault() = unlockKey == null
 
-    fun isTriggerable() = state == GateState.OPENABLE
+    private fun everyArrivingPlayerTouched(): Boolean {
+        var arrivingTouched = false
+        players.forEach { player ->
+            val arriving = player.existenceState.liveAfterUpdate && player.playPhase != PlayPhase.POST_PLAY
+            if (!arriving) return@forEach
+            if (!touchedThisFrame.contains(player)) return false
+            arrivingTouched = true
+        }
+        return arrivingTouched
+    }
 
-    fun trigger() {
-        if (!triggerable) return
+    // TODO: a vertical gate pans each player only on its axis once phase 3 adds the y branch (item 047)
+    private fun pansOnItsAxis() = direction.isHorizontal() && transDirection?.isHorizontal() != false
 
+    private fun trigger() {
         GameLogger.debug(TAG, "trigger(): nextRoomKey=$nextRoomKey, mapObjectId=$mapObjectId")
 
         state = GateState.OPENING
@@ -232,6 +254,11 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({
+        if (state == GateState.OPENABLE && triggerable && everyArrivingPlayerTouched()) trigger()
+        // TODO: the set is cleared per frame, not per world step; in a frame with 2 or more steps, a player who leaves
+        //  in one step and a partner who arrives in a later step both count (item 047, branch 047k, decision D7)
+        touchedThisFrame.clear()
+
         if (state == GateState.OPENING) {
             timer.update(it)
             if (timer.isFinished()) {
@@ -244,7 +271,8 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
                     Event(
                         EventType.NEXT_ROOM_REQ, props(
                             ConstKeys.ROOM pairTo nextRoomKey,
-                            "${ConstKeys.TRANS}_${ConstKeys.DIRECTION}" pairTo transDirection
+                            "${ConstKeys.TRANS}_${ConstKeys.DIRECTION}" pairTo transDirection,
+                            RoomTransitionEventKeys.AXIS_ONLY pairTo pansOnItsAxis()
                         )
                     )
                 )
@@ -311,7 +339,8 @@ class Gate(services: MegaServices) : MegaGameEntity(services), IBodyEntity, IAud
                     gateSize.y = 1.5f
                 }
                 else -> {
-                    gateSize.x = 1.5f
+                    // TODO: UP and DOWN gates in co-op are not yet as the owner wants; co-op levels avoid them (item 170)
+                    gateSize.x = if (services.rules.spawnGateBlocks) 3f else 1.5f
                     gateSize.y = 1f
                 }
             }

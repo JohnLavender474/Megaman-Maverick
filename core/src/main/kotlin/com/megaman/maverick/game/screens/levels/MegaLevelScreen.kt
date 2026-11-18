@@ -74,6 +74,7 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaHeartTank
 import com.megaman.maverick.game.entities.sensors.Gate
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.events.EventType
+import com.megaman.maverick.game.events.RoomTransitionEventKeys
 import com.megaman.maverick.game.fights.FightDirector
 import com.megaman.maverick.game.fights.FightPlans
 import com.megaman.maverick.game.input.SystemButton
@@ -226,6 +227,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private lateinit var cameraScroll: CameraScroll
     private var viewEdges: CameraViewEdges? = null
     private var slotRespawn: SlotRespawn? = null
+    private var gateRunning = false
     private var playersFocus: PlayersFocus? = null
     private var roomExits: CameraRoomExits? = null
     private lateinit var cameraShake: CameraShake
@@ -380,7 +382,9 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             game.services,
             partnerSpot,
             Array(game.players.capacity) { BeamDown(game.assets) { game.addDrawable(it) } }
-        ) else null
+        ) {
+            game.levelState.roomTransition || game.cameraView.rotating || gateRunning
+        } else null
         val playersFocus = viewEdges?.let { edges ->
             PlayersFocus(game.players, game.cameraView, game.services.rules.viewEdges, viewEdgesOn) { edges.isHeld(it) }
         }
@@ -606,6 +610,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
         cameraFollow.stopSmoothFollow()
         game.levelState.roomTransition = false
+        gateRunning = false
 
         slotRespawn?.reset()
 
@@ -686,7 +691,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
                 val roomName = event.properties.get(ConstKeys.ROOM) as String
 
                 val transDirection = event.getProperty("${ConstKeys.TRANS}_${ConstKeys.DIRECTION}", Direction::class)
-                val isTrans = roomBounds.transitionToRoom(gameCamera, roomName, transDirection)
+                val axisOnly = event.getProperty(RoomTransitionEventKeys.AXIS_ONLY)!!
+                val isTrans = roomBounds.transitionToRoom(gameCamera, roomName, transDirection, axisOnly)
 
                 if (isTrans) GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
@@ -698,6 +704,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.GATE_INIT_OPENING -> {
+                gateRunning = true
                 GameLogger.debug(
                     MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): gate init opening --> start room transition"
                 )
@@ -713,6 +720,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             }
 
             EventType.GATE_INIT_CLOSING -> {
+                gateRunning = false
                 GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): gate init closing")
 
                 val systemsToTurnOn = gdxArrayOf(
@@ -1070,6 +1078,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         audioMan.unsetMusic()
 
         game.levelState.roomTransition = false
+        gateRunning = false
         eventsMan.submitEvent(Event(EventType.TURN_CONTROLLER_ON))
 
         cameraFollow.stopSmoothFollow()

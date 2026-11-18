@@ -37,7 +37,7 @@ fun megaContactRules(
         pair(ContactRuleIds.SIDE_SIDE, SIDE, SIDE, SideSideRule, BEGIN, CONTINUE, END)
         pair(ContactRuleIds.SHIELD_SIDE, SHIELD, SIDE, ShieldSideRule, BEGIN)
         pair(ContactRuleIds.BLOCK_SIDE, BLOCK, SIDE, BlockSideRule, BEGIN, CONTINUE, END)
-        sets(ContactRuleIds.GATE, setOf(SIDE, FEET, HEAD), setOf(GATE), GateRule, BEGIN)
+        sets(ContactRuleIds.GATE, setOf(SIDE, FEET, HEAD), setOf(GATE), GateRule, BEGIN, CONTINUE)
         pair(ContactRuleIds.SIDE_ICE, SIDE, ICE, SideIceRule, BEGIN, CONTINUE, END)
         pair(ContactRuleIds.FEET_BLOCK, FEET, BLOCK, FeetBlockRule, BEGIN, CONTINUE, END)
         pair(ContactRuleIds.FEET_ICE, FEET, ICE, FeetIceRule, BEGIN, CONTINUE, END)

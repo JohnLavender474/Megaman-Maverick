@@ -7,7 +7,8 @@ import com.megaman.maverick.game.players.rootPlayer
 data class SessionRules(
     val friendlyFire: Boolean,
     val viewEdges: ViewEdgeRules = ViewEdgeRules(),
-    val slotRespawn: Boolean = false
+    val slotRespawn: Boolean = false,
+    val spawnGateBlocks: Boolean = false
 ) {
 
     fun isFriendlyFire(source: IDamagerEntity, target: MegaGameEntity): Boolean {
@@ -24,7 +25,8 @@ enum class GameMode(val rules: SessionRules) {
         SessionRules(
             friendlyFire = false,
             viewEdges = ViewEdgeRules(bottom = ViewEdgeRule.WARP, delay = 1f),
-            slotRespawn = true
+            slotRespawn = true,
+            spawnGateBlocks = true
         )
     ),
     PVP(SessionRules(friendlyFire = true))

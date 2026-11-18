@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="300" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="502">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="300" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="504">
  <tileset firstgid="1" source="../tsx/Wily2.tsx"/>
  <tileset firstgid="253" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1277" source="../tsx/UnderwaterFanPillar_Gray.tsx"/>
@@ -617,6 +617,7 @@
   <object id="366" x="2304" y="3040" width="32" height="32"/>
   <object id="367" x="2400" y="2720" width="192" height="32"/>
   <object id="369" x="2496" y="3104" width="96" height="32"/>
+  <object id="502" name="GateBlock" x="2496" y="3072" width="96" height="32"/>
   <object id="371" name="ConveyorBelt" x="4288" y="2848" width="224" height="32">
    <properties>
     <property name="left" type="bool" value="true"/>
@@ -734,6 +735,7 @@
   <object id="485" x="7744" y="3968" width="896" height="96"/>
   <object id="486" x="8416" y="3008" width="224" height="448"/>
   <object id="491" x="7936" y="3552" width="704" height="32"/>
+  <object id="503" name="GateBlock" x="8160" y="3520" width="96" height="32"/>
   <object id="495" x="7968" y="3008" width="448" height="192"/>
  </objectgroup>
  <objectgroup id="12" name="items">
