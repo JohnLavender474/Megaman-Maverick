@@ -7,6 +7,7 @@ to every task.
 | File | Read it before you |
 |---|---|
 | [`git.md`](git.md) | commit, merge, run Gradle or stop a process (every task) |
+| [`reports.md`](reports.md) | report work to the owner (every task) |
 | [`art.md`](art.md) | draw, fix, convert or credit art: sprites, tiles, backgrounds |
 | [`assets.md`](assets.md) | add or change frames, atlases or other asset files |
 | [`temp-files.md`](temp-files.md) | write a helper script, a generator or a draft |
