@@ -1,11 +1,11 @@
 # 079: Smarter behavior for simple enemies
 
-- Status: idea
+- Status: active
 - Type: feature
 - Objectives: `O4`
 - Depends on: none
 - Related: `015`, `074`, `117`
-- Branches: none yet
+- Branches: `mega-refactor-079a-smarter-met` (the `Met`)
 
 ## Goal
 
@@ -35,6 +35,17 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 > Certain enemies are overly simplistic in behavior. Starkner is an example: all he does is run toward Mega Man with a
 > delay between each charge. Met is another example: he could be a bit smarter by avoiding running into bottomless
 > pits.
+
+## Decisions
+
+- 2026-11-18: merge target is `master` directly. Each enemy is its own branch; the first is
+  `mega-refactor-079a-smarter-met`.
+- 2026-11-18: the `Met` avoids a `DEATH` area and a fall with no ground; it may still drop onto safe ground. It jumps
+  a gap toward the player, a step it can clear, or to a higher platform where the player is. A hard-mode `Met` seeks
+  the player more and dodges some shots.
+- 2026-11-18: a charged hit on a `Met` with its helmet does no damage. It stops the `Met` and pops the helmet up (more
+  for a full charge); the 3rd charged hit breaks the helmet (`FallingPiece` debris) and starts a desperate phase.
+- 2026-11-18: the ground check is one shared world-probe helper, not fixture sensors.
 
 ## Open questions
 

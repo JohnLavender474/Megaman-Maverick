@@ -73,7 +73,7 @@ None found. `051` is data-driven, and no merged work adds an enemy or boss that 
 | `077` | active | [Better boss fights for every boss: new and panic attacks, aiming, death animations](../items/077-robot-master-attacks/ITEM.md) (main) |
 | `078` | idea | [Stage redesigns (epic)](../items/078-robot-master-alt-paths/ITEM.md) (main) |
 | `166` | dropped | [Desert Man's stage rework (epic)](../items/166-desert-man-stage/ITEM.md) (main) |
-| `079` | idea | [Smarter behavior for simple enemies](../items/079-smarter-enemies/ITEM.md) (main) |
+| `079` | active | [Smarter behavior for simple enemies](../items/079-smarter-enemies/ITEM.md) (main) |
 | `080` | dropped | [A larger MockingBit and MockingByte section in Timber Woman's stage](../items/080-timber-woman-mocking-section/ITEM.md) (main) |
 | `089` | idea | [Conditional crush surfaces](../items/089-conditional-crush-surfaces/ITEM.md) (main) |
 | `015` | planned | [One entity state machine (enter/update/exit, state-owned timers)](../items/015-entity-fsm/ITEM.md) |
