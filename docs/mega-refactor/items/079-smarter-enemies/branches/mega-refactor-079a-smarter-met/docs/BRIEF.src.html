@@ -1,68 +1,92 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>079a Smarter Met</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 079 · Branch 079a · Objectives O4 · <span class="chip ok">approved 2026-11-18</span></p>
+    <h1>Smarter Met</h1>
+    <p class="lead">The <code>Met</code> stops at death pits, jumps when a jump is safe and useful, and reacts to charged shots: a stagger with the helmet up, and on the 3rd charged hit the helmet breaks and the <code>Met</code> goes desperate. A shared <code>GroundProbe</code> answers "is the ground safe here?" for any walking enemy.</p>
+    <p class="meta"><b>In play:</b> Mets no longer fall into pits; they jump gaps and steps; a charged shot pops the helmet up (higher for a full charge); 3 charged hits break it; hard-mode Mets chase and dodge. <code>run_only</code> Mets (the <code>GutsTank</code> fight) do not change.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>3 timed states become 7 states that read the ground and the hits</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
-flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+      <div class="frame"><pre class="mermaid" aria-label="Today: three states on timers">
+stateDiagram-v2
+  [*] --> SHIELDING
+  SHIELDING --> POP_UP: 1.15 s, no shot coming
+  POP_UP --> RUNNING: shoots once, 0.5 s
+  RUNNING --> SHIELDING: 0.5 s, or feet leave ground
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>The run is blind: the Met sees a pit only after its feet leave the ground. A charged shot bounces off the helmet or kills an exposed Met at once.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
-flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+      <div class="frame"><pre class="mermaid" aria-label="After: seven states">
+stateDiagram-v2
+  [*] --> SHIELDING
+  SHIELDING --> POP_UP: timer
+  POP_UP --> RUNNING: shoots
+  RUNNING --> JUMPING: JumpPlanner finds a safe, useful jump
+  RUNNING --> SHIELDING: timer, or GroundProbe sees a pit (turns)
+  JUMPING --> SHIELDING: lands
+  SHIELDING --> STAGGERED: charged hit 1 or 2
+  RUNNING --> STAGGERED: charged hit 1 or 2
+  POP_UP --> STAGGERED: charged hit 1 or 2
+  STAGGERED --> SHIELDING: exposed time ends
+  STAGGERED --> DESPERATE_RUN: charged hit 3, helmet breaks
+  SHIELDING --> DESPERATE_RUN: charged hit 3, helmet breaks
+  RUNNING --> DESPERATE_RUN: charged hit 3, helmet breaks
+  DESPERATE_RUN --> DESPERATE_PAUSE: about 2 s
+  DESPERATE_PAUSE --> DESPERATE_RUN: about 0.3 s
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>The states run on the engine <code>StateMachine</code>. Each run step asks <code>GroundProbe</code> first; a jump is tried only along an arc that <code>JumpPlanner</code> has checked.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>The Met asks the probe before each run step</h2></div>
+    <p>Today, <code>Met</code> in <code>RUNNING</code>:</p>
+<pre><code>if (!body.isSensing(BodySense.FEET_ON_GROUND)) {
+    behavior = MetBehavior.SHIELDING
+    return@add
+}
+body.physics.velocity.x = runImpulse</code></pre>
     <p>After:</p>
-<pre><code><new code></code></pre>
+<pre><code>val ahead = groundProbe.groundAhead(body, facing, direction, maxDrop = MAX_SAFE_DROP)
+when {
+    ahead.safe -&gt; body.physics.velocity.x = runImpulse
+    jumpPlanner.plan(body, jumpGoal(), out = jump) -&gt; startJump(jump)
+    else -&gt; stopAndTurn()
+}</code></pre>
+    <p>A charged hit goes to one handler, from the helmet fixture or from the body:</p>
+<pre><code>shieldFixture.setReceiver(Receivers.HIT_BY_PROJECTILE) { if (it is ChargedShot) onChargedHit(it) }
+
+private fun onChargedHit(shot: ChargedShot) {
+    helmetHits++
+    if (helmetHits &gt;= HELMET_HITS_TO_BREAK) breakHelmet() else stagger(full = shot.fullyCharged)
+}</code></pre>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>3 decisions, answered</h2></div>
+    <p><span class="chip warn">changed 2026-11-18</span> <b>Round 1, owner:</b> the stagger is now a stun. The helmet is its own entity (<code>MetHelmet</code>: body, shield, damager, no block collision) that flies up, follows the head and lands back on it. The landing ends the stun, within a minimum of 0.89 s and a maximum of 1.77 s (derived from the helmet flight; see <code>NOTES.md</code>). The stunned Met shows spinning stars; the landing pushes it down and back up. The airborne helmet hurts Mega Man, and a charged hit on it counts toward the 3.</p>
+    <p>The main design is set from your answers: stagger with no damage while the helmet is on, Claude draws the art, one world probe, the proposed jump rules, a smarter hard mode. These details are still open.</p>
+    <p><b>D1</b> <span class="chip ok">Chosen</span> It bounces off with the dink, as today, and counts toward the 3 hits.</p>
+    <p><b>D2</b> <span class="chip ok">Chosen</span> A palette copy of each new Met frame.</p>
+    <p><b>D3</b> <span class="chip ok">Chosen</span> About 1 shot in 3.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>The turned Met is the case most likely to break</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>4 gravity directions.</b> No live map turns a Met, but the code supports it. The probe and the jump arcs work in the Met's local frame; a test room has a Met on a ceiling and on a wall.</li>
+      <li><span class="chip warn">risk</span> <b>Gauntlet waves.</b> A Met that jumps away or turns at a pit can slow a wave. It still dies to every shot, so a wave cannot lock.</li>
+      <li><span class="chip warn">risk</span> <b>Atlas repack.</b> New frames go into <code>Enemies1</code>. A script checks that every old region keeps its name and pixels.</li>
     </ul>
   </section>
 
@@ -70,14 +94,25 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-079a-smarter-met</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_079 --room pit_edge</code>: the Met stops at the pit and turns.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_079 --room safe_drop</code>: the Met walks off onto safe ground.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_079 --room gap_jump</code>: the Met jumps the gap toward Megaman only.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_079 --room step_jump</code>: it jumps 1- and 2-tile steps, turns at a high wall.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_079 --room platform_jump</code>: it jumps to Megaman's higher platform.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_079 --room charged_stagger</code>: half and full charge stagger, no damage.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_079 --room helmet_break</code>: the 3rd charged hit breaks the helmet; desperate run.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_079 --room helmet_break --difficulty hard</code>: chase and dodge.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_079 --room turned_met</code>: ceiling and wall Mets still work.</li>
+      <li><code>./run-game-alpha.sh --level DESERT_MAN --room room9</code> and <code>--room room10</code>: real-stage Mets.</li>
+      <li><code>./run-game-alpha.sh --level GAUNTLET_1 --room room1</code>: Met waves end.</li>
+      <li><code>./run-game-alpha.sh --level WILY_STAGE_2 --room room9 --heartTanks all --healthTanks all</code>: GutsTank's Mets as before.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
     <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-079a-smarter-met/docs/SCOPE.md</code></p>
+    <p><code>docs/mega-refactor/items/079-smarter-enemies/branches/mega-refactor-079a-smarter-met/docs/SCOPE.md</code></p>
     <p><code>.../mega-refactor-079a-smarter-met/docs/CONTRACT.md</code></p>
   </section>
 </main>

@@ -252,6 +252,9 @@ comprehensive listing of the credits for the artwork used in this game.
     - Nutt Glider
 - Mister Mike
   - [Sniper Joe Expanded](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/159822/)
+- Met and Snow Met: helmet, stunned with stars, helmet landing, worried run, helmet pickup, crying, no helmet, jump and helmet pieces
+  - Original by Capcom, sourced from https://www.spriters-resource.com/
+  - Updated by Claude Opus 5.5, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
 - Bulb Blaster (Wily Stage 1 skin)
   - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
   - Inspired by the earlier Bulb Blaster sprite of this game (the frame layout and the wing flap)

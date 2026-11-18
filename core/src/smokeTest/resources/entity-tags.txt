@@ -297,6 +297,7 @@ hazards.LavaDropSupplier: LavaDropSupplier
 hazards.Lava: Lava
 hazards.LavaRiver: LavaRiver
 hazards.MagmaFlame: MagmaFlame
+hazards.MetHelmet: MetHelmet
 hazards.PipePuff: PipePuff
 hazards.PreciousCubeChute: PreciousCubeChute
 hazards.PreciousSpike: PreciousSpike
@@ -441,6 +442,8 @@ special.RoomShaker: RoomShaker
 special.RotationAnchor: RotationAnchor
 special.SpringBouncer: SpringBouncer
 special.SwimBooster: SwimBooster
+special.TestChargedShooter: TestChargedShooter
+special.TestHelmetMover: TestHelmetMover
 special.TestStunPulser: TestStunPulser
 special.TestTentacle: TestTentacle
 special.TestWavyTentacleController: TestWavyTentacleController
