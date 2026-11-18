@@ -37,3 +37,6 @@ Read this file before you draft or edit a level (TMX), or an entity that reads p
 
   Example (owner, 2026-11-18, branch `079a`): `RefactorTest079` room `charged_stagger` became 40 tiles wide, with the
   `Met`s 26 and 30 tiles from the left wall, so the charged-shot stun can be tried many times.
+- **A level for co-op has no `UP` or `DOWN` gate.** Use `LEFT` and `RIGHT` gates only. In co-op, vertical gates are not
+  yet as the owner wants (owner, 2026-11-18, branch `047k`; `TODO` at `Gate`). This rule ends when that follow-up
+  item is done. Existing single-player levels keep their vertical gates.
