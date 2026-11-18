@@ -63,3 +63,12 @@ Read this file before you draw, fix or convert art (sprites, tiles, backgrounds)
   bosses). When ratio 2 makes a small enemy look squished or too low on detail, propose a smaller ratio (for example
   1.6) for that object only, and scale its body, offsets and shots by the same factor (owner, 2026-11-03, Junkroid and
   Hover Gunner). In the demake tools, record the ratio in the object's `catalog/nessprite-<name>.json`.
+- **Match the model to the art task.** Every art task with an artistic choice goes to Claude Fable 5.2: new art,
+  redraws, and also recolors and reskins (the choice of a palette and how it reads is artistic). A lighter model
+  (Claude Sonnet 5.5) does only purely mechanical steps, for example applying a color map that the Fable agent planned,
+  repeating a fixed edit over many frames, or running checks. The Fable art agent can plan the palette and hand its
+  application to a Sonnet subagent to save Fable tokens, then review the result (owner, 2026-11-18, branch `078a`: the
+  Sonnet-only enemy reskins did not look good). The credit names the model that made the artistic choices.
+- **Art goes to an art agent.** The main session does not draw, recolor or redraw art itself. It writes a brief and
+  hands the art to one art subagent, which can delegate parts to other agents (with the model of the rule above).
+  The main session keeps the code, the packing, the maps and the checks (owner, 2026-11-18, branch `078a`).
