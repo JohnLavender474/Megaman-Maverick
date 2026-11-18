@@ -105,6 +105,12 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 - `MegaPlayers.targetFor` ignores the seeker (`MegaPlayers.kt:34`). Input is built for slot 0 only. Lives are one shared count (`GameState.kt:39`).
 - `Players.unregister` has only test callers. Leave during play is a possible first caller.
 
+## Notes for active branches
+
+- `047k` (2026-11-18, after the `078a` merge, owner): `078a` uses object ids 499 to 507 in `WilyStage1_v2.tmx`
+  (`nextobjectid` 508). Before `047k` merges, renumber its new `GateBlock` (today 499) to a free id and take
+  `master`'s `nextobjectid`.
+
 ## Open questions
 
 - Camera: closed 2026-11-06 (group camera with edge walls, see "Decisions").

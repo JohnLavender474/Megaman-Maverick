@@ -86,6 +86,12 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 ## Notes for active branches
 
+- `077c` (2026-11-18, after the `078a` merge, owner): `078a` uses object ids 499 to 507 in `WilyStage1_v2.tmx`
+  (`nextobjectid` 508). Before `077c` merges, renumber its new objects `SerpentPathA` and `SerpentPathB` (today 499 and
+  500) to free ids, and update `serpent_paths` to match; then take `master`'s map. Also repack `Projectiles1` after
+  taking `master` (`078a` added `GreenPelletBlast/wily/*`). `WilyGenerator.powerDown()` is now on `master`: wire the
+  phase-2 call in `077c`.
+
 - `077d` (planned, owner 2026-11-18): the Reactor Man fight upgrade includes new laser and emitter art. When it is
   done, update the Reactor Man refight in Wily Stage 1 (`078a` keeps the old `Reactor_Man_3` emitter tiles there as
   a TODO).

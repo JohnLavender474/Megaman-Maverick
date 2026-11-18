@@ -2778,3 +2778,25 @@ newest entry at the bottom.
   `2026-11-17-floating-points-combo-carries-over.md`. Owner decision in `047` `ITEM.md`: a gate needs every live
   player (phase 4, next). `O2-R5` current state updated.
 
+## 2026-11-18 — mega-refactor-078a-wily-stage-1-art
+
+- Summary: Wily Stage 1 art make-over (item `078`). One new tileset (290 tiles, tile animations) and the repainted
+  map with a `decor` layer; new background objects (the cliff/pit night sky with the fortress, also behind `room7`;
+  animated corridor and cave walls; the boss room wall) in `Backgrounds8` and `Backgrounds9`; `BackgroundLayerBuilder`
+  animates a custom background with `animation_rows` under its own name. New `WilyGenerator` decoration in
+  `boss_room` (light events, spark bursts, `powerDown()` for `077c`). `DarknessV2` lights tiles that have a `light`
+  tile property (cable windows and cuts). Play test round: green coolant drips (`AcidGoop` type `COOLANT`), cave
+  mouth in basalt, cable fixes, background trigger fixes, no cable in the Desert Man refight, `SpriteSkin` and `wily`
+  skins for the stage's enemies, `Wanaan` and the soldier's shot (Fable 5.2), `GreenUziJoe` renamed `UziJoe` in code,
+  data and 5 maps. Squash `d7cd4b9ae`.
+- Contract check: automated checks pass on the branch (`engine:test`, `core:test`, `core:smokeTest` 450 entity tests
+  with `--rerun`, `detektMain`, `core:verifyRandomRule`; `lwjgl3:jar` before the play test round); review before the
+  play test by 1 subagent (no bug, 1 check wording fixed); owner play test passed; 0 Diffity threads. `master` had only
+  docs changes since the branch start, so it was not merged into the branch first. `BulbBlaster` left
+  `known-entity-failures.txt`.
+- Follow-up: `077d` (folder on `master`) redraws the Reactor Man lasers and emitters, then updates the refight room
+  (the map still names `Reactor_Man_3`). Overlap left to the later merges (owner decision): `047k` and `077c` add new
+  objects with ids 499 and 500 to `WilyStage1_v2.tmx`, which `078a` already uses (499 to 507); each renumbers its new
+  objects (and `077c` its `serpent_paths` references) before it merges. `077c` and `079a` repack `Projectiles1` and
+  `Enemies1` again at their merge. No change to the current state of `O4` or `O9`.
+

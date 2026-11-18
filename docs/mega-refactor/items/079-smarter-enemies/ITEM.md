@@ -47,6 +47,11 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   for a full charge); the 3rd charged hit breaks the helmet (`FallingPiece` debris) and starts a desperate phase.
 - 2026-11-18: the ground check is one shared world-probe helper, not fixture sensors.
 
+## Notes for active branches
+
+- `079a` (2026-11-18, after the `078a` merge): `078a` repacked `Enemies1` (new `*/wily/*` regions, `GreenUziJoe`
+  renamed `UziJoe`) and changed `entity-tags.txt` and `README.md`. Take `master` and repack `Enemies1` before the merge.
+
 ## Open questions
 
 - Which other enemies are on the list?
