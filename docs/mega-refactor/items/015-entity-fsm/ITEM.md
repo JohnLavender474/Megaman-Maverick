@@ -46,11 +46,32 @@ Answer to review item 14 (2026-10-22, verbatim):
 
 > yes
 
+## Candidates for the first branch
+
+The review of 2026-11-18 found that every entity with many states written since 2026-11-05 avoids the engine
+`StateMachine` and has its own hand-made machine: 11 "go to state" functions in 9 files, each with the same shape
+(set the state, reset the time, then a `when` for the enter work). These are the prime candidates for the first
+branch of this item, because each one already has the shape of `Fsm<S>` and each new copy adds to the work. This is a
+recommendation, not an owner decision.
+
+| Entity | Hand-made machine | Item |
+|--------|-------------------|------|
+| `Met` | `requestState` and `enterState`, 7 states, an allowed-edge table | `079a` |
+| `HoverGunner` | `setState`, one timer reset per state | `081` |
+| `BigAssMaverickRobotHand` | `goTo`, 17 states in `bigassmaverickrobot/HandState.kt` with flags per state | `077a` |
+| `D1000` | `setState` and `goTo(step)`, 10 states and 7 step enums | `081` |
+| `D1000Core` | `setState`, 11 states with an `Int` phase inside a state | `081` |
+| `D1000Ram`, `D1000Crouch`, `D1000Ceiling`, `D1000Defeat`, `D1000Volley` | `goTo(Step)`, a linear step enum and a clock per move | `081` |
+
+The `file:line` of each machine is in `NOTES.md`, "2026-11-18 review". Suggested order: the `Met` first (below), then
+one more hand-made machine (`HoverGunner` or `BigAssMaverickRobotHand`) as the second caller, so that the API fits two
+real shapes before the `D1000` group, whose state plus step shape tests the composition with a `Routine`.
+
 ## Trial candidate
 
-The review of 2026-11-18 found a good first entity to move to `Fsm<S>`: the `Met` of branch
-`mega-refactor-079a-smarter-met` (`entities/enemies/Met.kt` on that branch; on `master` after its merge). This is a
-recommendation, not an owner decision.
+The first entity to move to `Fsm<S>`: the `Met` of branch `mega-refactor-079a-smarter-met`
+(`entities/enemies/Met.kt` on that branch; on `master` after its merge). This is a recommendation, not an owner
+decision.
 
 Why:
 
