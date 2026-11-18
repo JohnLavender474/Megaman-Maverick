@@ -85,7 +85,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 075 | [A larger oasis section in Desert Man's stage](items/075-desert-man-oasis/ITEM.md) | feature | `O4` | dropped | none | | 2026-11-17 |
 | 076 | [Better tileset art for every level](items/076-final-stage-tileset/ITEM.md) | feature | `O9`, `O4` | done | none | 2026-11-17 | 2026-11-17 |
 | 077 | [Better boss fights for every boss: new and panic attacks, aiming, death animations](items/077-robot-master-attacks/ITEM.md) | feature | `O4` | active | none | 2026-11-13 | |
-| 078 | [Stage redesigns (epic)](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4`, `O9` | idea | none | | |
+| 078 | [Stage redesigns (epic)](items/078-robot-master-alt-paths/ITEM.md) | feature | `O4`, `O9` | active | none | 2026-11-18 | |
 | 079 | [Smarter behavior for simple enemies](items/079-smarter-enemies/ITEM.md) | feature | `O4` | active | none | 2026-11-18 | |
 | 080 | [A larger MockingBit and MockingByte section in Timber Woman's stage](items/080-timber-woman-mocking-section/ITEM.md) | feature | `O4` | dropped | none | | 2026-11-17 |
 | 081 | [Playable X for the extra levels, with `CharacterDef`, ported from `mmx-x6`](items/081-playable-x/ITEM.md) | feature | `O8` | active | `047b`, `084` | 2026-11-06 | |
@@ -296,4 +296,5 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-045b-spawn-allocations`](items/045-pool-ownership/branches/mega-refactor-045b-spawn-allocations/process-log.md) | 045 | A pooled entity makes its objects once: no constructor call in `onSpawn`, `onDestroy` or an event handler | merged | 2026-11-16 | 2026-11-17 |
 | [`mega-refactor-045c-spawn-allocations-rest`](items/045-pool-ownership/branches/mega-refactor-045c-spawn-allocations-rest/process-log.md) | 045 | The rest of the spawn sweep: bosses, level objects, child entities made with a constructor, `Block` extras, shared label helpers | planned | | |
 | [`mega-refactor-077c-elec-devil`](items/077-robot-master-attacks/branches/mega-refactor-077c-elec-devil/process-log.md) | 077 | A richer `ElecDevil` fight (Wily stage 1): 2 phases, the Spark Serpent and other new attacks, art polish | active | 2026-11-18 | |
+| [`mega-refactor-078a-wily-stage-1-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078a-wily-stage-1-art/process-log.md) | 078 | Wily Stage 1 art make-over: one tileset, the repainted map, new backgrounds, and the generator entity with light events | active | 2026-11-18 | |
 | [`mega-refactor-079a-smarter-met`](items/079-smarter-enemies/branches/mega-refactor-079a-smarter-met/process-log.md) | 079 | A smarter `Met`: pit avoidance with a shared ground probe, safe jumps, charged-shot stagger, helmet break and a desperate phase | active | 2026-11-18 | |
