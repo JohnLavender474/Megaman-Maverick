@@ -2806,3 +2806,21 @@ newest entry at the bottom.
 - Summary: owner decision: when the owner asks for the Diffity link, give the review link of the current worktree, the
   full URL with the base (`/diff?ref=<merge-base SHA>`). The bare `/diff` URL shows only uncommitted changes, and a
   branch with all work committed shows "No changes found" there. Rule added to "Diff review" in `CLAUDE.md`.
+
+## 2026-11-18 — mega-refactor-047k-gate-gather
+
+- Summary: shared screen phase 4 (item `047`). A gate opens only when every live player touched it in the frame (one
+  rule for any player count; a player who beams in after a death counts, a dead one does not); a locked gate with a
+  player in it opens on the unlock; a horizontal gate pans each player on its axis; a respawn waits while a gate opens
+  and pans. Co-op vertical gates: new `GateBlock` (co-op only) on the top half of each `UP` gate and a 3-tile `GATE`
+  fixture in co-op; not final (item `170`). Squash `956cf0e53`.
+- Contract check: automated checks pass on the branch after `master` was merged in; 2 review rounds before the play
+  test (1 to 2 subagents each); owner play test passed (2026-11-18), with vertical gates in co-op conceded as a `TODO`;
+  0 Diffity threads.
+- `master` merge into the branch: `WilyStage1_v2.tmx` header conflict (kept `master`'s); the branch's `GateBlock` is
+  id 510 there, after `078a`'s 499 to 507 and `077c`'s 508 and 509. `077c` gets a header conflict at its merge
+  (`nextobjectid`: take the higher value); its object ids do not clash. Wily Stage 1 differs from `078a` only by that
+  `GateBlock`.
+- New item `170` (`UP` and `DOWN` gates in co-op), from the 2 backlog candidates of the branch (one item, because both
+  are about the same gates). Owner rule in `docs/ways-of-working/levels.md`: a level for co-op has no vertical gate
+  until `170` is done. `O2-R5` current state updated; no change to the redo risk.

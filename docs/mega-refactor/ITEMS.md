@@ -177,6 +177,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 167 | [No per-frame allocations in `AnimatedBackground` and `Background`](items/167-background-frame-allocations/ITEM.md) | refactor | `O5` | idea | none | | |
 | 168 | [`allowRotation` off in the TexturePacker projects](items/168-texture-packer-no-rotation/ITEM.md) | tooling | `O6` | idea | none | | |
 | 169 | [`LevelState` by lifetime and owner](items/169-level-state-lifetimes/ITEM.md) | refactor | `O1`, `O2` | idea | none | | |
+| 170 | [`UP` and `DOWN` gates in co-op](items/170-coop-vertical-gates/ITEM.md) | feature | `O2`, `O9` | idea | `047` | | |
 
 ## Branches
 
@@ -278,7 +279,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-047j-coop-bottom-warp`](items/047-co-op/branches/mega-refactor-047j-coop-bottom-warp/process-log.md) | 047 | The co-op default `bottom=WARP` for tall rooms | merged | 2026-11-06 | 2026-11-07 |
 | [`mega-refactor-047c-slot-respawn`](items/047-co-op/branches/mega-refactor-047c-slot-respawn/process-log.md) | 047 | A dead co-op player respawns near the lead, at a safe spot (shared screen phase 6) | merged | 2026-11-09 | 2026-11-09 |
 | [`mega-refactor-047i-transition-path`](items/047-co-op/branches/mega-refactor-047i-transition-path/process-log.md) | 047 | Per-player transition path at a gathered room exit | merged | 2026-11-17 | 2026-11-17 |
-| [`mega-refactor-047k-gate-gather`](items/047-co-op/branches/mega-refactor-047k-gate-gather/process-log.md) | 047 | Shared screen phase 4: a gate opens only when every live player is at it | active | 2026-11-17 | |
+| [`mega-refactor-047k-gate-gather`](items/047-co-op/branches/mega-refactor-047k-gate-gather/process-log.md) | 047 | Shared screen phase 4: a gate opens only when every live player is at it | merged | 2026-11-17 | 2026-11-18 |
 | [`mega-refactor-076a-desert-man-tileset`](items/076-final-stage-tileset/branches/mega-refactor-076a-desert-man-tileset/process-log.md) | 076 | A new original tileset for Desert Man, and the map repainted with it | merged | 2026-11-17 | 2026-11-17 |
 | [`mega-refactor-076b-desert-man-backgrounds`](items/076-final-stage-tileset/branches/mega-refactor-076b-desert-man-backgrounds/process-log.md) | 076 | New animated Desert Man backgrounds (`SunriseHills`, `DesertSunSky`, `SunsetHills`) | merged | 2026-11-17 | 2026-11-17 |
 | [`mega-refactor-134a-draw-interpolation`](items/134-render-interpolation/branches/mega-refactor-134a-draw-interpolation/process-log.md) | 134 | Draw bodies and the camera between the last 2 physics steps, with `--interpolation` (on by default) | merged | 2026-11-07 | 2026-11-09 |

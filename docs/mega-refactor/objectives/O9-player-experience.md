@@ -91,6 +91,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `154` | dropped | [Spawners test the camera after it moves](../items/154-spawn-after-camera-move/ITEM.md) (main) |
 | `159` | done | [New hand and head art for the intro boss](../items/159-intro-boss-hand-art/ITEM.md) |
 | `160` | idea | [Ladder shot height at a ladder foot](../items/160-ladder-foot-shot/ITEM.md) (main) |
+| `170` | idea | [`UP` and `DOWN` gates in co-op](../items/170-coop-vertical-gates/ITEM.md) |
 
 ## Gaps with no item
 
