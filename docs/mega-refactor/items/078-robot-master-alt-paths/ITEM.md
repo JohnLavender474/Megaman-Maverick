@@ -36,6 +36,23 @@ Each robot master stage is fully linear. That is not bad, but alt paths can make
 - A list of alt path ideas, one or more for each stage. The owner chooses which ones to make.
 - Alt paths must not be dead ends (memory rule for level drafts).
 
+### All stages: use the smarter `Met` (from `079a`)
+
+Branch `mega-refactor-079a-smarter-met` (item `079`) gives the `Met` new behavior, but no stage is laid out for it
+yet. Today the live `Met`s stand on plain floors: 7 in Desert Man (`room9`, `room10`) and 24 in `Gauntlet1_v2` waves.
+The new behavior shows only where the layout gives it room:
+
+- It stops at a pit (a `Death` area, or no ground within 4 tiles) and may drop onto safe ground lower down.
+- It jumps a gap toward the player, a step it can clear, or up to the player's platform.
+- A charged shot knocks its helmet off. The helmet flies about 2 to 5 tiles in the shot direction and rests on
+  blocks. The `Met` runs to fetch it (with jumps), or cries and runs helmetless when it cannot reach it (pit, wall,
+  helmet off screen). A helmetless `Met` puts on any free helmet that it touches.
+- The 3rd charged hit breaks the helmet. Hard mode: the `Met` chases the player and dodges some shots.
+
+Layout ideas: `Met`s near ledges, pits and low platforms, where a knocked-off helmet can land on a platform or fall
+into a pit, and groups of `Met`s whose helmets can be swapped. Each behavior has a test room in `RefactorTest079.tmx`
+(`--level REFACTOR_TEST_079`), listed in the `079a` `docs/CONTRACT.md`. Do this work after `079a` merges.
+
 ### All stages: camera sections (from `099`)
 
 Camera zones, scrolls and crush surfaces (`051`) exist, but only `RefactorTest051.tmx` uses them. Put them in real
