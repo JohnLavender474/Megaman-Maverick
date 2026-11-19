@@ -2900,3 +2900,17 @@ newest entry at the bottom.
   and a stale contract fixed. Owner play test: passed (2 rounds). Diffity: skipped (owner).
 - Follow-up: Spark Serpent, Circuit Floor and Storm Rain in `077e` (folder prepared). New item `174` (`Bosses3`
   cannot pack with `Basic`). `078c` also changes `Projectiles1`: it repacks at its next take of `master`.
+
+## 2026-11-19 — mega-refactor-078c-wily-stage-3-enemy-skins
+
+- Summary: Wily Stage 3 `lab` sprite skins (item `078`), drawn by Claude Fable 5.2. `SpriteSkin.LAB` and a skin set
+  per class (`SpriteSkin.of(tag, spawnProps, skins)` fails fast with the class name). Skins for the 7 enemies of the
+  stage and their 6 shots, the hazards `InfernoOven`, `RisingLavaRiver` and `FloatingEmber` (scope change), and
+  `GravitySwitcharoo` with its aura (scope change); spawners pass their skin on; `color=lab` on 84 placements of
+  `WilyStage3_v4.tmx`. Inferno Man, Moon Man and Wily Stage 1 keep their looks. Play test: `GravitySwitcharoo` draws
+  behind Megaman in every level. `Enemies2` (`png8`) repack shifts 9 old regions by up to 14 per channel. `master`
+  (with `077c`) merged into the branch first: `Projectiles1` repacked from the frames of both sides. Squash `464775afc`.
+- Contract check: automated checks pass on the branch after the `master` merge (`engine:test`, `core:test`,
+  `core:smokeTest`, `detektMain`, `core:verifyRandomRule`, `lwjgl3:jar`); atlas and map scripts pass. Reviews
+  before the play test (3 Sonnet agents, one per part): no bug. Owner play test: passed. Diffity: no threads.
+- Follow-up: none.
