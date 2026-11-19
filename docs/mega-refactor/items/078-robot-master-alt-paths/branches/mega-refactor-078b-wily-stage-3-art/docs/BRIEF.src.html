@@ -1,68 +1,68 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>078b Wily Stage 3 Art</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 078 · Branch 078b · Objectives O4, O9 · <span class="chip ok">approved 2026-11-19</span></p>
+    <h1>Wily Stage 3 art make-over</h1>
+    <p class="lead">The final stage trades its generic brick tiles for one new lab tileset in the mood of the X6 Gate stages, from art rounds 1 and 2. A <code>lab</code> conveyor belt type replaces the Glacier Man belt art in this stage.</p>
+    <p class="meta"><b>In play:</b> new tiles, a new decor layer (trace, emblem plates, vents), 3 new backgrounds, and new belts in Wily Stage 3. Block geometry, spawns, hazards and belt push do not change.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>One new tileset and one new atlas replace 2 shared tilesets and BKG18</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: the map draws shared tilesets and Glacier Man belt frames">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  T1["Tileset1 (11 levels)"] -->|tiles1, tiles2, fade| M["WilyStage3_v4.tmx"]
+  T2["mm9endless"] -->|wily_room| M
+  B3["Backgrounds3: BKG18"] -->|1 object| M
+  M -->|"15 belts, type=green"| C["ConveyorBelt"]
+  C -->|"*-Green regions"| P["Platforms1"]
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>The stage borrows generic tiles, one starfield and the Glacier Man belt.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: the map draws its own tileset, atlas and belt frames">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  T["wily_stage_3_tileset (new)"] -->|"tiles1, tiles2, fade, decor (new)"| M["WilyStage3_v4.tmx"]
+  B["Backgrounds10 (new): lab wall, furnace, core"] -->|"objects + show/hide triggers"| M
+  M -->|"15 belts, type=lab"| C["ConveyorBelt"]
+  C -->|"*-Lab regions (new)"| P["Platforms1 (repacked)"]
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>Other maps keep Tileset1, BKG18 and the green belt unchanged.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
-    <p>After:</p>
-<pre><code><new code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>The map is the first caller of the new belt type</h2></div>
+    <p>Today, <code>ConveyorBelt.init()</code> loads 2 types:</p>
+<pre><code>animDefs.put(DEFAULT_TYPE, AnimationDef(1, 2, 0.075f))
+animDefs.put(GREEN_TYPE, AnimationDef(2, 2, 0.075f))</code></pre>
+    <p>After: a third type with the same frame grid, and its 6 <code>*-Lab</code> regions:</p>
+<pre><code>const val LAB_TYPE = "lab"
+animDefs.put(LAB_TYPE, AnimationDef(2, 2, 0.075f))
+regions.put("lLeft_lab", atlas.findRegion("$TAG/LeftPart-MoveLeft-Lab"))
+// ... 5 more; the middle part picks mLeft/mRight as green does</code></pre>
+    <p>The map: <code>type="green"</code> becomes <code>type="lab"</code> on the 15 belts of Wily Stage 3.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>1 decision</h2></div>
+    <p>In Wily Stage 1 you asked at the play test for a stage skin on every enemy. Wily Stage 3 has <code>Bat</code>, <code>IceFox</code>, <code>ShieldAttacker</code>, <code>UziJoe</code>, <code>AstroAssAssaulter</code>, <code>BunbyTank</code> and <code>WanaanLauncher</code>; 3 of them already have a <code>wily</code> skin in Wily Stage 1 colors.</p>
+    <p><span class="chip ok">Chosen</span> Not in 078b: decide after the play test.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>Wrong tiles in edge cells are the main risk</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>A tile can look solid in air, or open in a wall.</b> The round-2 checks rerun on the final map; 1439 cells outside the 16 rooms are in no preview, so the check covers them by script.</li>
+      <li><span class="chip warn">risk</span> <b>A background can pop in a room pan.</b> The show/hide triggers fire on spawn, as in Wily Stage 1. The play checks pan through each change.</li>
+      <li><span class="chip warn">risk</span> <b>The Platforms1 repack can shift old regions.</b> A script checks that every old region keeps its name and pixels.</li>
     </ul>
   </section>
 
@@ -70,14 +70,20 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-078b-wily-stage-3-art</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level WILY_STAGE_3 --room intro_room</code>: walls rise from black, lamps, steady trace.</li>
+      <li><code>./run-game-alpha.sh --level WILY_STAGE_3 --room intro_room_2</code>: into room1: lab belts move and show direction; furnace background.</li>
+      <li><code>./run-game-alpha.sh --level WILY_STAGE_3 --room room3</code>: furnace glow at the bottom, lab wall above, no pop in pans.</li>
+      <li><code>./run-game-alpha.sh --level WILY_STAGE_3 --room room4 --heartTanks all --healthTanks all</code>: flame plate, then the refight.</li>
+      <li><code>./run-game-alpha.sh --level WILY_STAGE_3 --room room6 --heartTanks all --healthTanks all</code>: crescent plate; after the fight, room7 shows gem and leaf.</li>
+      <li><code>./run-game-alpha.sh --level WILY_STAGE_3 --room room8 --heartTanks all --healthTanks all</code>: trace turns violet; core background; steel and violet chamber.</li>
+      <li><code>./run-game-alpha.sh --level GLACIER_MAN --room room6</code>: green belts look and move as before (control).</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
-    <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-078b-wily-stage-3-art/docs/SCOPE.md</code></p>
+    <p>The full scan, the objective table and the full contract are in the branch folder:</p>
+    <p><code>docs/mega-refactor/items/078-robot-master-alt-paths/branches/mega-refactor-078b-wily-stage-3-art/docs/SCOPE.md</code></p>
   </section>
 </main>
 </body>

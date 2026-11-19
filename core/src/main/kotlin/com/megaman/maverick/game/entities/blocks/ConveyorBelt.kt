@@ -47,6 +47,7 @@ class ConveyorBelt(services: MegaServices) : Block(services), ISpritesEntity, IA
         const val TAG = "ConveyorBelt"
         const val DEFAULT_TYPE = "default"
         const val GREEN_TYPE = "green"
+        const val LAB_TYPE = "lab"
         private const val FORCE_IMPULSE = 20f
         private const val FORCE_MAX = 30f
         private val regions = ObjectMap<String, TextureRegion>()
@@ -78,10 +79,18 @@ class ConveyorBelt(services: MegaServices) : Block(services), ISpritesEntity, IA
             regions.put("rRight_green", atlas.findRegion("$TAG/RightPart-MoveRight-Green"))
             regions.put("mLeft_green", atlas.findRegion("$TAG/MiddlePart-MoveLeft-Green"))
             regions.put("mRight_green", atlas.findRegion("$TAG/MiddlePart-MoveRight-Green"))
+
+            regions.put("lLeft_lab", atlas.findRegion("$TAG/LeftPart-MoveLeft-Lab"))
+            regions.put("lRight_lab", atlas.findRegion("$TAG/LeftPart-MoveRight-Lab"))
+            regions.put("rLeft_lab", atlas.findRegion("$TAG/RightPart-MoveLeft-Lab"))
+            regions.put("rRight_lab", atlas.findRegion("$TAG/RightPart-MoveRight-Lab"))
+            regions.put("mLeft_lab", atlas.findRegion("$TAG/MiddlePart-MoveLeft-Lab"))
+            regions.put("mRight_lab", atlas.findRegion("$TAG/MiddlePart-MoveRight-Lab"))
         }
         if (animDefs.isEmpty) {
             animDefs.put(DEFAULT_TYPE, AnimationDef(1, 2, 0.075f))
             animDefs.put(GREEN_TYPE, AnimationDef(2, 2, 0.075f))
+            animDefs.put(LAB_TYPE, AnimationDef(2, 2, 0.075f))
         }
 
         super.init()
@@ -140,7 +149,7 @@ class ConveyorBelt(services: MegaServices) : Block(services), ISpritesEntity, IA
                 "right" -> if (left) "rLeft" else "rRight"
                 else -> when (type) {
                     DEFAULT_TYPE -> "middle"
-                    GREEN_TYPE -> if (left) "mLeft" else "mRight"
+                    GREEN_TYPE, LAB_TYPE -> if (left) "mLeft" else "mRight"
                     else -> throw IllegalArgumentException("Illegal type: $type")
                 }
             }

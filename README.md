@@ -319,6 +319,8 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
   - Inspired by AxeW1eld3r ([Megaman 10 - Endless Attack](https://www.spriters-resource.com/wii/mm10/sheet/166546/)): the tile layout of the cliffside, the pit, the sand and the corridors
   - Inspired by [Balloon Cart](https://balloon-cart.itch.io) ([Reactor Man](https://balloon-cart.itch.io/reactor-man-asset-pack)): the corridor ceiling pipes and the coolant pipes
+- Wily Stage 3 (tileset, backgrounds and the lab conveyor belt)
+  - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
 
 ### Music
 
