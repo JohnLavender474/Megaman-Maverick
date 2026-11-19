@@ -14,8 +14,10 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.equalsAny
+import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
@@ -50,6 +52,7 @@ import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.projectiles.BunbyRedRocket
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.extensions.getRotatedBounds
@@ -60,6 +63,8 @@ class BunbyTank(services: MegaServices) : AbstractEnemy(services, size = Size.ME
 
     companion object {
         const val TAG = "BunbyTank"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
+        private const val FROZEN = "frozen"
 
         private const val MOVE_SPEED = 3f
 
@@ -94,15 +99,19 @@ class BunbyTank(services: MegaServices) : AbstractEnemy(services, size = Size.ME
     private val shootScanner = GameRectangle()
     private val turnAroundScanner = GameRectangle()
     private lateinit var animations: ObjectMap<String, IAnimation>
+    private var skin = SpriteSkin.DEFAULT
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            regions.put("still", atlas.findRegion("$TAG/Still"))
-            regions.put("roll", atlas.findRegion("$TAG/Roll"))
-            regions.put("shoot", atlas.findRegion("$TAG/Shoot"))
-            regions.put("frozen", atlas.findRegion("$TAG/frozen"))
+            SKINS.forEach { skin ->
+                gdxArrayOf("Still", "Roll", "Shoot").forEach { key ->
+                    val name = skin.regionName(TAG, key)
+                    regions.put(name, atlas.findRegion(name))
+                }
+            }
+            regions.put(FROZEN, atlas.findRegion("$TAG/$FROZEN"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -113,6 +122,8 @@ class BunbyTank(services: MegaServices) : AbstractEnemy(services, size = Size.ME
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
@@ -131,11 +142,11 @@ class BunbyTank(services: MegaServices) : AbstractEnemy(services, size = Size.ME
 
         val shootFrameDuration =
             spawnProps.getOrDefault("${ConstKeys.SHOOT}_${ConstKeys.FRAME}", 0.15f, Float::class)
-        animations.get("shoot").setFrameDuration(shootFrameDuration)
+        SKINS.forEach { skin -> animations.get(skin.regionName(TAG, "Shoot")).setFrameDuration(shootFrameDuration) }
 
         val rollFrameDuration =
             spawnProps.getOrDefault("${ConstKeys.ROLL}_${ConstKeys.FRAME}", 0.1f, Float::class)
-        animations.get("roll").setFrameDuration(rollFrameDuration)
+        SKINS.forEach { skin -> animations.get(skin.regionName(TAG, "Roll")).setFrameDuration(rollFrameDuration) }
 
         frozen = false
     }
@@ -174,7 +185,8 @@ class BunbyTank(services: MegaServices) : AbstractEnemy(services, size = Size.ME
                 ConstKeys.FACING pairTo facing,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.DIRECTION pairTo direction,
-                ConstKeys.TRAJECTORY pairTo trajectory
+                ConstKeys.TRAJECTORY pairTo trajectory,
+                ConstKeys.COLOR pairTo skin.name
             )
         )
 
@@ -392,17 +404,20 @@ class BunbyTank(services: MegaServices) : AbstractEnemy(services, size = Size.ME
 
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = {
-            if (frozen) "frozen"
-            else if (!afterShootDelayTimer.isFinished()) "still"
-            else if (!shootTimer.isFinished()) "shoot"
-            else "roll"
+            if (frozen) FROZEN
+            else if (!afterShootDelayTimer.isFinished()) skin.regionName(TAG, "Still")
+            else if (!shootTimer.isFinished()) skin.regionName(TAG, "Shoot")
+            else skin.regionName(TAG, "Roll")
         }
-        animations = objectMapOf(
-            "frozen" pairTo Animation(regions.get("frozen")),
-            "still" pairTo Animation(regions.get("still")),
-            "shoot" pairTo Animation(regions.get("shoot"), 3, 1, 0.15f, false),
-            "roll" pairTo Animation(regions.get("roll"), 2, 1, 0.1f, true)
-        )
+        animations = objectMapOf(FROZEN pairTo Animation(regions.get(FROZEN)))
+        SKINS.forEach { skin ->
+            val still = skin.regionName(TAG, "Still")
+            val shoot = skin.regionName(TAG, "Shoot")
+            val roll = skin.regionName(TAG, "Roll")
+            animations.put(still, Animation(regions.get(still)))
+            animations.put(shoot, Animation(regions.get(shoot), 3, 1, 0.15f, false))
+            animations.put(roll, Animation(regions.get(roll), 2, 1, 0.1f, true))
+        }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

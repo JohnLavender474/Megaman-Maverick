@@ -2,11 +2,13 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
-import com.maverick.game.engine.animations.Animator
+import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.extensions.getTextureRegion
+import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -31,6 +33,7 @@ import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.explosions.IceBombExplosion
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
@@ -38,12 +41,20 @@ class IceBomb(services: MegaServices) : AbstractProjectile(services), IFreezerEn
 
     companion object {
         const val TAG = "IceBomb"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
         private const val GRAVITY = -22.5f
-        private var region: TextureRegion? = null
+        private val regions = ObjectMap<SpriteSkin, TextureRegion>()
+
+        private fun regionName(skin: SpriteSkin) = if (skin == SpriteSkin.DEFAULT) TAG else skin.regionName(TAG, TAG)
     }
 
+    private var skin = SpriteSkin.DEFAULT
+
     override fun init(vararg params: Any) {
-        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            SKINS.forEach { skin -> regions.put(skin, atlas.findRegion(regionName(skin))) }
+        }
         super.init()
         addComponent(defineAnimationsComponent())
     }
@@ -51,6 +62,8 @@ class IceBomb(services: MegaServices) : AbstractProjectile(services), IFreezerEn
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -114,5 +127,14 @@ class IceBomb(services: MegaServices) : AbstractProjectile(services), IFreezerEn
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
-        .key(TAG).animator(Animator(Animation(region!!, 2, 1, 0.1f, true))).build()
+        .key(TAG)
+        .animator(
+            AnimatorBuilder()
+                .setKeySupplier { skin.name }
+                .applyToAnimations { animations ->
+                    SKINS.forEach { skin -> animations.put(skin.name, Animation(regions[skin], 2, 1, 0.1f, true)) }
+                }
+                .build()
+        )
+        .build()
 }

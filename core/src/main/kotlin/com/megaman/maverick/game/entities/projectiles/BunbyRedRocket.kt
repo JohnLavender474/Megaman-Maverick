@@ -2,14 +2,17 @@ package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
+import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.extensions.gdxArrayOf
-import com.maverick.game.engine.common.extensions.getTextureRegion
+import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
@@ -39,6 +42,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.contracts.IProjectileEntity
 import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.world.body.*
 
@@ -47,7 +51,10 @@ class BunbyRedRocket(services: MegaServices) : AbstractProjectile(services), IAn
 
     companion object {
         const val TAG = "BunbyRedRocket"
-        private var region: TextureRegion? = null
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
+        private val regions = ObjectMap<SpriteSkin, TextureRegion>()
+
+        private fun regionName(skin: SpriteSkin) = if (skin == SpriteSkin.DEFAULT) TAG else skin.regionName(TAG, TAG)
     }
 
     override var direction: Direction
@@ -58,10 +65,14 @@ class BunbyRedRocket(services: MegaServices) : AbstractProjectile(services), IAn
     override lateinit var facing: Facing
 
     private val trajectory = Vector2()
+    private var skin = SpriteSkin.DEFAULT
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_2.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
+            SKINS.forEach { skin -> regions.put(skin, atlas.findRegion(regionName(skin))) }
+        }
         super.init()
         addComponent(defineAnimationsComponent())
         addComponent(defineUpdatablesComponent())
@@ -71,6 +82,8 @@ class BunbyRedRocket(services: MegaServices) : AbstractProjectile(services), IAn
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -137,8 +150,9 @@ class BunbyRedRocket(services: MegaServices) : AbstractProjectile(services), IAn
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animation = Animation(region!!, 2, 1, 0.1f, true)
-        val animator = Animator(animation)
+        val animations = ObjectMap<String, IAnimation>()
+        SKINS.forEach { skin -> animations.put(skin.name, Animation(regions[skin], 2, 1, 0.1f, true)) }
+        val animator = Animator({ skin.name }, animations)
         return AnimationsComponent(this, animator)
     }
 }

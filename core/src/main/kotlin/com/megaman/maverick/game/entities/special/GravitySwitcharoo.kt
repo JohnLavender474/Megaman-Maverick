@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.bosses.InfernoMan
 import com.megaman.maverick.game.entities.decorations.GravitySwitchAura
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.onGravityDeviceSwitch
@@ -81,6 +82,7 @@ class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity,
         // The entities (besides Mega Man) that can trigger a gravity switch
         private val TRIGGER_ENTITY_TAGS = gdxArrayOf<String>(InfernoMan.TAG)
 
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -107,12 +109,17 @@ class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity,
 
     private lateinit var spawnRoom: String
 
+    private var skin = SpriteSkin.DEFAULT
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-            gdxArrayOf(ConstKeys.ARROW, ConstKeys.AURA, ConstKeys.DEACTIVATED).forEach {
-                regions.put(it, atlas.findRegion("${TAG}/$it"))
+            SKINS.forEach { entry ->
+                gdxArrayOf(ConstKeys.ARROW, ConstKeys.AURA, ConstKeys.DEACTIVATED).forEach {
+                    val name = entry.regionName(TAG, it)
+                    regions.put(name, atlas.findRegion(name))
+                }
             }
         }
         super.init()
@@ -126,6 +133,9 @@ class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity,
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
+        sprites[ConstKeys.AURA].setRegion(regions[skin.regionName(TAG, ConstKeys.AURA)])
 
         val center = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(center)
@@ -197,7 +207,7 @@ class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity,
         requestToPlaySound(SoundAsset.LIFT_OFF_SOUND, false)
 
         val aura = MegaEntityFactory.fetch(GravitySwitchAura::class)!!
-        aura.spawn(props(ConstKeys.POSITION pairTo body.getCenter()))
+        aura.spawn(props(ConstKeys.POSITION pairTo body.getCenter(), ConstKeys.COLOR pairTo skin.name))
     }
 
     override fun defineUpdatablesComponent(component: UpdatablesComponent) {
@@ -250,7 +260,7 @@ class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity,
 
     private fun defineSpritesComponent() = SpritesComponentBuilder()
         .sprite(
-            ConstKeys.ARROW, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 5)).also {
+            ConstKeys.ARROW, GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -2)).also {
                 it.setSize(ARROW_SPRITE_SIZE * ConstVals.PPM)
                 it.setAlpha(ARROW_ALPHA)
             }
@@ -262,7 +272,7 @@ class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity,
         }
         .sprite(
             ConstKeys.AURA,
-            GameSprite(regions[ConstKeys.AURA], DrawingPriority(DrawingSection.FOREGROUND, 2))
+            GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, -1))
                 .also { it.setSize(AURA_SPRITE_SIZE * ConstVals.PPM) }
         )
         .preProcess { delta, sprite ->
@@ -278,12 +288,18 @@ class GravitySwitcharoo(services: MegaServices) : Switch(services), IBodyEntity,
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    if (!on || services.gameCamera.rotating || services.gravity.direction == direction) ConstKeys.DEACTIVATED
+                    val key = if (!on || services.gameCamera.rotating || services.gravity.direction == direction)
+                        ConstKeys.DEACTIVATED
                     else ConstKeys.ARROW
+                    skin.regionName(TAG, key)
                 }
                 .applyToAnimations { animations ->
-                    animations.put(ConstKeys.ARROW, Animation(regions[ConstKeys.ARROW], 3, 1, 0.1f, true))
-                    animations.put(ConstKeys.DEACTIVATED, Animation(regions[ConstKeys.DEACTIVATED]))
+                    SKINS.forEach { entry ->
+                        val arrow = entry.regionName(TAG, ConstKeys.ARROW)
+                        animations.put(arrow, Animation(regions[arrow], 3, 1, 0.1f, true))
+                        val deactivated = entry.regionName(TAG, ConstKeys.DEACTIVATED)
+                        animations.put(deactivated, Animation(regions[deactivated]))
+                    }
                 }
                 .build()
         )

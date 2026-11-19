@@ -11,6 +11,7 @@ import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -44,6 +45,7 @@ class GreenPelletBlast(services: MegaServices) : AbstractProjectile(services, si
 
     companion object {
         const val TAG = "GreenPelletBlast"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.WILY, SpriteSkin.LAB)
         private const val BURST_DUR = 0.15f
         private const val BLAST = "blast"
         private const val BURST = "burst"
@@ -62,7 +64,7 @@ class GreenPelletBlast(services: MegaServices) : AbstractProjectile(services, si
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
-            SpriteSkin.entries.forEach { skin ->
+            SKINS.forEach { skin ->
                 animDefs.keys().forEach { key ->
                     val name = skin.regionName(TAG, key)
                     regions.put(name, atlas.findRegion(name))
@@ -78,7 +80,7 @@ class GreenPelletBlast(services: MegaServices) : AbstractProjectile(services, si
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        skin = SpriteSkin.of(spawnProps)
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -165,7 +167,7 @@ class GreenPelletBlast(services: MegaServices) : AbstractProjectile(services, si
             AnimatorBuilder()
                 .setKeySupplier { skin.regionName(TAG, if (burst) BURST else BLAST) }
                 .applyToAnimations { animations ->
-                    SpriteSkin.entries.forEach { skin ->
+                    SKINS.forEach { skin ->
                         animDefs.forEach { entry ->
                             val key = skin.regionName(TAG, entry.key)
                             val (rows, columns, durations, loop) = entry.value

@@ -15,6 +15,7 @@ import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.equalsAny
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
@@ -57,6 +58,7 @@ class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SM
 
     companion object {
         const val TAG = "DragonFly"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.WILY)
         private const val FROZEN = "frozen"
         private val regions = ObjectMap<String, TextureRegion>()
         private const val CULL_TIME = 2f
@@ -93,7 +95,7 @@ class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SM
         GameLogger.debug(TAG, "init()")
         super.init()
         if (regions.isEmpty) {
-            SpriteSkin.entries.forEach { skin ->
+            SKINS.forEach { skin ->
                 val name = flyRegionName(skin)
                 regions.put(name, services.assets.getTextureRegion(TextureAsset.ENEMIES_1.source, name))
             }
@@ -107,7 +109,7 @@ class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SM
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        skin = SpriteSkin.of(spawnProps)
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         when {
             spawnProps.containsKey(ConstKeys.DIRECTION) -> {
@@ -286,7 +288,7 @@ class DragonFly(services: MegaServices) : AbstractEnemy(services, size = Size.SM
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = { if (frozen) FROZEN else flyRegionName(skin) }
         val animations = objectMapOf<String, IAnimation>(FROZEN pairTo Animation(regions[FROZEN]))
-        SpriteSkin.entries.forEach { skin ->
+        SKINS.forEach { skin ->
             val name = flyRegionName(skin)
             animations.put(name, Animation(regions[name], 1, 2, 0.1f, true))
         }

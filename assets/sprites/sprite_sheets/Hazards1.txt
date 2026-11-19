@@ -1,5 +1,5 @@
 Hazards1.png
-size: 991, 508
+size: 944, 560
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -19,7 +19,7 @@ AcidGoop/falling_green
   index: -1
 AcidGoop/falling_old
   rotate: false
-  xy: 748, 64
+  xy: 0, 108
   size: 144, 48
   orig: 144, 48
   offset: 0, 0
@@ -40,7 +40,7 @@ AcidGoop/landed_green
   index: -1
 AcidGoop/landed_old
   rotate: false
-  xy: 448, 176
+  xy: 256, 228
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -75,14 +75,14 @@ CeilingCrusher/Crusher
   index: -1
 DeadlyLeaf
   rotate: false
-  xy: 320, 112
+  xy: 0, 164
   size: 640, 64
   orig: 640, 64
   offset: 0, 0
   index: -1
 DiamondForger/forge
   rotate: false
-  xy: 0, 176
+  xy: 640, 164
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -131,21 +131,21 @@ Flame2
   index: -1
 Flame3/Still
   rotate: false
-  xy: 320, 64
+  xy: 512, 64
   size: 100, 33
   orig: 100, 33
   offset: 0, 0
   index: -1
 Flame3/Whoosh
   rotate: false
-  xy: 420, 64
+  xy: 612, 64
   size: 100, 33
   orig: 100, 33
   offset: 0, 0
   index: -1
 FlameColumn
   rotate: false
-  xy: 762, 272
+  xy: 826, 324
   size: 96, 236
   orig: 96, 236
   offset: 0, 0
@@ -173,35 +173,63 @@ FlameThrower/Hot
   index: -1
 IceCubeMaker
   rotate: false
-  xy: 192, 176
+  xy: 0, 228
   size: 128, 80
   orig: 128, 80
   offset: 0, 0
   index: -1
 InfernoOven/cold
   rotate: false
-  xy: 496, 176
+  xy: 304, 228
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 InfernoOven/flame
   rotate: false
-  xy: 528, 176
+  xy: 336, 228
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
   index: -1
 InfernoOven/hot
   rotate: false
-  xy: 592, 176
+  xy: 400, 228
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+InfernoOven/lab/cold
+  rotate: false
+  xy: 464, 228
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+InfernoOven/lab/flame
+  rotate: false
+  xy: 496, 228
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+InfernoOven/lab/hot
+  rotate: false
+  xy: 560, 228
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+InfernoOven/lab/warming_up
+  rotate: false
+  xy: 624, 228
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
   index: -1
 InfernoOven/warming_up
   rotate: false
-  xy: 656, 176
+  xy: 688, 228
   size: 64, 96
   orig: 64, 96
   offset: 0, 0
@@ -222,98 +250,98 @@ LaserBeamer/wily/LaserBeamer
   index: -1
 Lava/Fall
   rotate: false
-  xy: 720, 176
+  xy: 752, 228
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/FallBlack
   rotate: false
-  xy: 752, 176
+  xy: 784, 228
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/Flow
   rotate: false
-  xy: 520, 64
+  xy: 712, 64
   size: 100, 33
   orig: 100, 33
   offset: 0, 0
   index: -1
 Lava/Flow1
   rotate: false
-  xy: 784, 176
+  xy: 816, 228
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/Flow2
   rotate: false
-  xy: 816, 176
+  xy: 848, 228
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/Flow3
   rotate: false
-  xy: 848, 176
+  xy: 880, 228
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/TopFlow1
   rotate: false
-  xy: 880, 176
+  xy: 912, 228
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/TopFlow2
   rotate: false
-  xy: 912, 176
+  xy: 0, 324
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 Lava/TopFlow3
   rotate: false
-  xy: 944, 176
+  xy: 32, 324
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 LavaBeam
   rotate: false
-  xy: 564, 272
+  xy: 628, 324
   size: 150, 134
   orig: 150, 134
   offset: 0, 0
   index: -1
 LavaBeamer
   rotate: false
-  xy: 320, 176
+  xy: 128, 228
   size: 64, 88
   orig: 64, 88
   offset: 0, 0
   index: -1
 LavaBeamer/Off
   rotate: false
-  xy: 620, 64
+  xy: 812, 64
   size: 64, 44
   orig: 64, 44
   offset: 0, 0
   index: -1
 LavaBeamer/On
   rotate: false
-  xy: 684, 64
+  xy: 876, 64
   size: 64, 44
   orig: 64, 44
   offset: 0, 0
   index: -1
 LavaBeamer/SwitchingOn
   rotate: false
-  xy: 384, 176
+  xy: 192, 228
   size: 64, 88
   orig: 64, 88
   offset: 0, 0
@@ -334,7 +362,7 @@ LavaDrop/Landed
   index: -1
 LavaRiver/fall
   rotate: false
-  xy: 0, 272
+  xy: 64, 324
   size: 16, 96
   orig: 16, 96
   offset: 0, 0
@@ -348,7 +376,7 @@ LavaRiver/fall_frozen
   index: -1
 LavaRiver/fall_start
   rotate: false
-  xy: 892, 64
+  xy: 144, 108
   size: 16, 48
   orig: 16, 48
   offset: 0, 0
@@ -362,7 +390,7 @@ LavaRiver/fall_start_frozen
   index: -1
 LavaRiver/inner
   rotate: false
-  xy: 908, 64
+  xy: 160, 108
   size: 32, 48
   orig: 32, 48
   offset: 0, 0
@@ -376,7 +404,7 @@ LavaRiver/inner_frozen
   index: -1
 LavaRiver/top
   rotate: false
-  xy: 940, 64
+  xy: 192, 108
   size: 32, 48
   orig: 32, 48
   offset: 0, 0
@@ -397,7 +425,7 @@ MagmaFlame
   index: -1
 PipePuff
   rotate: false
-  xy: 16, 272
+  xy: 80, 324
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -418,14 +446,14 @@ PreciousCubeChute/top
   index: -1
 PreciousSpike
   rotate: false
-  xy: 112, 272
+  xy: 176, 324
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 SaucerRay
   rotate: false
-  xy: 714, 272
+  xy: 778, 324
   size: 48, 192
   orig: 48, 192
   offset: 0, 0
@@ -439,7 +467,7 @@ Saw/ring
   index: -1
 Saw/saw
   rotate: false
-  xy: 304, 272
+  xy: 368, 324
   size: 260, 130
   orig: 260, 130
   offset: 0, 0
@@ -488,21 +516,21 @@ Spike4
   index: -1
 Spike5
   rotate: false
-  xy: 927, 32
+  xy: 0, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike6
   rotate: false
-  xy: 959, 32
+  xy: 32, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Spike7
   rotate: false
-  xy: 0, 64
+  xy: 64, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -516,7 +544,7 @@ SpikeBall/Chain
   index: -1
 SpikeBall/SpikeBall
   rotate: false
-  xy: 32, 64
+  xy: 96, 64
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -530,63 +558,77 @@ SpikeTeeth
   index: -1
 SwingingAxe
   rotate: false
-  xy: 64, 176
+  xy: 704, 164
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 SwingingAxe_HandleEndCentered
   rotate: false
-  xy: 176, 272
+  xy: 240, 324
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SwingingAxe_UpsideDown
   rotate: false
-  xy: 128, 176
+  xy: 768, 164
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 UnderwaterFan/gray
   rotate: false
-  xy: 0, 112
+  xy: 224, 108
   size: 160, 56
   orig: 160, 56
   offset: 0, 0
   index: -1
 UnderwaterFan/green
   rotate: false
-  xy: 160, 112
+  xy: 384, 108
   size: 160, 56
   orig: 160, 56
   offset: 0, 0
   index: -1
 WanaanLauncher/bust
   rotate: false
-  xy: 64, 64
-  size: 64, 32
-  orig: 64, 32
-  offset: 0, 0
-  index: -1
-WanaanLauncher/launcher
-  rotate: false
   xy: 128, 64
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
-WanaanLauncher/wily/bust
+WanaanLauncher/lab/bust
   rotate: false
   xy: 192, 64
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
-WanaanLauncher/wily/launcher
+WanaanLauncher/lab/launcher
   rotate: false
   xy: 256, 64
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+WanaanLauncher/launcher
+  rotate: false
+  xy: 320, 64
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+WanaanLauncher/wily/bust
+  rotate: false
+  xy: 384, 64
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+WanaanLauncher/wily/launcher
+  rotate: false
+  xy: 448, 64
   size: 64, 32
   orig: 64, 32
   offset: 0, 0

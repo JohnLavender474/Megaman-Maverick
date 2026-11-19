@@ -56,6 +56,7 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
 
     companion object {
         const val TAG = "BulbBlaster"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.WILY)
         private const val STATE_DUR = 3f
         private const val RADIUS = 5
         private val WHITESPACE = Regex("\\s+")
@@ -94,7 +95,7 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            SpriteSkin.entries.forEach { skin ->
+            SKINS.forEach { skin ->
                 gdxArrayOf(LIGHT, DARK).forEach { key ->
                     val name = skin.regionName(TAG, key)
                     regions.put(name, atlas.findRegion(name))
@@ -112,7 +113,7 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
 
         services.events.addListener(this)
 
-        skin = SpriteSkin.of(spawnProps)
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         if (spawnProps.containsKey(ConstKeys.POSITION))
             spawnPosition.set(spawnProps.get(ConstKeys.POSITION, Vector2::class)!!)
@@ -221,7 +222,7 @@ class BulbBlaster(services: MegaServices) : AbstractEnemy(services), IFreezableE
             }
         }
         val animations = objectMapOf<String, IAnimation>()
-        SpriteSkin.entries.forEach { skin ->
+        SKINS.forEach { skin ->
             animations.put("$FROZEN/${skin.name}", Animation(regions[skin.regionName(TAG, DARK)]))
             gdxArrayOf(LIGHT, DARK).forEach { key ->
                 val name = skin.regionName(TAG, key)

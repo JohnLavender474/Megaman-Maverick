@@ -263,6 +263,11 @@ comprehensive listing of the credits for the artwork used in this game.
 - Wily Stage 1 skins of Uzi Joe and its shot, Duo-Ball Cannon, Spike Copter, Dragon Fly, Shield Attacker, Wanaan Launcher and its Wanaan, and Laser Beamer
   - Recolored by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
   - Original sprites by the artists credited above for each enemy
+- Wily Stage 3 (lab) skins of Bat, Ice Fox and its Ice Bomb, Shield Attacker, Uzi Joe and its shot, Astro Assaulter and its Moon Flag and laser, Bunby Tank and its rocket, and Wanaan Launcher and its Wanaan
+  - Recolored by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
+  - Original sprites by the artists credited in this section for each enemy
+  - Lab skins of the Inferno Oven, Rising Lava River and Floating Ember hazards redrawn by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer, on the original hazard sprites of this game
+  - Lab skins of the Gravity Switcharoo and its Gravity Switch Aura redrawn by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer, on the original Gravity Switcharoo sprites of this game
 - All other enemy sprites made by Capcom and sourced from https://www.spriters-resource.com/
 
 #### Blocks / Platforms

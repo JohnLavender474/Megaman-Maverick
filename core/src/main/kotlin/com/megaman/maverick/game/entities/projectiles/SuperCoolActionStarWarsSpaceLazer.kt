@@ -10,6 +10,7 @@ import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.extensions.putAll
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -33,17 +34,20 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.world.body.*
 
 class SuperCoolActionStarWarsSpaceLazer(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
     companion object {
         const val TAG = "SuperCoolActionStarWarsSpaceLazer"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
         private const val BURST_DUR = 0.2f
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
     private var burst = false
+    private var skin = SpriteSkin.DEFAULT
     private val burstTimer = Timer(BURST_DUR)
 
     override fun init(vararg params: Any) {
@@ -51,7 +55,12 @@ class SuperCoolActionStarWarsSpaceLazer(services: MegaServices) : AbstractProjec
 
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
-            gdxArrayOf("lazer", "burst").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
+            SKINS.forEach { skin ->
+                gdxArrayOf("lazer", "burst").forEach { key ->
+                    val name = skin.regionName(TAG, key)
+                    regions.put(name, atlas.findRegion(name))
+                }
+            }
         }
 
         super.init()
@@ -64,6 +73,8 @@ class SuperCoolActionStarWarsSpaceLazer(services: MegaServices) : AbstractProjec
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
 
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val center = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(center)
@@ -125,12 +136,16 @@ class SuperCoolActionStarWarsSpaceLazer(services: MegaServices) : AbstractProjec
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (burst) "burst" else "lazer" }
+                .setKeySupplier { skin.regionName(TAG, if (burst) "burst" else "lazer") }
                 .applyToAnimations { animations ->
-                    animations.putAll(
-                        "lazer" pairTo Animation(regions["lazer"], 2, 1, 0.1f, true),
-                        "burst" pairTo Animation(regions["burst"], 3, 1, 0.05f, false)
-                    )
+                    SKINS.forEach { skin ->
+                        val lazer = skin.regionName(TAG, "lazer")
+                        val burst = skin.regionName(TAG, "burst")
+                        animations.putAll(
+                            lazer pairTo Animation(regions[lazer], 2, 1, 0.1f, true),
+                            burst pairTo Animation(regions[burst], 3, 1, 0.05f, false)
+                        )
+                    }
                 }
                 .build()
         )

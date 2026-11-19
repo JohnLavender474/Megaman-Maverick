@@ -13,6 +13,7 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.extensions.toGdxArray
 import com.maverick.game.engine.common.interfaces.IFaceable
@@ -47,6 +48,7 @@ import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.IFreezerEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.projectiles.IceBomb
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.entities.utils.hardMode
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
@@ -57,6 +59,7 @@ class IceFox(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
 
     companion object {
         const val TAG = "IceFox"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
 
         private const val STAND_DUR = 1.5f
 
@@ -87,12 +90,18 @@ class IceFox(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
 
     private lateinit var timers: ObjectMap<IceFoxState, Timer>
     private var shots = SHOTS
+    private var skin = SpriteSkin.DEFAULT
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
+            SKINS.forEach { skin ->
+                animDefs.keys().forEach { key ->
+                    val name = skin.regionName(TAG, key)
+                    regions.put(name, atlas.findRegion(name))
+                }
+            }
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -102,6 +111,8 @@ class IceFox(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
@@ -184,12 +195,14 @@ class IceFox(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { currentState.name.lowercase() }
+                .setKeySupplier { skin.regionName(TAG, currentState.name.lowercase()) }
                 .applyToAnimations { animations ->
-                    animDefs.forEach { entry ->
-                        val key = entry.key
-                        val (rows, columns, durations, loop) = entry.value
-                        animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+                    SKINS.forEach { skin ->
+                        animDefs.forEach { entry ->
+                            val key = skin.regionName(TAG, entry.key)
+                            val (rows, columns, durations, loop) = entry.value
+                            animations.put(key, Animation(regions[key], rows, columns, durations, loop))
+                        }
                     }
                 }
                 .build()
@@ -211,7 +224,8 @@ class IceFox(services: MegaServices) : AbstractEnemy(services), IAnimatedEntity,
             props(
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
-                ConstKeys.IMPULSE pairTo impulse
+                ConstKeys.IMPULSE pairTo impulse,
+                ConstKeys.COLOR pairTo skin.name
             )
         )
 

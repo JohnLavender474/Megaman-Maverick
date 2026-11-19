@@ -14,6 +14,7 @@ import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.extensions.putAll
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
@@ -47,6 +48,7 @@ import com.megaman.maverick.game.entities.contracts.IFreezableEntity
 import com.megaman.maverick.game.entities.projectiles.SuperCoolActionStarWarsSpaceLazer
 import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -57,6 +59,8 @@ class AstroAssAssaulter(services: MegaServices) : AbstractEnemy(services, size =
 
     companion object {
         const val TAG = "AstroAssAssaulter"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
+        private const val FROZEN = "frozen"
 
         internal val FLAGS = OrderedMap<Int, StagedMoonLandingFlag>()
 
@@ -75,6 +79,12 @@ class AstroAssAssaulter(services: MegaServices) : AbstractEnemy(services, size =
         private const val LAZER_SPEED = 10f
 
         private val regions = ObjectMap<String, TextureRegion>()
+
+        private fun regionName(skin: SpriteSkin, key: String) =
+            if (key == FROZEN) SpriteSkin.DEFAULT.regionName(TAG, key) else skin.regionName(TAG, key)
+
+        private fun animationKey(skin: SpriteSkin, key: String) =
+            if (key == FROZEN) key else skin.regionName(TAG, key)
     }
 
     private enum class AstroAssState { STAND, SHOOT, THROW }
@@ -105,13 +115,16 @@ class AstroAssAssaulter(services: MegaServices) : AbstractEnemy(services, size =
     private var canThrowFlagRight = true
 
     private var shootUp = false
+    private var skin = SpriteSkin.DEFAULT
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            gdxArrayOf("stand", "throw", "shoot", "shoot_up", "frozen").forEach { key ->
-                regions.put(key, atlas.findRegion("${TAG}/$key"))
+            SKINS.forEach { skin ->
+                gdxArrayOf("stand", "throw", "shoot", "shoot_up", FROZEN).forEach { key ->
+                    regions.put(animationKey(skin, key), atlas.findRegion(regionName(skin, key)))
+                }
             }
         }
         if (stateTimers.isEmpty) {
@@ -141,6 +154,8 @@ class AstroAssAssaulter(services: MegaServices) : AbstractEnemy(services, size =
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.positionOnPoint(spawn, Position.BOTTOM_CENTER)
@@ -193,7 +208,8 @@ class AstroAssAssaulter(services: MegaServices) : AbstractEnemy(services, size =
                 ConstKeys.IMPULSE pairTo impulse,
                 "${ConstKeys.PARENT}_${ConstKeys.ID}" pairTo mapObjectId!!,
                 "${ConstKeys.GRAVITY}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_GRAVITY_SCALAR,
-                "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_MOVEMENT_SCALAR
+                "${ConstKeys.MOVEMENT}_${ConstKeys.SCALAR}" pairTo DEFAULT_FLAG_MOVEMENT_SCALAR,
+                ConstKeys.COLOR pairTo skin.name
             )
         )
 
@@ -210,7 +226,8 @@ class AstroAssAssaulter(services: MegaServices) : AbstractEnemy(services, size =
         val props = props(
             ConstKeys.OWNER pairTo this,
             ConstKeys.POSITION pairTo spawn,
-            ConstKeys.TRAJECTORY pairTo trajectory
+            ConstKeys.TRAJECTORY pairTo trajectory,
+            ConstKeys.COLOR pairTo skin.name
         )
 
         val lazer = MegaEntityFactory.fetch(SuperCoolActionStarWarsSpaceLazer::class)!!
@@ -288,20 +305,27 @@ class AstroAssAssaulter(services: MegaServices) : AbstractEnemy(services, size =
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    if (frozen) "frozen" else when (currentState) {
+                    val key = if (frozen) FROZEN else when (currentState) {
                         AstroAssState.STAND -> "stand"
                         AstroAssState.THROW -> "throw"
                         else -> if (shootUp) "shoot_up" else "shoot"
                     }
+                    animationKey(skin, key)
                 }
                 .applyToAnimations { animations ->
-                    animations.putAll(
-                        "stand" pairTo Animation(regions["stand"], 2, 1, gdxArrayOf(1f, 0.15f), true),
-                        "throw" pairTo Animation(regions["throw"], 2, 1, 0.1f, false),
-                        "shoot" pairTo Animation(regions["shoot"], 2, 1, 0.125f, true),
-                        "shoot_up" pairTo Animation(regions["shoot_up"], 2, 1, 0.125f, true),
-                        "frozen" pairTo Animation(regions["frozen"])
-                    )
+                    SKINS.forEach { skin ->
+                        val stand = animationKey(skin, "stand")
+                        val throwKey = animationKey(skin, "throw")
+                        val shoot = animationKey(skin, "shoot")
+                        val shootUp = animationKey(skin, "shoot_up")
+                        animations.putAll(
+                            stand pairTo Animation(regions[stand], 2, 1, gdxArrayOf(1f, 0.15f), true),
+                            throwKey pairTo Animation(regions[throwKey], 2, 1, 0.1f, false),
+                            shoot pairTo Animation(regions[shoot], 2, 1, 0.125f, true),
+                            shootUp pairTo Animation(regions[shootUp], 2, 1, 0.125f, true)
+                        )
+                    }
+                    animations.put(FROZEN, Animation(regions[FROZEN]))
                 }
                 .build()
         )

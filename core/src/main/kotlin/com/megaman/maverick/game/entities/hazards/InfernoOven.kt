@@ -10,6 +10,7 @@ import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.AnimatorBuilder
+import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Direction
@@ -48,6 +49,7 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.screens.levels.spawns.SpawnType
@@ -74,6 +76,7 @@ class InfernoOven(services: MegaServices) : MegaGameEntity(services), IBodyEntit
         private const val DAMAGER_WIDTH = 0.5f
         private const val DAMAGER_HEIGHT = 3f
 
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
         private val regions = ObjectMap<String, TextureRegion>()
         private val animDefs = ObjectMap<String, AnimationDef>()
     }
@@ -91,16 +94,20 @@ class InfernoOven(services: MegaServices) : MegaGameEntity(services), IBodyEntit
         get() = loop.getCurrent()
     private val timers = OrderedMap<InfernoOvenState, Timer>()
     private lateinit var spawnRoom: String
+    private var skin = SpriteSkin.DEFAULT
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-            InfernoOvenState.entries.forEach { state ->
-                val key = state.name.lowercase()
-                regions.put(key, atlas.findRegion("$TAG/$key"))
+            SKINS.forEach { entry ->
+                InfernoOvenState.entries.forEach { state ->
+                    val name = entry.regionName(TAG, state.name.lowercase())
+                    regions.put(name, atlas.findRegion(name))
+                }
+                val flame = entry.regionName(TAG, FLAME)
+                regions.put(flame, atlas.findRegion(flame))
             }
-            regions.put(FLAME, atlas.findRegion("$TAG/$FLAME"))
         }
         if (animDefs.isEmpty) {
             animDefs.put(InfernoOvenState.COLD.name.lowercase(), AnimationDef())
@@ -123,6 +130,8 @@ class InfernoOven(services: MegaServices) : MegaGameEntity(services), IBodyEntit
 
     override fun onSpawn(spawnProps: Properties) {
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
@@ -241,31 +250,38 @@ class InfernoOven(services: MegaServices) : MegaGameEntity(services), IBodyEntit
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { currentState.name.lowercase() }
+                .setKeySupplier { skin.regionName(TAG, currentState.name.lowercase()) }
                 .applyToAnimations { animations ->
-                    InfernoOvenState.entries.forEach { state ->
-                        val key = state.name.lowercase()
-                        val region = regions[key]
-                        val animDef = animDefs[key]
-                        animations.put(
-                            key,
-                            Animation(region, animDef.rows, animDef.cols, animDef.durations, animDef.loop)
-                        )
+                    SKINS.forEach { entry ->
+                        InfernoOvenState.entries.forEach { state ->
+                            val key = entry.regionName(TAG, state.name.lowercase())
+                            val region = regions[key]
+                            val animDef = animDefs[state.name.lowercase()]
+                            animations.put(
+                                key,
+                                Animation(region, animDef.rows, animDef.cols, animDef.durations, animDef.loop)
+                            )
+                        }
                     }
                 }
                 .build()
         )
         .key(FLAME)
         .animator(
-            Animator(animDefs[FLAME].let { animDef ->
-                Animation(
-                    regions[FLAME],
-                    animDef.rows,
-                    animDef.cols,
-                    animDef.durations,
-                    animDef.loop
-                )
-            }).also { animator -> animator.shouldAnimatePredicate = { currentState == InfernoOvenState.HOT } }
+            Animator(
+                keySupplier = { skin.regionName(TAG, FLAME) },
+                animations = ObjectMap<String, IAnimation>().also { animations ->
+                    val animDef = animDefs[FLAME]
+                    SKINS.forEach { entry ->
+                        val key = entry.regionName(TAG, FLAME)
+                        animations.put(
+                            key,
+                            Animation(regions[key], animDef.rows, animDef.cols, animDef.durations, animDef.loop)
+                        )
+                    }
+                },
+                shouldAnimatePredicate = { currentState == InfernoOvenState.HOT }
+            )
         )
         .build()
 

@@ -15,6 +15,7 @@ import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.extensions.equalsAny
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.interfaces.IFaceable
@@ -61,6 +62,7 @@ class UziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableEntity
 
     companion object {
         const val TAG = "UziJoe"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.WILY, SpriteSkin.LAB)
 
         private const val FROZEN = "frozen"
 
@@ -168,7 +170,7 @@ class UziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableEntity
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            SpriteSkin.entries.forEach { skin ->
+            SKINS.forEach { skin ->
                 animDefs.keys().forEach { key ->
                     regions.put(animationKey(skin, key), atlas.findRegion(regionName(skin, key)))
                 }
@@ -182,7 +184,7 @@ class UziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableEntity
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        skin = SpriteSkin.of(spawnProps)
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         direction =
             Direction.valueOf(spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase())
@@ -453,7 +455,7 @@ class UziJoe(services: MegaServices) : AbstractEnemy(services), IFreezableEntity
                     return@keySupplier animationKey(skin, key)
                 }
                 .applyToAnimations { animations ->
-                    SpriteSkin.entries.forEach { skin ->
+                    SKINS.forEach { skin ->
                         animDefs.forEach { entry ->
                             val key = animationKey(skin, entry.key)
                             val def = entry.value

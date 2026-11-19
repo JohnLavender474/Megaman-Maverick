@@ -13,6 +13,7 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.extensions.toGdxArray
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Loop
@@ -54,6 +55,7 @@ class DuoBallCanon(services: MegaServices) : AbstractEnemy(services), IFreezable
 
     companion object {
         const val TAG = "DuoBallCanon"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.WILY)
 
         private const val SWITCH_STATE_DELAY = 0.5f
 
@@ -133,7 +135,7 @@ class DuoBallCanon(services: MegaServices) : AbstractEnemy(services), IFreezable
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
             regions.put(FROZEN, atlas.findRegion("$TAG/$FROZEN"))
-            SpriteSkin.entries.forEach { skin ->
+            SKINS.forEach { skin ->
                 DuoBallCanonDirection.entries.forEach { direction ->
                     val key = direction.name.lowercase()
                     gdxArrayOf(key, "${key}${SHOOT_SUFFIX}").forEach { skinKey ->
@@ -151,7 +153,7 @@ class DuoBallCanon(services: MegaServices) : AbstractEnemy(services), IFreezable
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        skin = SpriteSkin.of(spawnProps)
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val spawn =spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
@@ -267,7 +269,7 @@ class DuoBallCanon(services: MegaServices) : AbstractEnemy(services), IFreezable
                 .applyToAnimations { animations ->
                     animations.put(FROZEN, Animation(regions[FROZEN]))
 
-                    SpriteSkin.entries.forEach { skin ->
+                    SKINS.forEach { skin ->
                         DuoBallCanonDirection.entries.forEach { direction ->
                             val key = skin.regionName(TAG, direction.name.lowercase())
                             animations.put(key, Animation(regions[key]))

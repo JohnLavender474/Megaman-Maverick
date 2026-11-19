@@ -71,6 +71,7 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
 
     companion object {
         const val TAG = "LaserBeamer"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.WILY)
 
         private const val DEFAULT_SPEED = 1.75f
         private const val DEFAULT_HARD_SPEED = 2f
@@ -108,7 +109,7 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (regions.isEmpty) SpriteSkin.entries.forEach { skin ->
+        if (regions.isEmpty) SKINS.forEach { skin ->
             val name = if (skin == SpriteSkin.DEFAULT) TAG else skin.regionName(TAG, TAG)
             regions.put(skin, services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, name))
         }
@@ -127,7 +128,7 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
 
         services.events.addListener(this)
 
-        skin = SpriteSkin.of(spawnProps)
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         direction = Direction.valueOf(
             spawnProps.getOrDefault(ConstKeys.DIRECTION, ConstKeys.UP, String::class).uppercase()

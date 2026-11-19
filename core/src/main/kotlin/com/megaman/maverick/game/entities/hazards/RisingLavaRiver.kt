@@ -49,6 +49,7 @@ import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
 import com.megaman.maverick.game.entities.decorations.FloatingEmber
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.levels.LevelUtils
@@ -92,6 +93,7 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
             RisingLavaRiverType.TOP pairTo AnimationDef(3, 1, 0.1f, true),
             RisingLavaRiverType.INNER pairTo AnimationDef(3, 1, 0.1f, true)
         )
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -134,13 +136,17 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
 
     private val emberDelay = Timer()
 
+    private var skin = SpriteSkin.DEFAULT
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_2.source)
-            animDefs.keys().forEach {
-                val key = it.name.lowercase()
-                regions.put(key, atlas.findRegion("$TAG/$key"))
+            SKINS.forEach { entry ->
+                animDefs.keys().forEach {
+                    val name = entry.regionName(TAG, it.name.lowercase())
+                    regions.put(name, atlas.findRegion(name))
+                }
             }
         }
         super.init()
@@ -174,6 +180,8 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
         super.onSpawn(spawnProps)
 
         services.events.addListener(this)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         state = RisingLavaRiverState.DORMANT
 
@@ -259,7 +267,7 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
 
             val animDef = animDefs[type]
             val animation = Animation(
-                regions[type.name.lowercase()],
+                regions[skin.regionName(TAG, type.name.lowercase())],
                 animDef.rows,
                 animDef.cols,
                 animDef.durations,
@@ -298,7 +306,8 @@ class RisingLavaRiver(services: MegaServices) : MegaGameEntity(services), IBodyE
                         ember.spawn(
                             props(
                                 ConstKeys.POSITION pairTo position,
-                                ConstKeys.CULL_TIME pairTo EMBER_CULL_TIME
+                                ConstKeys.CULL_TIME pairTo EMBER_CULL_TIME,
+                                ConstKeys.COLOR pairTo skin.name
                             )
                         )
 

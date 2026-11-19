@@ -3,11 +3,13 @@ package com.megaman.maverick.game.entities.decorations
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.Animator
+import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.extensions.getTextureRegion
+import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectMapOf
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.extensions.swapped
@@ -32,6 +34,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.entities.utils.onMaxSpawnedByTag
 import com.megaman.maverick.game.events.EventType
@@ -61,7 +64,10 @@ class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISprites
         private const val MIN_RISE_SPEED = 4f
         private const val MAX_RISE_SPEED = 6f
 
-        private var region: TextureRegion? = null
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
+        private val regions = ObjectMap<SpriteSkin, TextureRegion>()
+
+        private fun regionName(skin: SpriteSkin) = if (skin == SpriteSkin.DEFAULT) TAG else skin.regionName(TAG, TAG)
     }
 
     private val sinePosition = Vector2()
@@ -75,10 +81,14 @@ class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISprites
     private val position = Vector2()
     private var maxY = 0f
     private val out = Vector2()
+    private var skin = SpriteSkin.DEFAULT
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            SKINS.forEach { entry -> regions.put(entry, atlas.findRegion(regionName(entry))) }
+        }
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineCullablesComponent())
@@ -89,6 +99,8 @@ class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISprites
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val center = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         position.set(center)
@@ -167,7 +179,14 @@ class FloatingEmber(services: MegaServices) : MegaGameEntity(services), ISprites
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
-        .key(TAG).animator(Animator(Animation(region!!, 2, 1, 0.1f, true)))
+        .key(TAG).animator(
+            Animator(
+                keySupplier = { skin.name },
+                animations = ObjectMap<String, IAnimation>().also { animations ->
+                    SKINS.forEach { entry -> animations.put(entry.name, Animation(regions[entry], 2, 1, 0.1f, true)) }
+                }
+            )
+        )
         .build()
 
     override fun getType() = EntityType.DECORATION

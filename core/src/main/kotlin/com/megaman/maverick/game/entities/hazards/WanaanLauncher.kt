@@ -11,6 +11,7 @@ import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.IDirectional
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -59,6 +60,7 @@ class WanaanLauncher(services: MegaServices) : AbstractHealthEntity(services), I
 
     companion object {
         const val TAG = "WanaanLauncher"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.WILY, SpriteSkin.LAB)
         private const val NEW_WANAAN_DELAY = 0.25f
         private const val LAUNCH_DELAY = 1f
         private const val IMPULSE = 16.5f
@@ -80,7 +82,7 @@ class WanaanLauncher(services: MegaServices) : AbstractHealthEntity(services), I
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.HAZARDS_1.source)
-            SpriteSkin.entries.forEach { skin ->
+            SKINS.forEach { skin ->
                 gdxArrayOf("launcher", "bust").forEach { key ->
                     val name = skin.regionName(TAG, key)
                     regions.put(name, atlas.findRegion(name))
@@ -98,7 +100,7 @@ class WanaanLauncher(services: MegaServices) : AbstractHealthEntity(services), I
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        skin = SpriteSkin.of(spawnProps)
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         body.setCenter(spawn)

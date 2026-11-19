@@ -58,6 +58,7 @@ import com.megaman.maverick.game.entities.projectiles.GreenPelletBlast
 import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.DynamicBodyHeuristic
 import com.megaman.maverick.game.entities.utils.FreezableEntityHandler
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.pathfinding.MegaPathfinderResultConsumer
 import com.megaman.maverick.game.players.asPlayer
@@ -72,6 +73,8 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
 
     companion object {
         const val TAG = "Bat"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
+        private val SKINNED_REGIONS = gdxArrayOf("Hang", "Fly", "OpenEyes", "OpenWings")
         private var atlas: TextureAtlas? = null
         private const val MAX_ALLOWED = 3
         private const val HANG_DURATION = 0.75f
@@ -117,6 +120,7 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
         get() = !services.gameCamera.rotating && !frozen
 
     private lateinit var type: String
+    private var skin = SpriteSkin.DEFAULT
     private lateinit var state: BatState
     private lateinit var animations: ObjectMap<String, IAnimation>
 
@@ -164,10 +168,17 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
         body.setTopCenterToPoint(bounds.getPositionPoint(Position.TOP_CENTER))
 
         type = spawnProps.getOrDefault(ConstKeys.TYPE, "", String::class)
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
+        if (type.isNotEmpty() && skin != SpriteSkin.DEFAULT) throw IllegalArgumentException(
+            "Bat of type '$type' has no sprite skin '${skin.name.lowercase()}'. Leave '${ConstKeys.COLOR}' out."
+        )
 
         val frameDuration = spawnProps.getOrDefault(ConstKeys.FRAME, 0.1f, Float::class)
         animations.get("Fly").setFrameDuration(frameDuration)
         animations.get("SnowFly").setFrameDuration(frameDuration)
+        SKINS.forEach { skin ->
+            if (skin != SpriteSkin.DEFAULT) animations.get(skin.regionName(TAG, "Fly")).setFrameDuration(frameDuration)
+        }
 
         flyToAttackSpeed = spawnProps.getOrDefault(
             "${ConstKeys.ATTACK}_${ConstKeys.SPEED}",
@@ -353,7 +364,12 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { type + if (frozen) "frozen" else state.region }
+        val keySupplier: (String?) -> String? = {
+            when {
+                frozen || skin == SpriteSkin.DEFAULT -> type + if (frozen) "frozen" else state.region
+                else -> skin.regionName(TAG, state.region)
+            }
+        }
         animations = objectMapOf(
             "Hang" pairTo Animation(atlas!!.findRegion("Bat/Hang")),
             "Fly" pairTo Animation(atlas!!.findRegion("Bat/Fly"), 1, 2, 0.1f, true),
@@ -365,6 +381,17 @@ class Bat(services: MegaServices) : AbstractEnemy(services, size = Size.SMALL), 
             "SnowOpenEyes" pairTo Animation(atlas!!.findRegion("SnowBat/OpenEyes")),
             "SnowOpenWings" pairTo Animation(atlas!!.findRegion("SnowBat/OpenWings"))
         )
+        SKINS.forEach { skin ->
+            if (skin == SpriteSkin.DEFAULT) return@forEach
+            SKINNED_REGIONS.forEach { region ->
+                val name = skin.regionName(TAG, region)
+                val animation = when (region) {
+                    "Fly" -> Animation(atlas!!.findRegion(name), 1, 2, 0.1f, true)
+                    else -> Animation(atlas!!.findRegion(name))
+                }
+                animations.put(name, animation)
+            }
+        }
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }

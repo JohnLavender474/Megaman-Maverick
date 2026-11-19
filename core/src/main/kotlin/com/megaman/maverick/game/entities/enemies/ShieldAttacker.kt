@@ -13,6 +13,7 @@ import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.extensions.orderedMapOf
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
@@ -53,6 +54,7 @@ class ShieldAttacker(services: MegaServices) : AbstractEnemy(services, size = Si
 
     companion object {
         const val TAG = "ShieldAttacker"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.WILY, SpriteSkin.LAB)
 
         private const val X_VEL = 6f
 
@@ -106,7 +108,7 @@ class ShieldAttacker(services: MegaServices) : AbstractEnemy(services, size = Si
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_1.source)
-            SpriteSkin.entries.forEach { skin ->
+            SKINS.forEach { skin ->
                 animDefs.keys().forEach { key ->
                     regions.put(animationKey(skin, key), atlas.findRegion(regionName(skin, key)))
                 }
@@ -121,7 +123,7 @@ class ShieldAttacker(services: MegaServices) : AbstractEnemy(services, size = Si
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
 
-        skin = SpriteSkin.of(spawnProps)
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getCenter()
         vertical = spawnProps.getOrDefault(ConstKeys.VERTICAL, false, Boolean::class)
@@ -331,7 +333,7 @@ class ShieldAttacker(services: MegaServices) : AbstractEnemy(services, size = Si
             if (frozen) FROZEN else skin.regionName(TAG, if (turning) "turn" else "attack")
         }
         animations = ObjectMap<String, IAnimation>().also { animations ->
-            SpriteSkin.entries.forEach { skin ->
+            SKINS.forEach { skin ->
                 animDefs.forEach { entry ->
                     val key = animationKey(skin, entry.key)
                     val (rows, columns, durations, loop) = entry.value

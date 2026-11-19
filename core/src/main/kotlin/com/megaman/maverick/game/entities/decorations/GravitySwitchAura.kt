@@ -2,11 +2,14 @@ package com.megaman.maverick.game.entities.decorations
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.Animator
+import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.extensions.getTextureRegion
+import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -22,6 +25,7 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import kotlin.math.max
 
 class GravitySwitchAura(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity {
@@ -34,7 +38,10 @@ class GravitySwitchAura(services: MegaServices) : MegaGameEntity(services), ISpr
         private const val SCALE_TIMES = 10f
         private const val DELTA_DUR = 0.1f
 
-        private var region: TextureRegion? = null
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
+        private val regions = ObjectMap<SpriteSkin, TextureRegion>()
+
+        private fun regionName(skin: SpriteSkin) = if (skin == SpriteSkin.DEFAULT) TAG else skin.regionName(TAG, TAG)
     }
 
     private val deltaTimer = Timer(DELTA_DUR)
@@ -43,9 +50,14 @@ class GravitySwitchAura(services: MegaServices) : MegaGameEntity(services), ISpr
     private val center = Vector2()
     private var size = INIT_SIZE
 
+    private var skin = SpriteSkin.DEFAULT
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (regions.isEmpty) {
+            val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
+            SKINS.forEach { entry -> regions.put(entry, atlas.findRegion(regionName(entry))) }
+        }
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
@@ -55,6 +67,8 @@ class GravitySwitchAura(services: MegaServices) : MegaGameEntity(services), ISpr
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         val center = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         this.center.set(center)
@@ -89,7 +103,14 @@ class GravitySwitchAura(services: MegaServices) : MegaGameEntity(services), ISpr
         .build()
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
-        .key(TAG).animator(Animator(Animation(region!!, 2, 2, 0.1f, true)))
+        .key(TAG).animator(
+            Animator(
+                keySupplier = { skin.name },
+                animations = ObjectMap<String, IAnimation>().also { animations ->
+                    SKINS.forEach { entry -> animations.put(entry.name, Animation(regions[entry], 2, 2, 0.1f, true)) }
+                }
+            )
+        )
         .build()
 
     override fun getType() = EntityType.DECORATION

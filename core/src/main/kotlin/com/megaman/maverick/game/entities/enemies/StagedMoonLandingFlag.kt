@@ -15,6 +15,7 @@ import com.maverick.game.engine.common.enums.Position
 import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.extensions.putAll
 import com.maverick.game.engine.common.extensions.toGdxArray
 import com.maverick.game.engine.common.interfaces.IFaceable
@@ -45,6 +46,7 @@ import com.megaman.maverick.game.damage.dmgNeg
 import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.IScalableGravityEntity
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.entities.utils.SpriteSkin
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.misc.FacingUtils
@@ -55,6 +57,7 @@ class StagedMoonLandingFlag(services: MegaServices) : AbstractEnemy(services, si
 
     companion object {
         const val TAG = "StagedMoonLandingFlag"
+        private val SKINS = objectSetOf(SpriteSkin.DEFAULT, SpriteSkin.LAB)
 
         private const val HIDDEN_WIDTH = 0.5f
         private const val HIDDEN_HEIGHT = 0.25f
@@ -87,6 +90,7 @@ class StagedMoonLandingFlag(services: MegaServices) : AbstractEnemy(services, si
     private val stateTimers = OrderedMap<FlagState, Timer>()
 
     private var parentId = -1
+    private var skin = SpriteSkin.DEFAULT
 
     private lateinit var shieldDamager1: Fixture
     private val shield1Health = Points(0, 100, 100)
@@ -106,13 +110,15 @@ class StagedMoonLandingFlag(services: MegaServices) : AbstractEnemy(services, si
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.ENEMIES_2.source)
-            FlagState.entries.forEach {
-                val key = it.name.lowercase()
-                regions.put(key, atlas.findRegion("$TAG/$key"))
-            }
-            for (i in 1..3) {
-                val key = "${ConstKeys.SHIELD}$i"
-                regions.put(key, atlas.findRegion("$TAG/$key"))
+            SKINS.forEach { skin ->
+                FlagState.entries.forEach {
+                    val name = skin.regionName(TAG, it.name.lowercase())
+                    regions.put(name, atlas.findRegion(name))
+                }
+                for (i in 1..3) {
+                    val name = skin.regionName(TAG, "${ConstKeys.SHIELD}$i")
+                    regions.put(name, atlas.findRegion(name))
+                }
             }
         }
         if (stateTimers.isEmpty) {
@@ -127,6 +133,8 @@ class StagedMoonLandingFlag(services: MegaServices) : AbstractEnemy(services, si
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+
+        skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
         parentId = spawnProps.getOrDefault("${ConstKeys.PARENT}_${ConstKeys.ID}", -1, Int::class)
 
@@ -393,14 +401,20 @@ class StagedMoonLandingFlag(services: MegaServices) : AbstractEnemy(services, si
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { currentState.name.lowercase() }
+                .setKeySupplier { skin.regionName(TAG, currentState.name.lowercase()) }
                 .applyToAnimations { animations ->
-                    animations.putAll(
-                        "stand" pairTo Animation(regions["stand"]),
-                        "rise" pairTo Animation(regions["rise"], 3, 1, 0.1f, false),
-                        "fall" pairTo Animation(regions["fall"], 3, 1, 0.1f, false),
-                        "hidden" pairTo Animation(regions["hidden"])
-                    )
+                    SKINS.forEach { skin ->
+                        val stand = skin.regionName(TAG, "stand")
+                        val rise = skin.regionName(TAG, "rise")
+                        val fall = skin.regionName(TAG, "fall")
+                        val hidden = skin.regionName(TAG, "hidden")
+                        animations.putAll(
+                            stand pairTo Animation(regions[stand]),
+                            rise pairTo Animation(regions[rise], 3, 1, 0.1f, false),
+                            fall pairTo Animation(regions[fall], 3, 1, 0.1f, false),
+                            hidden pairTo Animation(regions[hidden])
+                        )
+                    }
                 }
                 .build()
         )
@@ -409,16 +423,19 @@ class StagedMoonLandingFlag(services: MegaServices) : AbstractEnemy(services, si
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    when {
+                    val key = when {
                         shield1Health.current >= 75 -> "${ConstKeys.SHIELD}1"
                         shield1Health.current >= 25 -> "${ConstKeys.SHIELD}2"
                         else -> "${ConstKeys.SHIELD}3"
                     }
+                    skin.regionName(TAG, key)
                 }
                 .applyToAnimations { animations ->
-                    for (i in 1..3) {
-                        val key = "${ConstKeys.SHIELD}$i"
-                        animations.put(key, Animation(regions[key], 3, 1, 0.1f, true))
+                    SKINS.forEach { skin ->
+                        for (i in 1..3) {
+                            val key = skin.regionName(TAG, "${ConstKeys.SHIELD}$i")
+                            animations.put(key, Animation(regions[key], 3, 1, 0.1f, true))
+                        }
                     }
                 }
                 .build()
@@ -428,16 +445,19 @@ class StagedMoonLandingFlag(services: MegaServices) : AbstractEnemy(services, si
         .animator(
             AnimatorBuilder()
                 .setKeySupplier {
-                    when {
+                    val key = when {
                         shield2Health.current >= 75 -> "${ConstKeys.SHIELD}1"
                         shield2Health.current >= 25 -> "${ConstKeys.SHIELD}2"
                         else -> "${ConstKeys.SHIELD}3"
                     }
+                    skin.regionName(TAG, key)
                 }
                 .applyToAnimations { animations ->
-                    for (i in 1..3) {
-                        val key = "${ConstKeys.SHIELD}$i"
-                        animations.put(key, Animation(regions[key], 3, 1, 0.1f, true))
+                    SKINS.forEach { skin ->
+                        for (i in 1..3) {
+                            val key = skin.regionName(TAG, "${ConstKeys.SHIELD}$i")
+                            animations.put(key, Animation(regions[key], 3, 1, 0.1f, true))
+                        }
                     }
                 }
                 .build()
