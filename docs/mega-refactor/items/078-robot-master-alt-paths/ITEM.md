@@ -5,7 +5,7 @@
 - Objectives: `O4`, `O9`
 - Depends on: none
 - Related: `077`, `079`, `089`, `051`, `067`
-- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`); `mega-refactor-078b-wily-stage-3-art` (active, 2026-11-19)
+- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`); `mega-refactor-078b-wily-stage-3-art` (merged, 2026-11-19, squash `e346c558d`)
 
 ## Goal
 
@@ -143,7 +143,8 @@ backgrounds in the mood of the X6 Gate stages, whose music the stage plays. Area
 | Refight hall | `room4`, `room6` to `room8`, the 4 refight rooms | short rooms between the refights |
 | Core | `room9`, `wily_room` | the climb to `WilyFinalBoss` |
 
-Art only: the block geometry stays. Drafts: `temp/078-wily3-art/` in the main checkout.
+Art only: the block geometry stays. Drafts: `temp/078-wily3-art/` in the main checkout. Done in `078b` (merged
+2026-11-19): the tileset, the `decor` layer, `Backgrounds10` and the `lab` conveyor belt.
 
 ## Decisions
 
@@ -274,6 +275,9 @@ All stages:
   an old layout can need a repaint later.
 
 Tileset art:
+
+- Wily Stage 3: do its enemies (`Bat`, `IceFox`, `ShieldAttacker`, `UziJoe`, `AstroAssAssaulter`, `BunbyTank`,
+  `WanaanLauncher`) get a stage skin, as in Wily Stage 1? Owner, `078b` D1: decide after the play test.
 
 - Which tilesets are high quality (keep), and which need new art (replace)?
 - Is "the final level" `WILY_STAGE_3` (it holds `WilyFinalBoss`)? The owner confirms.

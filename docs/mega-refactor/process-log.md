@@ -2869,3 +2869,18 @@ newest entry at the bottom.
   is on the $20/month plan.
 - Contract check: not needed (docs only).
 - Follow-up: lift the Fable confirmation rule after the upgrade back to the $100/month plan.
+
+## 2026-11-19 — mega-refactor-078b-wily-stage-3-art
+
+- Summary: Wily Stage 3 art make-over (item `078`), in the mood of the X6 Gate stages ("the last lab"). One new
+  tileset `wily_stage_3_tileset` (187 tiles, 9 trace animations; Claude Fable 5.2, 2 art rounds) and the repainted
+  map with a `decor` layer (trace, emblem plates in the rooms before the refights, vents, lamps); `Tileset1` and
+  `mm9endless` leave this map. New atlas `Backgrounds10` (lab wall, furnace glow, core field) and 7 world-locked
+  background objects with no show/hide triggers, in place of `BKG18`. New `ConveyorBelt` type `lab` with its own
+  frames in `Platforms1` (repack shifts 2 old `png8` regions by up to 19 RGB, no alpha change); the 15 belts of the
+  stage use it. Credits in `README.md`. Squash `e346c558d`.
+- Contract check: automated checks pass on the branch (`engine:test`, `core:test`, `core:smokeTest`, `detektMain`,
+  `core:verifyRandomRule`, `lwjgl3:jar`); map and atlas script checks pass (objects identical to `master`, spike
+  cells kept, old `Platforms1` regions keep their names). Review before the play test (1 Sonnet agent): no bug.
+  Owner play test: passed ("Stage looks good"). Diffity: no threads.
+- Follow-up: enemy skins for Wily Stage 3 (owner D1: decide after the play test; open question in `078` `ITEM.md`).

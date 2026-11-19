@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: Wily Stage 3 art make-over: one new tileset in the mood of the X6 Gate stages, the repainted map, and new backgrounds
 - Done: planning (brief https://claude.ai/artifact/BtRkqv7FQtegZ726ki3RCD, approved 2026-11-19), PLAN.md; PLAN steps 1-6 (tileset, map repaint, backgrounds, lab belt, credits)
-- Next: owner play test and Diffity review
+- Next: none
 - Blocked:
 
 ## Entries
@@ -39,3 +39,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Steps 3 to 6 accepted as done, with 3 changes from the plan (logged above by the step agent): no show/hide triggers (7 world-locked objects, 93 sprite copies against 10000 for `BKG18`), `parallax_x` 1 as well, and the `Platforms1` `png8` repack shift of 2 old regions.
 - Automated checks: `engine:test core:test core:smokeTest detektMain core:verifyRandomRule lwjgl3:jar` pass (`temp/mega-refactor-078b-wily-stage-3-art/gradle-checks.txt`).
 - Review before the play test (1 Sonnet agent): no bug; the 7 manual checks pass. Risk checked and dismissed: `Background.reset()` runs only in the level screen `reset()` (level exit), and the level start zeroes the prior camera position, so a respawn does not offset the backgrounds. Play-test watch: the 96 px jump of the lab wall pattern in the pan from `room5` to `room6`.
+- Owner play test passed ("Stage looks good"); Diffity: no threads. Squash-merged into `master` as `e346c558d`.
