@@ -5,7 +5,7 @@
 - Objectives: `O4`, `O9`
 - Depends on: none
 - Related: `077`, `079`, `089`, `051`, `067`
-- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`)
+- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`); `mega-refactor-078b-wily-stage-3-art` (active, 2026-11-19)
 
 ## Goal
 
@@ -130,6 +130,21 @@ The stage is a mix of Capcom rips and free assets (`MM10Endless`, `Reactor_Man_1
 Art only: the block geometry stays. Drafts: `temp/078-wily1-art/` in the main checkout (`STYLE.md` is the shared
 style guide).
 
+### Wily Stage 3 (`WILY_STAGE_3`, `WilyStage3_v4.tmx`): art make-over
+
+The final stage. Its art is the generic brick tileset that the owner flagged in `076`: `tiles1` paints 11 distinct
+tiles and `tiles2` 4 (`Tileset1`, a few `mm9endless`), with one background (`BKG18`). New original tiles and
+backgrounds in the mood of the X6 Gate stages, whose music the stage plays. Areas (draft):
+
+| Area | Rooms | Content |
+|---|---|---|
+| Entrance | `intro_room`, `intro_room_2` | the start |
+| Furnace run | `room1` to `room3`, `room5` | `InfernoOven`, `FireballBar`, `RisingLavaRiver`, `Wanaan`, gravity switches |
+| Refight hall | `room4`, `room6` to `room8`, the 4 refight rooms | short rooms between the refights |
+| Core | `room9`, `wily_room` | the climb to `WilyFinalBoss` |
+
+Art only: the block geometry stays. Drafts: `temp/078-wily3-art/` in the main checkout.
+
 ## Decisions
 
 - 2026-11-17 (owner): `078` is the stage redesign epic for all stages. It took in `073`, `074`, `080`, `099`, `166`
@@ -164,6 +179,10 @@ style guide).
   with its own name and a hide trigger at `room8`; the skull crest at the corridor gates; a thick-junction corner
   tile. New tile layer `decor` after `tiles1` for all new decor (`tiles2` already paints the corridors and draws
   under `tiles1`). Full list: `temp/078-wily1-art/STYLE.md`.
+
+- 2026-11-19 (owner): Wily Stage 3 art make-over as branch `078b`. The mood follows the X6 Gate stages, whose
+  music the stage plays. The owner asked for a first draft from Claude's best guess (owner accepted the
+  recommendation): a new tileset, not an edit of `Tileset1` (11 live levels use it).
 
 Decisions carried over from `076` (they apply to the tileset and background work):
 
