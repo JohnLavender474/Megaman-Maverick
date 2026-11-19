@@ -72,3 +72,8 @@ Read this file before you draw, fix or convert art (sprites, tiles, backgrounds)
 - **Art goes to an art agent.** The main session does not draw, recolor or redraw art itself. It writes a brief and
   hands the art to one art subagent, which can delegate parts to other agents (with the model of the rule above).
   The main session keeps the code, the packing, the maps and the checks (owner, 2026-11-18, branch `078a`).
+- **A fresh art agent for each round.** Each round of owner feedback goes to a new art subagent, not to the agent of
+  the last round. The images of each round stay in the context of an agent and make each later request more costly
+  (one agent reached about 727k tokens over many rounds). Give the new agent the paths of the current frames, the
+  owner's notes of the round and the short notes of the last rounds from the task's temp folder (owner accepted the
+  recommendation, 2026-11-19).

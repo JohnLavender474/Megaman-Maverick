@@ -36,7 +36,7 @@ titles, with more variety. The camera zones and scrolling camera are one example
 
 - Rule: a new mechanic has a room in a test map, so that it can be tried with no full stage.
 - Problem: `P3`
-- Check: the branch `CONTRACT.md` names the room with `--level` and `--room`.
+- Check: the branch contract names the room with `--level` and `--room`.
 - Applies: `linked items`
 - Active: `now`
 

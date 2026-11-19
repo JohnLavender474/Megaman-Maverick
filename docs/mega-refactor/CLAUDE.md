@@ -7,7 +7,8 @@ Read this file before you do any work on the mega refactor.
 Change `engine/` and `core/` so that the game reaches the objectives in
 `objectives/README.md`. The effort includes refactors and also new behavior. A branch keeps all
 behavior that its contract does not name as an intended change. Each branch writes its own
-contract in its `docs/CONTRACT.md`.
+contract in the "Contract" part of its `docs/SCOPE.md` (branches planned before 2026-11-19 keep a
+separate `docs/CONTRACT.md`; read "the contract" as that file for them).
 
 Performance is also a goal. The game must play well on weak hardware, not only on the owner's
 laptop. So an optimization does not need proof of a slowdown on the owner's machine before it is
@@ -47,7 +48,23 @@ Rules:
 | `_templates/branch/` | The files to copy for a new branch folder. | `master` only |
 | `items/<id>-<slug>/ITEM.md` | The item: goal, proposed scope, owner's input, open questions. | `master` only |
 | `items/<id>-<slug>/NOTES.md` | Research for the item. | `master` only |
-| `items/<id>-<slug>/branches/<branch>/` | The docs of one branch. | `master` before the branch exists, then that branch only |
+| `items/<id>-<slug>/branches/<branch>/` | The docs of one branch: `SCOPE.md` (scope and contract), `PLAN.md`, `NOTES.md`, `TODO.md`, `BRIEF.src.html` and `process-log.md`. | `master` before the branch exists, then that branch only |
+
+## Sessions and token use
+
+Context length costs the most tokens: each request reads the whole conversation again (owner
+accepted the recommendation, 2026-11-19, from a usage scan of 2026-10-19 to 2026-11-19). So:
+
+- **One session per phase.** The phases of a branch are: planning (scan to the owner's answers
+  and the plan), implementation, review and play test (with the Diffity rounds), and merge. At
+  the end of a phase, bring the branch docs and the status block of the branch `process-log.md`
+  up to date. Then tell the owner to start a new session (`/clear`), and give a one-line prompt
+  to continue, for example `Continue 079a: implementation, from PLAN.md step 1.` The new session
+  reads this file and the branch folder, not the old conversation. A phase that grows very long
+  (for example many Diffity rounds) can also end early in the same way.
+- **Implementation subagents take a group of steps.** Give one subagent a group of plan steps
+  that touch the same files (about 3 to 5 steps), not the whole branch. The main session checks
+  the result of each group before it dispatches the next group to a new subagent.
 
 ## Objectives
 
@@ -181,19 +198,25 @@ the branch from the parent branch instead.
 Do these steps in this order, before you change code. The owner approves once, at the brief
 (step 3).
 
-`SCOPE.md`, `CONTRACT.md` and `PLAN.md` are Claude's working record, for later sessions and for
-the merge checks. The owner does not have to read them. The owner reads the brief and answers its
+`SCOPE.md` and `PLAN.md` are Claude's working record, for later sessions and for the merge
+checks. The owner does not have to read them. The owner reads the brief and answers its
 questions.
+
+**Small branch.** A branch that changes at most about 5 production files and has at most 1
+decision for the owner is small. A small branch skips the HTML brief and `PLAN.md`: give the
+brief parts (goal, decision, risks) as a short terminal message and ask the decision with
+`AskUserQuestion`, and put the ordered steps in a "Steps" part of `SCOPE.md`. If the branch grows
+past the limit, write the brief and `PLAN.md` as usual.
 
 1. **Scan.** Read the code that the branch will touch. Find the classes, call sites, events and
    data involved, how they connect, and their problems. Read the item `NOTES.md`. Read
    `objectives/README.md` and the file of each objective that the item links. Read the folders
    of the other active branches for overlap.
-2. **Draft `docs/SCOPE.md` and `docs/CONTRACT.md`.**
-   - `SCOPE.md`: what the scan found and what the branch will and will not change. In
+2. **Draft `docs/SCOPE.md`.** One file with two parts:
+   - Scope: what the scan found and what the branch will and will not change. In
      "Objective check", list the always-on rules and the rules of the linked objectives that the
      branch can affect, each with `helps`, `no effect`, `waiting` or `conflict`.
-   - `CONTRACT.md`: the behavior that the branch changes on purpose, the behavior that it must not
+   - Contract: the behavior that the branch changes on purpose, the behavior that it must not
      change, and how to check them, for example the levels to play through and what to look for.
      Only include what the scope can affect.
 3. **Brief.** Load the `visual-explainer` skill. Write `docs/BRIEF.src.html` from the template
@@ -215,11 +238,11 @@ questions.
    - **Risks:** up to 3 points.
    - **Play checks:** the commands, as in "Test maps". The owner uses them at the play test, not
      at planning.
-   - **Details:** links to `SCOPE.md` and `CONTRACT.md` on the branch folder.
+   - **Details:** a link to `SCOPE.md` on the branch folder.
 
    Do not put scan inventories, `file:line` references or the objective table in the brief. They
-   stay in `SCOPE.md`. When the owner answers, write the answers in `SCOPE.md` (and in
-   `CONTRACT.md` if they change it), and set both to `approved` with the date.
+   stay in `SCOPE.md`. When the owner answers, write the answers in `SCOPE.md` (also in its
+   contract part if they change it), and set it to `approved` with the date.
 4. **`docs/PLAN.md`.** Write the ordered steps to do the work. Give each step its own check. It
    needs no approval. Show the step titles to the owner in a short list, and start the work.
 
@@ -227,7 +250,7 @@ Specs and plans for a `mega-refactor-` branch go in the branch folder, not in
 `docs/superpowers/`. This also applies when a skill (for example `superpowers:writing-plans`)
 gives a different default path.
 
-If the scope must change during the work, update `docs/SCOPE.md` and `docs/CONTRACT.md`. Update
+If the scope must change during the work, update `docs/SCOPE.md` (both parts). Update
 the brief, mark what changed, render it, publish it again to the same link, and ask the owner the new
 decision. Then update `docs/PLAN.md` to match. A change to `docs/PLAN.md` alone does not need
 approval, but write the reason in the process log.
@@ -275,7 +298,7 @@ approval, but write the reason in the process log.
   their outputs are equal (for example the ordered list of contacts and the body positions after
   each step). Rules:
   - Name the suite and its frozen copy so that they are clearly temporary, and list them in the
-    branch `docs/PLAN.md` and `docs/CONTRACT.md`.
+    branch `docs/PLAN.md` and in the contract.
   - Delete the suite and the frozen copy in the last commit before the merge. They do not go to
     `master`, because the old code no longer exists there.
   - Also write a permanent test suite against the new code for the rules that must stay true
@@ -292,9 +315,11 @@ makes sure that **every** manual check in the contract will compile, launch and 
 (owner decision, 2026-11-06).
 
 1. Run the automated checks of the contract first. They must pass.
-2. Dispatch the review to one or more code-review subagents. You can split the work, for example
-   one agent for the branch diff and one agent for each test map or group of checks. Give each
-   agent the branch diff, the contract and the rule "do not launch the game".
+2. Dispatch the review to one code-review subagent on Sonnet (Agent `model: "sonnet"`; owner
+   accepted the recommendation, 2026-11-19). Give it the branch diff, the contract and the rule
+   "do not launch the game". Use a second agent only when one agent cannot hold the diff and the
+   checks, and write the reason in the branch process log. When item `003` merges with its
+   play-check validator, the reviewer runs it in place of the command and level checks below.
 3. The review covers the branch diff (bugs, behavior that the contract does not name as a change,
    and the rules of `docs/CODE_STYLE.md`) and each manual check. For each check, it makes sure that:
    - the command is valid: the `--level` is a `LevelDefinition` entry, the `--room` is a room in
@@ -343,7 +368,7 @@ review before the play test stays the review by subagents.
 
 ### Branch merge
 
-1. Do the checks in the branch `docs/CONTRACT.md`: the automated checks, the review before the
+1. Do the checks in the branch contract: the automated checks, the review before the
    play test, and then the user's play test and diff review. Write the result in the branch
    process log.
 2. **Merge approval.** When the owner reports that the play test passed and adds no other
@@ -495,7 +520,7 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
   to copy. Before the list, give the absolute path of the worktree that the commands run from, as a
   `cd` command in its own inline code span (for example
   `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-029a-player-contract`). This also
-  applies to checks listed in a draft `CONTRACT.md` that you show to the owner. Put each full command (from the
+  applies to checks listed in a draft contract that you show to the owner. Put each full command (from the
   worktree, with `--level` and `--room`) in its own inline code span on its own line, followed by what to look at.
   Example:
   - `./run-game-alpha.sh --level REFACTOR_TEST_029 --room enemy_aim`: `Met` and `SniperJoe` face
@@ -516,7 +541,7 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
 
 - Bugs go in `docs/issues/`, one Markdown file per bug (decision A in `items/000-bugs/ITEM.md`). The rules and
   the index are in `docs/issues/README.md`.
-- If a branch must change buggy behavior, its `CONTRACT.md` names the bug under "Intended changes".
+- If a branch must change buggy behavior, its contract names the bug under "Intended changes".
 - A `fix/` branch and a direct change on `master` read the always-on rules in
   `objectives/README.md`. They do not need an "Objective check" section. A conflict goes in the
   fix's short contract.

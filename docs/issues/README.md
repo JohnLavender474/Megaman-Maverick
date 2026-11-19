@@ -20,8 +20,8 @@ are items in `docs/mega-refactor/ITEMS.md`.
 - Each time a commit on `master` changes the issue file or the short contract of an open fix branch,
   merge `master` into that branch at once (`git merge master` in its worktree), so that the copy in
   the branch stays current. A docs-only merge needs no test run.
-- A refactor branch that must change buggy behavior names the issue file in its `CONTRACT.md`
-  under "Intended changes".
+- A refactor branch that must change buggy behavior names the issue file in its contract
+  (the "Contract" part of `SCOPE.md`) under "Intended changes".
 - To close an issue, set `status: closed` and add a `## Resolution` section with the commit or
   branch. Do not delete the file.
 - Keep the index below up to date.

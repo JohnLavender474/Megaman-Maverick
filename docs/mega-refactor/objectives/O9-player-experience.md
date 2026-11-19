@@ -30,7 +30,7 @@ The parts of the game around the levels feel complete: saves, settings, controls
 - Rule: the game stays fully playable with only the d-pad, `A`, `B`, `START` and `SELECT`. Exception: playing as X
   needs a dash button, so these buttons are not enough for X.
 - Problem: `P3`
-- Check: the branch `CONTRACT.md` names a check with those buttons, if the branch changes controls.
+- Check: the branch contract names a check with those buttons, if the branch changes controls.
 - Applies: `always-on`
 - Active: `now`
 

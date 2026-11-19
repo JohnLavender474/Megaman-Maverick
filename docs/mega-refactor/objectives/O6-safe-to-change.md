@@ -32,9 +32,11 @@ A large change is safe because a check finds the break, not because a person hap
 
 ### `O6-R2`: Named checks
 
-- Rule: each behavior that a branch must keep or change has a named check in its `CONTRACT.md`.
+- Rule: each behavior that a branch must keep or change has a named check in its contract (the
+  "Contract" part of `SCOPE.md`; `CONTRACT.md` in branches planned before 2026-11-19; owner
+  accepted the recommendation, 2026-11-19).
 - Problem: `P1`
-- Check: read `CONTRACT.md`.
+- Check: read the contract.
 - Applies: `always-on`
 - Active: `now`
 

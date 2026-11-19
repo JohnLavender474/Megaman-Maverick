@@ -2845,3 +2845,18 @@ newest entry at the bottom.
   foot-sensor pairs to `GroundProbe`), from the 3 backlog candidates. 2 issues filed from the bug candidates (1-frame
   visual lags of `MetHelmet` and of a desperate `Met`). `O4` current state and redo risk updated (`O4-R2`, `O4-R3`).
   Item `079` stays `active` (more enemies, for example `Starkner`).
+
+## 2026-11-19 — master (docs)
+
+- Summary: changes to the process to use fewer tokens, from a scan of the Claude Code usage of 2026-10-19 to
+  2026-11-19 (most cost came from long contexts: the average main-session request read about 305k tokens, and
+  subagents that ran a whole branch or many art rounds grew to 400k to 727k). Owner accepted the recommendations.
+  `CLAUDE.md`: new section "Sessions and token use" (one session per phase, with a handoff prompt; implementation
+  subagents take a group of 3 to 5 plan steps); the contract is now the "Contract" part of `SCOPE.md` (template
+  `CONTRACT.md` removed; older branches keep theirs); a small branch (at most about 5 production files and 1
+  decision) skips the HTML brief and `PLAN.md`; the review before the play test uses one Sonnet subagent.
+  `objectives/O6`, `O4`, `O9` and `docs/issues/README.md`: references to `CONTRACT.md` changed to the contract
+  (`O6-R2` text changed with the owner's approval). Item `003` takes a play-check validator. `docs/ways-of-working/art.md`:
+  a fresh art agent for each round.
+- Contract check: not needed (docs only).
+- Follow-up: the model for art rounds (Fable by the 2026-11-18 rule, or Sonnet or a non-Claude tool) is open.

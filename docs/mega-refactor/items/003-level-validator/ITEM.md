@@ -22,6 +22,17 @@ From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 - Fixing the existing findings (about 14 objects in 7 maps) is a separate content change, because a fix makes an object spawn.
 - Slope rule (from `068a`, owner decision 2026-11-03): every object in a `blocks_slopes` or `blocks_slopes_<n>` layer is a rectangle named `GroundSlope`, with `side` set to `left` or `right` and a height/width ratio of 1/4 or 1/2. An object with no name in such a layer spawns as a full `Block`, with no warning.
 
+- Play-check validator (added 2026-11-19, owner accepted the recommendation): a check that reads the manual checks of
+  a branch contract and finds, with no game launch, the mechanical errors that the review before the play test now
+  finds by hand: the `--level` is a `LevelDefinition` entry, the `--room` is a room of the live TMX file with a
+  player spawn in it, and the other option values (for example `--weapons`) are valid names. With the map rules
+  above, it replaces the command and level part of that review, so the review needs fewer agent tokens.
+
+## Decisions
+
+- 2026-11-19: the scope takes the play-check validator above (owner accepted the recommendation, from the token-use
+  scan of the `mega-refactor` process).
+
 ## Owner's input
 
 Answer to review item 2 (2026-10-22, verbatim):
