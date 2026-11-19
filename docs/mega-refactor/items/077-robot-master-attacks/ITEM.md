@@ -5,7 +5,7 @@
 - Objectives: `O4`
 - Depends on: none
 - Related: `015`, `023`, `118`
-- Branches: `mega-refactor-077a-intro-boss` (merged, 2026-11-15, squash `c4b402a80`), `mega-refactor-077b-desert-man` (merged, 2026-11-16, squash `740ef9101`), `mega-refactor-077c-elec-devil` (merged, 2026-11-19, squash `10e479f09`), `mega-refactor-077d-reactor-man` (planned), `mega-refactor-077e-elec-devil-serpent` (planned)
+- Branches: `mega-refactor-077a-intro-boss` (merged, 2026-11-15, squash `c4b402a80`), `mega-refactor-077b-desert-man` (merged, 2026-11-16, squash `740ef9101`), `mega-refactor-077c-elec-devil` (merged, 2026-11-19, squash `10e479f09`), `mega-refactor-077d-reactor-man` (planned), `mega-refactor-077e-elec-devil-serpent` (planned), `mega-refactor-077f-glacier-man-art` (active), `mega-refactor-077g-glacier-man` (blocked by `077f`)
 
 ## Goal
 
@@ -83,6 +83,12 @@ Not approved. The branch `SCOPE.md` decides the final scope.
   - The hand motion: keep the circular orbit, because it refers to the final fight of Mega Man X1, but the orbit is
     no longer the only motion. Add the new motions from the research (hover with drift, a punch with wind-up and
     recoil, and others) and describe them and their integration with a proper state machine.
+
+- 2026-11-19 (owner, Glacier Man): option B: keep his moveset, add a smarter move choice and new moves. Phase 2
+  adds Icicle Rain (a lobbed big ice chunk bursts on the ceiling; icicles form, shake and drop) and Sled Ram. No
+  frozen-floor attack (the arena is already ice). Dedicated chunk (lob) and aim (straight) throw animations for the
+  ice cubes. Death: freeze and shatter. Art first: `077f` draws the frames, then `077g` codes the fight. The design is
+  the draft `SCOPE.md` of `077g`.
 
 ## Notes for active branches
 
