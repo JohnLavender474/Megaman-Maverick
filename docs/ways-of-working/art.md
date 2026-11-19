@@ -72,6 +72,12 @@ Read this file before you draw, fix or convert art (sprites, tiles, backgrounds)
 - **Art goes to an art agent.** The main session does not draw, recolor or redraw art itself. It writes a brief and
   hands the art to one art subagent, which can delegate parts to other agents (with the model of the rule above).
   The main session keeps the code, the packing, the maps and the checks (owner, 2026-11-18, branch `078a`).
+- **Art work has its own item or branch.** Do art in an item or branch made for it, not as a side task of a code
+  branch (owner, 2026-11-19).
+- **Confirm Fable once per item or branch (temporary).** Before the first Fable agent of an item or branch, warn the
+  owner once that the work uses Fable and ask for confirmation with `AskUserQuestion`. Later Fable agents of the same
+  item or branch need no new confirmation. This rule holds while the owner is on the $20/month plan, and the owner
+  lifts it after the upgrade back to the $100/month plan (owner, 2026-11-19).
 - **A fresh art agent for each round.** Each round of owner feedback goes to a new art subagent, not to the agent of
   the last round. The images of each round stay in the context of an agent and make each later request more costly
   (one agent reached about 727k tokens over many rounds). Give the new agent the paths of the current frames, the

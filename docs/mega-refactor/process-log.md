@@ -2860,3 +2860,12 @@ newest entry at the bottom.
   a fresh art agent for each round.
 - Contract check: not needed (docs only).
 - Follow-up: the model for art rounds (Fable by the 2026-11-18 rule, or Sonnet or a non-Claude tool) is open.
+
+## 2026-11-19 — master (docs)
+
+- Summary: the open art-model question of the last entry is closed. The owner keeps Fable for artistic choices.
+  `docs/ways-of-working/art.md`: art work has its own item or branch; before the first Fable agent of an item or
+  branch, warn the owner once and ask for confirmation. The confirmation rule is temporary: it holds while the owner
+  is on the $20/month plan.
+- Contract check: not needed (docs only).
+- Follow-up: lift the Fable confirmation rule after the upgrade back to the $100/month plan.
