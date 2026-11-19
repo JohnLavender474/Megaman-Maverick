@@ -181,6 +181,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 171 | [A shared ledge-walk helper for enemies](items/171-ledge-walk-helper/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 172 | [Mega Man picks up and wears a `Met` helmet](items/172-wear-met-helmet/ITEM.md) | feature | `O4`, `O8` | idea | none | | |
 | 173 | [Copied foot-sensor pairs to `GroundProbe`](items/173-foot-sensors-to-ground-probe/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
+| 174 | [Move the D-1000 frames out of `Bosses3` so that it packs with `Basic`](items/174-bosses3-atlas-split/ITEM.md) | tooling | `O6` | idea | none | | |
 
 ## Branches
 
@@ -299,8 +300,9 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-161a-random-call-lint`](items/161-random-call-lint/branches/mega-refactor-161a-random-call-lint/process-log.md) | 161 | A type-aware check for direct random calls | merged | 2026-11-16 | 2026-11-17 |
 | [`mega-refactor-045b-spawn-allocations`](items/045-pool-ownership/branches/mega-refactor-045b-spawn-allocations/process-log.md) | 045 | A pooled entity makes its objects once: no constructor call in `onSpawn`, `onDestroy` or an event handler | merged | 2026-11-16 | 2026-11-17 |
 | [`mega-refactor-045c-spawn-allocations-rest`](items/045-pool-ownership/branches/mega-refactor-045c-spawn-allocations-rest/process-log.md) | 045 | The rest of the spawn sweep: bosses, level objects, child entities made with a constructor, `Block` extras, shared label helpers | planned | | |
-| [`mega-refactor-077c-elec-devil`](items/077-robot-master-attacks/branches/mega-refactor-077c-elec-devil/process-log.md) | 077 | A richer `ElecDevil` fight (Wily stage 1): 2 phases, the Spark Serpent and other new attacks, art polish | active | 2026-11-18 | |
+| [`mega-refactor-077c-elec-devil`](items/077-robot-master-attacks/branches/mega-refactor-077c-elec-devil/process-log.md) | 077 | A richer `ElecDevil` fight (Wily stage 1): 2 phases, eye patterns, Live Wire, Tether Claw, art polish | merged | 2026-11-18 | 2026-11-19 |
 | [`mega-refactor-077d-reactor-man`](items/077-robot-master-attacks/branches/mega-refactor-077d-reactor-man/process-log.md) | 077 | A richer Reactor Man fight; new laser and emitter art; then the Wily Stage 1 refight room | planned | | |
+| [`mega-refactor-077e-elec-devil-serpent`](items/077-robot-master-attacks/branches/mega-refactor-077e-elec-devil-serpent/process-log.md) | 077 | `ElecDevil` phase 2: Spark Serpent, Circuit Floor and Storm Rain (moved from `077c`) | planned | | |
 | [`mega-refactor-078a-wily-stage-1-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078a-wily-stage-1-art/process-log.md) | 078 | Wily Stage 1 art make-over: one tileset, the repainted map, new backgrounds, and the generator entity with light events | merged | 2026-11-18 | 2026-11-18 |
 | [`mega-refactor-078b-wily-stage-3-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078b-wily-stage-3-art/process-log.md) | 078 | Wily Stage 3 art make-over: one new tileset in the mood of the X6 Gate stages, the repainted map, new backgrounds | merged | 2026-11-19 | 2026-11-19 |
 | [`mega-refactor-078c-wily-stage-3-enemy-skins`](items/078-robot-master-alt-paths/branches/mega-refactor-078c-wily-stage-3-enemy-skins/process-log.md) | 078 | A stage sprite skin for the Wily Stage 3 enemies and what they spawn (Claude Fable 5.2) | active | 2026-11-19 | |

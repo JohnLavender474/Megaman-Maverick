@@ -2884,3 +2884,19 @@ newest entry at the bottom.
   cells kept, old `Platforms1` regions keep their names). Review before the play test (1 Sonnet agent): no bug.
   Owner play test: passed ("Stage looks good"). Diffity: no threads.
 - Follow-up: enemy skins for Wily Stage 3 (owner D1: decide after the play test; open question in `078` `ITEM.md`).
+
+## 2026-11-19 — mega-refactor-077c-elec-devil
+
+- Summary: a richer `ElecDevil` fight (item `077`). 2 health phases (damage table 2 x `master`, so the hits to kill
+  per weapon are the same), a phase tell and the Wily generator power-down at phase 2, `ElecDevilTuning` rows. Eye
+  pattern deck (Fan, Ring, Stall; Bounce in phase 2; one colour each), Live Wire (damaging arcs between flying
+  pieces of one dodge band), Tether Claw (`ElecDevilClaw`, a guide line, then a claw on a damaging tether) in place
+  of the `HAND` eye shots. Player damage in `PlayerDamageNegotiator` (same values). NES-palette art by Claude Fable
+  5.2; ElecDevil frames move to the new atlas `Bosses4`; credits in `README.md`. Test map `REFACTOR_TEST_077`.
+  Squash `10e479f09`.
+- Contract check: automated checks pass on the branch (`engine:test`, `core:test`, `core:smokeTest`, `lwjgl3:jar`,
+  `detektMain`, `core:verifyRandomRule`). Final test pass: every test-debt rule has a test, 36 mutations each failed a
+  test; it found 1 bug (the first STAND showed the shoot eye), fixed. Review (1 Sonnet agent): no bugs; 3 style fixes
+  and a stale contract fixed. Owner play test: passed (2 rounds). Diffity: skipped (owner).
+- Follow-up: Spark Serpent, Circuit Floor and Storm Rain in `077e` (folder prepared). New item `174` (`Bosses3`
+  cannot pack with `Basic`). `078c` also changes `Projectiles1`: it repacks at its next take of `master`.

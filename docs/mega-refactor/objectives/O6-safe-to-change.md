@@ -98,6 +98,7 @@ None found.
 | `107` | idea | [Tighter floor on the entity class count in the smoke test](../items/107-tighter-entity-class-floor/ITEM.md) (main) |
 | `142` | idea | [Remove the reflection from `FriendlyFireTest` and `EntityExistenceTest`](../items/142-tests-no-reflection/ITEM.md) (main) |
 | `168` | idea | [`allowRotation` off in the TexturePacker projects](../items/168-texture-packer-no-rotation/ITEM.md) (main) |
+| `174` | idea | [Move the D-1000 frames out of `Bosses3` so that it packs with `Basic`](../items/174-bosses3-atlas-split/ITEM.md) (main) |
 
 ## Gaps with no item
 
