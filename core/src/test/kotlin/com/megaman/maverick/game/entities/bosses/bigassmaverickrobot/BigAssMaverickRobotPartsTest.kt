@@ -21,7 +21,7 @@ class BigAssMaverickRobotPartsTest : DescribeSpec({
     val high: (Float, Float) -> Float = { _, max -> max }
 
     fun aim(aim: OrbAim, center: Vector2, velocity: Vector2, random: (Float, Float) -> Float) =
-        OrbAim.point(aim, center, velocity, arena, random, Vector2())
+        OrbAim.point(aim, center, velocity, OrbAim.LEAD_TIME, arena, random, Vector2())
 
     fun inArena(point: Vector2) {
         point.x shouldBeGreaterThanOrEqual arena.getX()

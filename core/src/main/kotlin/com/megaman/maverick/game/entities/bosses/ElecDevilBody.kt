@@ -6,19 +6,17 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.ObjectSet
-import com.maverick.game.engine.animations.Animation
+import com.badlogic.gdx.utils.OrderedMap
 import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.AnimatorBuilder
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.enums.Position
+import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
-import com.maverick.game.engine.common.extensions.orderedMapOf
-import com.maverick.game.engine.common.extensions.toGdxArray
 import com.maverick.game.engine.common.interfaces.IActivatable
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
-import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
@@ -41,9 +39,12 @@ import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.bosses.ElecDevilConstants.BODY_SPRITE_FACING_LEFT_OFFSET_X
 import com.megaman.maverick.game.entities.bosses.ElecDevilConstants.BODY_SPRITE_FACING_RIGHT_OFFSET_X
+import com.megaman.maverick.game.entities.bosses.elecdevil.ClawPhase
+import com.megaman.maverick.game.entities.bosses.elecdevil.EyePattern
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
+import com.megaman.maverick.game.utils.AnimationUtils
 import com.megaman.maverick.game.utils.misc.LightSourceUtils
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.getBounds
@@ -59,13 +60,32 @@ class ElecDevilBody(services: MegaServices) : MegaGameEntity(services), IBodyEnt
         private const val LIGHT_SOURCE_RADIUS = 5
         private const val LIGHT_SOURCE_RADIANCE = 3f
 
-        private val animDefs = orderedMapOf(
-            ElecDevilState.TURN_TO_PIECES pairTo AnimationDef(4, 2, 0.1f, false),
-            ElecDevilState.APPEAR pairTo AnimationDef(2, 2, 0.1f, false),
-            ElecDevilState.CHARGE pairTo AnimationDef(2, 2, 0.1f, true),
-            ElecDevilState.STAND pairTo AnimationDef(2, 2, 0.1f, true),
-            ElecDevilState.HAND pairTo AnimationDef(2, 1, 0.1f, true),
-        )
+        private const val CHARGE_KEY = "charge"
+        private const val SHOOT_KEY = "shoot"
+        private const val HAND_WINDUP_KEY = "hand_windup"
+        private const val HAND_FIRED_KEY = "hand_fired"
+        private const val HAND_RECOIL_KEY = "hand_recoil"
+
+        private val animDefs = OrderedMap<String, AnimationDef>().also { defs ->
+            defs.put("turn_to_pieces", AnimationDef(4, 2, 0.1f, false))
+            defs.put("appear", AnimationDef(4, 2, 0.05f, false))
+            defs.put("stand", AnimationDef(2, 2, 0.1f, true))
+            EyePattern.entries.forEach { pattern ->
+                defs.put(pattern.regionKey(CHARGE_KEY), AnimationDef(2, 2, 0.1f, true))
+                defs.put(pattern.regionKey(SHOOT_KEY), AnimationDef(2, 2, 0.075f, true))
+            }
+            defs.put(HAND_WINDUP_KEY, AnimationDef(2, 1, 0.05f, true))
+            defs.put(HAND_FIRED_KEY, AnimationDef(2, 1, 0.1f, true))
+            defs.put(HAND_RECOIL_KEY, AnimationDef(2, 1, 0.1f, false))
+            defs.put(
+                "defeated", AnimationDef(
+                    rows = 4,
+                    cols = 2,
+                    durations = gdxArrayOf(0.08f, 0.08f, 0.1f, 0.1f, 0.1f, 0.12f, 0.14f, 0.14f),
+                    loop = false
+                )
+            )
+        }
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -88,9 +108,8 @@ class ElecDevilBody(services: MegaServices) : MegaGameEntity(services), IBodyEnt
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init(): hashcode=${hashCode()}")
         if (regions.isEmpty) {
-            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
-            val keys = animDefs.keys().map { it.name.lowercase() }.toGdxArray().also { it.add("defeated") }
-            keys.forEach { key -> regions.put(key, atlas.findRegion("${ElecDevil.TAG}/$key")) }
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_4.source)
+            AnimationUtils.loadRegions(ElecDevil.TAG, atlas, animDefs.keys(), regions)
         }
         super.init()
         addComponent(defineBodyComponent())
@@ -171,6 +190,7 @@ class ElecDevilBody(services: MegaServices) : MegaGameEntity(services), IBodyEnt
         })
         .preProcess { _, sprite ->
             sprite.hidden = !on || owner!!.isDamageBlinking()
+            sprite.color = if (owner!!.isPhaseFlashOn()) ElecDevil.PHASE_FLASH_COLOR else Color.WHITE
 
             sprite.setFlip(isFacing(Facing.LEFT), false)
 
@@ -187,28 +207,27 @@ class ElecDevilBody(services: MegaServices) : MegaGameEntity(services), IBodyEnt
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier {
-                    when {
-                        on -> if (owner!!.defeated) "defeated" else owner!!.getCurrentState().name.lowercase()
-                        else -> null
-                    }
-                }
-                .applyToAnimations { animations ->
-                    animDefs.forEach { entry ->
-                        val state = entry.key
-                        val key = state.name.lowercase()
-                        val (rows, columns, durations, loop) = entry.value
-                        try {
-                            val animation = Animation(regions[key], rows, columns, durations, loop)
-                            animations.put(key, animation)
-                        } catch (e: Exception) {
-                            throw IllegalStateException("Failed to create animation for key=$key", e)
-                        }
-                    }
-                }
+                .setKeySupplier { if (on) animationKey(owner!!) else null }
+                .applyToAnimations { animations -> AnimationUtils.loadAnimationDefs(animDefs, animations, regions) }
                 .build()
         )
         .build()
+
+    private fun animationKey(owner: ElecDevil) = when {
+        owner.defeated -> "defeated"
+        owner.getCurrentState() == ElecDevilState.STAND && owner.isEyeSpreadShooting() ->
+            owner.getEyePattern().regionKey(SHOOT_KEY)
+
+        owner.getCurrentState() == ElecDevilState.CHARGE -> owner.getEyePattern().regionKey(CHARGE_KEY)
+        owner.getCurrentState() == ElecDevilState.HAND -> when (owner.getClawPhase()) {
+            ClawPhase.DELAY -> ElecDevilState.STAND.name.lowercase()
+            ClawPhase.WINDUP -> HAND_WINDUP_KEY
+            ClawPhase.OUT -> HAND_FIRED_KEY
+            ClawPhase.RECOIL -> HAND_RECOIL_KEY
+        }
+
+        else -> owner.getCurrentState().name.lowercase()
+    }
 
     override fun getType() = EntityType.OTHER
 

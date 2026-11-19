@@ -51,6 +51,7 @@ bosses.DesertMan: DesertMan
 bosses.ElecDevilBody: ElecDevilBody
 bosses.ElecDevilBodyPiece: ElecDevilBodyPiece
 bosses.ElecDevilBodyPieces: ElecDevilBodyPieces
+bosses.ElecDevilClaw: ElecDevilClaw
 bosses.ElecDevil: ElecDevil
 bosses.GlacierMan: GlacierMan
 bosses.GutsTankFist: GutsTankFist

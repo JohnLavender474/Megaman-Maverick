@@ -1,0 +1,628 @@
+Bosses4.png
+size: 1950, 1070
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+ElecDevil/appear
+  rotate: false
+  xy: 775, 685
+  size: 256, 384
+  orig: 256, 384
+  offset: 0, 0
+  index: -1
+ElecDevil/charge_blue
+  rotate: false
+  xy: 1, 491
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/charge_green
+  rotate: false
+  xy: 259, 491
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/charge_red
+  rotate: false
+  xy: 517, 491
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/charge_yellow
+  rotate: false
+  xy: 775, 491
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/claw
+  rotate: false
+  xy: 1, 1
+  size: 96, 48
+  orig: 96, 48
+  offset: 0, 0
+  index: -1
+ElecDevil/defeated
+  rotate: false
+  xy: 1033, 685
+  size: 256, 384
+  orig: 256, 384
+  offset: 0, 0
+  index: -1
+ElecDevil/grid
+  rotate: false
+  xy: 99, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/hand_fired
+  rotate: false
+  xy: 1033, 491
+  size: 128, 192
+  orig: 128, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/hand_recoil
+  rotate: false
+  xy: 1163, 491
+  size: 128, 192
+  orig: 128, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/hand_windup
+  rotate: false
+  xy: 1293, 491
+  size: 128, 192
+  orig: 128, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row0column0
+  rotate: false
+  xy: 229, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row0column1
+  rotate: false
+  xy: 359, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row0column2
+  rotate: false
+  xy: 489, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row0column3
+  rotate: false
+  xy: 619, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row1column0
+  rotate: false
+  xy: 749, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row1column1
+  rotate: false
+  xy: 879, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row1column2
+  rotate: false
+  xy: 1009, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row1column3
+  rotate: false
+  xy: 1139, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row2column0
+  rotate: false
+  xy: 1269, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row2column1
+  rotate: false
+  xy: 1399, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row2column2
+  rotate: false
+  xy: 1529, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row2column3
+  rotate: false
+  xy: 1659, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row2column4
+  rotate: false
+  xy: 1789, 1
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row3column0
+  rotate: false
+  xy: 1, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row3column1
+  rotate: false
+  xy: 131, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row3column2
+  rotate: false
+  xy: 261, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row3column3
+  rotate: false
+  xy: 391, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row3column4
+  rotate: false
+  xy: 521, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row4column0
+  rotate: false
+  xy: 651, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row4column1
+  rotate: false
+  xy: 781, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row4column2
+  rotate: false
+  xy: 911, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row4column3
+  rotate: false
+  xy: 1041, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row5column1
+  rotate: false
+  xy: 1171, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/blue/row5column2
+  rotate: false
+  xy: 1301, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row0column0
+  rotate: false
+  xy: 1431, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row0column1
+  rotate: false
+  xy: 1561, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row0column2
+  rotate: false
+  xy: 1691, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row0column3
+  rotate: false
+  xy: 1821, 99
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row1column0
+  rotate: false
+  xy: 1, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row1column1
+  rotate: false
+  xy: 131, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row1column2
+  rotate: false
+  xy: 261, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row1column3
+  rotate: false
+  xy: 391, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row2column0
+  rotate: false
+  xy: 521, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row2column1
+  rotate: false
+  xy: 651, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row2column2
+  rotate: false
+  xy: 781, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row2column3
+  rotate: false
+  xy: 911, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row2column4
+  rotate: false
+  xy: 1041, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row3column0
+  rotate: false
+  xy: 1171, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row3column1
+  rotate: false
+  xy: 1301, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row3column2
+  rotate: false
+  xy: 1431, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row3column3
+  rotate: false
+  xy: 1561, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row3column4
+  rotate: false
+  xy: 1691, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row4column0
+  rotate: false
+  xy: 1821, 197
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row4column1
+  rotate: false
+  xy: 1, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row4column2
+  rotate: false
+  xy: 131, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row4column3
+  rotate: false
+  xy: 261, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row5column1
+  rotate: false
+  xy: 391, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/green/row5column2
+  rotate: false
+  xy: 521, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row0column0
+  rotate: false
+  xy: 651, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row0column1
+  rotate: false
+  xy: 781, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row0column2
+  rotate: false
+  xy: 911, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row0column3
+  rotate: false
+  xy: 1041, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row1column0
+  rotate: false
+  xy: 1171, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row1column1
+  rotate: false
+  xy: 1301, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row1column2
+  rotate: false
+  xy: 1431, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row1column3
+  rotate: false
+  xy: 1561, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row2column0
+  rotate: false
+  xy: 1691, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row2column1
+  rotate: false
+  xy: 1821, 295
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row2column2
+  rotate: false
+  xy: 1, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row2column3
+  rotate: false
+  xy: 131, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row2column4
+  rotate: false
+  xy: 261, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row3column0
+  rotate: false
+  xy: 391, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row3column1
+  rotate: false
+  xy: 521, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row3column2
+  rotate: false
+  xy: 651, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row3column3
+  rotate: false
+  xy: 781, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row3column4
+  rotate: false
+  xy: 911, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row4column0
+  rotate: false
+  xy: 1041, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row4column1
+  rotate: false
+  xy: 1171, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row4column2
+  rotate: false
+  xy: 1301, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row4column3
+  rotate: false
+  xy: 1431, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row5column1
+  rotate: false
+  xy: 1561, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/pieces/white/row5column2
+  rotate: false
+  xy: 1691, 393
+  size: 128, 96
+  orig: 128, 96
+  offset: 0, 0
+  index: -1
+ElecDevil/shoot_blue
+  rotate: false
+  xy: 1423, 491
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/shoot_green
+  rotate: false
+  xy: 1681, 491
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/shoot_red
+  rotate: false
+  xy: 1, 685
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/shoot_yellow
+  rotate: false
+  xy: 259, 685
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/stand
+  rotate: false
+  xy: 517, 685
+  size: 256, 192
+  orig: 256, 192
+  offset: 0, 0
+  index: -1
+ElecDevil/turn_to_pieces
+  rotate: false
+  xy: 1291, 685
+  size: 256, 384
+  orig: 256, 384
+  offset: 0, 0
+  index: -1

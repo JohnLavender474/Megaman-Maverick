@@ -26,9 +26,6 @@ internal object ElecDevilConstants {
     internal const val PIECE_WIDTH = BODY_WIDTH.div(PIECE_COLUMNS)
     internal const val PIECE_HEIGHT = BODY_HEIGHT.div(PIECE_ROWS)
 
-    internal const val PIECE_MIN_SPEED = 10f
-    internal const val PIECE_MAX_SPEED = 12f
-
     internal val CELLS = orderedMapOf(
         0 pairTo orderedSetOf(0, 1, 2, 3),
         1 pairTo orderedSetOf(0, 1, 2, 3),
@@ -37,6 +34,8 @@ internal object ElecDevilConstants {
         4 pairTo orderedSetOf(0, 1, 2, 3),
         5 pairTo orderedSetOf(1, 2)
     )
+
+    internal val PIECE_COUNT = CELLS.values().sumOf { it.size }
 
     internal const val LIGHT_SOURCE_SEND_EVENT_DELAY = 0.1f
 

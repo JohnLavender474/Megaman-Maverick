@@ -23,6 +23,7 @@ enum class OrbAim {
             aim: OrbAim,
             playerCenter: Vector2,
             playerVelocity: Vector2,
+            leadTime: Float,
             arena: GameRectangle,
             random: (Float, Float) -> Float,
             out: Vector2
@@ -31,7 +32,7 @@ enum class OrbAim {
             val floor = arena.getY()
             when (aim) {
                 LEAD -> out.set(
-                    playerCenter.x + playerVelocity.x * LEAD_TIME,
+                    playerCenter.x + playerVelocity.x * leadTime,
                     MathUtils.clamp(playerCenter.y, floor, floor + LEAD_MAX_HEIGHT * ppm)
                 )
 

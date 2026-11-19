@@ -46,7 +46,7 @@ flowchart TD
 | `BigAssMaverickRobotMotion` | The mode and its clock; `slot` gives the moving target point of a hand; `spring` is the eased motion |
 | `HandState`, `HandAttack` | The hand states, with the damager and platform flags of each state, and the attack kinds |
 | `HandChoreography` | A pure function: attacker state, time in state, punch direction, rider, phase scale to the partner offset |
-| `OrbAim` | A pure function: aim kind, player center and velocity, arena to the aim point |
+| `OrbAim` | A pure function: aim kind, player center and velocity, lead time, arena to the aim point; `ElecDevil` uses it too |
 | `SlamAim` | A pure function: fist position, target, arena to the dive direction (down, the 2 down diagonals, left, right), the start point, the stop point and the hit point on the floor or a wall |
 | `ClapAim` | A pure function: target, arena, fist size to the meet point of the pincer clap and the start and stop point of each fist |
 | `ArenaPerimeter` | The open perimeter of the arena as one path (left wall top to bottom, floor, right wall bottom to top); a pure function maps a path offset to a point and a side |

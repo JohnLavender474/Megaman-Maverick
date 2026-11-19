@@ -92,7 +92,7 @@ class ElecDevilBodyPieces(services: MegaServices) : MegaGameEntity(services), IB
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_3.source)
+            val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_4.source)
             ElecDevilConstants.forEachCell { row, column ->
                 val rowColumnKey = ElecDevilConstants.getRowColumnKey(row, column)
                 colors.forEach { color ->
@@ -263,6 +263,7 @@ class ElecDevilBodyPieces(services: MegaServices) : MegaGameEntity(services), IB
                         (standByPieces.contains(row pairTo column) && standByBlink))
                     sprite.hidden = !visible
 
+                    sprite.color = if (owner!!.owner!!.isPhaseFlashOn()) ElecDevil.PHASE_FLASH_COLOR else Color.WHITE
                     sprite.setAlpha(if (activePieces.contains(row pairTo column)) 1f else STAND_BY_ALPHA)
 
                     sprite.setFlip(isFacing(Facing.LEFT), false)

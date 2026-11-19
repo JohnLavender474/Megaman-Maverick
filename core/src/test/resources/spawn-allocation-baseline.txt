@@ -10,7 +10,7 @@ blocks/RocketPlatform.kt 2
 blocks/SteamRoller.kt 1
 bosses/BigAssMaverickRobotHand.kt 1
 bosses/DesertMan.kt 1
-bosses/ElecDevil.kt 7
+bosses/ElecDevil.kt 1
 bosses/GlacierMan.kt 1
 bosses/GutsTank.kt 2
 bosses/InfernoMan.kt 1

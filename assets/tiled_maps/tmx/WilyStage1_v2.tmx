@@ -489,12 +489,19 @@
     <property name="light_source_keys" value="1"/>
     <property name="right" type="object" value="450"/>
     <property name="room" type="object" value="429"/>
+    <property name="serpent_paths" value="508,509"/>
     <property name="start_x" type="object" value="451"/>
    </properties>
   </object>
   <object id="449" name="LeftPos" x="17456" y="2208" width="32" height="32"/>
   <object id="450" name="RightPos" x="17776" y="2208" width="32" height="32"/>
   <object id="451" name="StartX" x="17952" y="2208" width="32" height="32"/>
+  <object id="508" name="SerpentPathA" x="17472" y="2096">
+   <polyline points="0,0 -64,-48 -64,-144 384,-144 384,-48 320,0"/>
+  </object>
+  <object id="509" name="SerpentPathB" x="17792" y="2096">
+   <polyline points="0,0 -64,32 -112,48 -208,48 -256,-16 -304,-64 -320,0"/>
+  </object>
   <object id="475" name="Beamer" x="9728" y="1472" width="32" height="32">
    <properties>
     <property name="direction" value="down"/>

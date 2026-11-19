@@ -510,6 +510,7 @@ class BigAssMaverickRobot(services: MegaServices) : AbstractBoss(services, defea
             aim,
             target.body.getCenter(),
             target.body.physics.velocity,
+            OrbAim.LEAD_TIME,
             arena,
             { min, max -> services.random.nextFloat(min, max) },
             GameObjectPools.fetch(Vector2::class)

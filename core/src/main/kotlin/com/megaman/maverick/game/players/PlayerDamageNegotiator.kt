@@ -16,6 +16,10 @@ import com.megaman.maverick.game.entities.bosses.BigAssMaverickRobotHand
 import com.megaman.maverick.game.entities.bosses.D1000
 import com.megaman.maverick.game.entities.bosses.D1000Core
 import com.megaman.maverick.game.entities.bosses.DesertMan
+import com.megaman.maverick.game.entities.bosses.ElecDevil
+import com.megaman.maverick.game.entities.bosses.ElecDevilBodyPiece
+import com.megaman.maverick.game.entities.bosses.ElecDevilBodyPieces
+import com.megaman.maverick.game.entities.bosses.ElecDevilClaw
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -24,10 +28,12 @@ import com.megaman.maverick.game.entities.enemies.Junkroid
 import com.megaman.maverick.game.entities.enemies.MetaDridler
 import com.megaman.maverick.game.entities.enemies.MetaWheelF
 import com.megaman.maverick.game.entities.explosions.BigAssMaverickRobotOrbExplosion
+import com.megaman.maverick.game.entities.explosions.ElecExplosion
 import com.megaman.maverick.game.entities.hazards.D1000CeilingDebris
 import com.megaman.maverick.game.entities.hazards.Laser
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
+import com.megaman.maverick.game.entities.projectiles.ElecBall
 import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.projectiles.Needle
 import com.megaman.maverick.game.entities.state.tags
@@ -50,6 +56,12 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
         // TODO: consider varied damage per Desert Man damager (item 077)
         DesertMan.TAG pairTo dmgNeg(3),
         Needle.TAG pairTo dmgNeg(3),
+        ElecDevil.TAG pairTo dmgNeg(3),
+        ElecDevilClaw.TAG pairTo dmgNeg(3),
+        ElecDevilBodyPieces.TAG pairTo dmgNeg(3),
+        ElecDevilBodyPiece.TAG pairTo dmgNeg(3),
+        ElecBall.TAG pairTo dmgNeg(3),
+        ElecExplosion.TAG pairTo dmgNeg(3),
         D1000.TAG pairTo dmgNeg(2),
         D1000Core.TAG pairTo dmgNeg(2),
         EnemyShot.TAG pairTo dmgNeg { (it as EnemyShot).kind.damage },

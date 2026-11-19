@@ -188,7 +188,9 @@ comprehensive listing of the credits for the artwork used in this game.
 - Inferno Dragon - [Ansimuz](https://ansimuz.itch.io/mega-bot)
 - Moon Head - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
 - Reactor Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
-- Elec Devil - [boberatu](https://www.deviantart.com/boberatu/art/Elec-Devil-276493565)
+- Elec Devil
+  - Original by [boberatu](https://www.deviantart.com/boberatu/art/Elec-Devil-276493565)
+  - Updated by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer: NES palette, body polish, eye, claw, transitions, defeat, orbs and Live Wire arc
 - Guts Tank - [Mister Mike](https://www.spriters-resource.com/nes/mm2/sheet/2317/)
 - Penpen Maker - [Mister Mike](https://www.spriters-resource.com/nes/mm3/sheet/77911/) (currently not used)
 - Sphinx - [Mister Mike](https://www.spriters-resource.com/custom_edited/megamancustoms/sheet/108177/) (currently not used)

@@ -6,12 +6,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
+import com.maverick.game.engine.common.random.GameRandom
 import com.maverick.game.engine.common.random.SeededRandom
 import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.entities.IGameEntity
@@ -38,6 +40,7 @@ import com.megaman.maverick.game.entities.state.PlayPhaseComponent
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.testServices
+import com.megaman.maverick.game.utils.GameObjectPools
 import io.mockk.clearAllMocks
 import io.mockk.clearMocks
 import io.mockk.every
@@ -46,12 +49,14 @@ import java.util.Random
 
 const val BOSS_RIG_PPM = ConstVals.PPM.toFloat()
 
-class BossRig {
+class BossRig(random: GameRandom? = null) {
 
     val spawned = Array<IGameEntity>()
     val queued = Array<Pair<IGameEntity, Properties>>()
     val destroyed = Array<IGameEntity>()
     val events = Array<Event>()
+    val spawnProps = ObjectMap<IGameEntity, Properties>()
+    val spawnTimes = ObjectMap<IGameEntity, Float>()
     val randomSource = Random(0L)
     val services: MegaServices
     val player: MegamanX
@@ -94,7 +99,7 @@ class BossRig {
             true
         }
         services = testServices(engine = engine, assets = assets, audio = audio, players = MegaPlayers(2),
-            random = SeededRandom(randomSource)
+            random = random ?: SeededRandom(randomSource)
         )
         every { texture.width } returns 1024
         every { texture.height } returns 1024
@@ -122,6 +127,8 @@ class BossRig {
         spawned.clear()
         queued.clear()
         destroyed.clear()
+        spawnProps.clear()
+        spawnTimes.clear()
         MegaEntityFactory.reset()
         clearAllMocks(answers = false, recordedCalls = true, childMocks = false)
     }
@@ -138,10 +145,15 @@ class BossRig {
 
     private var ticks = 0
 
+    var time = 0f
+        private set
+
     fun processSpawns() {
         while (!queued.isEmpty) {
             val (entity, properties) = queued.removeIndex(0)
             spawned.add(entity)
+            spawnProps.put(entity, properties)
+            spawnTimes.put(entity, time)
             entity.onSpawn(properties)
             entity.existenceState = EntityExistenceState.LIVE
         }
@@ -160,6 +172,8 @@ class BossRig {
             if (body.physics.gravityOn) body.physics.velocity.mulAdd(body.physics.gravity, delta)
             body.translate(body.physics.velocity.x * delta, body.physics.velocity.y * delta)
         }
+        time += delta
+        GameObjectPools.performNextReclaim()
         if (++ticks % 30 == 0) clearMocks(
             texture, engine, audio, assets, answers = false, recordedCalls = true, childMocks = false,
             verificationMarks = false, exclusionRules = false

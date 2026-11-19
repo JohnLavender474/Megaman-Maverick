@@ -15,6 +15,7 @@ import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameCircle
+import com.maverick.game.engine.common.shapes.GameLine
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
@@ -29,12 +30,14 @@ import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
+import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
+import com.megaman.maverick.game.entities.bosses.elecdevil.LiveWireArcSprites
 import com.megaman.maverick.game.entities.contracts.ILightSource
 import com.megaman.maverick.game.entities.explosions.ElecExplosion
 import com.megaman.maverick.game.utils.extensions.pooledCopy
@@ -54,6 +57,8 @@ class ElecDevilBodyPiece(services: MegaServices) : AbstractProjectile(services),
         // if the life of a body piece exceeds this max TTL, then clearly something wrong has happened, i.e. the body
         // piece has not been culled properly
         private const val MAX_TTL = 5f
+
+        private const val ARC_KEY = "arc"
 
         private var region: TextureRegion? = null
     }
@@ -78,9 +83,21 @@ class ElecDevilBodyPiece(services: MegaServices) : AbstractProjectile(services),
 
     private var speed = 0f
 
+    internal var linkedPiece: ElecDevilBodyPiece? = null
+
+    private val arc = LiveWireArcSprites(ARC_KEY, priority = 4) { from, to ->
+        val linked = liveLinkedPieceForDraw()
+        if (linked != null) {
+            from.set(body.getCenter())
+            to.set(linked.body.getCenter())
+        }
+        linked != null
+    }
+
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init(): hashcode=${hashCode()}")
         if (region == null) region = services.assets.getTextureRegion(TextureAsset.PROJECTILES_1.source, TAG)
+        LiveWireArcSprites.loadRegions(services.assets)
         super.init()
         addComponent(defineUpdatablesComponent())
         addComponent(defineAnimationsComponent())
@@ -105,6 +122,7 @@ class ElecDevilBodyPiece(services: MegaServices) : AbstractProjectile(services),
         ttlTimer.reset()
 
         speed = spawnProps.get(ConstKeys.SPEED, Float::class)!!
+        arc.time = 0f
 
         lightSourceSendEventDelay.reset()
         lightSourceKeys.addAll(
@@ -116,6 +134,7 @@ class ElecDevilBodyPiece(services: MegaServices) : AbstractProjectile(services),
         GameLogger.debug(TAG, "onDestroy(): hashcode=${hashCode()}")
         super.onDestroy()
         lightSourceKeys.clear()
+        linkedPiece = null
     }
 
     override fun explodeAndDie(vararg params: Any?) {
@@ -127,6 +146,7 @@ class ElecDevilBodyPiece(services: MegaServices) : AbstractProjectile(services),
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
+        arc.time += delta
         ttlTimer.update(delta)
         // Ideally, this should never happened. However, one time while playing against the elec devil, I ran into an
         // instance where a body piece floated at its target destination indefinitely, causing the boss fight to be
@@ -171,6 +191,18 @@ class ElecDevilBodyPiece(services: MegaServices) : AbstractProjectile(services),
 
         val circle = GameCircle().setRadius(0.5f * ConstVals.PPM)
 
+        val arcFixture = Fixture(body, FixtureType.DAMAGER, GameLine())
+        arcFixture.attachedToBody = false
+        body.addFixture(arcFixture)
+        arcFixture.drawingColor = Color.CYAN
+        debugShapes.add { if (arcFixture.isActive()) arcFixture else null }
+
+        body.preProcess.put(ARC_KEY) {
+            val linked = linkedLive()
+            arcFixture.setActive(linked != null)
+            if (linked != null) (arcFixture.rawShape as GameLine).set(body.getCenter(), linked.body.getCenter())
+        }
+
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
 
         return BodyComponentCreator.create(
@@ -178,6 +210,12 @@ class ElecDevilBodyPiece(services: MegaServices) : AbstractProjectile(services),
             body,
             BodyFixtureDef.of(FixtureType.PROJECTILE pairTo circle.copy(), FixtureType.DAMAGER pairTo circle.copy())
         )
+    }
+
+    private fun linkedLive(): ElecDevilBodyPiece? {
+        val linked = linkedPiece
+        if (linked != null && !linked.existenceState.liveNow) linkedPiece = null
+        return linkedPiece
     }
 
     override fun defineSpritesComponent() = SpritesComponentBuilder()
@@ -191,7 +229,13 @@ class ElecDevilBodyPiece(services: MegaServices) : AbstractProjectile(services),
             sprite.setOriginCenter()
             sprite.rotation = target.pooledCopy().sub(start).nor().angleDeg()
         }
+        .also { builder -> arc.addTo(builder) }
         .build()
+
+    private fun liveLinkedPieceForDraw(): ElecDevilBodyPiece? {
+        val linked = linkedPiece
+        return if (linked != null && linked.existenceState.liveNow) linked else null
+    }
 
     private fun defineAnimationsComponent() = AnimationsComponentBuilder(this)
         .key(TAG).animator(Animator(Animation(region!!, 1, 5, 0.1f, true)))
