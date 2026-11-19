@@ -5,7 +5,7 @@
 - Objectives: `O4`, `O9`
 - Depends on: none
 - Related: `077`, `079`, `089`, `051`, `067`
-- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`); `mega-refactor-078b-wily-stage-3-art` (merged, 2026-11-19, squash `e346c558d`); `mega-refactor-078c-wily-stage-3-enemy-skins` (active, 2026-11-19)
+- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`); `mega-refactor-078b-wily-stage-3-art` (merged, 2026-11-19, squash `e346c558d`); `mega-refactor-078c-wily-stage-3-enemy-skins` (active, 2026-11-19); `mega-refactor-078d-reactor-man-art` (active, 2026-11-19)
 
 ## Goal
 
@@ -146,6 +146,12 @@ backgrounds in the mood of the X6 Gate stages, whose music the stage plays. Area
 Art only: the block geometry stays. Drafts: `temp/078-wily3-art/` in the main checkout. Done in `078b` (merged
 2026-11-19): the tileset, the `decor` layer, `Backgrounds10` and the `lab` conveyor belt.
 
+### Reactor Man (`REACTOR_MAN`, `ReactorMan_v3.tmx`): art touch-up
+
+The owner keeps the Reactor Man tiles, but the stage has no motion in its tiles and its areas look alike (green-grey
+steel and magenta pipes in every room). Branch `078d`: one merged tileset with an accent palette and a moving motif
+per area, decor entities with no gameplay effect, and backgrounds per area. Art only: blocks and hazards stay.
+
 ## Decisions
 
 - 2026-11-17 (owner): `078` is the stage redesign epic for all stages. It took in `073`, `074`, `080`, `099`, `166`
@@ -187,6 +193,9 @@ Art only: the block geometry stays. Drafts: `temp/078-wily3-art/` in the main ch
 
 - 2026-11-19 (owner, after the `078b` play test): the Wily Stage 3 enemies get a stage skin, drawn by Claude Fable
   5.2. Branch `078c`.
+
+- 2026-11-19 (owner): Reactor Man art touch-up as branch `078d` (merge target `master`): tile animations plus decor
+  entities, an accent palette and a motif per area, one merged tileset. Details in the branch `docs/NOTES.md`.
 
 Decisions carried over from `076` (they apply to the tileset and background work):
 
