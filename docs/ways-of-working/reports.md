@@ -18,3 +18,16 @@ Leave out:
 - owner decisions said again, and facts from an earlier message said again
 
 Detail that someone can need later goes in the task's notes or temp folder, not in the message.
+
+## Answers to "why" questions
+
+2026-11-18, owner (branch `079a`): a long answer about why code exists was "word vomit".
+
+When the owner asks why code exists, or whether another mechanism covers it, answer with:
+
+1. one summary sentence;
+2. the updated logic, in a few short lines;
+3. the code.
+
+This also applies to `/read-only` questions. The full reasoning (history, edge cases, evidence) goes in the branch
+process log, not in the message.
