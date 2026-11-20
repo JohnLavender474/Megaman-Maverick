@@ -215,7 +215,11 @@ internal class GlacierManRig(hard: Boolean = false) {
         every { engine.destroy(any()) } answers {
             val entity = firstArg<IGameEntity>()
             destroyed.add(entity)
-            entity.existenceState = EntityExistenceState.DESTROY_QUEUED
+            if (entity.existenceState == EntityExistenceState.SPAWN_QUEUED) {
+                entity.existenceState = EntityExistenceState.UNSPAWNED
+                for (i in queued.size - 1 downTo 0) if (queued[i].first === entity) queued.removeIndex(i)
+            } else entity.existenceState = EntityExistenceState.DESTROY_QUEUED
+            entity.onDestroyQueued()
             true
         }
         every { audio.playSound(any<Any>(), any<Boolean>()) } answers { audioSounds.add(firstArg<Any?>()) }

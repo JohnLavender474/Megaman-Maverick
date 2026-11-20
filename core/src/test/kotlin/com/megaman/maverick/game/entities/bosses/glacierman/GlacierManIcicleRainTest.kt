@@ -385,5 +385,40 @@ class GlacierManIcicleRainTest : DescribeSpec({
             rig.destroyed.contains(other, true) shouldBe false
             rig.spawnsOf<IceShard>().size shouldBe 0
         }
+
+        fun reusedIcicle(): FallingIcicle {
+            val own = icicles().first().entity as FallingIcicle
+            own.destroy()
+            rig.processDestroys()
+            val reused = MegaEntityFactory.fetch(FallingIcicle::class)!!
+            withClue("the pool gives the destroyed icicle again") { (reused === own) shouldBe true }
+            reused.spawn(props(ConstKeys.POSITION pairTo Vector2(10f * T, 10f * T))) shouldBe true
+            return reused
+        }
+
+        it("the defeat does not touch a destroyed icicle of the boss that another owner queues again") {
+            start()
+            pound()
+            waitIcicles(2)
+            val reused = reusedIcicle()
+            val destroyedBefore = rig.destroyed.count { it === reused }
+            repeat(15) { rig.boss.takeDamageFrom(rig.bullet()) }
+            rig.checkPoints()
+            rig.boss.defeated shouldBe true
+            rig.destroyed.count { it === reused } shouldBe destroyedBefore
+            reused.existenceState.liveAfterUpdate shouldBe true
+        }
+
+        it("a destroy of the boss does not touch a destroyed icicle of the boss that another owner queues again") {
+            start()
+            pound()
+            waitIcicles(2)
+            val reused = reusedIcicle()
+            val destroyedBefore = rig.destroyed.count { it === reused }
+            rig.boss.destroy()
+            rig.processDestroys()
+            rig.destroyed.count { it === reused } shouldBe destroyedBefore
+            reused.existenceState.liveAfterUpdate shouldBe true
+        }
     }
 })

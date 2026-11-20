@@ -89,6 +89,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
+import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.reflect.KClass
@@ -124,11 +125,12 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services, defeatDur = DE
         private const val CHUNK_MAX_TIME = 1.3f
 
         private const val MEGAMAN_OFFSET_X = 2.5f
-        private const val MEGAMAN_ABOVE_OFFSET_Y = 1.5f
+        private const val MEGAMAN_ABOVE_OFFSET_Y = 2f
 
         private const val JUMP_IMPULSE_X = 25f
         private const val JUMP_IMPULSE_Y = 15f
         private const val JUMP_OVER_PAST = 2f
+        private const val AIR_TIME_ITERATIONS = 4
 
         private const val GRAVITY = -22.5f
         private const val GROUND_GRAVITY = -1.5f
@@ -265,6 +267,16 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services, defeatDur = DE
     private val freeColumns = GdxIntArray()
     private var waveSpawnIndex = 0
     private val icicles = Array<FallingIcicle>()
+    private val releasedIcicles = Array<FallingIcicle>()
+    private val releaseDeadIcicles: () -> Unit = {
+        for (i in icicles.size - 1 downTo 0) {
+            val icicle = icicles[i]
+            if (!icicle.existenceState.liveAfterUpdate) {
+                icicle.runnablesOnDestroyQueued.remove(TAG)
+                icicles.removeIndex(i)
+            }
+        }
+    }
 
     private var ramBounced = false
 
@@ -358,7 +370,8 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services, defeatDur = DE
         poundImpacted = false
         waveColumns.clear()
         waveSpawnIndex = 0
-        icicles.clear()
+        releaseIcicles()
+        releasedIcicles.clear()
         ramBounced = false
         body.physics.velocityClamp.x = VELOCITY_CLAMP_X * ConstVals.PPM
 
@@ -376,8 +389,9 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services, defeatDur = DE
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
-        for (i in 0 until icicles.size) if (isOwnLiveIcicle(icicles[i])) icicles[i].destroy()
-        icicles.clear()
+        releaseIcicles()
+        for (i in 0 until releasedIcicles.size) releasedIcicles[i].destroy()
+        releasedIcicles.clear()
     }
 
     override fun isReady(delta: Float) = timers["init"].isFinished()
@@ -388,13 +402,19 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services, defeatDur = DE
         body.physics.gravityOn = false
         phaseStartPending = false
         shardsSpawned = false
+        releaseIcicles()
+        for (i in 0 until releasedIcicles.size) {
+            val icicle = releasedIcicles[i]
+            if (icicle.existenceState == EntityExistenceState.LIVE) icicle.explodeAndDie() else icicle.destroy()
+        }
+        releasedIcicles.clear()
+    }
+
+    private fun releaseIcicles() {
         for (i in 0 until icicles.size) {
             val icicle = icicles[i]
-            when {
-                !isOwnLiveIcicle(icicle) -> continue
-                icicle.existenceState == EntityExistenceState.LIVE -> icicle.explodeAndDie()
-                else -> icicle.destroy()
-            }
+            if (icicle.runnablesOnDestroyQueued[TAG] === releaseDeadIcicles) icicle.runnablesOnDestroyQueued.remove(TAG)
+            releasedIcicles.add(icicle)
         }
         icicles.clear()
     }
@@ -1145,8 +1165,9 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services, defeatDur = DE
                 ConstKeys.DURATION pairTo moveTuning.icicleShakeDur
             )
         )
-        for (i in icicles.size - 1 downTo 0) if (!isOwnLiveIcicle(icicles[i])) icicles.removeIndex(i)
-        if (!icicles.contains(icicle, true)) icicles.add(icicle)
+        if (!icicle.existenceState.liveAfterUpdate || icicles.contains(icicle, true)) return
+        icicle.runnablesOnDestroyQueued.put(TAG, releaseDeadIcicles)
+        icicles.add(icicle)
     }
 
     private fun ceilingAt(x: Float): Float {
@@ -1160,14 +1181,7 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services, defeatDur = DE
         return ceiling
     }
 
-    // TODO: a pooled icicle of this boss that another owner re-queues before the next prune counts as own until it spawns; a defeat or destroy in that frame destroys it (077g TODO.md bug candidate)
-    private fun isOwnLiveIcicle(icicle: FallingIcicle) = icicle.existenceState == EntityExistenceState.SPAWN_QUEUED ||
-        (icicle.existenceState.liveAfterUpdate && icicle.owner == this)
-
-    private fun anyOwnLiveIcicle(): Boolean {
-        for (i in 0 until icicles.size) if (isOwnLiveIcicle(icicles[i])) return true
-        return false
-    }
+    private fun anyOwnLiveIcicle() = !icicles.isEmpty
 
     private fun canShootUp() = !stateMachine.getCurrentElement()
         .equalsAny(GlacierManState.SLED, GlacierManState.SLED_RAM, GlacierManState.JUMP)
@@ -1232,8 +1246,21 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services, defeatDur = DE
         val landX = MathUtils.clamp(
             playerX + facing.value * JUMP_OVER_PAST * ConstVals.PPM, arenaMinX + halfWidth, arenaMaxX - halfWidth
         )
-        val airTime = 2f * JUMP_IMPULSE_Y / -GRAVITY
+        val airTime = airTime(JUMP_IMPULSE_Y, GRAVITY, body.physics.defaultFrictionOnSelf.y)
         body.physics.velocity.set((landX - bodyX) / airTime, JUMP_IMPULSE_Y * ConstVals.PPM)
+    }
+
+    private fun airTime(speedY: Float, gravity: Float, drag: Float): Float {
+        var time = 2f * speedY / -gravity
+        if (drag <= 0f) return time
+        val terminal = gravity / drag
+        repeat(AIR_TIME_ITERATIONS) {
+            val decay = exp(-drag * time)
+            val height = terminal * time + (speedY - terminal) * (1f - decay) / drag
+            val speed = terminal + (speedY - terminal) * decay
+            time -= height / speed
+        }
+        return time
     }
 
     private fun faceTargetPlayer() {

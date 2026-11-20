@@ -12,7 +12,7 @@ import java.io.File
 import kotlin.math.abs
 
 private const val TOLERANCE = 2f * STEP
-private const val AIR_TIME = 2f * 15f / 22.5f
+private const val AIR_TIME = 1.1262612f
 
 private val PHASE_1_ROWS = listOf(
     TuningRow("normal", hard = false, phase2 = false),
@@ -71,17 +71,24 @@ class GlacierManMoveChoiceTest : DescribeSpec({
             rig.lastPickTotal() shouldBe (farTotal(row) plusOrMinus 0.001f)
         }
 
-        it("no duck when the top of the player is 1.5 tiles or more over his feet, and jump x aboveJumpScale") {
+        it("no duck when the top of the player is 2 tiles or more over his feet, and jump x aboveJumpScale") {
             start()
-            rig.place(6f, topOverFloor = 1.5f)
+            rig.place(6f, topOverFloor = 2f)
             rig.leaveStand(0.5f)
             rig.lastPickTotal() shouldBe (row.iceBlastWeight * row.farIceBlastScale + row.sledWeight +
                 row.jumpWeight * row.aboveJumpScale plusOrMinus 0.001f)
         }
 
-        it("the player at 1.49 tiles is not above") {
+        it("the player at 1.99 tiles is not above") {
             start()
-            rig.place(6f, topOverFloor = 1.49f)
+            rig.place(6f, topOverFloor = 1.99f)
+            rig.leaveStand(0.5f)
+            rig.lastPickTotal() shouldBe (farTotal(row) plusOrMinus 0.001f)
+        }
+
+        it("a 1.5-tile player who stands on his floor is not above") {
+            start()
+            rig.place(6f, topOverFloor = rig.playerBody.getHeight() / T)
             rig.leaveStand(0.5f)
             rig.lastPickTotal() shouldBe (farTotal(row) plusOrMinus 0.001f)
         }
@@ -235,7 +242,7 @@ class GlacierManMoveChoiceTest : DescribeSpec({
             rig.bossBody.physics.velocity.y shouldBe (15f * T plusOrMinus 0.01f)
             val shots = rig.spawnsOf<Snowhead>().size
             withClue("the jump lands") { rig.ticksUntil(3f) { rig.baseKey == "brake" } shouldBe true }
-            (rig.bossCenter().x > playerX) shouldBe true
+            rig.bossCenter().x shouldBe (playerX + 2f * T plusOrMinus 0.25f * T)
             rig.boss.facing shouldBe Facing.LEFT
             val landing = rig.spawnsOf<Snowhead>().drop(shots)
             landing.size shouldBe 1
