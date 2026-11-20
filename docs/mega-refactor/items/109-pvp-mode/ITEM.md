@@ -44,6 +44,7 @@ See `108` for the owner's reference to Call of Duty.
 - 2026-11-19: merge target: each branch merges directly into `master`. The wrap code runs only in a room with the wrap flag.
 - 2026-11-19: the first branch `109a` holds the screen wrap and the test map `REFACTOR_TEST_109`. PvP respawn and score come in a later branch.
 - 2026-11-19: the wrap flag is a bool property `wrap` on the `game_rooms` object.
+- 2026-11-19: a room with `wrap=true` has no room transitions at all: no exit on any edge and no Gate transition. A `TODO` at the code says to revisit this in `111`.
 
 ## Open questions
 

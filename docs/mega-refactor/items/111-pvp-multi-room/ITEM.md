@@ -23,6 +23,10 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 > It seems like PvP would best be designed in just a single large room, but having the ability to support multiple rooms in PvP is definitely a worthy goal. Let's make it so that first we implement just a single large room and then tackle multi-room support afterward.
 
+## Decisions
+
+- 2026-11-19 (from `109`): a room with `wrap=true` has no room transitions at all. Revisit this rule when this item starts, for example to allow top and bottom exits so that wrap rooms can stack.
+
 ## Open questions
 
 - What is the room state of each view? `CameraRoomBounds` holds one current room, `levelState.currentRoom` is one value, and `LevelRoomHandler` submits one set of transition events with one `POSITION`.
