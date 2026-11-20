@@ -53,6 +53,8 @@ class FallingIcicle(services: MegaServices) : AbstractProjectile(services), IAni
     companion object {
         const val TAG = "FallingIcicle"
         private const val SHAKE_DUR = 0.25f
+        private const val FORM_FRAMES = 4
+        private const val FORM_FRAME_DUR = 0.15f
         private const val GRAVITY = -22.5f
         private const val SHATTER_DUR = 0.25f
         private const val NORMAL_CLAMP_Y = 10f
@@ -61,11 +63,14 @@ class FallingIcicle(services: MegaServices) : AbstractProjectile(services), IAni
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    enum class FallingIcicleState { STILL, SHAKE, FALL }
+    enum class FallingIcicleState { FORM, STILL, SHAKE, FALL }
 
     override lateinit var facing: Facing
 
+    private val formTimer = Timer(FORM_FRAMES * FORM_FRAME_DUR)
+    private val stillTimer = Timer()
     private val shakeTimer = Timer(SHAKE_DUR)
+    private var timed = false
     private val shatterTimer = Timer(SHATTER_DUR)
 
     private lateinit var state: FallingIcicleState
@@ -75,7 +80,7 @@ class FallingIcicle(services: MegaServices) : AbstractProjectile(services), IAni
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
-            gdxArrayOf("still", "shake").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
+            gdxArrayOf("form", "still", "shake").forEach { regions.put(it, atlas.findRegion("$TAG/$it")) }
         }
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -104,7 +109,10 @@ class FallingIcicle(services: MegaServices) : AbstractProjectile(services), IAni
             else -> FallingIcicleState.STILL
         }
 
-        shakeTimer.reset()
+        timed = spawnProps.containsKey(ConstKeys.DELAY)
+        stillTimer.resetDuration(spawnProps.getOrDefault(ConstKeys.DELAY, 0f, Float::class))
+        formTimer.reset()
+        shakeTimer.resetDuration(spawnProps.getOrDefault(ConstKeys.DURATION, SHAKE_DUR, Float::class))
         shatterTimer.reset()
 
         spawnProps.forEach { key, value ->
@@ -165,7 +173,15 @@ class FallingIcicle(services: MegaServices) : AbstractProjectile(services), IAni
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
         when (state) {
-            FallingIcicleState.STILL -> {
+            FallingIcicleState.FORM -> {
+                formTimer.update(delta)
+                if (formTimer.isFinished()) state = FallingIcicleState.STILL
+            }
+
+            FallingIcicleState.STILL -> if (timed) {
+                stillTimer.update(delta)
+                if (stillTimer.isFinished()) state = FallingIcicleState.SHAKE
+            } else {
                 if (players.anyLive {
                         it.body.getY() < body.getMaxY() && it.body.getMaxX() > body.getX() &&
                             it.body.getX() < body.getMaxX()
@@ -231,10 +247,12 @@ class FallingIcicle(services: MegaServices) : AbstractProjectile(services), IAni
         val keySupplier: (String?) -> String? = {
             when (state) {
                 FallingIcicleState.STILL, FallingIcicleState.FALL -> "still"
+                FallingIcicleState.FORM -> "form"
                 FallingIcicleState.SHAKE -> "shake"
             }
         }
         val animations = objectMapOf<String, IAnimation>(
+            "form" pairTo Animation(regions["form"], FORM_FRAMES, 1, FORM_FRAME_DUR, false),
             "still" pairTo Animation(regions["still"]),
             "shake" pairTo Animation(regions["shake"], 2, 1, 0.1f, true),
         )

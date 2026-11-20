@@ -20,6 +20,7 @@ import com.megaman.maverick.game.entities.bosses.ElecDevil
 import com.megaman.maverick.game.entities.bosses.ElecDevilBodyPiece
 import com.megaman.maverick.game.entities.bosses.ElecDevilBodyPieces
 import com.megaman.maverick.game.entities.bosses.ElecDevilClaw
+import com.megaman.maverick.game.entities.bosses.GlacierMan
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -31,11 +32,14 @@ import com.megaman.maverick.game.entities.explosions.BigAssMaverickRobotOrbExplo
 import com.megaman.maverick.game.entities.explosions.ElecExplosion
 import com.megaman.maverick.game.entities.hazards.D1000CeilingDebris
 import com.megaman.maverick.game.entities.hazards.Laser
+import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.projectiles.BigAssMaverickRobotOrb
 import com.megaman.maverick.game.entities.projectiles.D1000Bomb
 import com.megaman.maverick.game.entities.projectiles.ElecBall
 import com.megaman.maverick.game.entities.projectiles.EnemyShot
+import com.megaman.maverick.game.entities.projectiles.FallingIcicle
 import com.megaman.maverick.game.entities.projectiles.Needle
+import com.megaman.maverick.game.entities.projectiles.Snowhead
 import com.megaman.maverick.game.entities.state.tags
 import com.megaman.maverick.game.entities.utils.hardMode
 
@@ -62,6 +66,10 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
         ElecDevilBodyPiece.TAG pairTo dmgNeg(3),
         ElecBall.TAG pairTo dmgNeg(3),
         ElecExplosion.TAG pairTo dmgNeg(3),
+        GlacierMan.TAG pairTo dmgNeg(3),
+        Snowhead.TAG pairTo dmgNeg { if ((it as Snowhead).owner is GlacierMan) 3 else fallbackDamage(it) },
+        SmallIceCube.TAG pairTo dmgNeg { if ((it as SmallIceCube).owner is GlacierMan) 3 else fallbackDamage(it) },
+        FallingIcicle.TAG pairTo dmgNeg { if ((it as FallingIcicle).owner is GlacierMan) 3 else fallbackDamage(it) },
         D1000.TAG pairTo dmgNeg(2),
         D1000Core.TAG pairTo dmgNeg(2),
         EnemyShot.TAG pairTo dmgNeg { (it as EnemyShot).kind.damage },
@@ -82,17 +90,18 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
         if (entity is IOwnable<*> && entity.owner == player) return 0
 
         val tag = customTagOf(entity)
-        return when {
-            tag != null -> custom[tag].get(damager)
-            entity is ISizable -> when (entity.size) {
-                Size.LARGE -> 4
-                Size.MEDIUM -> 3
-                Size.SMALL -> 2
-            }
-            entity is IHazard -> entity.getDamageToMegaman()
-            entityTypes.contains(entity.getType()) -> 3
-            else -> 0
+        return if (tag != null) custom[tag].get(damager) else fallbackDamage(entity)
+    }
+
+    private fun fallbackDamage(entity: MegaGameEntity) = when {
+        entity is ISizable -> when (entity.size) {
+            Size.LARGE -> 4
+            Size.MEDIUM -> 3
+            Size.SMALL -> 2
         }
+        entity is IHazard -> entity.getDamageToMegaman()
+        entityTypes.contains(entity.getType()) -> 3
+        else -> 0
     }
 
     private fun customTagOf(entity: MegaGameEntity): String? {

@@ -61,6 +61,8 @@ class ExplosionOrb(services: MegaServices) : MegaGameEntity(services), IBodyEnti
         )
         private var region: TextureRegion? = null
 
+        const val SPRITE_PRIORITY_VALUE = 20
+
         fun spawnRing(center: Vector2, speed: Float = DEFAULT_EXPLOSION_ORB_SPEED) =
             RING_DIRECTIONS.forEach { direction ->
                 val orb = MegaEntityFactory.fetch(ExplosionOrb::class)!!
@@ -118,7 +120,7 @@ class ExplosionOrb(services: MegaServices) : MegaGameEntity(services), IBodyEnti
     }
 
     private fun defineSpritesCompoent(): SpritesComponent {
-        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 20))
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, SPRITE_PRIORITY_VALUE))
         sprite.setSize(3f * ConstVals.PPM)
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ -> sprite.setCenter(body.getCenter()) }

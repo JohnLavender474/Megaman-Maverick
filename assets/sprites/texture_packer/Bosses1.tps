@@ -256,7 +256,7 @@
             </struct>
             <key type="filename">../frames/Bosses1/GlacierMan/brake_flash.png</key>
             <key type="filename">../frames/Bosses1/GlacierMan/fall_flash.png</key>
-            <key type="filename">../frames/Bosses1/GlacierMan/ice_blast_attack.png</key>
+            <key type="filename">../frames/Bosses1/GlacierMan/throw_flash.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>

@@ -1,7 +1,9 @@
 package com.megaman.maverick.game.entities.bosses
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -19,7 +21,6 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.shapes.toGameRectangle
-import com.maverick.game.engine.common.time.TimeMarkedRunnable
 import com.maverick.game.engine.common.time.Timer
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
@@ -29,7 +30,9 @@ import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
+import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.entities.body
+import com.maverick.game.engine.events.Event
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.state.StateMachine
 import com.maverick.game.engine.state.StateMachineBuilder
@@ -43,27 +46,56 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.damage.DamageNegotiation
+import com.megaman.maverick.game.damage.IDamageNegotiator
 import com.megaman.maverick.game.damage.dmgNeg
-import com.megaman.maverick.game.difficulty.DifficultyMode
-import com.megaman.maverick.game.entities.state.BossPhase
+import com.megaman.maverick.game.drawables.ui.BossBitsBar
+import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.MegaGameEntities
+import com.megaman.maverick.game.entities.blocks.Block
+import com.megaman.maverick.game.entities.bosses.bigassmaverickrobot.OrbAim
+import com.megaman.maverick.game.entities.bosses.glacierman.GlacierManTuning
 import com.megaman.maverick.game.entities.contracts.AbstractBoss
 import com.megaman.maverick.game.entities.contracts.IFireEntity
 import com.megaman.maverick.game.entities.contracts.targetPlayer
+import com.megaman.maverick.game.entities.explosions.ChargedShotExplosion
+import com.megaman.maverick.game.entities.explosions.ExplosionOrb
+import com.megaman.maverick.game.entities.explosions.IceBombExplosion
+import com.megaman.maverick.game.entities.explosions.IceShard
+import com.megaman.maverick.game.entities.explosions.ReactorExplosion
 import com.megaman.maverick.game.entities.hazards.MagmaFlame
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
+import com.megaman.maverick.game.entities.players.PlayerSabreSlash
+import com.megaman.maverick.game.entities.projectiles.Axe
+import com.megaman.maverick.game.entities.projectiles.Bullet
+import com.megaman.maverick.game.entities.projectiles.ChargedShot
+import com.megaman.maverick.game.entities.projectiles.FallingIcicle
+import com.megaman.maverick.game.entities.projectiles.FallingIcicle.FallingIcicleState
 import com.megaman.maverick.game.entities.projectiles.Fireball
 import com.megaman.maverick.game.entities.projectiles.MagmaWave
+import com.megaman.maverick.game.entities.projectiles.MoonScythe
+import com.megaman.maverick.game.entities.projectiles.Needle
+import com.megaman.maverick.game.entities.projectiles.PreciousGem
+import com.megaman.maverick.game.entities.projectiles.ProtoBuster
 import com.megaman.maverick.game.entities.projectiles.ReactorManProjectile
+import com.megaman.maverick.game.entities.projectiles.SlashWave
 import com.megaman.maverick.game.entities.projectiles.Snowhead
+import com.megaman.maverick.game.entities.state.BossPhase
+import com.megaman.maverick.game.entities.utils.hardMode
+import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
-import com.megaman.maverick.game.utils.extensions.toGameRectangle
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.reflect.KClass
+import com.badlogic.gdx.utils.FloatArray as GdxFloatArray
+import com.badlogic.gdx.utils.IntArray as GdxIntArray
 
-class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntity, IFaceable {
+class GlacierMan(services: MegaServices) : AbstractBoss(services, defeatDur = DEFEAT_DUR), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "GlacierMan"
@@ -71,62 +103,175 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
         const val SPRITE_WIDTH = 4f
         const val SPRITE_HEIGHT = 3f
 
-        private const val INIT_DUR = 1f
-        private const val STAND_DUR = 1f
-        private const val DUCK_DUR = 0.75f
-        private const val SLED_DUR = 1.5f
-        private const val STOP_DUR = 0.8f
+        private const val CELL_WIDTH = 64f
+        private const val CELL_HEIGHT = 48f
 
+        private const val INIT_DUR = 1f
         private const val FIRED_DUR = 1f
+        private const val MAX_BRAKE_DUR = 0.75f
 
         private const val SHOOT_ANIM_DUR = 0.25f
-        private const val SHOOT_UP_CHANCE = 0.4f
+        private const val SLED_SHOT_GAP = 0.5f
+        private const val SLED_SHOTS = 2
 
-        private const val ICE_BLAST_ATTACK_DUR = 4f
-        private const val ICE_BLAST_ATTACK_COUNT = 6
-        private const val ICE_BLAST_ATTACK_COUNT_HARD = 12
+        private const val FLASH_FRAME_DUR = 0.05f
+        private const val THROW_RELEASE_FRAME = 2
+
         private const val ICE_BLAST_VEL = 10f
-        private const val CHUNK_ICE_BLAST_VEL_Y = 10f
+        private const val CUBE_GRAVITY = -22.5f
+        private const val CHUNK_SPEED_X = 7f
+        private const val CHUNK_MIN_TIME = 0.6f
+        private const val CHUNK_MAX_TIME = 1.3f
 
         private const val MEGAMAN_OFFSET_X = 2.5f
         private const val MEGAMAN_ABOVE_OFFSET_Y = 1.5f
 
         private const val JUMP_IMPULSE_X = 25f
         private const val JUMP_IMPULSE_Y = 15f
+        private const val JUMP_OVER_PAST = 2f
 
         private const val GRAVITY = -22.5f
         private const val GROUND_GRAVITY = -1.5f
 
         private const val SLED_SPEED = 8f
         private const val BRAKE_FRICTION_X = 1.25f
-        private const val MAX_BRAKE_DUR = 0.75f
+        private const val VELOCITY_CLAMP_X = 10f
+        private const val VELOCITY_CLAMP_Y = 25f
+        private const val SLED_RAM_MAX_DUR = 3f
+
+        private const val POUND_FRAMES = 5
+        private const val POUND_FRAME_DUR = 0.1f
+        private const val POUND_IMPACT_FRAME = 2
+        private const val POUND_SHAKE_DUR = 0.4f
+        private const val SHAKE_INTERVAL = 0.1f
+        private const val SHAKE_X = 0.001f
+        private const val SHAKE_Y = 0.005f
+        private const val ICICLE_COLUMN_WIDTH = 1f
+        private const val ICICLE_GAP_COLUMNS = 2
+        private const val LOW_HEALTH_RAIN_RATIO = 0.25f
 
         private const val SNOWBALL_VEL_UP_X = 9f
         private const val SNOWBALL_VEL_UP_Y = 15f
         private const val SNOWBALL_VEL_STRAIGHT_X = 15f
         private const val SNOWBALL_VEL_STRAIGHT_Y = 6f
+        private const val SNOWBALL_AIM_SPEED_X = 10f
+        private const val SNOWBALL_AIM_MIN_TIME = 0.4f
+        private const val SNOWBALL_AIM_MAX_TIME = 1f
+
+        private const val PHASE_SHAKE_DUR = 0.5f
+        private const val PHASE_FLASH_BLINK = 0.1f
+        private val PHASE_FLASH_COLOR: Color = Color.CYAN
+
+        private const val FREEZE_FRAMES = 5
+        private const val FREEZE_FRAME_DUR = 0.15f
+        private const val CRACK_FRAME_DUR = 0.25f
+        private const val CRACK_LAST_FRAME_DUR = 0.1f
+        private const val SHATTER_FRAMES = 3
+        private const val SHATTER_FRAME_DUR = 0.1f
+        private const val FREEZE_DUR = FREEZE_FRAMES * FREEZE_FRAME_DUR
+        private const val SHATTER_START = FREEZE_DUR + 2 * CRACK_FRAME_DUR + CRACK_LAST_FRAME_DUR
+        private const val FREEZE_SEQUENCE_DUR = SHATTER_START + SHATTER_FRAMES * SHATTER_FRAME_DUR
+        private const val SHATTER_HOLD_DUR = 1f
+        private const val DEFEAT_DUR = FREEZE_SEQUENCE_DUR + SHATTER_HOLD_DUR
+        private const val SHARDS_CELL_X = 32f
+        private const val SHARDS_CELL_Y = 22f
+
+        private val DAMAGE = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
+            Bullet::class pairTo dmgNeg(2),
+            ProtoBuster::class pairTo dmgNeg(2),
+            PlayerSabreSlash::class pairTo dmgNeg {
+                it as PlayerSabreSlash
+                if (it.fullStrength) 4 else 2
+            },
+            ChargedShot::class pairTo dmgNeg {
+                it as ChargedShot
+                if (it.fullyCharged) 4 else 2
+            },
+            ChargedShotExplosion::class pairTo dmgNeg {
+                it as ChargedShotExplosion
+                if (it.fullyCharged) 4 else 2
+            },
+            Fireball::class pairTo dmgNeg(8),
+            MagmaWave::class pairTo dmgNeg(8),
+            MagmaFlame::class pairTo dmgNeg(8),
+            ReactorManProjectile::class pairTo dmgNeg(6),
+            MoonScythe::class pairTo dmgNeg(2),
+            SmallIceCube::class pairTo dmgNeg(2),
+            Axe::class pairTo dmgNeg(2),
+            Needle::class pairTo dmgNeg(2),
+            SlashWave::class pairTo dmgNeg(2),
+            PreciousGem::class pairTo dmgNeg(2),
+            IceBombExplosion::class pairTo dmgNeg(2),
+            ReactorExplosion::class pairTo dmgNeg(2)
+        )
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class GlacierManState { INIT, STAND, STOP, JUMP, SLED, BRAKE, DUCK, ICE_BLAST_ATTACK, FIRED }
+    private enum class GlacierManState {
+        INIT, STAND, TELL, STOP, JUMP, SLED, BRAKE, DUCK, ICE_BLAST_ATTACK, ICICLE_RAIN, SLED_RAM, PHASE_START, FIRED
+    }
+
+    private enum class IceThrow(val key: String, val frames: Int, val spawnX: Float, val spawnY: Float) {
+        CHUNK("chunk", 5, 14f, 28f),
+        AIM("aim", 4, 13f, 20f),
+        AIM_UP("aim_up", 4, 13f, 32f)
+    }
+
+    override val damageNegotiator: IDamageNegotiator = object : BossDamageNegotiator() {
+        override fun get(damager: IDamagerEntity) = DAMAGE[damager::class]?.get(damager) ?: super.get(damager)
+    }
+    override val healthPhases = 2
+    override val healthBarRegions = gdxArrayOf(ConstKeys.STANDARD, BossBitsBar.PHASE_2_BITS)
 
     override lateinit var facing: Facing
 
     private lateinit var stateMachine: StateMachine<GlacierManState>
     private val currentState: GlacierManState
         get() = stateMachine.getCurrentElement()
-    private var previousState: GlacierManState? = null
+    private var nextState: GlacierManState? = null
+    private var tellMove = GlacierManState.JUMP
+    private var lastMove: GlacierManState? = null
+    private var moveBeforeLast: GlacierManState? = null
+    private var jumpOver = false
+
+    private val tuning: GlacierManTuning
+        get() = GlacierManTuning.of(services.gameState.hardMode, healthPhase)
+    private var volleyTuning = GlacierManTuning.NORMAL
 
     private val timers = ObjectMap<String, Timer>()
+    private val shotTimes = GdxFloatArray()
+    private var shotIndex = 0
 
     private lateinit var animator: Animator
+    private lateinit var animations: ObjectMap<String, IAnimation>
 
     private val walls = Array<GameRectangle>()
+    private var wallCount = 0
+    private var arenaMinX = 0f
+    private var arenaMaxX = 0f
+    private val arena = GameRectangle()
+
+    private val volleyAims = Array<OrbAim>()
+    private var iceThrow = IceThrow.AIM
+    private var throwIndex = 0
+    private var throwReleased = false
+    private val randomRange: (Float, Float) -> Float = { min, max -> services.random.nextFloat(min, max) }
+
+    private var moveTuning = GlacierManTuning.NORMAL
+    private var rainWavesLeft = 0
+    private var poundImpacted = false
+    private val waveColumns = GdxIntArray()
+    private val freeColumns = GdxIntArray()
+    private var waveSpawnIndex = 0
+    private val icicles = Array<FallingIcicle>()
+
+    private var ramBounced = false
+
+    private var phaseStartPending = false
+    private var shardsSpawned = false
 
     private var shootUp = false
-    private var firstUpdate = true
-    private var iceBlastLeftHand = false
 
     private val fired: Boolean
         get() = !timers["fired"].isFinished()
@@ -136,7 +281,9 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.BOSSES_1.source)
             gdxArrayOf(
-                "defeated",
+                "freeze",
+                "frozen_crack",
+                "frozen_shatter",
                 "fired",
                 "stand",
                 "stand_shoot",
@@ -145,32 +292,34 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
                 "jump",
                 "fall",
                 "fall_shoot_up",
+                "fall_flash",
                 "sled",
                 "sled_shoot",
                 "sled_shoot_up",
                 "brake",
                 "brake_shoot",
                 "brake_shoot_up",
+                "brake_flash",
                 "duck",
                 "duck_shoot",
                 "duck_shoot_up",
-                "ice_blast_attack"
+                "throw_flash",
+                "fist_flash",
+                "chunk",
+                "aim",
+                "aim_up",
+                "pound"
             ).forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineAnimationsComponent())
         stateMachine = buildStateMachine()
-        damageOverrides.put(Fireball::class, dmgNeg(4))
-        damageOverrides.put(MagmaWave::class, dmgNeg(4))
-        damageOverrides.put(MagmaFlame::class, dmgNeg(4))
-        damageOverrides.put(ReactorManProjectile::class, dmgNeg(3))
+        buildTimers()
     }
 
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
-
-        buildTimers()
 
         val spawn = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!.getPositionPoint(Position.BOTTOM_CENTER)
         body.setBottomCenterToPoint(spawn)
@@ -193,22 +342,42 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
         facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
 
         shootUp = false
-        firstUpdate = true
-        iceBlastLeftHand = false
+        phaseStartPending = false
+        shardsSpawned = false
+        nextState = null
+        tellMove = GlacierManState.JUMP
+        lastMove = null
+        moveBeforeLast = null
+        jumpOver = false
+        shotTimes.clear()
+        shotIndex = 0
+        volleyAims.clear()
+        throwIndex = 0
+        throwReleased = false
+        rainWavesLeft = 0
+        poundImpacted = false
+        waveColumns.clear()
+        waveSpawnIndex = 0
+        icicles.clear()
+        ramBounced = false
+        body.physics.velocityClamp.x = VELOCITY_CLAMP_X * ConstVals.PPM
 
+        wallCount = 0
         spawnProps.forEach { key, value ->
             if (key.toString().contains(ConstKeys.WALL)) {
-                val wall = (value as RectangleMapObject).rectangle.toGameRectangle(GameRectangle())
-                walls.add(wall)
+                if (wallCount == walls.size) walls.add(GameRectangle())
+                (value as RectangleMapObject).rectangle.toGameRectangle(walls[wallCount])
+                wallCount++
             }
         }
-
-        previousState = null
+        setArenaEdges(spawn.x)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
+        for (i in 0 until icicles.size) if (isOwnLiveIcicle(icicles[i])) icicles[i].destroy()
+        icicles.clear()
     }
 
     override fun isReady(delta: Float) = timers["init"].isFinished()
@@ -217,11 +386,27 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
         super.triggerDefeat()
         body.physics.velocity.setZero()
         body.physics.gravityOn = false
+        phaseStartPending = false
+        shardsSpawned = false
+        for (i in 0 until icicles.size) {
+            val icicle = icicles[i]
+            when {
+                !isOwnLiveIcicle(icicle) -> continue
+                icicle.existenceState == EntityExistenceState.LIVE -> icicle.explodeAndDie()
+                else -> icicle.destroy()
+            }
+        }
+        icicles.clear()
     }
 
     override fun onReady() {
         super.onReady()
         body.physics.gravityOn = true
+    }
+
+    override fun onHealthPhaseStart(phase: Int) {
+        GameLogger.debug(TAG, "onHealthPhaseStart(): phase=$phase")
+        phaseStartPending = true
     }
 
     override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
@@ -243,17 +428,30 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
             if (defeated) {
                 body.physics.velocity.setZero()
                 body.physics.gravityOn = false
-                explodeOnDefeat(delta)
+                if (!shardsSpawned && defeatTimer.time >= SHATTER_START) {
+                    shardsSpawned = true
+                    IceShard.spawn5(cellPoint(SHARDS_CELL_X, SHARDS_CELL_Y, GameObjectPools.fetch(Vector2::class)))
+                    if (spawnDefeatOrbs) {
+                        spawnDefeatOrbs = false
+                        spawnExplosionOrbs(body.getCenter())
+                    }
+                }
                 return@add
             }
 
             timers["shoot_anim"].update(delta)
 
+            if (phaseStartPending && !fired && body.isSensing(BodySense.FEET_ON_GROUND) &&
+                !currentState.equalsAny(GlacierManState.INIT, GlacierManState.JUMP, GlacierManState.FIRED)
+            ) {
+                phaseStartPending = false
+                goTo(GlacierManState.PHASE_START)
+            }
+
             if (currentState != GlacierManState.FIRED && fired) stateMachine.next()
 
             when (currentState) {
                 GlacierManState.INIT -> {
-                    // init state only occurs as the first state and never again
                     val timer = timers["init"]
                     timer.update(delta)
 
@@ -261,37 +459,99 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
                 }
 
                 GlacierManState.STAND,
+                GlacierManState.TELL,
                 GlacierManState.DUCK,
                 GlacierManState.SLED,
-                GlacierManState.STOP,
-                GlacierManState.ICE_BLAST_ATTACK -> {
-                    if (currentState.equalsAny(GlacierManState.STAND, GlacierManState.DUCK))
-                        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                GlacierManState.STOP -> {
+                    if (currentState.equalsAny(GlacierManState.STAND, GlacierManState.DUCK, GlacierManState.TELL))
+                        faceTargetPlayer()
 
                     body.physics.velocity.x =
                         if (currentState == GlacierManState.SLED) SLED_SPEED * ConstVals.PPM * facing.value else 0f
 
-                    val key = currentState.name.lowercase()
-
-                    val timer = timers[key]
+                    val timer = timers[currentState.name.lowercase()]
                     timer.update(delta)
 
-                    if (timer.isFinished() || (currentState == GlacierManState.SLED && shouldStopSledding())) {
-                        val next = stateMachine.next()
-                        GameLogger.debug(TAG, "update(): current=$currentState, next=$next")
+                    while (shotIndex < shotTimes.size && timer.time >= shotTimes[shotIndex]) {
+                        shotIndex++
+                        shoot(aimAtPlayer = services.random.nextFloat(0f, 1f) < tuning.snowballAimChance)
+                    }
+
+                    if (timer.isFinished() || (currentState == GlacierManState.SLED && shouldStopSledding()))
+                        endTimedState()
+                }
+
+                GlacierManState.ICE_BLAST_ATTACK -> {
+                    body.physics.velocity.x = 0f
+
+                    val timer = timers["ice_throw"]
+                    timer.update(delta)
+
+                    if (!throwReleased && timer.time >= THROW_RELEASE_FRAME * volleyTuning.throwFrameDur) {
+                        throwReleased = true
+                        releaseCube()
+                    }
+
+                    if (timer.isFinished()) {
+                        throwIndex++
+                        if (throwIndex < volleyAims.size) startThrow() else goTo(GlacierManState.STAND)
                     }
                 }
 
+                GlacierManState.ICICLE_RAIN -> {
+                    body.physics.velocity.x = 0f
+
+                    val timer = timers["icicle_rain"]
+                    timer.update(delta)
+
+                    if (!poundImpacted && timer.time >= POUND_IMPACT_FRAME * POUND_FRAME_DUR) {
+                        poundImpacted = true
+                        poundImpact()
+                    }
+
+                    while (poundImpacted && waveSpawnIndex < waveColumns.size &&
+                        timer.time >= POUND_IMPACT_FRAME * POUND_FRAME_DUR + waveSpawnIndex * moveTuning.icicleStagger
+                    ) {
+                        spawnIcicle(waveColumns[waveSpawnIndex])
+                        waveSpawnIndex++
+                    }
+
+                    if (timer.isFinished()) when {
+                        rainWavesLeft <= 0 -> goTo(GlacierManState.STAND)
+                        !anyOwnLiveIcicle() -> startPound()
+                    }
+                }
+
+                GlacierManState.SLED_RAM -> {
+                    body.physics.velocity.x = moveTuning.sledRamSpeed * ConstVals.PPM * facing.value
+
+                    val timer = timers["sled_ram"]
+                    timer.update(delta)
+
+                    if (!ramBounced && shouldStopSledding()) {
+                        ramBounced = true
+                        facing = facing.opposite()
+                        body.physics.velocity.x = moveTuning.sledRamSpeed * ConstVals.PPM * facing.value
+                        GameLogger.debug(TAG, "update(): sled ram bounce, facing=$facing")
+                    }
+
+                    if ((ramBounced && shouldStopSledding()) || timer.isFinished()) goTo(GlacierManState.BRAKE)
+                }
+
                 GlacierManState.JUMP -> {
-                    facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+                    if (!jumpOver) faceTargetPlayer()
 
                     when {
                         body.physics.velocity.y <= 0f && body.isSensing(BodySense.FEET_ON_GROUND) -> {
-                            GameLogger.debug(TAG, "update(): end jump")
-                            stateMachine.next()
+                            GameLogger.debug(TAG, "update(): end jump: jumpOver=$jumpOver")
+                            if (jumpOver) {
+                                faceTargetPlayer()
+                                shoot(aimAtPlayer = true)
+                            }
+                            goTo(GlacierManState.BRAKE)
                         }
 
-                        else -> body.physics.velocity.x += JUMP_IMPULSE_X * ConstVals.PPM * facing.value * delta
+                        !jumpOver -> body.physics.velocity.x += JUMP_IMPULSE_X * ConstVals.PPM * facing.value * delta
                     }
                 }
 
@@ -304,8 +564,19 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
                     ) {
                         GameLogger.debug(TAG, "update(): end brake")
                         body.physics.velocity.x = 0f
-                        stateMachine.next()
+                        goTo(GlacierManState.STOP)
                     }
+                }
+
+                GlacierManState.PHASE_START -> {
+                    faceTargetPlayer()
+                    body.physics.velocity.x = 0f
+                    if (body.physics.velocity.y > 0f) body.physics.velocity.y = 0f
+
+                    val timer = timers["phase_start"]
+                    timer.update(delta)
+
+                    if (timer.isFinished()) goTo(GlacierManState.STAND)
                 }
 
                 GlacierManState.FIRED -> {
@@ -327,7 +598,7 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
     override fun defineBodyComponent(): BodyComponent {
         val body = Body(BodyType.DYNAMIC)
         body.setSize(1.25f * ConstVals.PPM, 1.75f * ConstVals.PPM)
-        body.physics.velocityClamp.set(10f * ConstVals.PPM, 25f * ConstVals.PPM)
+        body.physics.velocityClamp.set(VELOCITY_CLAMP_X * ConstVals.PPM, VELOCITY_CLAMP_Y * ConstVals.PPM)
         body.physics.applyFrictionX = false
 
         val debugShapes = Array<() -> IDrawableShape?>()
@@ -394,40 +665,63 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
 
             sprite.setFlip(isFacing(Facing.RIGHT), false)
 
-            sprite.hidden = damageBlink || services.levelState.roomTransition
+            sprite.priority.section = if (defeated) DrawingSection.FOREGROUND else DrawingSection.PLAYGROUND
+            sprite.priority.value = if (defeated) ExplosionOrb.SPRITE_PRIORITY_VALUE + 1 else 1
+
+            sprite.hidden = (if (defeated) defeatTimer.time >= FREEZE_SEQUENCE_DUR else damageBlink) ||
+                services.levelState.roomTransition
+            sprite.color = if (isPhaseFlashOn()) PHASE_FLASH_COLOR else Color.WHITE
         }
         return spritesComponent
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val animations = objectMapOf<String, IAnimation>(
+        animations = objectMapOf<String, IAnimation>(
             "fired" pairTo Animation(regions["fired"], 3, 1, 0.1f, true),
-            "defeated" pairTo Animation(regions["defeated"], 3, 1, 0.1f, true),
+            "freeze" pairTo Animation(regions["freeze"], FREEZE_FRAMES, 1, FREEZE_FRAME_DUR, false),
+            "frozen_crack" pairTo Animation(
+                regions["frozen_crack"], 3, 1, gdxArrayOf(CRACK_FRAME_DUR, CRACK_FRAME_DUR, CRACK_LAST_FRAME_DUR), false
+            ),
+            "frozen_shatter" pairTo Animation(regions["frozen_shatter"], SHATTER_FRAMES, 1, SHATTER_FRAME_DUR, false),
             "stand" pairTo Animation(regions["stand"]),
             "stand_shoot" pairTo Animation(regions["stand_shoot"]),
             "stand_shoot_up" pairTo Animation(regions["stand_shoot_up"]),
             "brake" pairTo Animation(regions["brake"], 3, 1, 0.1f, true),
             "brake_shoot" pairTo Animation(regions["brake_shoot"], 3, 1, 0.1f, true),
             "brake_shoot_up" pairTo Animation(regions["brake_shoot_up"], 3, 1, 0.1f, true),
+            "brake_flash" pairTo Animation(regions["brake_flash"], 2, 1, FLASH_FRAME_DUR, true),
             "duck" pairTo Animation(regions["duck"]),
             "duck_shoot" pairTo Animation(regions["duck_shoot"]),
             "duck_shoot_up" pairTo Animation(regions["duck_shoot_up"]),
             "fall" pairTo Animation(regions["fall"], 4, 2, 0.1f, true),
             "fall_shoot_up" pairTo Animation(regions["fall_shoot_up"], 4, 2, 0.1f, true),
+            "fall_flash" pairTo Animation(regions["fall_flash"], 2, 1, FLASH_FRAME_DUR, true),
             "jump" pairTo Animation(regions["jump"], 4, 2, 0.1f, true),
             "sled" pairTo Animation(regions["sled"], 2, 2, 0.1f, true),
             "sled_shoot" pairTo Animation(regions["sled_shoot"], 2, 2, 0.1f, true),
             "sled_shoot_up" pairTo Animation(regions["sled_shoot_up"], 2, 2, 0.1f, true),
             "stop" pairTo Animation(regions["stop"], 3, 3, 0.075f, false),
-            "ice_blast_attack" pairTo Animation(regions["ice_blast_attack"], 2, 1, 0.1f, true)
+            "throw_flash" pairTo Animation(regions["throw_flash"], 2, 1, FLASH_FRAME_DUR, true),
+            "fist_flash" pairTo Animation(regions["fist_flash"], 2, 1, FLASH_FRAME_DUR, true),
+            "chunk" pairTo Animation(regions["chunk"], IceThrow.CHUNK.frames, 1, 0.1f, false),
+            "aim" pairTo Animation(regions["aim"], IceThrow.AIM.frames, 1, 0.1f, false),
+            "aim_up" pairTo Animation(regions["aim_up"], IceThrow.AIM_UP.frames, 1, 0.1f, false),
+            "pound" pairTo Animation(regions["pound"], POUND_FRAMES, 1, POUND_FRAME_DUR, false)
         )
         val keySupplier: (String?) -> String? = {
-            if (defeated) "defeated" else if (fired) "fired" else {
+            if (defeated) defeatKey() else if (fired) "fired" else {
                 val state = stateMachine.getCurrentElement()
 
                 val key = when (state) {
                     GlacierManState.INIT -> if (body.isSensing(BodySense.FEET_ON_GROUND)) "stop" else "fall"
                     GlacierManState.JUMP -> if (body.physics.velocity.y > 0f) "jump" else "fall"
+                    GlacierManState.TELL -> tellKey(tellMove)
+                    GlacierManState.ICE_BLAST_ATTACK -> iceThrow.key
+                    GlacierManState.ICICLE_RAIN ->
+                        if (timers["icicle_rain"].time < POUND_FRAMES * POUND_FRAME_DUR) "pound" else "stand"
+
+                    GlacierManState.SLED_RAM -> "sled"
+                    GlacierManState.PHASE_START -> "fist_flash"
                     else -> state.name.lowercase()
                 }
 
@@ -463,139 +757,261 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
         GlacierManState.entries.forEach { state -> builder.state(state.name, state) }
         builder.setOnChangeState(this::onChangeState)
         builder.initialState(GlacierManState.INIT.name)
-            // init
             .transition(GlacierManState.INIT.name, GlacierManState.STAND.name) { bossComponent.phase != BossPhase.ENTRANCE }
-            // stand
-            .transition(GlacierManState.STAND.name, GlacierManState.FIRED.name) { fired }
-            .transition(GlacierManState.STAND.name, GlacierManState.ICE_BLAST_ATTACK.name) {
-                !firstUpdate && previousState != GlacierManState.ICE_BLAST_ATTACK && canIceBlast() &&
-                    services.random.nextInt(0, 10) <= 4
-            }.transition(GlacierManState.STAND.name, GlacierManState.DUCK.name) {
-                !isMegamanAboveOffsetY() && previousState != GlacierManState.DUCK && services.random.nextInt(0, 10) <= 5
-            }
-            .transition(GlacierManState.STAND.name, GlacierManState.SLED.name) {
-                isMegamanOutsideOffsetX() && previousState != GlacierManState.SLED
-            }
-            .transition(GlacierManState.STAND.name, GlacierManState.JUMP.name) { true }
-            // duck
-            .transition(GlacierManState.DUCK.name, GlacierManState.FIRED.name) { fired }
-            .transition(GlacierManState.DUCK.name, GlacierManState.SLED.name) { isMegamanOutsideOffsetX() }
-            .transition(GlacierManState.DUCK.name, GlacierManState.JUMP.name) { isMegamanAboveOffsetY() }
-            // sled
-            .transition(GlacierManState.SLED.name, GlacierManState.FIRED.name) { fired }
-            .transition(GlacierManState.SLED.name, GlacierManState.JUMP.name) { isMegamanAboveOffsetY() }
-            .transition(GlacierManState.SLED.name, GlacierManState.BRAKE.name) { true }
-            // jump
-            .transition(GlacierManState.JUMP.name, GlacierManState.FIRED.name) { fired }
-            .transition(GlacierManState.JUMP.name, GlacierManState.BRAKE.name) { true }
-            // brake
-            .transition(GlacierManState.BRAKE.name, GlacierManState.FIRED.name) { fired }
-            .transition(GlacierManState.BRAKE.name, GlacierManState.STOP.name) { true }
-            // stop
-            .transition(GlacierManState.STOP.name, GlacierManState.FIRED.name) { fired }
-            .transition(GlacierManState.STOP.name, GlacierManState.STAND.name) { true }
-            // ice blast attack
-            .transition(GlacierManState.ICE_BLAST_ATTACK.name, GlacierManState.FIRED.name) { fired }
-            .transition(GlacierManState.ICE_BLAST_ATTACK.name, GlacierManState.STAND.name) { true }
-            // fired
             .transition(GlacierManState.FIRED.name, GlacierManState.STAND.name) { true }
+        GlacierManState.entries.forEach { from ->
+            if (from.equalsAny(GlacierManState.INIT, GlacierManState.FIRED)) return@forEach
+            builder.transition(from.name, GlacierManState.FIRED.name) { fired }
+            GlacierManState.entries.forEach { to ->
+                if (to != from && !to.equalsAny(GlacierManState.INIT, GlacierManState.FIRED))
+                    builder.transition(from.name, to.name) { nextState == to }
+            }
+        }
         return builder.build()
     }
 
     private fun buildTimers() {
-        val firedTimer = Timer(FIRED_DUR)
-        timers.put("fired", firedTimer)
-
-        val shootAnimTimer = Timer(SHOOT_ANIM_DUR)
-        timers.put("shoot_anim", shootAnimTimer)
-
-        val initTimer = Timer(INIT_DUR)
-        timers.put("init", initTimer)
-
-        val standTimer = Timer(STAND_DUR)
-        standTimer.addRunnables(gdxArrayOf(TimeMarkedRunnable(0.5f) { shoot() }))
-        timers.put("stand", standTimer)
-
-        val duckTimer = Timer(DUCK_DUR)
-        val duckRunnable = TimeMarkedRunnable(0.25f) { shoot() }
-        duckTimer.addRunnables(gdxArrayOf(duckRunnable))
-        timers.put("duck", duckTimer)
-
-        val sledTimer = Timer(SLED_DUR)
-        val sledRunnables = Array<TimeMarkedRunnable>()
-        for (i in 0 until 2) {
-            val time = 0.5f + 0.5f * i
-            val sledRunnable = TimeMarkedRunnable(time) { shoot() }
-            sledRunnables.add(sledRunnable)
-        }
-        sledTimer.addRunnables(sledRunnables)
-        timers.put("sled", sledTimer)
-
-        val maxBrakeTimer = Timer(MAX_BRAKE_DUR)
-        timers.put("brake", maxBrakeTimer)
-
-        val iceBlastAttackTimer = Timer(ICE_BLAST_ATTACK_DUR)
-        val iceBlastAttackTimerRunnables = Array<TimeMarkedRunnable>()
-
-        val count = if (services.gameState.getDifficultyMode() == DifficultyMode.HARD)
-            ICE_BLAST_ATTACK_COUNT_HARD else ICE_BLAST_ATTACK_COUNT
-
-        for (i in 0 until count) {
-            val increment = ICE_BLAST_ATTACK_DUR / count
-
-            val time = increment + i * increment
-            val iceBlastAttackRunnable = TimeMarkedRunnable(time) { iceBlast() }
-
-            iceBlastAttackTimerRunnables.add(iceBlastAttackRunnable)
-        }
-        iceBlastAttackTimer.addRunnables(iceBlastAttackTimerRunnables)
-        timers.put("ice_blast_attack", iceBlastAttackTimer)
-
-        val stopTimer = Timer(STOP_DUR)
-        timers.put("stop", stopTimer)
+        val row = GlacierManTuning.NORMAL
+        timers.put("fired", Timer(FIRED_DUR))
+        timers.put("shoot_anim", Timer(SHOOT_ANIM_DUR))
+        timers.put("init", Timer(INIT_DUR))
+        timers.put("stand", Timer(row.standDurMax))
+        timers.put("tell", Timer(row.sledTellDur))
+        timers.put("duck", Timer(row.duckDur))
+        timers.put("sled", Timer(row.sledDur))
+        timers.put("brake", Timer(MAX_BRAKE_DUR))
+        timers.put("stop", Timer(row.stopDur))
+        timers.put("ice_throw", Timer(IceThrow.CHUNK.frames * row.throwFrameDur + row.throwRest))
+        timers.put("icicle_rain", Timer(POUND_FRAMES * POUND_FRAME_DUR))
+        timers.put("sled_ram", Timer(SLED_RAM_MAX_DUR))
+        timers.put("phase_start", Timer(row.phaseStartDur))
     }
 
-    private fun getIceBlastLeftPos() = body.getCenter().add(-0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM)
+    private fun goTo(state: GlacierManState) {
+        nextState = state
+        val current = stateMachine.next()
+        GameLogger.debug(TAG, "goTo(): state=$state, current=$current")
+    }
 
-    private fun getIceBlastRightPos() = body.getCenter().add(0.75f * ConstVals.PPM, 0.2f * ConstVals.PPM)
+    private fun tellThen(move: GlacierManState, jumpOver: Boolean = false) {
+        tellMove = move
+        this.jumpOver = jumpOver
+        goTo(GlacierManState.TELL)
+    }
 
-    private fun getCurrentIceBlastPos(): Vector2 {
-        var preferredPos = if (iceBlastLeftHand) getIceBlastLeftPos() else getIceBlastRightPos()
+    private fun startMove(move: GlacierManState) {
+        if (move.equalsAny(GlacierManState.DUCK, GlacierManState.ICICLE_RAIN)) goTo(move) else tellThen(move)
+    }
 
-        val mockIceCubeBounds =
-            GameObjectPools.fetch(GameRectangle::class).setSize(SmallIceCube.BODY_SIZE * ConstVals.PPM)
-                .setCenter(preferredPos)
+    private fun endTimedState() {
+        when (currentState) {
+            GlacierManState.STAND -> startMove(pickMove())
+            GlacierManState.TELL -> goTo(tellMove)
+            GlacierManState.DUCK -> when {
+                services.random.nextFloat(0f, 1f) < tuning.duckSledChainChance || isMegamanOutsideOffsetX() ->
+                    tellThen(GlacierManState.SLED)
 
-        val contactWithWall = walls.any { it.overlaps(mockIceCubeBounds) }
-        if (contactWithWall) preferredPos = if (iceBlastLeftHand) getIceBlastRightPos() else getIceBlastLeftPos()
+                isMegamanAboveOffsetY() -> tellThen(GlacierManState.JUMP)
+                else -> goTo(GlacierManState.STAND)
+            }
 
-        return preferredPos
+            GlacierManState.SLED -> when {
+                isMegamanAboveOffsetY() -> {
+                    jumpOver = false
+                    goTo(GlacierManState.JUMP)
+                }
+
+                shouldStopSledding() && services.random.nextFloat(0f, 1f) < tuning.sledJumpChainChance ->
+                    tellThen(GlacierManState.JUMP, jumpOver = true)
+
+                else -> goTo(GlacierManState.BRAKE)
+            }
+
+            GlacierManState.STOP -> goTo(GlacierManState.STAND)
+            else -> throw IllegalStateException("$TAG: no timed end for state $currentState")
+        }
+    }
+
+    private fun pickMove(): GlacierManState {
+        val row = tuning
+        val far = isMegamanOutsideOffsetX()
+        val above = isMegamanAboveOffsetY()
+
+        val iceBlast = repeatScaled(
+            GlacierManState.ICE_BLAST_ATTACK,
+            if (canIceBlast()) row.iceBlastWeight * (if (far) row.farIceBlastScale else 1f) else 0f,
+            row
+        )
+        val duck = repeatScaled(GlacierManState.DUCK, if (above) 0f else row.duckWeight, row)
+        val sled = repeatScaled(GlacierManState.SLED, if (far) row.sledWeight else 0f, row)
+        val jump = repeatScaled(
+            GlacierManState.JUMP,
+            row.jumpWeight * (if (far) 1f else row.nearJumpScale) * (if (above) row.aboveJumpScale else 1f),
+            row
+        )
+        val icicleRain = repeatScaled(GlacierManState.ICICLE_RAIN, row.icicleRainWeight, row)
+        val sledRam = repeatScaled(GlacierManState.SLED_RAM, row.sledRamWeight, row)
+
+        val total = iceBlast + duck + sled + jump + icicleRain + sledRam
+        val move = when {
+            total <= 0f -> if (lastMove == GlacierManState.JUMP && moveBeforeLast == GlacierManState.JUMP)
+                GlacierManState.DUCK else GlacierManState.JUMP
+
+            else -> weightedMove(services.random.nextFloat(0f, total), iceBlast, duck, sled, icicleRain, sledRam, jump)
+        }
+        GameLogger.debug(
+            TAG, "pickMove(): move=$move, iceBlast=$iceBlast, duck=$duck, sled=$sled, jump=$jump, " +
+                "icicleRain=$icicleRain, sledRam=$sledRam, last=$lastMove, beforeLast=$moveBeforeLast"
+        )
+        return move
+    }
+
+    private fun weightedMove(
+        roll: Float,
+        iceBlast: Float,
+        duck: Float,
+        sled: Float,
+        icicleRain: Float,
+        sledRam: Float,
+        jump: Float
+    ) = when {
+        roll < iceBlast -> GlacierManState.ICE_BLAST_ATTACK
+        roll < iceBlast + duck -> GlacierManState.DUCK
+        roll < iceBlast + duck + sled -> GlacierManState.SLED
+        roll < iceBlast + duck + sled + icicleRain -> GlacierManState.ICICLE_RAIN
+        roll < iceBlast + duck + sled + icicleRain + sledRam -> GlacierManState.SLED_RAM
+        jump > 0f -> GlacierManState.JUMP
+        sled > 0f -> GlacierManState.SLED
+        duck > 0f -> GlacierManState.DUCK
+        else -> GlacierManState.ICE_BLAST_ATTACK
+    }
+
+    private fun repeatScaled(move: GlacierManState, weight: Float, row: GlacierManTuning) = when {
+        lastMove == move && moveBeforeLast == move -> 0f
+        lastMove == move -> weight * row.lastMoveScale
+        else -> weight
+    }
+
+    private fun recordMove(move: GlacierManState) {
+        moveBeforeLast = lastMove
+        lastMove = move
+    }
+
+    private fun tellKey(move: GlacierManState) = when (move) {
+        GlacierManState.SLED, GlacierManState.SLED_RAM -> "brake_flash"
+        GlacierManState.JUMP -> "fall_flash"
+        else -> "throw_flash"
+    }
+
+    private fun tellDur(move: GlacierManState, row: GlacierManTuning) = when (move) {
+        GlacierManState.SLED -> row.sledTellDur
+        GlacierManState.SLED_RAM -> row.sledRamTellDur
+        GlacierManState.JUMP -> row.jumpTellDur
+        else -> row.iceBlastTellDur
+    }
+
+    private fun setArenaEdges(spawnX: Float) {
+        arenaMinX = -Float.MAX_VALUE
+        arenaMaxX = Float.MAX_VALUE
+        for (i in 0 until wallCount) {
+            val wall = walls[i]
+            if (wall.getMaxX() <= spawnX) arenaMinX = max(arenaMinX, wall.getMaxX())
+            else if (wall.getX() >= spawnX) arenaMaxX = min(arenaMaxX, wall.getX())
+        }
+        if (arenaMinX == -Float.MAX_VALUE || arenaMaxX == Float.MAX_VALUE) throw IllegalStateException(
+            "$TAG: the spawn needs a wall object on each side of the boss (spawn props wall_1 and wall_2); " +
+                "found $wallCount wall(s) for spawn x=$spawnX"
+        )
+    }
+
+    private fun cellPoint(x: Float, y: Float, out: Vector2): Vector2 {
+        val scaleX = SPRITE_WIDTH * ConstVals.PPM / CELL_WIDTH
+        val scaleY = SPRITE_HEIGHT * ConstVals.PPM / CELL_HEIGHT
+        val cellX = if (isFacing(Facing.LEFT)) x else CELL_WIDTH - x
+        val spriteLeft = body.getX() + body.getWidth() / 2f - SPRITE_WIDTH * ConstVals.PPM / 2f
+        return out.set(spriteLeft + cellX * scaleX, body.getY() + y * scaleY)
+    }
+
+    private fun defeatKey() = when {
+        defeatTimer.time < FREEZE_DUR -> "freeze"
+        defeatTimer.time < SHATTER_START -> "frozen_crack"
+        else -> "frozen_shatter"
+    }
+
+    private fun isPhaseFlashOn() = currentState == GlacierManState.PHASE_START && !defeated &&
+        (timers["phase_start"].time / PHASE_FLASH_BLINK).toInt() % 2 == 0
+
+    private fun startPhasePose() {
+        GameLogger.debug(TAG, "startPhasePose(): healthPhase=$healthPhase")
+        timers["phase_start"].resetDuration(tuning.phaseStartDur)
+        services.events.submitEvent(
+            Event(
+                EventType.SHAKE_CAM, props(
+                    ConstKeys.DURATION pairTo PHASE_SHAKE_DUR,
+                    ConstKeys.INTERVAL pairTo SHAKE_INTERVAL,
+                    ConstKeys.X pairTo SHAKE_X * ConstVals.PPM,
+                    ConstKeys.Y pairTo SHAKE_Y * ConstVals.PPM
+                )
+            )
+        )
+        requestToPlaySound(SoundAsset.CHILL_SHOOT_SOUND, false)
     }
 
     private fun canIceBlast(): Boolean {
         if (!body.isSensing(BodySense.FEET_ON_GROUND)) return false
-        val iceBlastPositions = gdxArrayOf(getIceBlastLeftPos(), getIceBlastRightPos())
-        return iceBlastPositions.any { pos -> !walls.any { it.contains(pos) } }
+        val point = GameObjectPools.fetch(Vector2::class)
+        val throws = IceThrow.entries
+        for (i in 0 until throws.size) {
+            cellPoint(throws[i].spawnX, throws[i].spawnY, point)
+            for (j in 0 until wallCount) if (walls[j].contains(point)) return false
+        }
+        return true
     }
 
-    private fun iceBlast() {
-        GameLogger.debug(TAG, "iceBlast()")
+    private fun startVolley() {
+        volleyTuning = tuning
+        volleyAims.clear()
+        val aims = OrbAim.entries
+        for (i in 0 until volleyTuning.iceBlastCount) volleyAims.add(aims[i % aims.size])
+        services.random.shuffle(volleyAims)
+        throwIndex = 0
+        startThrow()
+    }
 
-        val spawn = getCurrentIceBlastPos()
-        iceBlastLeftHand = !iceBlastLeftHand
-
-        val trajectory: Vector2
-        val gravityOn: Boolean
-        val chunkIceBlast = services.random.nextBoolean()
-        if (chunkIceBlast) {
-            trajectory = MegaUtilMethods.calculateJumpImpulse(
-                spawn, targetPlayer.body.getCenter(), CHUNK_ICE_BLAST_VEL_Y * ConstVals.PPM
-            )
-            gravityOn = true
-        } else {
-            trajectory = targetPlayer.body.getCenter().sub(body.getCenter()).nor().scl(ICE_BLAST_VEL * ConstVals.PPM)
-            gravityOn = false
+    private fun startThrow() {
+        faceTargetPlayer()
+        iceThrow = when {
+            isMegamanAboveOffsetY() -> IceThrow.AIM_UP
+            services.random.nextFloat(0f, 1f) < volleyTuning.chunkChance -> IceThrow.CHUNK
+            else -> IceThrow.AIM
         }
+        val animation = animations[iceThrow.key]
+        animation.setFrameDuration(volleyTuning.throwFrameDur)
+        animation.reset()
+        timers["ice_throw"].resetDuration(iceThrow.frames * volleyTuning.throwFrameDur + volleyTuning.throwRest)
+        throwReleased = false
+    }
+
+    private fun releaseCube() {
+        val aim = volleyAims[throwIndex]
+        GameLogger.debug(TAG, "releaseCube(): throw=$iceThrow, aim=$aim, index=$throwIndex")
+
+        val spawn = cellPoint(iceThrow.spawnX, iceThrow.spawnY, GameObjectPools.fetch(Vector2::class))
+        arena.set(arenaMinX, body.getY(), arenaMaxX - arenaMinX, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        val target = OrbAim.point(
+            aim,
+            targetPlayer.body.getCenter(),
+            targetPlayer.body.physics.velocity,
+            volleyTuning.cubeLeadTime,
+            arena,
+            randomRange,
+            GameObjectPools.fetch(Vector2::class)
+        )
+
+        val lob = iceThrow == IceThrow.CHUNK
+        val trajectory = GameObjectPools.fetch(Vector2::class)
+        if (lob) arcTo(spawn, target, CUBE_GRAVITY, CHUNK_SPEED_X, CHUNK_MIN_TIME, CHUNK_MAX_TIME, trajectory)
+        else trajectory.set(target).sub(spawn).nor().scl(ICE_BLAST_VEL * ConstVals.PPM)
 
         val cube = MegaEntityFactory.fetch(SmallIceCube::class)!!
         cube.spawn(
@@ -603,8 +1019,9 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
                 ConstKeys.OWNER pairTo this,
                 ConstKeys.POSITION pairTo spawn,
                 ConstKeys.TRAJECTORY pairTo trajectory,
-                ConstKeys.GRAVITY_ON pairTo gravityOn,
-                ConstKeys.CLAMP pairTo !chunkIceBlast,
+                ConstKeys.GRAVITY pairTo CUBE_GRAVITY,
+                ConstKeys.GRAVITY_ON pairTo lob,
+                ConstKeys.CLAMP pairTo !lob,
                 ConstKeys.FRICTION_X pairTo false,
                 ConstKeys.FRICTION_Y pairTo false,
                 ConstKeys.HIT_BY_BLOCK pairTo true,
@@ -613,26 +1030,175 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
         )
     }
 
-    private fun canShootUp() = !stateMachine.getCurrentElement().equalsAny(GlacierManState.SLED, GlacierManState.JUMP)
+    private fun arcTo(
+        from: Vector2,
+        to: Vector2,
+        gravity: Float,
+        speedX: Float,
+        minTime: Float,
+        maxTime: Float,
+        out: Vector2
+    ): Vector2 {
+        val dx = to.x - from.x
+        val time = MathUtils.clamp(abs(dx) / (speedX * ConstVals.PPM), minTime, maxTime)
+        return out.set(dx / time, (to.y - from.y) / time - 0.5f * gravity * ConstVals.PPM * time)
+    }
 
-    private fun shoot() {
-        GameLogger.debug(TAG, "shoot()")
+    private fun startPound() {
+        rainWavesLeft--
+        poundImpacted = false
+        waveColumns.clear()
+        waveSpawnIndex = 0
+        faceTargetPlayer()
+        animations["pound"].reset()
+        val waveDur = POUND_IMPACT_FRAME * POUND_FRAME_DUR +
+            (moveTuning.icicleCount - 1) * moveTuning.icicleStagger + moveTuning.icicleWaveRest
+        timers["icicle_rain"].resetDuration(max(POUND_FRAMES * POUND_FRAME_DUR, waveDur))
+    }
 
-        shootUp = canShootUp() && (isFalling() || isMegamanAboveOffsetY() || services.random.nextFloat(0f, 1f) <= SHOOT_UP_CHANCE)
+    private fun poundImpact() {
+        GameLogger.debug(TAG, "poundImpact(): wavesLeft=$rainWavesLeft")
+        services.events.submitEvent(
+            Event(
+                EventType.SHAKE_CAM, props(
+                    ConstKeys.DURATION pairTo POUND_SHAKE_DUR,
+                    ConstKeys.INTERVAL pairTo SHAKE_INTERVAL,
+                    ConstKeys.X pairTo SHAKE_X * ConstVals.PPM,
+                    ConstKeys.Y pairTo SHAKE_Y * ConstVals.PPM
+                )
+            )
+        )
+        requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
+        buildWave()
+    }
+
+    private fun buildWave() {
+        val columns = ((arenaMaxX - arenaMinX) / (ICICLE_COLUMN_WIDTH * ConstVals.PPM)).toInt()
+
+        arena.set(arenaMinX, body.getY(), arenaMaxX - arenaMinX, ConstVals.VIEW_HEIGHT * ConstVals.PPM)
+        val lead = OrbAim.point(
+            OrbAim.LEAD,
+            targetPlayer.body.getCenter(),
+            targetPlayer.body.physics.velocity,
+            moveTuning.icicleLeadTime,
+            arena,
+            randomRange,
+            GameObjectPools.fetch(Vector2::class)
+        )
+        val leadColumn = columnOf(lead.x, columns)
+        val bossMinColumn = columnOf(body.getX(), columns)
+        val bossMaxColumn = columnOf(body.getMaxX(), columns)
+
+        var gapStarts = 0
+        for (start in 0..columns - ICICLE_GAP_COLUMNS)
+            if (isSafeGap(start, leadColumn, bossMinColumn, bossMaxColumn)) gapStarts++
+        if (gapStarts == 0) throw IllegalStateException(
+            "$TAG: no safe icicle gap of $ICICLE_GAP_COLUMNS columns in an arena of $columns columns " +
+                "(lead column $leadColumn, boss columns $bossMinColumn to $bossMaxColumn); widen the arena walls"
+        )
+        var pick = services.random.nextInt(0, gapStarts - 1)
+        var gapStart = 0
+        for (start in 0..columns - ICICLE_GAP_COLUMNS) {
+            if (!isSafeGap(start, leadColumn, bossMinColumn, bossMaxColumn)) continue
+            if (pick == 0) {
+                gapStart = start
+                break
+            }
+            pick--
+        }
+
+        freeColumns.clear()
+        for (column in 0 until columns)
+            if (column != leadColumn && (column < gapStart || column >= gapStart + ICICLE_GAP_COLUMNS))
+                freeColumns.add(column)
+        val others = min(moveTuning.icicleCount - 1, freeColumns.size)
+        while (freeColumns.size > others) freeColumns.removeIndex(services.random.nextInt(0, freeColumns.size - 1))
+
+        waveColumns.clear()
+        waveColumns.add(leadColumn)
+        val bossOnLeft = body.getX() + body.getWidth() / 2f < (arenaMinX + arenaMaxX) / 2f
+        for (i in 0 until freeColumns.size)
+            waveColumns.add(if (bossOnLeft) freeColumns[i] else freeColumns[freeColumns.size - 1 - i])
+        waveSpawnIndex = 0
+
+        GameLogger.debug(TAG, "buildWave(): lead=$leadColumn, gapStart=$gapStart, columns=$waveColumns")
+    }
+
+    private fun isSafeGap(start: Int, leadColumn: Int, bossMinColumn: Int, bossMaxColumn: Int): Boolean {
+        val end = start + ICICLE_GAP_COLUMNS - 1
+        return (leadColumn < start || leadColumn > end) && (end < bossMinColumn || start > bossMaxColumn)
+    }
+
+    private fun columnOf(x: Float, columns: Int) =
+        MathUtils.clamp(((x - arenaMinX) / (ICICLE_COLUMN_WIDTH * ConstVals.PPM)).toInt(), 0, columns - 1)
+
+    private fun spawnIcicle(column: Int) {
+        val x = arenaMinX + (column + 0.5f) * ICICLE_COLUMN_WIDTH * ConstVals.PPM
+        val spawn = GameObjectPools.fetch(Vector2::class).set(x, ceilingAt(x))
+        val icicle = MegaEntityFactory.fetch(FallingIcicle::class)!!
+        icicle.spawn(
+            props(
+                ConstKeys.OWNER pairTo this,
+                ConstKeys.POSITION pairTo spawn,
+                ConstKeys.STATE pairTo FallingIcicleState.FORM,
+                ConstKeys.DELAY pairTo moveTuning.icicleStillDur,
+                ConstKeys.DURATION pairTo moveTuning.icicleShakeDur
+            )
+        )
+        for (i in icicles.size - 1 downTo 0) if (!isOwnLiveIcicle(icicles[i])) icicles.removeIndex(i)
+        if (!icicles.contains(icicle, true)) icicles.add(icicle)
+    }
+
+    private fun ceilingAt(x: Float): Float {
+        var ceiling = body.getY() + ConstVals.VIEW_HEIGHT * ConstVals.PPM
+        val blocks = MegaGameEntities.getOfType(EntityType.BLOCK).orderedItems()
+        for (i in 0 until blocks.size) {
+            val blockBody = (blocks[i] as Block).body
+            if (blockBody.getX() < x && blockBody.getMaxX() > x && blockBody.getY() >= body.getMaxY())
+                ceiling = min(ceiling, blockBody.getY())
+        }
+        return ceiling
+    }
+
+    // TODO: a pooled icicle of this boss that another owner re-queues before the next prune counts as own until it spawns; a defeat or destroy in that frame destroys it (077g TODO.md bug candidate)
+    private fun isOwnLiveIcicle(icicle: FallingIcicle) = icicle.existenceState == EntityExistenceState.SPAWN_QUEUED ||
+        (icicle.existenceState.liveAfterUpdate && icicle.owner == this)
+
+    private fun anyOwnLiveIcicle(): Boolean {
+        for (i in 0 until icicles.size) if (isOwnLiveIcicle(icicles[i])) return true
+        return false
+    }
+
+    private fun canShootUp() = !stateMachine.getCurrentElement()
+        .equalsAny(GlacierManState.SLED, GlacierManState.SLED_RAM, GlacierManState.JUMP)
+
+    private fun shoot(aimAtPlayer: Boolean) {
+        val onGround = body.isSensing(BodySense.FEET_ON_GROUND)
+        val playerCenter = targetPlayer.body.getCenter()
+        val inFront = (playerCenter.x - (body.getX() + body.getWidth() / 2f)) * facing.value > 0f
+        val aimed = aimAtPlayer && onGround && inFront
+
+        shootUp = canShootUp() &&
+            (isFalling() || isMegamanAboveOffsetY() ||
+                (!aimed && services.random.nextFloat(0f, 1f) <= tuning.shootUpChance))
+
+        GameLogger.debug(TAG, "shoot(): aimed=$aimed, shootUp=$shootUp")
 
         val spawn = body.getCenter()
-        val trajectory = Vector2()
-        if (body.isSensing(BodySense.FEET_ON_GROUND)) {
+        val trajectory = GameObjectPools.fetch(Vector2::class).setZero()
+        if (onGround) {
             when {
-                stateMachine.getCurrentElement() == GlacierManState.SLED -> spawn.add(
-                    0.75f * facing.value * ConstVals.PPM,
-                    0.1f * ConstVals.PPM
-                )
+                stateMachine.getCurrentElement() == GlacierManState.SLED ->
+                    spawn.add(0.75f * facing.value * ConstVals.PPM, 0.1f * ConstVals.PPM)
+
                 shootUp -> spawn.add(0.4f * facing.value * ConstVals.PPM, 0.1f * ConstVals.PPM)
                 else -> spawn.add(0.5f * facing.value * ConstVals.PPM, 0f)
             }
 
-            trajectory.set(
+            if (aimed) arcTo(
+                spawn, playerCenter, Snowhead.GRAVITY, SNOWBALL_AIM_SPEED_X, SNOWBALL_AIM_MIN_TIME,
+                SNOWBALL_AIM_MAX_TIME, trajectory
+            ) else trajectory.set(
                 (if (shootUp) SNOWBALL_VEL_UP_X else SNOWBALL_VEL_STRAIGHT_X) * facing.value,
                 if (shootUp) SNOWBALL_VEL_UP_Y else SNOWBALL_VEL_STRAIGHT_Y
             ).scl(ConstVals.PPM.toFloat())
@@ -658,35 +1224,98 @@ class GlacierMan(services: MegaServices) : AbstractBoss(services), IAnimatedEnti
         body.physics.velocity.y = impulse.y
     }
 
+    private fun jumpOverTargetPlayer() {
+        val playerX = targetPlayer.body.getCenter().x
+        val bodyX = body.getX() + body.getWidth() / 2f
+        facing = if (playerX < bodyX) Facing.LEFT else Facing.RIGHT
+        val halfWidth = body.getWidth() / 2f
+        val landX = MathUtils.clamp(
+            playerX + facing.value * JUMP_OVER_PAST * ConstVals.PPM, arenaMinX + halfWidth, arenaMaxX - halfWidth
+        )
+        val airTime = 2f * JUMP_IMPULSE_Y / -GRAVITY
+        body.physics.velocity.set((landX - bodyX) / airTime, JUMP_IMPULSE_Y * ConstVals.PPM)
+    }
+
+    private fun faceTargetPlayer() {
+        facing = if (targetPlayer.body.getX() < body.getX()) Facing.LEFT else Facing.RIGHT
+    }
+
     private fun isFalling() =
         stateMachine.getCurrentElement() == GlacierManState.JUMP && body.physics.velocity.y < 0f && !body.isSensing(BodySense.FEET_ON_GROUND)
 
     private fun onChangeState(current: GlacierManState, previous: GlacierManState) {
         GameLogger.debug(TAG, "onChangeState(): new=$current, old=$previous")
 
-        firstUpdate = false
+        shotTimes.clear()
+        shotIndex = 0
 
-        if (previousState != GlacierManState.FIRED) {
-            val timer = timers[previous.name.lowercase()]
-            timer?.reset()
-        }
-
+        val row = tuning
         when (current) {
-            GlacierManState.STAND -> previousState = previous
+            GlacierManState.STAND -> {
+                jumpOver = false
+                timers["stand"].resetDuration(services.random.nextFloat(row.standDurMin, row.standDurMax))
+                shotTimes.add(services.random.nextFloat(row.standShotMin, row.standShotMax))
+            }
+
+            GlacierManState.TELL -> timers["tell"].resetDuration(tellDur(tellMove, row))
+
+            GlacierManState.DUCK -> {
+                recordMove(current)
+                timers["duck"].resetDuration(row.duckDur)
+                shotTimes.add(services.random.nextFloat(row.duckShotMin, row.duckShotMax))
+            }
+
+            GlacierManState.SLED -> {
+                recordMove(current)
+                timers["sled"].resetDuration(row.sledDur)
+                for (i in 1..SLED_SHOTS) shotTimes.add(
+                    i * SLED_SHOT_GAP + services.random.nextFloat(-row.sledShotJitter, row.sledShotJitter)
+                )
+            }
+
             GlacierManState.JUMP -> {
-                GameLogger.debug(TAG, "onChangeState(): jump")
-                jump()
+                recordMove(current)
+                if (jumpOver) jumpOverTargetPlayer() else jump()
+            }
+
+            GlacierManState.ICE_BLAST_ATTACK -> {
+                recordMove(current)
+                startVolley()
+            }
+
+            GlacierManState.ICICLE_RAIN -> {
+                recordMove(current)
+                moveTuning = row
+                val lowHealth = healthPhase >= healthPhases &&
+                    getCurrentHealth() < LOW_HEALTH_RAIN_RATIO * getMaxHealth()
+                rainWavesLeft = if (lowHealth) row.lowHealthRainWaves else row.icicleRainWaves
+                startPound()
+            }
+
+            GlacierManState.SLED_RAM -> {
+                recordMove(current)
+                moveTuning = row
+                ramBounced = false
+                timers["sled_ram"].reset()
+                body.physics.velocityClamp.x = max(VELOCITY_CLAMP_X, row.sledRamSpeed) * ConstVals.PPM
             }
 
             GlacierManState.BRAKE -> {
                 GameLogger.debug(TAG, "onChangeState(): start brake, apply brake friction")
+                timers["brake"].reset()
                 body.physics.defaultFrictionOnSelf.x = BRAKE_FRICTION_X
                 body.putProperty("${ConstKeys.ICE}_${ConstKeys.FRICTION_X}", false)
                 body.physics.applyFrictionX = true
             }
 
+            GlacierManState.STOP -> timers["stop"].resetDuration(row.stopDur)
+
+            GlacierManState.PHASE_START -> startPhasePose()
+
             else -> GameLogger.debug(TAG, "onChangeState(): no change when current=$current")
         }
+
+        if (previous == GlacierManState.SLED_RAM) body.physics.velocityClamp.x = VELOCITY_CLAMP_X * ConstVals.PPM
 
         if (previous == GlacierManState.BRAKE) {
             GameLogger.debug(TAG, "onChangeState(): stop brake")
