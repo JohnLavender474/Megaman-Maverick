@@ -92,11 +92,11 @@ class ToxicWaterfall(services: MegaServices) : MegaGameEntity(services), IBodyEn
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+        ToxicLiquidClock.join(services)
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
         val join = spawnProps.getOrDefault(ConstKeys.JOIN, false, Boolean::class)
         setDrawables(bounds, join)
-        ToxicLiquidClock.join(services)
     }
 
     override fun onDestroy() {

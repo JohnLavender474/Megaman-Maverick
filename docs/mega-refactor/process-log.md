@@ -2988,3 +2988,16 @@ newest entry at the bottom.
   test: passed (rounds 1 to 4f and fixes). Diffity: not opened.
 - Follow-up: new items `176` (one level animation clock) and `177` (backgrounds drawn per room). `077d` note: the
   emitter tiles are `reactor_man_tileset` ids 112 and 115.
+
+## 2026-11-20 — direct change on `master`: 078d post-merge review fixes
+
+- Reason: the owner accepted a review of the code that `078d` added late (after its review before the play test).
+  The fixes are small, change no gameplay and belong to no active branch, so they go directly on `master`.
+- Review: 1 Sonnet agent on `ToxicLiquidClock`, `ToxicWater`, `ToxicWaterfall`, `DecorLaserTube`, `SteamVent`.
+  Join and leave of the clock balance through level end, reset and pooled reuse.
+- Fixes: `ToxicWater` and `ToxicWaterfall` call `ToxicLiquidClock.join` right after `super.onSpawn`, so a throw later
+  in `onSpawn` (bad map size) cannot unbalance the user count; `DecorLaserTube` uses `check` for its size rule.
+- Not fixed: `ToxicWater.defineDrawables` makes new sprites on each spawn (code from before `078d`). Observation:
+  the clock is an updatable, so the water and waterfalls animate in a pause (the water did so before `078d`; the
+  waterfalls did not); written in item `176`.
+- Checks: `engine:test core:test core:smokeTest detektMain core:verifyRandomRule lwjgl3:jar` pass.

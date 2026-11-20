@@ -22,6 +22,9 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - Give the clock a typed home on the level, feed the tile renderer from it, and move shared entity clocks onto it.
   The first one is `ToxicLiquidClock` (`entities/special/`; a `TODO` comment there points here).
 - Touches the engine renderer.
+- `services.updatables` also runs in a pause (`MegamanMaverickGame.render`), so `ToxicLiquidClock` animates the
+  toxic water and waterfalls in a pause. The water did so before `078d` (its old animator was an updatable); the
+  waterfalls stopped in a pause before `078d`. The level clock fixes both.
 
 ## Owner's input
 

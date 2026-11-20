@@ -59,6 +59,7 @@ class ToxicWater(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
     override fun onSpawn(spawnProps: Properties) {
         GameLogger.debug(TAG, "onSpawn(): spawnProps=$spawnProps")
         super.onSpawn(spawnProps)
+        ToxicLiquidClock.join(services)
 
         bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
         defineDrawables(bounds)
@@ -72,8 +73,6 @@ class ToxicWater(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
             )
         )
         this.water = water
-
-        ToxicLiquidClock.join(services)
     }
 
     override fun onDestroy() {

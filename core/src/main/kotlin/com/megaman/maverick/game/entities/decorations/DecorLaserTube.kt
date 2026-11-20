@@ -62,10 +62,10 @@ class DecorLaserTube(services: MegaServices) : MegaGameEntity(services), ISprite
         super.onSpawn(spawnProps)
         bounds.set(spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!)
         val mids = ((bounds.getHeight() - 2f * CAP_HEIGHT * ConstVals.PPM) / (MID_HEIGHT * ConstVals.PPM)).toInt()
-        if (mids < 1) throw IllegalStateException(
+        check(mids >= 1) {
             "$TAG $mapObjectId: the map object is ${bounds.getHeight()} px high; it needs at least " +
                 "${(2f * CAP_HEIGHT + MID_HEIGHT) * ConstVals.PPM} px (2 caps and 1 glass segment)"
-        )
+        }
         while (midAnimations.size < mids) addMid(midAnimations.size)
         val phase = (mapObjectId ?: 0) % FRAMES
         val cap = CAP_HEIGHT * ConstVals.PPM
