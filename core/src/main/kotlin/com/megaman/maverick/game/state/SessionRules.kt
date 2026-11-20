@@ -7,7 +7,7 @@ import com.megaman.maverick.game.players.rootPlayer
 data class SessionRules(
     val friendlyFire: Boolean,
     val viewEdges: ViewEdgeRules = ViewEdgeRules(),
-    val slotRespawn: Boolean = false,
+    val slotRespawn: SlotRespawnRule = SlotRespawnRule.OFF,
     val spawnGateBlocks: Boolean = false
 ) {
 
@@ -19,15 +19,21 @@ data class SessionRules(
     }
 }
 
+enum class SlotRespawnRule(val costsLife: Boolean, val spawnProtection: Boolean) {
+    OFF(costsLife = false, spawnProtection = false),
+    NEAR_PARTNER(costsLife = true, spawnProtection = false),
+    AT_SPAWN(costsLife = false, spawnProtection = true)
+}
+
 enum class GameMode(val rules: SessionRules) {
     SINGLE(SessionRules(friendlyFire = false)),
     COOP(
         SessionRules(
             friendlyFire = false,
             viewEdges = ViewEdgeRules(bottom = ViewEdgeRule.WARP, delay = 1f),
-            slotRespawn = true,
+            slotRespawn = SlotRespawnRule.NEAR_PARTNER,
             spawnGateBlocks = true
         )
     ),
-    PVP(SessionRules(friendlyFire = true))
+    PVP(SessionRules(friendlyFire = true, slotRespawn = SlotRespawnRule.AT_SPAWN))
 }

@@ -14,8 +14,12 @@ class DamageRecoveryComponent(duration: Float, flashInterval: Float) : IGameComp
     val recovering: Boolean
         get() = !recoveryTimer.isFinished()
 
+    fun start() {
+        recoveryTimer.reset()
+    }
+
     fun update(delta: Float, damaged: Boolean, damageJustFinished: Boolean) {
-        if (damageJustFinished) recoveryTimer.reset()
+        if (damageJustFinished) start()
 
         if (!damaged && recovering) {
             recoveryTimer.update(delta)

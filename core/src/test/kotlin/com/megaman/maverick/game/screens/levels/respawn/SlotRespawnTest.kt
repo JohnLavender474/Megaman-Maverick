@@ -8,6 +8,8 @@ import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.objects.Properties
+import com.maverick.game.engine.common.objects.pairTo
+import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.entities.body
@@ -21,6 +23,7 @@ import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.audio.MegaAudioManager
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.playPhase
+import com.megaman.maverick.game.entities.state.setPlayPhase
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.players.TestFreezer
@@ -29,9 +32,11 @@ import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.screens.levels.camera.PartnerSpot
 import com.megaman.maverick.game.screens.levels.camera.WarpSpotTest
 import com.megaman.maverick.game.state.GameState
+import com.megaman.maverick.game.state.SlotRespawnRule
 import com.megaman.maverick.game.testServices
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.setBodySense
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -39,7 +44,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 
-private class RespawnRig(lives: Int = 3) {
+private class RespawnRig(lives: Int = 3, rule: SlotRespawnRule = SlotRespawnRule.NEAR_PARTNER) {
     val engine = mockk<GameEngine>(relaxed = true)
     val audio = mockk<MegaAudioManager>(relaxed = true)
     val players = MegaPlayers(2)
@@ -55,7 +60,14 @@ private class RespawnRig(lives: Int = 3) {
     val world = SimpleGridWorldContainer(32)
     val beams = Array(2) { mockk<BeamDown>(relaxed = true) }
     var hold = false
-    val respawn = SlotRespawn(services, PartnerSpot(WarpSpotTest(32f, services.rules) { world }, view, center), beams) {
+    val slotSpawns = Array(2) { props(ConstKeys.BOUNDS pairTo GameRectangle(it * 300f, 30f, 10f, 10f)) }
+    val respawn = SlotRespawn(
+        services,
+        rule,
+        PartnerSpot(WarpSpotTest(32f, services.rules) { world }, view, center),
+        beams,
+        { slot -> slotSpawns[slot.index] }
+    ) {
         hold
     }
     val first = player(0, 200f, 40f)
@@ -93,6 +105,14 @@ private class RespawnRig(lives: Int = 3) {
     }
 
     fun repeatUpdate(times: Int, delta: Float = 0.1f) = repeat(times) { respawn.update(delta) }
+
+    fun beamIn(player: TestHealthPlayer) {
+        repeatUpdate(11)
+        player.existenceState = EntityExistenceState.LIVE
+        repeatUpdate(1)
+        every { beams[player.slot.index].finished } returns true
+        repeatUpdate(1)
+    }
 }
 
 class SlotRespawnTest : DescribeSpec({
@@ -261,6 +281,91 @@ class SlotRespawnTest : DescribeSpec({
             rig.repeatUpdate(20)
             verify(exactly = 0) { rig.engine.spawn(any(), any()) }
             verify { rig.beams[1].stop() }
+        }
+
+        it("gives no spawn protection in co-op") {
+            val rig = RespawnRig()
+            rig.kill(rig.second)
+            rig.beamIn(rig.second)
+            rig.second.playPhase shouldBe PlayPhase.IN_PLAY
+            rig.second.recovery.recovering shouldBe false
+        }
+    }
+
+    describe("the respawn at the slot spawn (PvP)") {
+        it("respawns slot 0 alone and starts no routine, also while the routine or the level-start beam runs") {
+            val rig = RespawnRig(rule = SlotRespawnRule.AT_SPAWN)
+            rig.kill(rig.first) shouldBe false
+            rig.first.playPhase shouldBe PlayPhase.PRE_PLAY
+            rig.spawned(rig.first) shouldBe true
+
+            val running = RespawnRig(rule = SlotRespawnRule.AT_SPAWN)
+            running.kill(running.first, routineRunning = true) shouldBe false
+            running.spawned(running.first) shouldBe true
+        }
+
+        it("respawns both players when they die in one frame, with no partner") {
+            val rig = RespawnRig(rule = SlotRespawnRule.AT_SPAWN)
+            rig.kill(rig.first) shouldBe false
+            rig.kill(rig.second) shouldBe false
+            rig.repeatUpdate(11)
+            verify(exactly = 1) { rig.engine.spawn(rig.first, any()) }
+            verify(exactly = 1) { rig.engine.spawn(rig.second, any()) }
+        }
+
+        it("takes no life, also past the life count") {
+            val rig = RespawnRig(lives = 1, rule = SlotRespawnRule.AT_SPAWN)
+            rig.kill(rig.second) shouldBe false
+            rig.gameState.getLives(PlayerSlot(1)) shouldBe 1
+            rig.second.playPhase shouldBe PlayPhase.PRE_PLAY
+            rig.spawned(rig.second) shouldBe true
+        }
+
+        it("waits 1 s and the hold, then spawns at the slot's own spawn") {
+            val rig = RespawnRig(rule = SlotRespawnRule.AT_SPAWN)
+            rig.kill(rig.second)
+            rig.hold = true
+            rig.repeatUpdate(30)
+            verify(exactly = 0) { rig.engine.spawn(any(), any()) }
+
+            rig.hold = false
+            rig.repeatUpdate(9)
+            verify(exactly = 0) { rig.engine.spawn(any(), any()) }
+            rig.repeatUpdate(2)
+            rig.spawnProps(rig.second) shouldBe rig.slotSpawns[1]
+        }
+
+        it("starts the damage recovery at the beam end, so the player is invincible for a time") {
+            val rig = RespawnRig(rule = SlotRespawnRule.AT_SPAWN)
+            rig.kill(rig.second)
+            rig.repeatUpdate(11)
+            rig.second.existenceState = EntityExistenceState.LIVE
+            rig.repeatUpdate(1)
+            rig.second.recovery.recovering shouldBe false
+
+            every { rig.beams[1].finished } returns true
+            rig.repeatUpdate(1)
+            rig.second.playPhase shouldBe PlayPhase.IN_PLAY
+            rig.second.recovery.recovering shouldBe true
+            rig.second.invincible shouldBe true
+        }
+    }
+
+    describe("a death while the level routine runs (PvP)") {
+        it("puts the player back in pre-play at the beam start, after the routine's end put it in play") {
+            val rig = RespawnRig(rule = SlotRespawnRule.AT_SPAWN)
+            rig.kill(rig.second, routineRunning = true) shouldBe false
+            rig.repeatUpdate(11)
+            rig.second.existenceState = EntityExistenceState.LIVE
+            rig.second.setPlayPhase(PlayPhase.IN_PLAY)
+            rig.repeatUpdate(1)
+            rig.second.playPhase shouldBe PlayPhase.PRE_PLAY
+        }
+    }
+
+    describe("the rule") {
+        it("throws when the rule is OFF") {
+            shouldThrow<IllegalArgumentException> { RespawnRig(rule = SlotRespawnRule.OFF) }
         }
     }
 })

@@ -117,6 +117,7 @@ import com.megaman.maverick.game.screens.levels.tiled.layers.MegaMapLayerBuilder
 import com.megaman.maverick.game.screens.menus.level.LevelPauseScreen
 import com.megaman.maverick.game.spawns.ISpawner
 import com.megaman.maverick.game.spawns.SpawnsManager
+import com.megaman.maverick.game.state.SlotRespawnRule
 import com.megaman.maverick.game.utils.extensions.getRotatedBounds
 import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
@@ -379,12 +380,15 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             viewEdgesOn
         ) else null
         this.viewEdges = viewEdges
-        slotRespawn = if (game.services.rules.slotRespawn && viewEdges != null) SlotRespawn(
+        val slotRespawnRule = game.services.rules.slotRespawn
+        slotRespawn = if (slotRespawnRule != SlotRespawnRule.OFF && viewEdges != null) SlotRespawn(
             game.services,
+            slotRespawnRule,
             partnerSpot,
-            Array(game.players.capacity) { BeamDown(game.assets) { game.addDrawable(it) } }
+            Array(game.players.capacity) { BeamDown(game.assets) { game.addDrawable(it) } },
+            ::slotRespawnProps
         ) {
-            game.levelState.roomTransition || game.cameraView.rotating || gateRunning
+            !respawn.finished || game.levelState.roomTransition || game.cameraView.rotating || gateRunning
         } else null
         val playersFocus = viewEdges?.let { edges ->
             PlayersFocus(game.players, game.cameraView, game.services.rules.viewEdges, viewEdgesOn) { edges.isHeld(it) }
@@ -598,6 +602,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         return cameraZones.zones.any { it.bounds.overlaps(room) } || cameraScroll.sections.any { it.bounds.overlaps(room) }
     }
 
+    private fun checkpointSpawnProps() =
+        playerCheckpointMan.currentSpawnProps ?: throw IllegalStateException("Megaman spawn props are null")
+
+    private fun slotRespawnProps(slot: PlayerSlot): Properties {
+        val spawnProps = checkpointSpawnProps()
+        return if (slot == PlayerSlot(0)) spawnProps else slotSpawnProps(slot, spawnProps)
+    }
+
     private fun resetLevelForRespawn() {
         GameLogger.debug(TAG, "resetLevelForRespawn(): reset the room bounds and spawn the players")
 
@@ -618,8 +630,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         MegaGameEntities.getOfType(EntityType.ENEMY).forEach { it.destroy() }
         spawnsMan.rearm()
 
-        val spawnProps =
-            playerCheckpointMan.currentSpawnProps ?: throw IllegalStateException("Megaman spawn props are null")
+        val spawnProps = checkpointSpawnProps()
         GameLogger.debug(TAG, "resetLevelForRespawn(): spawn Megaman: $spawnProps")
         engine.spawn(player, spawnProps)
         for (i in 1 until game.players.capacity) {

@@ -10,7 +10,7 @@ The examples in this file are hypothetical. The real steps are in `RespawnSteps.
 
 ## Status
 
-The routine acts on the lead player in slot 0, as the old handlers did. Co-op respawn is item `047`. The public events (`PLAYER_JUST_DIED`, `PLAYER_DONE_DYIN`, `PLAYER_READY`) stay, because entities listen to them. The routine sends `LEVEL_RESET` when it resets the level; many entity classes destroy, cull or reset themselves on it. A player spawn sends no event. A spawn event for each slot comes with co-op (`047`), when a listener needs it.
+The routine acts on the lead player in slot 0, as the old handlers did. `SlotRespawn` respawns one slot alone, by the `SlotRespawnRule` of the session mode (`state/SessionRules.kt`): `NEAR_PARTNER` (co-op, item `047`) spawns the slot next to a live partner, costs a life, and gives the routine the death of the last player; `AT_SPAWN` (PvP, item `109`) spawns the slot at its own spawn point, costs no life, starts the damage recovery at the beam end, and never starts the routine. The public events (`PLAYER_JUST_DIED`, `PLAYER_DONE_DYIN`, `PLAYER_READY`) stay, because entities listen to them. The routine sends `LEVEL_RESET` when it resets the level; many entity classes destroy, cull or reset themselves on it. A player spawn sends no event. A spawn event for each slot comes with co-op (`047`), when a listener needs it.
 
 ## The parts
 

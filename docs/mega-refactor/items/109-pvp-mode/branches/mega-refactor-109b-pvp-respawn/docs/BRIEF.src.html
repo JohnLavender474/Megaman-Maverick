@@ -1,68 +1,67 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>109b PvP Respawn</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 109 · Branch 109b · Objectives O2, O8 · <span class="chip ok">approved 2026-11-20</span></p>
+    <h1>A PvP death respawns only the dead player</h1>
+    <p class="lead">In <code>--mode pvp</code>, a death of slot 0 runs the level defeat for both players, and a death of slot 1 has no respawn. After this branch, each dead slot respawns alone at a spawn point. The level defeat never runs in PvP.</p>
+    <p class="meta"><b>In play:</b> slot 1 kills slot 0: no black fade, no music stop, slot 1 stays. Slot 0 beams in at its spawn after 1 s. The same in the other direction. Co-op and single play do not change.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>The session rule picks the respawn, not the slot number</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: PvP death flow">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  D["PLAYER_JUST_DIED"] --> Q{"slotRespawn?<br/>(PvP: false)"}
+  Q -->|"slot 0"| R["level defeat:<br/>remove slot 1, fade,<br/>reset level, -1 life"]
+  Q -->|"slot 1"| N["nothing:<br/>slot 1 stays dead"]
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>PvP has no slot respawn, so the slot number decides: a full defeat, or no respawn.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: PvP death flow">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  D["PLAYER_JUST_DIED"] --> S["SlotRespawn"]
+  S -->|"COOP: NEAR_PARTNER"| P["spot next to partner<br/>(as today)"]
+  S -->|"PVP: AT_SPAWN"| A["wait 1 s, spawn at<br/>the slot spawn point"]
+  A --> B["beam in, then<br/>spawn protection (D3)"]
+  S -.->|"COOP: last one dies"| R["level defeat (as today)"]
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>Co-op keeps its path. PvP never reaches the level defeat.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>A typed rule replaces the bool</h2></div>
+    <p>Today, <code>SessionRules</code>:</p>
+<pre><code>val slotRespawn: Boolean = false            // COOP true, PVP false</code></pre>
     <p>After:</p>
-<pre><code><new code></code></pre>
+<pre><code>enum class SlotRespawnRule { OFF, NEAR_PARTNER, AT_SPAWN }
+
+val slotRespawn: SlotRespawnRule = OFF      // COOP NEAR_PARTNER, PVP AT_SPAWN</code></pre>
+    <p>In <code>SlotRespawn.onDeath</code>, the <code>AT_SPAWN</code> form always starts the slot respawn and returns <code>false</code>, so the screen never starts the level defeat. The spawn props come from the screen: the checkpoint spawn for slot 0, and <code>slotSpawnProps</code> for slot 1.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>3 decisions</h2></div>
+    <p>The test room <code>arena</code> has one spawn per slot: slot 0 on the left, slot 1 on the right. Lives are one shared count today.</p>
+    <p><b>D1 · Where does a dead slot respawn?</b> <span class="chip ok">Chosen</span> Its own slot spawn point.</p>
+    <p><b>D2 · Does a PvP death cost a life?</b> <span class="chip ok">Chosen</span> No life cost, no game over in PvP.</p>
+    <p><b>D3 · Spawn protection after the beam-in?</b> <span class="chip ok">Chosen</span> The 1.5 s flash and invincibility, as after a hit.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>Co-op must keep its exact path</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>Co-op change.</b> The bool becomes an enum in the co-op path too. Unit tests keep the co-op cases; 2 co-op control checks.</li>
+      <li><span class="chip warn">risk</span> <b>Death during the level-start beam.</b> Today a slot 0 death then starts the level defeat. The PvP form must not, also there. A unit test covers it.</li>
+      <li><span class="chip warn">risk</span> <b>Both die in one frame.</b> Each slot must respawn on its own, with no fade. A unit test covers it.</li>
     </ul>
   </section>
 
@@ -70,14 +69,18 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-109b-pvp-respawn</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_109 --room arena --players 2 --mode pvp</code>: slot 1 kills slot 0. No fade, no music stop, slot 1 stays. Slot 0 beams in at its spawn after 1 s.</li>
+      <li>Same command: slot 0 kills slot 1. Slot 1 beams in at its spawn after 1 s.</li>
+      <li>Same command: kill more times than the life count. No game over.</li>
+      <li><code>./run-game-test-coop.sh --room slot_1_death</code>: slot 1 dies and respawns next to slot 0, as before.</li>
+      <li><code>./run-game-test-coop.sh --room group_pit</code>: both fall; the level resets, as before.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
     <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-109b-pvp-respawn/docs/SCOPE.md</code></p>
+    <p><code>docs/mega-refactor/items/109-pvp-mode/branches/mega-refactor-109b-pvp-respawn/docs/SCOPE.md</code></p>
   </section>
 </main>
 </body>
