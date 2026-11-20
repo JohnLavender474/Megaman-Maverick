@@ -113,6 +113,11 @@ The owner calls it "Gravity Man's stage".
    and too simple, so the enemies and their behaviors get little use and give no special gameplay. Make it larger,
    and design each new room around one behavior of the enemies (for example the eggs from `MockingByteEgg` or the
    nest from `MockingByteNest`).
+   Widened on 2026-11-20 (owner): the redesign covers the full stage, not only this section. It includes, but is
+   not limited to, a mini boss and larger rooms and areas.
+   - **Mini boss: a giant felling walker.** A logging machine on legs, in the Mega Man style. Intro: the walker
+     shows in the background, walks toward the play space, jumps out of the background and lands on the floor of the
+     play space. Concept mockup (a few poses): `temp/078-timber-walker-miniboss/` in the main checkout.
 2. **Art make-over: a logging camp in a bayou.** Today the stage repeats one Anokolisa tree and canopy, a plain
    `Tileset1` plank fort with ropes, a static Anokolisa cave with blue water blobs, and one background
    (`ForestBKG_v2`). Concept: Timber Woman's logging camp eats an old bayou, and the damage grows along the route.
@@ -234,6 +239,10 @@ where the back wall was. Art only: blocks and spawns stay.
   (the blocks stay); bramble pit floors so the pits still read as death; morning mist at the start and sunset in the
   boss room; leaf fall kinds spin fall, pendulum, and land and rest (decor code, after the art branch); mud water,
   lily pads and the log flume ride go on the redesign list.
+- 2026-11-20 (owner, after the `078f` round-2 review): the Timber Woman redesign (part 1, from `080`) covers the full
+  stage, with a mini boss (a giant felling walker, with an intro from the background into the play space) and larger
+  rooms and areas. The walker is not in the `078f` boss-room background. A Claude Fable 5.2 agent draws a concept
+  mockup of the walker (a few poses). Note: the mini boss is stage content, so it is in `078`, not in `077`.
 
 Decisions carried over from `076` (they apply to the tileset and background work):
 
