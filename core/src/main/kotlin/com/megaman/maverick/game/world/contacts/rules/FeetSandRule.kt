@@ -35,6 +35,7 @@ class FeetSandRule(private val splashesOn: () -> Boolean) : IContactRule {
 
         if (splashesOn.invoke()) {
             val splash = EntityFactories.fetch(EntityType.DECORATION, DecorationsFactory.SPLASH)!!
+            // TODO: the splash is at the real feet, not on the sand side of a wrap edge (item 109, D2)
             val position = feetFixture.getShape().getBoundingRectangle().getPositionPoint(Position.BOTTOM_CENTER)
             splash.spawn(
                 props(

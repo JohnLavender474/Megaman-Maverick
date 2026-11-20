@@ -1,68 +1,80 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>109a Screen Wrap</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 109 · Branch 109a · Objectives O2, O8 · <span class="chip ok">approved 2026-11-19</span></p>
+    <h1>Screen wrap in a wrap room</h1>
+    <p class="lead">A room with <code>wrap=true</code> joins its left and right edges, as in the Super Mario Bros. 3 battle mode. Players and shots that leave on one side come in on the other side, and an entity on an edge exists on both sides.</p>
+    <p class="meta"><b>In play:</b> only in the new test map <code>REFACTOR_TEST_109</code>. All other levels play as before.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>The world step and the sprite draw ask one wrap object</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: the room edge ends the world">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  P["Player at the left edge"] -->|walks off| O["Outside the room"]
+  S["Shot at the edge"] -->|leaves the view| C["Camera cull removes it"]
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>A room edge is the end of the world: a body that crosses it leaves the room.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: the wrap object feeds the world step and the sprite draw">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  R["game_rooms object<br/>wrap = true"] -->|bounds| W["WorldWrap<br/>region, filter, cap"]
+  F["core WrapPolicy<br/>players, shots"] -->|filter, cap| W
+  W -->|second query at ±W<br/>wrap at center| WS["WorldSystem step"]
+  W -->|far-half offset| SS["SpritesSystem → GameSprite.draw"]
+  R -->|blocks| T["Room transitions"]
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>With no wrap room the region is empty, and the step and the draw do no wrap work.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>The game wires one filter into 2 engine systems</h2></div>
+    <p>Today, <code>MegamanMaverickGame.createGameEngine()</code>:</p>
+<pre><code>val worldSystem = WorldSystem(ppm, fixedStep, worldContainerSupplier, contactListener, ...)
+SpritesSystem(this::addDrawable, diagnostics, worldSystem)</code></pre>
     <p>After:</p>
-<pre><code><new code></code></pre>
+<pre><code>val wrap = WorldWrap(
+    region = { out -> wrapRoomBounds(out) },          // null unless the room has wrap=true
+    wraps = { entity -> WrapPolicy.wraps(entity) },   // players and shots
+    maxWraps = { entity -> WrapPolicy.maxWraps(entity) }
+)
+val worldSystem = WorldSystem(..., wrap = wrap)
+SpritesSystem(this::addDrawable, diagnostics, interpolation, wrap)
+
+object WrapPolicy {
+    // TODO: per-instance override; enemies, items, effects (item 109, phase 2)
+    fun wraps(e: IGameEntity) = e.isPlayer || e is IProjectileEntity
+    fun maxWraps(e: IGameEntity) = if (e is IProjectileEntity) 1 else UNLIMITED
+}</code></pre>
+    <p><span class="chip warn">added 2026-11-19</span> First, the draw offsets leave <code>WorldSystem</code>. A draw-side <code>BodyInterpolation</code> implements <code>IDrawOffsets</code> and reads only the step number and <code>alpha</code> from the world:</p>
+<pre><code>// before: SpritesSystem(this::addDrawable, diagnostics, worldSystem)
+val interpolation = BodyInterpolation(world = worldSystem, ppm = ConstVals.PPM)
+SpritesSystem(this::addDrawable, diagnostics, interpolation, wrap)</code></pre>
+    <p>In the step, a body whose center is past an edge moves by ±W with its step start, so interpolation draws no jump. Its contacts stay the same fixture pairs across the edge, so a floor contact does not end and begin again.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>2 decisions</h2></div>
+    <p>The camera stays still only when the room is exactly one view wide. Some contact rules read the real fixture shape again, so across an edge they see only the real side.</p>
+    <p><b>D1 · Must a wrap room be exactly one view wide?</b> <span class="chip ok">Chosen</span> Yes: the level load throws for any other width.</p>
+    <p><b>D2 · Ladders, sand, gravity changers and shot hit points across an edge?</b> <span class="chip ok">Chosen</span> Later: a TODO at each rule.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>The world step is the hot path of every level</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>Cost in normal levels.</b> With no region the step does one null check per frame. The allocation test and a step timing test run before and after.</li>
+      <li><span class="chip warn">risk</span> <b>A floor across the edge is handled twice.</b> On a one-way block the friction adds twice. The test room uses plain blocks; a TODO marks it.</li>
+      <li><span class="chip warn">risk</span> <b>Queries outside the step.</b> Ground probes and pathfinding do not see across the edge. No enemy uses them in the test room.</li>
     </ul>
   </section>
 
@@ -70,14 +82,20 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-109a-screen-wrap</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-test-coop.sh --level REFACTOR_TEST_109 --room arena --mode pvp</code>: walk off each side and come in on the other; both halves draw on the edge; the camera stays still.</li>
+      <li>Same room: stand and jump on the floor across an edge; the player does not fall through.</li>
+      <li>Same room: shoot across an edge; the shot wraps 1 time, then leaves and is gone. Hit the other player while the target is on the edge.</li>
+      <li>Same room, press <code>I</code>: no streak or pop at the wrap with interpolation on or off.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_109 --room arena</code>: the wrap works with one player.</li>
+      <li><code>./run-game-test-coop.sh --room group_wide</code>: the side edges hold the players as before.</li>
+      <li><code>./run-game-test-coop.sh --room transition</code>: the room transition runs, and shots leave the view and vanish as before.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
     <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-109a-screen-wrap/docs/SCOPE.md</code></p>
+    <p><code>docs/mega-refactor/items/109-pvp-mode/branches/mega-refactor-109a-screen-wrap/docs/SCOPE.md</code></p>
   </section>
 </main>
 </body>

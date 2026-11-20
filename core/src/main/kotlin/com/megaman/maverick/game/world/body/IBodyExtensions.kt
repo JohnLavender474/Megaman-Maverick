@@ -17,6 +17,8 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getRotatedBounds
+import com.megaman.maverick.game.world.wrap.seamShiftOf
+import com.megaman.maverick.game.world.wrap.wrapRegion
 
 fun IBody.defaultDoUpdate(): Boolean {
     val services = getEntity().services
@@ -33,8 +35,14 @@ fun IBody.defaultDoUpdate(): Boolean {
 }
 
 fun IBody.overlapsGameCam(): Boolean {
-    val services = getEntity().services
-    return getBounds().overlaps(services.gameCamera.getRotatedBounds())
+    val entity = getEntity()
+    val services = entity.services
+    val view = services.gameCamera.getRotatedBounds()
+    val bounds = getBounds()
+    if (bounds.overlaps(view)) return true
+    val region = services.levelState.wrapRegion(GameObjectPools.fetch(GameRectangle::class))
+    val dx = seamShiftOf(entity = entity, body = this, bounds = bounds, region = region)
+    return dx != 0f && bounds.translate(dx, 0f).overlaps(view)
 }
 
 fun IBody.getBounds() = getBounds(GameObjectPools.fetch(GameRectangle::class))

@@ -21,6 +21,7 @@ import com.megaman.maverick.game.entities.blocks.CameraEdgeBlock
 import com.megaman.maverick.game.players.MegaPlayers
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.wrap.isWrapRoom
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -84,7 +85,8 @@ class CameraRoomExits(
 
     override fun update(camera: Camera, delta: Float): Boolean {
         val current = roomBounds.currentGameRoom
-        if (!enabled() || current == null || liveCount() < 2) {
+        // TODO: a wrap room has no room transitions and no exit walls; revisit in item 111
+        if (!enabled() || current == null || current.isWrapRoom() || liveCount() < 2) {
             removeBlocks()
             return false
         }

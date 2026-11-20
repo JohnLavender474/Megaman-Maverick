@@ -396,6 +396,7 @@ object ConstKeys {
     const val TYPE = "type"
     const val COLLECTION = "collection"
     const val WHITE = "white"
+    const val WRAP = "wrap"
     const val BLUE = "blue"
     const val RUNNABLE = "runnable"
     const val ENTITY = "entity"

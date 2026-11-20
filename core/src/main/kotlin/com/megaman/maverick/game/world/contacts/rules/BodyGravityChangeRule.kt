@@ -24,6 +24,7 @@ class BodyGravityChangeRule(private val gravity: WorldGravity) : IContactRule {
         if (entity.asPlayer != null) gravity.set(direction) else entity.direction = direction
     }
 
+    // TODO: the body point is on the real side; a gravity changer across a wrap edge is missed (item 109, D2)
     private fun begin(bodyFixture: IFixture, gravityChangeFixture: IFixture) {
         val body = bodyFixture.getBody()
         val pd = body.getPositionDelta()

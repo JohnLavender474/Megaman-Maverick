@@ -35,6 +35,7 @@ class ProjectileRule(private val rules: SessionRules) : IContactRule {
 
         otherFixture.receiver(Receivers.HIT_BY_PROJECTILE)?.invoke(projectile1)
 
+        // TODO: the hit shapes are the real shapes, so a hit across a wrap edge is on the far side (item 109, D2)
         val thisShape = projectileFixture.getShape().copy()
         val otherShape = otherFixture.getShape().copy()
         when (otherFixture.getType()) {

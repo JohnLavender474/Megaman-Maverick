@@ -7,6 +7,7 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.screens.levels.tiledmap.builders.ITiledMapLayerBuilder
 import com.megaman.maverick.game.ConstKeys
+import com.megaman.maverick.game.world.wrap.checkWrapRoomWidths
 
 class GameRoomsLayerBuilder : ITiledMapLayerBuilder {
 
@@ -17,6 +18,7 @@ class GameRoomsLayerBuilder : ITiledMapLayerBuilder {
     override fun build(layer: MapLayer, returnProps: Properties) {
         val gameRooms = Array<RectangleMapObject>()
         layer.objects.forEach { if (it is RectangleMapObject) gameRooms.add(it) }
+        checkWrapRoomWidths(gameRooms)
 
         val printedGameRooms = gameRooms.map { "[${it.name}, ${it.rectangle}]" }
         GameLogger.debug(TAG, "build(): Game rooms: $printedGameRooms")

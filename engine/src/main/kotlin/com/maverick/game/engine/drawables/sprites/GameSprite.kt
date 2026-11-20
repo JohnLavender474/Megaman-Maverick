@@ -67,17 +67,23 @@ open class GameSprite(
 
     var drawOffsetX = 0f
     var drawOffsetY = 0f
+    var wrapOffsetX = 0f
 
     override fun draw(drawer: Batch) {
         if (hidden || texture == null) return
-        if (drawOffsetX == 0f && drawOffsetY == 0f) {
-            super.draw(drawer)
+        drawShifted(drawer, drawOffsetX, drawOffsetY)
+        if (wrapOffsetX != 0f) drawShifted(drawer, drawOffsetX + wrapOffsetX, drawOffsetY)
+    }
+
+    private fun drawShifted(drawer: Batch, offsetX: Float, offsetY: Float) {
+        if (offsetX == 0f && offsetY == 0f) {
+            drawer.draw(texture, getVertices(), 0, VERTICES_SIZE)
             return
         }
         getVertices().copyInto(shiftedVertices)
         for (i in 0 until VERTICES_SIZE step VERTEX_STRIDE) {
-            shiftedVertices[i + X1] += drawOffsetX
-            shiftedVertices[i + Y1] += drawOffsetY
+            shiftedVertices[i + X1] += offsetX
+            shiftedVertices[i + Y1] += offsetY
         }
         drawer.draw(texture, shiftedVertices, 0, VERTICES_SIZE)
     }

@@ -73,6 +73,19 @@ class Body(
 
     override fun getStepMove(out: Vector2): Vector2 = out.set(stepMoveX, stepMoveY)
 
+    override var wrapCount = 0
+        private set
+
+    override var lastWrapDx = 0f
+        private set
+
+    override fun wrapBy(dx: Float) {
+        bounds.translate(dx, 0f)
+        stepStartX += dx
+        wrapCount++
+        lastWrapDx = dx
+    }
+
     override fun getBounds(out: GameRectangle): GameRectangle {
         out.set(bounds)
 
@@ -151,6 +164,8 @@ class Body(
         stepSerial = NO_STEP
         stepMoveX = 0f
         stepMoveY = 0f
+        wrapCount = 0
+        lastWrapDx = 0f
         physics.reset()
         onReset.values().forEach { it.invoke() }
     }

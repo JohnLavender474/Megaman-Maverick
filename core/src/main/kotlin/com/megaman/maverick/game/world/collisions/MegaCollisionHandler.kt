@@ -76,6 +76,7 @@ class MegaCollisionHandler : ICollisionHandler {
 
                     if (dynamicBody.hasFeetBlock(staticEntity as Block)) {
                         dynamicBody.setY(staticBody.getMaxY())
+                        // TODO: a body across a wrap edge on a one-way block that spans both edges gets this friction twice per step (item 109)
                         dynamicBody.physics.frictionOnSelf.x += staticBody.physics.frictionToApply.x
                         return true
                     }

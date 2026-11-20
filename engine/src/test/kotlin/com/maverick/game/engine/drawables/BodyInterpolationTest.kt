@@ -1,10 +1,11 @@
-package com.maverick.game.engine.world
+package com.maverick.game.engine.drawables
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.MockGameEntity
 import com.maverick.game.engine.common.objects.ImmutableCollection
 import com.maverick.game.engine.entities.IGameEntity
+import com.maverick.game.engine.world.WorldSystem
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
@@ -19,12 +20,13 @@ import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import kotlin.math.abs
 
-class WorldDrawOffsetsTest : DescribeSpec({
+class BodyInterpolationTest : DescribeSpec({
     val step = 1f / 150f
     val ppm = 32
 
     lateinit var body: Body
     lateinit var world: WorldSystem
+    lateinit var offsets: BodyInterpolation
     lateinit var entities: ImmutableCollection<IGameEntity>
     val out = Vector2()
 
@@ -39,11 +41,15 @@ class WorldDrawOffsetsTest : DescribeSpec({
             override fun filter(fixture1: IFixture, fixture2: IFixture) = true
         },
         maxIterations = maxIterations,
-        fixedStepScalar = fixedStepScalar,
-        interpolation = true
+        fixedStepScalar = fixedStepScalar
     )
 
-    fun drawnX() = body.getX() + world.getDrawOffset(body, out).x
+    fun useWorld(next: WorldSystem, interpolation: Boolean = true) {
+        world = next
+        offsets = BodyInterpolation(world = next, interpolation = interpolation)
+    }
+
+    fun drawnX() = body.getX() + offsets.getDrawOffset(body, out).x
 
     beforeEach {
         body = Body(BodyType.DYNAMIC)
@@ -51,7 +57,7 @@ class WorldDrawOffsetsTest : DescribeSpec({
         body.physics.applyFrictionY = false
         body.physics.gravityOn = false
         val entity = MockGameEntity().apply { addComponent(BodyComponent(body)) }
-        world = makeWorld()
+        useWorld(makeWorld())
         entities = ImmutableCollection(listOf<IGameEntity>(entity))
     }
 
@@ -95,7 +101,7 @@ class WorldDrawOffsetsTest : DescribeSpec({
                 }
             }
             world.process(true, entities, step * 1.5f)
-            world.getDrawOffset(body, out).x shouldBe ((world.alpha - 1f) * 10f * step plusOrMinus 1e-4f)
+            offsets.getDrawOffset(body, out).x shouldBe ((world.alpha - 1f) * 10f * step plusOrMinus 1e-4f)
         }
     }
 
@@ -113,14 +119,14 @@ class WorldDrawOffsetsTest : DescribeSpec({
         }
 
         it("is 1 at the step cap") {
-            world = makeWorld(maxIterations = 2)
+            useWorld(makeWorld(maxIterations = 2))
             world.process(true, entities, step * 5.5f)
             world.alpha shouldBe 1f
         }
 
         for (scalar in floatArrayOf(0.5f, 2f)) {
             it("goes evenly from 0 to 1 between 2 steps with a step scalar of $scalar") {
-                world = makeWorld(fixedStepScalar = scalar)
+                useWorld(makeWorld(fixedStepScalar = scalar))
                 val interval = step / scalar
                 val frame = interval / 8f
                 world.process(true, entities, step)
@@ -147,21 +153,21 @@ class WorldDrawOffsetsTest : DescribeSpec({
         it("is (alpha - 1) times the last step move") {
             body.physics.velocity.x = 150f
             world.process(true, entities, step * 2.5f)
-            world.getDrawOffset(body, out).x shouldBe (-0.5f plusOrMinus 1e-3f)
+            offsets.getDrawOffset(body, out).x shouldBe (-0.5f plusOrMinus 1e-3f)
         }
 
         it("is 0 when the flag is off") {
-            world.interpolation = false
+            offsets.interpolation = false
             body.physics.velocity.x = 150f
             world.process(true, entities, step * 2.5f)
-            world.getDrawOffset(body, out) shouldBe Vector2(0f, 0f)
+            offsets.getDrawOffset(body, out) shouldBe Vector2(0f, 0f)
         }
 
         it("is 0 when the body was not in the last step") {
             body.physics.velocity.x = 150f
             world.process(true, entities, step * 2.5f)
             body.reset()
-            world.getDrawOffset(body, out) shouldBe Vector2(0f, 0f)
+            offsets.getDrawOffset(body, out) shouldBe Vector2(0f, 0f)
         }
 
         it("is 0 for a body that did not update while other bodies stepped") {
@@ -176,13 +182,13 @@ class WorldDrawOffsetsTest : DescribeSpec({
             world.process(true, entities, step * 2.5f)
             update = false
             world.process(true, entities, step * 1f)
-            world.getDrawOffset(skipped, out) shouldBe Vector2(0f, 0f)
+            offsets.getDrawOffset(skipped, out) shouldBe Vector2(0f, 0f)
         }
 
         it("is 0 when the step move is more than 1 tile") {
             body.preProcess.put("teleport") { it.setX(it.getX() + 2f * ppm) }
             world.process(true, entities, step * 2.5f)
-            world.getDrawOffset(body, out) shouldBe Vector2(0f, 0f)
+            offsets.getDrawOffset(body, out) shouldBe Vector2(0f, 0f)
         }
     }
 
@@ -201,7 +207,7 @@ class WorldDrawOffsetsTest : DescribeSpec({
 
             val stepped = Array<Float>()
             body.setX(0f)
-            world = makeWorld().apply { interpolation = false }
+            useWorld(makeWorld(), interpolation = false)
             var priorX = 0f
             repeat(60) {
                 world.process(true, entities, frame)

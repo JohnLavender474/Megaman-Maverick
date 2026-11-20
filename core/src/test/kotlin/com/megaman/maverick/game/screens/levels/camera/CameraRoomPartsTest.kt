@@ -16,6 +16,7 @@ import com.maverick.game.engine.camera.CameraView
 import com.maverick.game.engine.camera.IFocusable
 import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.megaman.maverick.game.ConstKeys
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
@@ -99,6 +100,15 @@ class CameraRoomPartsTest : DescribeSpec({
             rig.transition.transitioning shouldBe true
             rig.roomBounds.currentGameRoom!!.name shouldBe "b"
             rig.roomBounds.priorGameRoom!!.name shouldBe "a"
+        }
+
+        it("starts no transition from a wrap room when the focus overlaps another room") {
+            val wrapRoom = room("a", 0f, 0f, 200f, 200f).also { it.properties.put(ConstKeys.WRAP, true) }
+            val rig = Rig(Direction.UP, Array.with(wrapRoom, room("b", 200f, 0f, 200f, 200f)), 100f, 100f)
+            rig.focus.x = 199f
+            rig.controller.update(0.01f)
+            rig.transition.transitioning shouldBe false
+            rig.roomBounds.currentGameRoom!!.name shouldBe "a"
         }
 
         it("a reset cancels a transition") {

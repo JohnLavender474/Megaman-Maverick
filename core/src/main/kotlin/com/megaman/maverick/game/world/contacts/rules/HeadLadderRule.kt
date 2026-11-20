@@ -35,6 +35,7 @@ object HeadLadderRule : IContactRule {
             Direction.RIGHT -> headFixture.getShape().getBoundingRectangle().getPositionPoint(Position.CENTER_RIGHT)
         }
 
+        // TODO: the head point is on the real side, so a ladder across a wrap edge is not seen (item 109, D2)
         if (ladderFixture.getShape().contains(headPoint)) {
             val body = headFixture.getBody()
             body.setBodySense(BodySense.HEAD_TOUCHING_LADDER, true)

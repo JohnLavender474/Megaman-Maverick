@@ -45,6 +45,7 @@ import com.maverick.game.engine.controller.ControllerSystem
 import com.maverick.game.engine.cullables.CullablesSystem
 import com.maverick.game.engine.cullables.GameEntityCuller
 import com.maverick.game.engine.diagnostics.RuntimeDiagnostics
+import com.maverick.game.engine.drawables.BodyInterpolation
 import com.maverick.game.engine.drawables.fonts.BitmapFontHandle
 import com.maverick.game.engine.drawables.fonts.FontsSystem
 import com.maverick.game.engine.drawables.shapes.DrawableShapesSystem
@@ -71,6 +72,7 @@ import com.maverick.game.engine.screens.viewports.PixelPerfectFitViewport
 import com.maverick.game.engine.systems.GameSystem
 import com.maverick.game.engine.updatables.UpdatablesSystem
 import com.maverick.game.engine.world.WorldSystem
+import com.maverick.game.engine.world.WorldWrap
 import com.maverick.game.engine.world.body.IFixture
 import com.maverick.game.engine.world.contacts.ContactRuleDispatcher
 import com.megaman.maverick.game.MegamanMaverickGame.RunType
@@ -129,6 +131,8 @@ import com.megaman.maverick.game.world.body.getEntity
 import com.megaman.maverick.game.world.collisions.MegaCollisionHandler
 import com.megaman.maverick.game.world.contacts.MegaContactFilter
 import com.megaman.maverick.game.world.contacts.megaContactRules
+import com.megaman.maverick.game.world.wrap.WrapPolicy
+import com.megaman.maverick.game.world.wrap.wrapRegion
 import java.time.LocalDateTime
 import java.util.zip.Deflater
 import kotlin.reflect.KClass
@@ -242,6 +246,8 @@ class MegamanMaverickGame(
     lateinit var audio: MegaAudioManager
 
     lateinit var engine: GameEngine
+    lateinit var bodyInterpolation: BodyInterpolation
+        private set
     lateinit var gameState: GameState
 
     val players = MegaPlayers(MAX_PLAYERS)
@@ -637,7 +643,7 @@ class MegamanMaverickGame(
                 }
             }
 
-            if (!clock.paused && params.interpolationToggle?.invoke() == true) getSystem(WorldSystem::class)!!.let {
+            if (!clock.paused && params.interpolationToggle?.invoke() == true) bodyInterpolation.let {
                 it.interpolation = !it.interpolation
                 GameLogger.log(TAG, "render(): interpolation = ${it.interpolation}")
             }
@@ -971,6 +977,11 @@ class MegamanMaverickGame(
 
         val pathDebugConsumer = if (params.debugPathfinding) ::addPathDebugLines else null
 
+        val worldWrap = WorldWrap(
+            region = levelState::wrapRegion,
+            wraps = WrapPolicy::wraps,
+            maxWraps = WrapPolicy::maxWraps
+        )
         val worldSystem = WorldSystem(
             ppm = ConstVals.PPM,
             fixedStep = settings.performance.fixedStep,
@@ -986,8 +997,9 @@ class MegamanMaverickGame(
                 params.fixedStepScalar / (settings.performance.fixedStep * settings.performance.fps)
             ),
             diagnostics = diagnostics,
-            interpolation = params.interpolation
+            wrap = worldWrap
         )
+        bodyInterpolation = BodyInterpolation(world = worldSystem, interpolation = params.interpolation)
 
         val engine = GameEngine(
             systems = gdxArrayOf(
@@ -1019,7 +1031,7 @@ class MegamanMaverickGame(
                 UpdatablesSystem(diagnostics),
                 FontsSystem(this::addDrawable),
                 AnimationsSystem(diagnostics),
-                SpritesSystem(this::addDrawable, diagnostics, worldSystem),
+                SpritesSystem(this::addDrawable, diagnostics, bodyInterpolation, worldWrap),
                 DrawableShapesSystem(
                     shapesCollector = { shapes.add(it) },
                     debug = params.debugShapes,

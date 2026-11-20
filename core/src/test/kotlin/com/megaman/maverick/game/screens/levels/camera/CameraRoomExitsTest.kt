@@ -169,6 +169,17 @@ class CameraRoomExitsTest : DescribeSpec({
             rig.roomBounds.currentGameRoom shouldBe rig.next
         }
 
+        it("puts no wall and starts no transition in a wrap room") {
+            val rig = ExitsRig()
+            rig.start.properties.put(ConstKeys.WRAP, true)
+            rig.atRightExit(rig.first)
+            rig.atRightExit(rig.second)
+            rig.update()
+            rig.transition.transitioning shouldBe false
+            rig.roomBounds.currentGameRoom shouldBe rig.start
+            verify(exactly = 0) { rig.engine.spawn(any<CameraEdgeBlock>(), any()) }
+        }
+
         it("starts an axis-only pan at a gathered exit") {
             val rig = ExitsRig()
             rig.atRightExit(rig.first)

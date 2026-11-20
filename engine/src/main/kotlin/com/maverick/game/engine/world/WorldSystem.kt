@@ -3,6 +3,8 @@ package com.maverick.game.engine.world
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.IntArray
+import com.badlogic.gdx.utils.ObjectMap
 import com.badlogic.gdx.utils.OrderedSet
 import com.maverick.game.engine.common.objects.ImmutableCollection
 import com.maverick.game.engine.common.objects.Pool
@@ -21,7 +23,6 @@ import com.maverick.game.engine.world.contacts.Contact
 import com.maverick.game.engine.world.contacts.IContactFilter
 import com.maverick.game.engine.world.contacts.IContactListener
 import com.maverick.game.engine.world.container.IWorldContainer
-import kotlin.math.abs
 
 class WorldSystem(
     var ppm: Int,
@@ -33,8 +34,8 @@ class WorldSystem(
     var fixedStepScalar: Float = 1f,
     var maxIterations: Int = Int.MAX_VALUE, // max iters cap does not account for fixed step scalar
     var diagnostics: RuntimeDiagnostics? = null,
-    var interpolation: Boolean = false
-) : GameSystem(BodyComponent::class), IDrawOffsets, IWorldBodies {
+    var wrap: WorldWrap? = null
+) : GameSystem(BodyComponent::class), IWorldBodies {
 
     companion object {
         const val TAG = "WorldSystem"
@@ -143,6 +144,16 @@ class WorldSystem(
     private val bodyArray = Array<IBody>()
     private val out1 = GameRectangle()
     private val out2 = GameRectangle()
+    private val tempCenter = Vector2()
+
+    private val wrapRegionOut = GameRectangle()
+    private var wrapRegion: GameRectangle? = null
+    private val wrapBodies = Array<IBody>()
+    private val wrapCaps = IntArray()
+    private val seamShapes = ObjectMap<Class<*>, IGameShape2D>()
+    private lateinit var seamRegion: GameRectangle
+    private lateinit var seamBody: IBody
+    private var seamMaxWraps = 0
 
     override fun process(on: Boolean, entities: ImmutableCollection<IGameEntity>, delta: Float) {
         if (!on) return
@@ -153,12 +164,21 @@ class WorldSystem(
         accumulator += delta
         if (accumulator >= fixedStep) {
             val worldContainer = worldContainerSupplier()!!
+            val wrap = this.wrap
+            val region = wrap?.region(wrapRegionOut)
+            wrapRegion = region
 
             diagnostics?.beginEntry("buildBodyArray")
             entities.forEach { entity ->
                 try {
                     val component = entity.getComponent(BodyComponent::class)!!
-                    if (component.doUpdate()) bodyArray.add(component.body)
+                    if (component.doUpdate()) {
+                        bodyArray.add(component.body)
+                        if (region != null && wrap!!.wraps(entity)) {
+                            wrapBodies.add(component.body)
+                            wrapCaps.add(wrap.maxWraps(entity))
+                        }
+                    }
                 } catch (e: Exception) {
                     throw Exception("Exception occurred while processing world for entity: $entity", e)
                 }
@@ -196,6 +216,9 @@ class WorldSystem(
             diagnostics?.endEntry()
 
             bodyArray.clear()
+            wrapBodies.clear()
+            wrapCaps.clear()
+            wrapRegion = null
         }
 
         val fixedStepScaled = fixedStep / fixedStepScalar
@@ -203,15 +226,6 @@ class WorldSystem(
         else ((accumulator - (fixedStep - fixedStepScaled)) / fixedStepScaled).coerceIn(0f, 1f)
 
         diagnostics?.endEntry()
-    }
-
-    override fun getDrawOffset(body: IBody, out: Vector2): Vector2 {
-        if (!interpolation || body.stepSerial != stepSerial) return out.setZero()
-        body.getStepMove(out)
-        // TODO: a teleport inside a step that moves less than 1 tile and does not call restartStep is drawn as a
-        //  slide for 1 frame; PipePortal calls it, other teleports are outside the steps (item 134, 134b audit)
-        if (abs(out.x) > ppm || abs(out.y) > ppm) return out.setZero()
-        return out.scl(alpha - 1f)
     }
 
     override fun reset() {
@@ -259,6 +273,7 @@ class WorldSystem(
 
         diagnostics?.beginEntry("collectContacts")
         bodies.forEach { body -> collectContacts(body, worldContainer) }
+        collectSeamContacts(worldContainer)
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("processContacts")
@@ -267,6 +282,7 @@ class WorldSystem(
 
         diagnostics?.beginEntry("resolveCollisions")
         bodies.forEach { body -> resolveCollisions(body, worldContainer) }
+        resolveSeamCollisions(worldContainer)
         diagnostics?.endEntry()
 
         diagnostics?.beginEntry("postProcess")
@@ -275,6 +291,86 @@ class WorldSystem(
             body.endStep()
         }
         diagnostics?.endEntry()
+
+        applyWraps()
+    }
+
+    private fun applyWraps() {
+        val region = wrapRegion ?: return
+        val width = region.getWidth()
+        for (i in 0 until wrapBodies.size) {
+            val body = wrapBodies[i]
+            if (body.wrapCount >= wrapCaps[i]) continue
+            val centerX = body.getBounds(out1).getCenter(tempCenter).x
+            if (centerX < region.getX()) body.wrapBy(width)
+            else if (centerX > region.getMaxX()) body.wrapBy(-width)
+        }
+    }
+
+    private fun seamShift(bounds: GameRectangle, region: GameRectangle, body: IBody, maxWraps: Int) =
+        WorldWrap.seamShift(
+            minX = bounds.getX(),
+            maxX = bounds.getMaxX(),
+            region = region,
+            wrapCount = body.wrapCount,
+            lastWrapDx = body.lastWrapDx,
+            maxWraps = maxWraps
+        )
+
+    private fun collectSeamContacts(worldContainer: IWorldContainer) {
+        val region = wrapRegion ?: return
+        seamRegion = region
+        passContainer = worldContainer
+        for (i in 0 until wrapBodies.size) {
+            val body = wrapBodies[i]
+            seamBody = body
+            seamMaxWraps = wrapCaps[i]
+            body.forEachFixture(collectSeamFixtureContacts)
+        }
+    }
+
+    private val collectSeamFixtureContacts: (IFixture) -> Unit = { fixture -> collectSeamContacts(fixture) }
+
+    private fun collectSeamContacts(fixture: IFixture) {
+        if (!fixture.isActive()) return
+
+        val shape = fixture.getShape()
+        val bounds = shape.getBoundingRectangle(out1)
+        val dx = seamShift(bounds, seamRegion, seamBody, seamMaxWraps)
+        if (dx == 0f) return
+
+        var seamShape = seamShapes[shape.javaClass]
+        if (seamShape == null) {
+            seamShape = shape.copy()
+            seamShapes.put(shape.javaClass, seamShape)
+        }
+        seamShape.setTo(shape)
+        seamShape.translate(dx, 0f)
+
+        collectFixture = fixture
+        collectShape = seamShape
+        passContainer!!.forEachFixture(
+            MathUtils.floor((bounds.getX() + dx) / ppm),
+            MathUtils.floor(bounds.getY() / ppm),
+            MathUtils.ceil((bounds.getMaxX() + dx) / ppm),
+            MathUtils.ceil(bounds.getMaxY() / ppm),
+            collectCandidate
+        )
+    }
+
+    private fun resolveSeamCollisions(worldContainer: IWorldContainer) {
+        val region = wrapRegion ?: return
+        for (i in 0 until wrapBodies.size) {
+            val body = wrapBodies[i]
+            if (body.type == BodyType.STATIC) continue
+
+            val dx = seamShift(body.getBounds(out1), region, body, wrapCaps[i])
+            if (dx == 0f) continue
+
+            body.translate(dx, 0f)
+            resolveCollisions(body, worldContainer)
+            body.translate(-dx, 0f)
+        }
     }
 
     internal fun processContacts(delta: Float) {

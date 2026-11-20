@@ -39,7 +39,7 @@ class WorldAllocationMeasureTest : DescribeSpec({
 
     fun allocatedBytes() = threads.getThreadAllocatedBytes(Thread.currentThread().id)
 
-    it("world steps allocate almost nothing per frame after warm-up") {
+    fun worldBytesPerFrame(wrap: WorldWrap?, speedX: Float, wrapping: HashSet<IGameEntity>): Long {
         val ppm = 32
         val container = SimpleGridWorldContainer(ppm)
         val world = WorldSystem(
@@ -57,7 +57,8 @@ class WorldAllocationMeasureTest : DescribeSpec({
             contactFilter = object : IContactFilter {
                 override fun shouldProceedFiltering(fixture: IFixture) = true
                 override fun filter(fixture1: IFixture, fixture2: IFixture) = true
-            }
+            },
+            wrap = wrap
         )
         val engine = GameEngine()
         val entities = ArrayList<IGameEntity>()
@@ -66,10 +67,12 @@ class WorldAllocationMeasureTest : DescribeSpec({
             body.setSize(ppm.toFloat(), ppm.toFloat())
             body.setPosition((i % 20) * ppm * 0.8f, (i / 20) * ppm * 0.8f)
             body.physics.gravityOn = false
-            if (body.type == BodyType.DYNAMIC) body.physics.velocity.set(1f, 0.5f)
+            if (body.type == BodyType.DYNAMIC) body.physics.velocity.set(speedX, 0.5f)
             body.addFixture(Fixture(body, MeasureFixtureType.TYPE, GameRectangle().setSize(ppm.toFloat())))
             body.addFixture(Fixture(body, MeasureFixtureType.TYPE, GameRectangle().setSize(ppm * 0.5f)))
-            entities.add(MeasureEntity(engine).apply { addComponent(BodyComponent(body)) })
+            val entity = MeasureEntity(engine).apply { addComponent(BodyComponent(body)) }
+            if (body.type == BodyType.DYNAMIC) wrapping.add(entity)
+            entities.add(entity)
         }
         world.on = true
         entities.forEach { world.add(it) }
@@ -77,8 +80,25 @@ class WorldAllocationMeasureTest : DescribeSpec({
         val frames = 1000
         val before = allocatedBytes()
         repeat(frames) { world.update(1f / 60f) }
-        val perFrame = (allocatedBytes() - before) / frames
+        return (allocatedBytes() - before) / frames
+    }
+
+    it("world steps allocate almost nothing per frame after warm-up") {
+        val perFrame = worldBytesPerFrame(wrap = null, speedX = 1f, wrapping = HashSet())
         println("WORLD_ALLOC bytes per frame: $perFrame")
+        perFrame shouldBeLessThan 1024L
+    }
+
+    it("world steps with a wrap region and bodies that cross its edges allocate almost nothing per frame") {
+        val wrapping = HashSet<IGameEntity>()
+        val region = GameRectangle(64f, 0f, 384f, 448f)
+        val wrap = WorldWrap(
+            region = { out -> out.set(region) },
+            wraps = { entity -> wrapping.contains(entity) },
+            maxWraps = { _ -> WorldWrap.UNLIMITED_WRAPS }
+        )
+        val perFrame = worldBytesPerFrame(wrap = wrap, speedX = 300f, wrapping = wrapping)
+        println("WORLD_WRAP_ALLOC bytes per frame: $perFrame")
         perFrame shouldBeLessThan 1024L
     }
 

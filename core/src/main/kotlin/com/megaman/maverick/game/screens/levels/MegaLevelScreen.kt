@@ -122,6 +122,7 @@ import com.megaman.maverick.game.utils.extensions.toProps
 import com.megaman.maverick.game.utils.interfaces.IShapeDebuggable
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
+import com.megaman.maverick.game.world.wrap.isWrapRoom
 import com.megaman.maverick.game.entities.megamanx.MegamanX
 import com.megaman.maverick.game.controllers.SelectButtonAction
 
@@ -408,7 +409,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             cameraFollow,
             limitStage,
             game.cameraController.settledPosition,
-            game.getSystem(WorldSystem::class)!!
+            game.bodyInterpolation
         )
         game.cameraController.addEffect(cameraDrawOffset)
         cameraSubject = CameraSubject(gameCamera, cameraFollow, roomBounds, cameraDrawOffset)
@@ -689,6 +690,15 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
 
             EventType.NEXT_ROOM_REQ -> {
                 val roomName = event.properties.get(ConstKeys.ROOM) as String
+
+                // TODO: a wrap room has no room transitions; revisit in item 111
+                if (roomBounds.currentGameRoom?.isWrapRoom() == true) {
+                    GameLogger.error(
+                        MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG,
+                        "onEvent(): next room req --> refused in a wrap room: $roomName"
+                    )
+                    return
+                }
 
                 val transDirection = event.getProperty("${ConstKeys.TRANS}_${ConstKeys.DIRECTION}", Direction::class)
                 val axisOnly = event.getProperty(RoomTransitionEventKeys.AXIS_ONLY)!!

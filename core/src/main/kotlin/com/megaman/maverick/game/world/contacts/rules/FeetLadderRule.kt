@@ -35,6 +35,7 @@ object FeetLadderRule : IContactRule {
             Direction.RIGHT -> feetFixture.getShape().getBoundingRectangle().getPositionPoint(Position.CENTER_LEFT)
         }
 
+        // TODO: the feet point is on the real side, so a ladder across a wrap edge is not seen (item 109, D2)
         if (ladderFixture.getShape().contains(feetPoint)) {
             val body = feetFixture.getBody()
             body.setBodySense(BodySense.FEET_TOUCHING_LADDER, true)

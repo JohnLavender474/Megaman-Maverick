@@ -60,6 +60,7 @@ object BlockSideRule : IContactRule {
         val touched = sideFixture.getTouchedSideBlocks()
         touched.remove(blockFixture)
         val sideShape = sideFixture.getShape()
+        // TODO: the real side shape misses a block across a wrap edge, so the prune drops it (item 109, D2)
         touched.removeIf {
             !it.isActive() || !it.getEntity().existenceState.liveNow || !sideShape.overlaps(it.getShape())
         }
