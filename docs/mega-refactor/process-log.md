@@ -2943,3 +2943,20 @@ newest entry at the bottom.
   All manual checks pass. Diffity: 0 threads.
 - Follow-up: `109` `ITEM.md`: a PvP death must not run the level-defeat routine (respawn branch, not planned yet).
   Root `CLAUDE.md` example `--level DESERT_MAN --room room4` names a room with no player spawn (not fixed).
+
+## 2026-11-20 — mega-refactor-077g-glacier-man
+
+- Summary: a richer Glacier Man fight (item `077`, art of `077f`): 2 health phases with tuning rows per difficulty and
+  phase; boss damage 2 × `master` (same hits to kill); damage to the player in `PlayerDamageNegotiator`; weighted
+  move choice with repeat limits, chains and tells; chunk, aim and aim_up throws with `OrbAim` mixed aims; aimed
+  snowballs; phase 2: Icicle Rain (a lead icicle and a safe gap per wave, 2 waves under 25 %) and Sled Ram;
+  `FallingIcicle` `FORM` and timed drop (default path unchanged); phase-2 start pose; freeze-and-shatter death.
+  Test rooms `glacier_man` and `glacier_man_boss` in `REFACTOR_TEST_077`. Squash `e832cda0c`.
+- Contract check: `engine:test`, `core:test` (200 new fight tests on `GlacierManRig`, `FallingIcicleTest`),
+  `core:smokeTest`, `lwjgl3:jar`, `detektMain`, `core:verifyRandomRule` pass, also after `master` (`109a`) was merged
+  into the branch. 76 mutations, 75 failed their tests, 1 equivalent. Review before the play test: 1 Sonnet agent,
+  2 findings (a queued-icicle ownership edge case, `TODO` and issue; `--weapons all` added to a check). Play round 1:
+  the owner set the moveset final and approved the merge; Diffity: 0 threads. The final pass changed no production
+  code (one `TODO` comment).
+- Follow-up: 3 issues filed (`docs/issues/2026-11-20-glacier-man-*.md`). No backlog candidates. `077d` and `077e`
+  stay planned.

@@ -2,7 +2,7 @@
 
 ## Status
 
-- State: active
+- State: merged (2026-11-20, squash `e832cda0c`)
 - Goal: a richer Glacier Man fight: 2 phases, smarter move choice, chunk and aim throws, Icicle Rain, Sled Ram, freeze-and-shatter death
 - Done: branch start; scan; `docs/SCOPE.md` (draft with contract); brief
   (https://claude.ai/artifact/48Cs2LR9WkMbzS9dPjUoAm)
@@ -10,7 +10,7 @@
 - Done also: `PLAN.md` steps 1 to 10; play round 1 closed 2026-11-20 (moveset final, Diffity: 0 threads)
 - Done also: step 11 final pass (2026-11-20)
 - Done also: step 12 review before the play test (2026-11-20)
-- Next: owner play test and Diffity review, then merge
+- Next: none (3 issues filed on `master`)
 - Blocked:
 
 ## Entries
@@ -109,3 +109,11 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   - Manual row 3 needs weapons: `--weapons all` added to the row in `SCOPE.md`.
 - All 6 manual rows otherwise OK (commands, rooms, spawns, wall references, ceilings, tiles). The fix is a comment
   only, so the automated checks were not run again.
+
+## 2026-11-20 (merge)
+
+- Production code unchanged since the owner's round-1 approval ("ready to merge"), so no new play round: the final
+  pass added tests, docs and one `TODO` comment.
+- `master` (`109a` screen wrap: `Body`, `WorldSystem`, sprites) merged into the branch; automated checks pass again.
+  No file overlap with the other active branches.
+- Squash `e832cda0c`. Mutation logs moved to the main checkout `temp/077g-final-pass/`.

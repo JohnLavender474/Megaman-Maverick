@@ -5,7 +5,7 @@
 - Objectives: `O4`
 - Depends on: none
 - Related: `015`, `023`, `118`
-- Branches: `mega-refactor-077a-intro-boss` (merged, 2026-11-15, squash `c4b402a80`), `mega-refactor-077b-desert-man` (merged, 2026-11-16, squash `740ef9101`), `mega-refactor-077c-elec-devil` (merged, 2026-11-19, squash `10e479f09`), `mega-refactor-077d-reactor-man` (planned), `mega-refactor-077e-elec-devil-serpent` (planned), `mega-refactor-077f-glacier-man-art` (merged, 2026-11-19, squash `a53325f14`), `mega-refactor-077g-glacier-man` (active, 2026-11-19)
+- Branches: `mega-refactor-077a-intro-boss` (merged, 2026-11-15, squash `c4b402a80`), `mega-refactor-077b-desert-man` (merged, 2026-11-16, squash `740ef9101`), `mega-refactor-077c-elec-devil` (merged, 2026-11-19, squash `10e479f09`), `mega-refactor-077d-reactor-man` (planned), `mega-refactor-077e-elec-devil-serpent` (planned), `mega-refactor-077f-glacier-man-art` (merged, 2026-11-19, squash `a53325f14`), `mega-refactor-077g-glacier-man` (merged, 2026-11-20, squash `e832cda0c`)
 
 ## Goal
 
