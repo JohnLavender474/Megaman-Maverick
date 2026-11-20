@@ -506,6 +506,10 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
 - **Experimental checks come first** (owner decision, 2026-10-30). List the checks of new or changed
   behavior before the control checks, which show that existing behavior did not change. A problem
   in an experimental check leads to a fix, and the fix means the control checks must run again.
+- **Simplest setup first** (owner decision, 2026-11-20). Within the experimental checks, and within
+  the control checks, order the checks from the simplest launch to the most complex: 1 player before
+  2 players, the default mode before `--mode coop` or `--mode pvp`, no extra flags before extra
+  flags. A failure in a simple setup is easier to read, and it can make a complex check pointless.
 - **Test-only entities:** if no existing entity can trigger a behavior in a small room (for
   example a boss attack), the branch can add a small test entity. Its name starts with `Test`
   (for example `TestStunPulser`), it goes in the package of its `EntityType`, and only test maps
