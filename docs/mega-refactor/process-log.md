@@ -2914,3 +2914,15 @@ newest entry at the bottom.
   `core:smokeTest`, `detektMain`, `core:verifyRandomRule`, `lwjgl3:jar`); atlas and map scripts pass. Reviews
   before the play test (3 Sonnet agents, one per part): no bug. Owner play test: passed. Diffity: no threads.
 - Follow-up: none.
+
+## 2026-11-19 — mega-refactor-077f-glacier-man-art
+
+- Summary: new Glacier Man art for the `077g` fight (item `077`), drawn by Claude Fable 5.2 in 7 owner-reviewed
+  rounds. `Bosses1`: `GlacierMan/chunk`, `aim`, `aim_up`, `pound`, `freeze`, `frozen_crack`, `frozen_shatter`;
+  `Projectiles2`: `FallingIcicle/form`. Scope change (owner, round 1 review): Icicle Rain starts with a ground pound
+  in place of a big ice chunk thrown at the ceiling; `heave` and `GlacierIceChunk` dropped, the `077g` draft
+  `SCOPE.md` updated. Credits in `README.md`. No code reads the new regions yet. Squash `a53325f14`.
+- Contract check: `core:smokeTest` and `lwjgl3:jar` pass on the branch; repack script: every old region of
+  `Bosses1` (69) and `Projectiles2` (44) keeps its name and pixels, the 8 new regions have the listed frame counts.
+  No code, so no review before a play test and no play test; the owner reviewed the preview GIFs. Diffity: not used.
+- Follow-up: `077g` (now `planned`) codes the fight on this art. `078d` (active) also edits README `CREDITS`.
