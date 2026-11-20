@@ -411,6 +411,7 @@ object ConstKeys {
     const val SPAWN_BLINK = "spawn_blink"
     const val BLINK = "blink"
     const val JITTER = "jitter"
+    const val JOIN = "join"
     const val SPAWNER = "spawner"
     const val ATLAS = "atlas"
     const val REGION = "region"

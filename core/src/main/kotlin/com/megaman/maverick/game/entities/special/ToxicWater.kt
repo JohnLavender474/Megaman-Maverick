@@ -3,16 +3,11 @@ package com.megaman.maverick.game.entities.special
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
-import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
-import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.animations.IAnimator
 import com.maverick.game.engine.common.GameLogger
-import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.objectMapOf
-import com.maverick.game.engine.common.interfaces.Initializable
-import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.objects.GamePair
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -23,6 +18,7 @@ import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
+import com.maverick.game.engine.drawables.sprites.splitAndFlatten
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.ICullableEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
@@ -32,40 +28,9 @@ import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.MegaEntityFactory
-import com.megaman.maverick.game.entities.MegaGameEntities
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
-
-private class ToxicWaterWaveAnimator(private val services: MegaServices) : IAnimator, Initializable, Updatable {
-
-    companion object {
-        const val TAG = "ToxicWaterWaveAnimator"
-    }
-
-    private lateinit var animation: IAnimation
-    private var initialized = false
-
-    override fun init(vararg params: Any) {
-        if (initialized) return
-        initialized = true
-
-        val atlas = services.assets.getTextureAtlas(TextureAsset.SPECIALS_1.source)
-        val region = atlas.findRegion("${ToxicWater.TAG}/waves")
-        animation = Animation(region, 2, 2, 0.125f, true)
-    }
-
-    override fun update(delta: Float) = animation.update(delta)
-
-    override fun shouldAnimate(delta: Float) = true
-
-    override fun animate(sprite: GameSprite, delta: Float) {
-        val region = animation.getCurrentRegion()
-        if (region != null) sprite.setRegion(region)
-    }
-
-    override fun reset() = animation.reset()
-}
 
 class ToxicWater(services: MegaServices) : MegaGameEntity(services), ISpritesEntity, IAnimatedEntity, ICullableEntity {
 
@@ -73,7 +38,7 @@ class ToxicWater(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
         const val TAG = "ToxicWater"
         private const val WATER_ALPHA = 0.8f
         private var waterRegion: TextureRegion? = null
-        private var waveAnimator: ToxicWaterWaveAnimator? = null
+        private var waveAnimator: ToxicLiquidAnimator? = null
     }
 
     private var water: Water? = null
@@ -84,8 +49,8 @@ class ToxicWater(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
         if (waterRegion == null)
             waterRegion = services.assets.getTextureRegion(TextureAsset.SPECIALS_1.source, "$TAG/water")
         if (waveAnimator == null) {
-            waveAnimator = ToxicWaterWaveAnimator(services)
-            waveAnimator!!.init()
+            val waves = services.assets.getTextureRegion(TextureAsset.SPECIALS_1.source, "$TAG/waves")
+            waveAnimator = ToxicLiquidAnimator(waves.splitAndFlatten(2, 2, Array()))
         }
         super.init()
         addComponent(defineCullablesComponent())
@@ -108,8 +73,7 @@ class ToxicWater(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
         )
         this.water = water
 
-        if (!services.updatables.containsKey(ToxicWaterWaveAnimator.TAG))
-            services.updatables.put(ToxicWaterWaveAnimator.TAG, waveAnimator!!::update)
+        ToxicLiquidClock.join(services)
     }
 
     override fun onDestroy() {
@@ -119,7 +83,7 @@ class ToxicWater(services: MegaServices) : MegaGameEntity(services), ISpritesEnt
         water?.destroy()
         water = null
 
-        if (MegaGameEntities.getOfTag(TAG).isEmpty) services.updatables.remove(ToxicWaterWaveAnimator.TAG)
+        ToxicLiquidClock.leave(services)
     }
 
     private fun defineDrawables(bounds: GameRectangle) {

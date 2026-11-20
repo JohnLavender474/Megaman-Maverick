@@ -1,14 +1,10 @@
 package com.megaman.maverick.game.entities.decorations
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.OrderedMap
-import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
-import com.maverick.game.engine.animations.Animator
-import com.maverick.game.engine.animations.IAnimator
 import com.maverick.game.engine.audio.AudioComponent
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Position
@@ -16,7 +12,6 @@ import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.extensions.getTextureRegion
 import com.maverick.game.engine.common.extensions.isAny
 import com.maverick.game.engine.common.extensions.objectMapOf
-import com.maverick.game.engine.common.objects.GamePair
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -27,6 +22,7 @@ import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
+import com.maverick.game.engine.drawables.sprites.splitAndFlatten
 import com.maverick.game.engine.entities.contracts.*
 import com.maverick.game.engine.updatables.UpdatablesComponent
 import com.maverick.game.engine.world.body.Body
@@ -44,6 +40,9 @@ import com.megaman.maverick.game.entities.contracts.AbstractEnemy
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.decorations.Splash.SplashType
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.special.ToxicLiquidAnimator
+import com.megaman.maverick.game.entities.special.ToxicLiquidClock
+import com.megaman.maverick.game.entities.state.mapObjectId
 import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
 import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -61,16 +60,30 @@ class ToxicWaterfall(services: MegaServices) : MegaGameEntity(services), IBodyEn
         private const val ALPHA = 0.75f
         private const val SPLASH_FREQ = 0.2f
         private const val SPLASH_ALPHA = 0.25f
-        private var region: TextureRegion? = null
+        private const val JOIN_REGION = "ToxicWaterfallJoin"
+        private const val JOIN_DROP = 0.5f
+        private const val PRIORITY = 10
+        private var fallAnimator: ToxicLiquidAnimator? = null
+        private var joinAnimator: ToxicLiquidAnimator? = null
     }
 
     private val bodiesInWater = OrderedMap<IBodyEntity, Timer>()
+    private val fallSprites = Array<GameSprite>()
+    private val joinSprites = Array<GameSprite>()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region = services.assets.getTextureRegion(TextureAsset.DECORATIONS_1.source, TAG)
+        if (fallAnimator == null) {
+            val atlas = TextureAsset.DECORATIONS_1.source
+            val fall = services.assets.getTextureRegion(atlas, TAG)
+            fallAnimator = ToxicLiquidAnimator(fall.splitAndFlatten(2, 2, Array()))
+            val join = services.assets.getTextureRegion(atlas, JOIN_REGION)
+            joinAnimator = ToxicLiquidAnimator(join.splitAndFlatten(2, 2, Array()))
+        }
         super.init()
         addComponent(AudioComponent())
+        addComponent(SpritesComponent())
+        addComponent(AnimationsComponent())
         addComponent(defineUpdatablesComponent())
         addComponent(defineBodyComponent())
         addComponent(defineCullablesComponent())
@@ -81,13 +94,16 @@ class ToxicWaterfall(services: MegaServices) : MegaGameEntity(services), IBodyEn
         super.onSpawn(spawnProps)
         val bounds = spawnProps.get(ConstKeys.BOUNDS, GameRectangle::class)!!
         body.set(bounds)
-        defineDrawables(bounds)
+        val join = spawnProps.getOrDefault(ConstKeys.JOIN, false, Boolean::class)
+        setDrawables(bounds, join)
+        ToxicLiquidClock.join(services)
     }
 
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
         bodiesInWater.clear()
+        ToxicLiquidClock.leave(services)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -167,33 +183,46 @@ class ToxicWaterfall(services: MegaServices) : MegaGameEntity(services), IBodyEn
         return CullablesComponent(objectMapOf(ConstKeys.CULL_OUT_OF_BOUNDS pairTo cullOutOfBounds))
     }
 
-    private fun defineDrawables(bounds: GameRectangle) {
-        val sprites = OrderedMap<Any, GameSprite>()
-        val animators = Array<GamePair<() -> GameSprite, IAnimator>>()
-
+    private fun setDrawables(bounds: GameRectangle, join: Boolean) {
         val rows = (bounds.getHeight() / ConstVals.PPM).toInt()
         val columns = (bounds.getWidth() / (2f * ConstVals.PPM)).toInt()
+        check(rows >= 1 && columns >= 1) {
+            "$TAG $mapObjectId: the map object is ${bounds.getWidth()} x ${bounds.getHeight()} px; it needs at least " +
+                "${2 * ConstVals.PPM} x ${ConstVals.PPM} px"
+        }
+        val width = 2f * ConstVals.PPM
+        val height = ConstVals.PPM.toFloat()
 
-        for (x in 0 until columns) {
-            for (y in 0 until rows) {
-                val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, 10))
-                sprite.setBounds(
-                    bounds.getX() + 2f * x * ConstVals.PPM,
-                    bounds.getY() + y * ConstVals.PPM,
-                    2f * ConstVals.PPM,
-                    ConstVals.PPM.toFloat()
-                )
-                sprite.setAlpha(ALPHA)
-                sprites.put("${x}_${y}", sprite)
+        while (fallSprites.size < rows * columns) addSprite(fallSprites, "fall", fallAnimator!!)
+        while (joinSprites.size < columns) addSprite(joinSprites, "join", joinAnimator!!)
 
-                val animation = Animation(region!!, 2, 2, 0.1f, true)
-                val animator = Animator(animation)
-                animators.add({ sprite } pairTo animator)
-            }
+        for (i in 0 until fallSprites.size) {
+            val x = i % columns
+            val y = i / columns
+            val sprite = fallSprites[i]
+            sprite.hidden = i >= rows * columns || (join && y == 0)
+            sprite.setBounds(bounds.getX() + x * width, bounds.getY() + y * height, width, height)
         }
 
-        addComponent(SpritesComponent(sprites))
-        addComponent(AnimationsComponent(animators))
+        for (i in 0 until joinSprites.size) {
+            val sprite = joinSprites[i]
+            sprite.hidden = !join || i >= columns
+            sprite.setBounds(
+                bounds.getX() + i * width,
+                bounds.getY() - JOIN_DROP * ConstVals.PPM,
+                width,
+                height + JOIN_DROP * ConstVals.PPM
+            )
+        }
+    }
+
+    private fun addSprite(list: Array<GameSprite>, prefix: String, animator: ToxicLiquidAnimator) {
+        val sprite = GameSprite(DrawingPriority(DrawingSection.FOREGROUND, PRIORITY))
+        sprite.setAlpha(ALPHA)
+        val key = "${prefix}_${list.size}"
+        sprites.put(key, sprite)
+        list.add(sprite)
+        getComponent(AnimationsComponent::class)!!.putAnimator(key, sprite, animator)
     }
 
     override fun getType() = EntityType.DECORATION

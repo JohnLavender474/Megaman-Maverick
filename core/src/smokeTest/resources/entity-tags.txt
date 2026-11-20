@@ -76,6 +76,7 @@ decorations.CrystalConveyorBKG: CrystalConveyorBKG
 decorations.D1000BombMarker: D1000BombMarker
 decorations.D1000DebrisWarning: D1000DebrisWarning
 decorations.D1000RubblePile: D1000RubblePile
+decorations.DecorLaserTube: DecorLaserTube
 decorations.DustPuff: DustPuff
 decorations.FallingLeaf: FallingLeaf
 decorations.FallingLeaves: FallingLeaves
@@ -107,6 +108,7 @@ decorations.Snow: Snow
 decorations.SpaceSatellite: SpaceSatellite
 decorations.Splash: Splash
 decorations.StarknerTrailSprite: StarknerTrailSprite
+decorations.SteamVent: SteamVent
 decorations.ToxicWaterfall: ToxicWaterfall
 decorations.Tree: Tree
 decorations.UnderWaterBubble: UnderWaterBubble

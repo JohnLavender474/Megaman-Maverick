@@ -291,6 +291,8 @@ List of creators and the stages in which their artwork is used. Some stages cont
 
 - [Balloon Cart](https://balloon-cart.itch.io)
   - [Reactor Man](https://balloon-cart.itch.io/reactor-man-asset-pack)
+    - Original by [Balloon Cart](https://balloon-cart.itch.io) ([Reactor Man](https://balloon-cart.itch.io/reactor-man-asset-pack))
+    - Updated by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer: the refine pass, the tile animations, and the new layout of the pipes, girders, tanks and domes of the indoor areas
   - [Glacier Man](https://balloon-cart.itch.io/glacier-man-asset-pack)
 - [Ansimuz](https://ansimuz.itch.io)
   - [Intro Stage](https://ansimuz.itch.io/mega-bot) 
@@ -330,6 +332,9 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Inspired by [Balloon Cart](https://balloon-cart.itch.io) ([Reactor Man](https://balloon-cart.itch.io/reactor-man-asset-pack)): the corridor ceiling pipes and the coolant pipes
 - Wily Stage 3 (tileset, backgrounds and the lab conveyor belt)
   - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
+- Reactor Man (backgrounds, toxic water and waterfall, laser tubes, steam vents and sparks)
+  - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
+  - Inspired by [Balloon Cart](https://balloon-cart.itch.io) ([Reactor Man](https://balloon-cart.itch.io/reactor-man-asset-pack)): the pipes, tanks and louvers of the area backgrounds
 
 ### Music
 

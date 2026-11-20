@@ -30,6 +30,7 @@ enum class TextureAsset(src: String) : IAsset {
     BACKGROUNDS_8("Backgrounds8.txt"),
     BACKGROUNDS_9("Backgrounds9.txt"),
     BACKGROUNDS_10("Backgrounds10.txt"),
+    BACKGROUNDS_11("Backgrounds11.txt"),
     UI_1("Ui1.txt"),
     UI_2("Ui2.txt"),
     FACES_1("Faces1.txt"),
