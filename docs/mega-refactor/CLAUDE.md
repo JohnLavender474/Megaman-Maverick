@@ -520,6 +520,12 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
   later branches and items can use them again. A later branch may add rooms, but does not change
   a room that another contract uses without a note in its process log.
 - The contract lists each check with its `--level` and `--room`.
+- **Play scripts** (owner decision, 2026-11-20, branch `077g`: re-asking for the checks or searching the docs for
+  them was a constant struggle). When you hand the checks to the owner, also write one script per manual check in
+  `<worktree>/temp/play/`, named `play-1.sh`, `play-2.sh`, ... in the order of the contract, so `ls -l` lists them in
+  order. Each script prints its check number and what to look at, then `cd`s to the worktree and runs the run script
+  with the full options; extra arguments pass through. `temp/` is git-ignored, so the scripts are never committed.
+  When the contract checks change, rewrite the folder to match. In the handover message, give the folder path.
 - When you ask the owner to run checks, give them as a list, not a table, so the commands are easy
   to copy. Before the list, give the absolute path of the worktree that the commands run from, as a
   `cd` command in its own inline code span (for example
