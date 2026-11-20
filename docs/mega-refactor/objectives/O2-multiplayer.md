@@ -250,6 +250,7 @@ Not a redo, but new work that is larger than the table shows:
 | `136` | idea | [Co-op: a player can skip a spike floor in a tall room](../items/136-tall-room-spike-skip/ITEM.md) (main) |
 | `169` | idea | [`LevelState` by lifetime and owner](../items/169-level-state-lifetimes/ITEM.md) |
 | `170` | idea | [`UP` and `DOWN` gates in co-op](../items/170-coop-vertical-gates/ITEM.md) |
+| `175` | idea | [`LevelPlayers`: player spawns, deaths and slot respawn out of `MegaLevelScreen`](../items/175-level-players/ITEM.md) |
 
 ## Gaps with no item
 

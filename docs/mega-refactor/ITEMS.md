@@ -182,6 +182,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 172 | [Mega Man picks up and wears a `Met` helmet](items/172-wear-met-helmet/ITEM.md) | feature | `O4`, `O8` | idea | none | | |
 | 173 | [Copied foot-sensor pairs to `GroundProbe`](items/173-foot-sensors-to-ground-probe/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 174 | [Move the D-1000 frames out of `Bosses3` so that it packs with `Basic`](items/174-bosses3-atlas-split/ITEM.md) | tooling | `O6` | idea | none | | |
+| 175 | [`LevelPlayers`: player spawns, deaths and slot respawn out of `MegaLevelScreen`](items/175-level-players/ITEM.md) | refactor | `O1`, `O2` | idea | none | | |
 
 ## Branches
 
