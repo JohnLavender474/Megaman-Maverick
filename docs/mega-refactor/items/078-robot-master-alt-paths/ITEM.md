@@ -5,7 +5,7 @@
 - Objectives: `O4`, `O9`
 - Depends on: none
 - Related: `077`, `079`, `089`, `051`, `067`
-- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`); `mega-refactor-078b-wily-stage-3-art` (merged, 2026-11-19, squash `e346c558d`); `mega-refactor-078c-wily-stage-3-enemy-skins` (merged, 2026-11-19, squash `464775afc`); `mega-refactor-078d-reactor-man-art` (active, 2026-11-19)
+- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`); `mega-refactor-078b-wily-stage-3-art` (merged, 2026-11-19, squash `e346c558d`); `mega-refactor-078c-wily-stage-3-enemy-skins` (merged, 2026-11-19, squash `464775afc`); `mega-refactor-078d-reactor-man-art` (active, 2026-11-19); `mega-refactor-078e-precious-woman-art` (active, 2026-11-20)
 
 ## Goal
 
@@ -152,6 +152,13 @@ The owner keeps the Reactor Man tiles, but the stage has no motion in its tiles 
 steel and magenta pipes in every room). Branch `078d`: one merged tileset with an accent palette and a moving motif
 per area, decor entities with no gameplay effect, and backgrounds per area. Art only: blocks and hazards stay.
 
+### Precious Woman (`PRECIOUS_WOMAN`, `PreciousWoman_v2.tmx`): art make-over
+
+The decor crystals are rips from Mega Man 5 (`CrystalManTileset`), and the purple rock tiles are simple and
+repetitive. A dark back-wall layer (`tiles2`) fills every room. Branch `078e`: a "deep cave of jewels" look, a jewel
+mine in a crystal abyss: one new original tileset, no back-wall tiles, and a new parallax background that shows
+where the back wall was. Art only: blocks and spawns stay.
+
 ## Decisions
 
 - 2026-11-17 (owner): `078` is the stage redesign epic for all stages. It took in `073`, `074`, `080`, `099`, `166`
@@ -196,6 +203,10 @@ per area, decor entities with no gameplay effect, and backgrounds per area. Art 
 
 - 2026-11-19 (owner): Reactor Man art touch-up as branch `078d` (merge target `master`): tile animations plus decor
   entities, an accent palette and a motif per area, one merged tileset. Details in the branch `docs/NOTES.md`.
+
+- 2026-11-20 (owner): Precious Woman art make-over as branch `078e` (merge target `master`). Background concept
+  "crystal abyss"; the stage reads as a jewel mine (the girders stay as mine scaffolds); the `tiles2` back wall goes.
+  Art by Claude Fable 5.2 (confirmed). Details in the branch `docs/NOTES.md`.
 
 Decisions carried over from `076` (they apply to the tileset and background work):
 
