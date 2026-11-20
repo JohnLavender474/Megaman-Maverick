@@ -2972,3 +2972,19 @@ newest entry at the bottom.
   during the level routine; the hold waits for the routine, `startBeam` sets `PRE_PLAY`). Play test passed; Diffity:
   0 threads.
 - Follow-up: item `175` (`LevelPlayers`, filed before the merge). No backlog or bug candidates.
+
+## 2026-11-20 — mega-refactor-078d-reactor-man-art
+
+- Summary: Reactor Man stage art (item `078`), drawn by Claude Fable 5.2 in rounds. One merged tileset
+  `reactor_man_tileset` (467 tiles after the unused tiles were dropped, pixel-equal check) in place of 6 tilesets, with
+  Tiled tile animations, a new layout of the indoor pipes, girders, tanks and domes (play test round 4), and a new
+  `tiles_back` layer. Acid water art; `ToxicWaterfall` join sprite (`join` map property) and `ToxicLiquidClock`
+  (one frame clock for all water). New decor entities `DecorLaserTube` and `SteamVent`. 5 area backgrounds in the new
+  atlas `Backgrounds11`, switched on room entry (`spawn_room` triggers, decision R5). `master` merged into the branch
+  first: `Decorations1` and `Specials1` repacked from the frames of both sides. Squash `e4f083bb6`.
+- Contract check: automated checks pass on the branch after the `master` merge (`engine:test`, `core:test`,
+  `core:smokeTest`, `detektMain`, `core:verifyRandomRule`, `lwjgl3:jar`); atlas script passes; map object script: 2
+  intended failures (the `join` objects, removed triggers). Review before the play test: 1 Sonnet agent. Owner play
+  test: passed (rounds 1 to 4f and fixes). Diffity: not opened.
+- Follow-up: new items `176` (one level animation clock) and `177` (backgrounds drawn per room). `077d` note: the
+  emitter tiles are `reactor_man_tileset` ids 112 and 115.

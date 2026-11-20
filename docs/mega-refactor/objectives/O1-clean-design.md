@@ -180,6 +180,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `171` | idea | [A shared ledge-walk helper for enemies](../items/171-ledge-walk-helper/ITEM.md) (main) |
 | `173` | idea | [Copied foot-sensor pairs to `GroundProbe`](../items/173-foot-sensors-to-ground-probe/ITEM.md) (main) |
 | `175` | idea | [`LevelPlayers`: player spawns, deaths and slot respawn out of `MegaLevelScreen`](../items/175-level-players/ITEM.md) (main) |
+| `176` | idea | [One level animation clock for tiles and entities](../items/176-level-animation-clock/ITEM.md) |
 
 ## Gaps with no item
 

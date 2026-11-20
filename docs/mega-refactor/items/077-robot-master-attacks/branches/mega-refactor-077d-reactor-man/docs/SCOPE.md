@@ -29,6 +29,8 @@ their problems. Use `file_path:line` references.
 - The fight upgrade (attacks, phases; to be scanned).
 - New laser and emitter art. The emitter today is tile art: `Reactor_Man_3` tiles 210 and 211 (rotated), with
   see-through ports where `TubeBeamerV2` draws its black, pink and white flash square behind the tiles.
+  Since `078d` (merged 2026-11-20), the Reactor Man stage uses one merged tileset: these 2 tiles are
+  `reactor_man_tileset` ids 112 (was 210) and 115 (was 211), copied unchanged; edit them there for the stage.
 - Both places that host the fight: the Reactor Man stage, and the refight in Wily Stage 1 (`reactor_man_room` of
   `WilyStage1_v2.tmx`). After the new art is done, update the refight room: replace the 28 old `Reactor_Man_3`
   cells (rows 45 and 46, columns 304 to 317) with the new emitter, drawn in the Wily Stage 1 palette, and remove

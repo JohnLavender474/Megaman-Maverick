@@ -92,6 +92,8 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `159` | done | [New hand and head art for the intro boss](../items/159-intro-boss-hand-art/ITEM.md) |
 | `160` | idea | [Ladder shot height at a ladder foot](../items/160-ladder-foot-shot/ITEM.md) (main) |
 | `170` | idea | [`UP` and `DOWN` gates in co-op](../items/170-coop-vertical-gates/ITEM.md) |
+| `176` | idea | [One level animation clock for tiles and entities](../items/176-level-animation-clock/ITEM.md) (main) |
+| `177` | idea | [Backgrounds drawn per room](../items/177-backgrounds-per-room/ITEM.md) (main) |
 
 ## Gaps with no item
 

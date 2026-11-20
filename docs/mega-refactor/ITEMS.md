@@ -183,6 +183,8 @@ statuses and column meanings are in `CLAUDE.md`.
 | 173 | [Copied foot-sensor pairs to `GroundProbe`](items/173-foot-sensors-to-ground-probe/ITEM.md) | refactor | `O1`, `O4` | idea | none | | |
 | 174 | [Move the D-1000 frames out of `Bosses3` so that it packs with `Basic`](items/174-bosses3-atlas-split/ITEM.md) | tooling | `O6` | idea | none | | |
 | 175 | [`LevelPlayers`: player spawns, deaths and slot respawn out of `MegaLevelScreen`](items/175-level-players/ITEM.md) | refactor | `O1`, `O2` | idea | none | | |
+| 176 | [One level animation clock for tiles and entities](items/176-level-animation-clock/ITEM.md) | refactor | `O9`, `O1` | idea | none | | |
+| 177 | [Backgrounds drawn per room](items/177-backgrounds-per-room/ITEM.md) | feature | `O9`, `O4` | idea | none | | |
 
 ## Branches
 
@@ -309,7 +311,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-078a-wily-stage-1-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078a-wily-stage-1-art/process-log.md) | 078 | Wily Stage 1 art make-over: one tileset, the repainted map, new backgrounds, and the generator entity with light events | merged | 2026-11-18 | 2026-11-18 |
 | [`mega-refactor-078b-wily-stage-3-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078b-wily-stage-3-art/process-log.md) | 078 | Wily Stage 3 art make-over: one new tileset in the mood of the X6 Gate stages, the repainted map, new backgrounds | merged | 2026-11-19 | 2026-11-19 |
 | [`mega-refactor-078c-wily-stage-3-enemy-skins`](items/078-robot-master-alt-paths/branches/mega-refactor-078c-wily-stage-3-enemy-skins/process-log.md) | 078 | A stage sprite skin for the Wily Stage 3 enemies and what they spawn (Claude Fable 5.2) | merged | 2026-11-19 | 2026-11-19 |
-| [`mega-refactor-078d-reactor-man-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078d-reactor-man-art/process-log.md) | 078 | Reactor Man stage touch-up: one merged tileset with an accent palette and a moving motif per area, decor entities, backgrounds | active | 2026-11-19 | |
+| [`mega-refactor-078d-reactor-man-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078d-reactor-man-art/process-log.md) | 078 | Reactor Man stage touch-up: one merged tileset with an accent palette and a moving motif per area, decor entities, backgrounds | merged | 2026-11-19 | 2026-11-20 |
 | [`mega-refactor-078e-precious-woman-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078e-precious-woman-art/process-log.md) | 078 | Precious Woman art make-over: a jewel mine in a crystal abyss; one new tileset, no back-wall tiles, new parallax background | active | 2026-11-20 | |
 | [`mega-refactor-109a-screen-wrap`](items/109-pvp-mode/branches/mega-refactor-109a-screen-wrap/process-log.md) | 109 | Horizontal screen wrap in a room with the `wrap` flag (players and shots), and the test map `REFACTOR_TEST_109` | merged | 2026-11-19 | 2026-11-20 |
 | [`mega-refactor-109b-pvp-respawn`](items/109-pvp-mode/branches/mega-refactor-109b-pvp-respawn/process-log.md) | 109 | PvP respawn: a death respawns only the dead slot, with no level-defeat routine | merged | 2026-11-20 | 2026-11-20 |

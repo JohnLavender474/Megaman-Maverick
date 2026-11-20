@@ -99,6 +99,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `171` | idea | [A shared ledge-walk helper for enemies](../items/171-ledge-walk-helper/ITEM.md) |
 | `172` | idea | [Mega Man picks up and wears a `Met` helmet](../items/172-wear-met-helmet/ITEM.md) (main) |
 | `173` | idea | [Copied foot-sensor pairs to `GroundProbe`](../items/173-foot-sensors-to-ground-probe/ITEM.md) |
+| `177` | idea | [Backgrounds drawn per room](../items/177-backgrounds-per-room/ITEM.md) |
 
 ## Gaps with no item
 
