@@ -2,10 +2,10 @@
 
 ## Status
 
-- State: planned
+- State: active
 - Goal: a richer Glacier Man fight: 2 phases, smarter move choice, chunk and aim throws, Icicle Rain, Sled Ram, freeze-and-shatter death
-- Done: draft `docs/SCOPE.md` (the fight design)
-- Next: branch start (`077f` merged)
+- Done: draft `docs/SCOPE.md` (the fight design); branch start
+- Next: planning (scan, `SCOPE.md`, brief)
 - Blocked:
 
 ## Entries
@@ -21,3 +21,8 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 
 - `077f` merged: the art is on `master` (final frame list in the `077f` `docs/NOTES.md`). Icicle Rain starts with
   `pound` (owner, `077f` art review). Status `planned`.
+
+## 2026-11-19 (branch start)
+
+- Branch start on `master`: `ITEMS.md` row and `ITEM.md` set to `active`. Worktree
+  `.worktrees/mega-refactor-077g-glacier-man/` from `master`. Merge target `master` (item decision 2026-11-13).
