@@ -28,7 +28,8 @@ attack; damage values 2 × `master` on 2 phases, so the hits to kill stay 1-for-
 - Icicles: they form on the ceiling, shake, then drop.
 - Ice cubes: dedicated animations for the chunk (lob) and the aim (straight throw), in place of the plain launch
   from the hands.
-- Icicle Rain start: Glacier Man lobs a big ice chunk up; it bursts on the ceiling, and the icicles form there.
+- Icicle Rain start: Glacier Man pounds the ground with his fist, and the icicles form on the ceiling (owner,
+  2026-11-19, `077f` art review: in place of a big ice chunk).
 - Death: freeze and shatter. He freezes solid in a block of ice, cracks spread, the block bursts into shards.
 - Not objected to (proposals in the conversation): phase 2 also adds Sled Ram; the `FIRED` stun on fire hits stays;
   damage table 2 × `master`; the `WILY_STAGE_2` refight gets the same fight.
@@ -85,7 +86,7 @@ attack; damage values 2 × `master` on 2 phases, so the hits to kill stay 1-for-
 
 7. `healthPhases = 2`. `onHealthPhaseStart(2)`: a short ice-power pose (`ice_blast_attack` sparkles and a flash), a
    sound and a screen shake. Quicker tells and shorter stands from the tuning rows.
-8. **Icicle Rain:** he lobs a big ice chunk straight up. It bursts on the ceiling. Icicles form along the ceiling
+8. **Icicle Rain:** he pounds the ground with his fist (`pound`; screen shake). Icicles form along the ceiling
    (form → still → shake → drop), one after the other or in a wave. One icicle forms over the player's lead position,
    the others scatter. A gap always stays safe. The icicles shatter on the floor.
 9. **Sled Ram:** a fast sled across the arena. At the wall he bounces back and shoots snowballs both ways.
