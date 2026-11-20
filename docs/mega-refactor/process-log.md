@@ -2926,3 +2926,20 @@ newest entry at the bottom.
   `Bosses1` (69) and `Projectiles2` (44) keeps its name and pixels, the 8 new regions have the listed frame counts.
   No code, so no review before a play test and no play test; the owner reviewed the preview GIFs. Diffity: not used.
 - Follow-up: `077g` (now `planned`) codes the fight on this art. `078d` (active) also edits README `CREDITS`.
+
+## 2026-11-20 — mega-refactor-109a-screen-wrap
+
+- Summary: horizontal screen wrap in a `game_rooms` room with `wrap=true` (item `109`): players wrap with no limit,
+  shots 1 time. While a body straddles an edge, its far half collides (seam contacts and collisions) and draws
+  (`GameSprite.wrapOffsetX`), with one shared seam rule (`WorldWrap.seamShift`) for physics, draw and the camera
+  "seen" test. A wrap room must be one view wide (the level load throws), and it has no room transitions (`TODO`s
+  for `111`). The draw offsets moved from `WorldSystem` to `BodyInterpolation`. New test map `REFACTOR_TEST_109`
+  (room `arena`). Squash `3556c4b8d`.
+- Contract check: `engine:test` 764, `core:test` + `core:smokeTest` 3117, `lwjgl3:jar`, `detektMain`,
+  `core:verifyRandomRule` pass; allocation unchanged (`WORLD_ALLOC` and `WORLD_WRAP_ALLOC` 16 bytes per frame).
+  Review before the play test: 1 Sonnet agent; fixes: a one-sided high ledge in the test map (the edge stand check
+  could not fail), a rename, doc wording. Play test round 1 found that a shot spawned fully past the edge never
+  wrapped (`defaultDoUpdate` skipped it); fixed with a wrap-aware `overlapsGameCam` and `WrapCameraOverlapTest`.
+  All manual checks pass. Diffity: 0 threads.
+- Follow-up: `109` `ITEM.md`: a PvP death must not run the level-defeat routine (respawn branch, not planned yet).
+  Root `CLAUDE.md` example `--level DESERT_MAN --room room4` names a room with no player spawn (not fixed).
