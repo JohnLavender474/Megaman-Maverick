@@ -9,6 +9,9 @@ Read this file before you commit, merge, run Gradle or stop a process. It applie
   `git commit` takes what another session staged. Before a merge or a commit in the main checkout, run
   `git status --short`. If a change is staged or modified that is not yours, stop and ask the owner. Commit with
   explicit paths where you can, and check `git show --stat HEAD` after the commit.
+- **Commit process docs without asking** (owner, 2026-11-19). A docs-only change on `master` that the mega-refactor
+  process makes (an item decision or open question, research in a `NOTES.md`, a branch start, a new item) is
+  committed at once. Do not ask "should I commit?". The rules above still apply.
 - **Select a process by its PID.** Several sessions run Gradle at once on this machine. List the candidates with
   the PID, the age (`etimes`), the working folder (`readlink /proc/<pid>/cwd`) and the parent, keep only those whose
   folder is your worktree, and act on those PIDs. Never use `pkill -f <name>`, and never take `pgrep ... | head -1`
