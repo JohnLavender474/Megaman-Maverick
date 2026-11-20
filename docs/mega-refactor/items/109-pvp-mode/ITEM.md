@@ -27,10 +27,16 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 See `108` for the owner's reference to Call of Duty.
 
+2026-11-19 (verbatim):
+
+> I want to create a simple test pvp mode and room. See mega-refactor item 109. I'm imagining in my head something like the pvp mode in Super Mario Bros 3: a single room where the 2 players duke it out. In that game, the walls are open on the sides, so if a player runs off the screen to the left, then they appear on the right side of the same floor; basically a mirror. We need to support the same thing in this room. This means that if a player is standway halfway through the left side of the screen, then the other half of their sprite & body appears on the right side of the screen. Let's research to see what it would entail to support this without affecting any other levels in the game.
+
 ## Decisions
 
 - 2026-11-01: Spec Ops and PvP are the crux of `O2`, and they are the only two named multiplayer modes.
 - 2026-11-01: the first PvP target is one large room. Multi-room support comes after it (`111`).
+- 2026-11-19: a first test PvP room is one view wide, with horizontal screen wrap as in the Super Mario Bros. 3 battle mode. A player who straddles an edge has the other half of the sprite and the body on the far side. No other level changes. Research in `NOTES.md`, "Horizontal screen wrap".
+- 2026-11-19: shots wrap at the edges of a wrap room, as the players do (TowerFall style, not SMB3).
 
 ## Open questions
 
@@ -43,6 +49,9 @@ See `108` for the owner's reference to Call of Duty.
 - Enemies and hazards in PvP: can a map hold them? `targetPlayer` and `IHazard.getDamageToMegaman` assume that all players are on one side.
 - Netplay: does PvP need rollback? See `095`.
 - See `102` for the mode concept, the menu, the start flow and progress.
+- Wrap room: where does the flag live? `NOTES.md` recommends a `wrap` property on the `game_rooms` object (inference).
+- Wrap room: what removes a wrapping shot, now that leaving the camera does not? A lifetime, a distance, or a wrap count?
+- Wrap room: must ladders, sand, gravity changers and other rules that read the real fixture shape work across the edge, or does a wrap room leave them out?
 
 ## Sources
 
