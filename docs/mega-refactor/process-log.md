@@ -2960,3 +2960,15 @@ newest entry at the bottom.
   code (one `TODO` comment).
 - Follow-up: 3 issues filed (`docs/issues/2026-11-20-glacier-man-*.md`). No backlog candidates. `077d` and `077e`
   stay planned.
+
+## 2026-11-20 — mega-refactor-109b-pvp-respawn
+
+- Summary: in PvP, a death respawns only the dead slot at its own level spawn (item `109`, must fix from the `109a`
+  play test). No level-defeat routine, no level reset, no life cost; the other player stays. `SlotRespawnRule`
+  (`OFF`, `NEAR_PARTNER`, `AT_SPAWN`) with `costsLife` and `spawnProtection` in `SessionRules`; `SlotRespawn` takes the
+  rule and a spawn-props supplier; `DamageRecoveryComponent.start()` gives the recovery flash. Squash `e1904c580`.
+- Contract check: `engine:test core:test core:smokeTest lwjgl3:jar detektMain core:verifyRandomRule` pass; 8 new
+  `SlotRespawnTest` cases, 7 mutations failed their cases. Review before the play test: 1 Sonnet agent, 1 fix (a death
+  during the level routine; the hold waits for the routine, `startBeam` sets `PRE_PLAY`). Play test passed; Diffity:
+  0 threads.
+- Follow-up: item `175` (`LevelPlayers`, filed before the merge). No backlog or bug candidates.

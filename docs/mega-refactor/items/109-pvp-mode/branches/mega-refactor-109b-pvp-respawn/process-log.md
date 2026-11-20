@@ -2,11 +2,11 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: a PvP death respawns only the dead slot: no level-defeat routine, no level reset, the other player stays
 - Done: branch start, scan, draft `SCOPE.md`, brief, owner answers, `PLAN.md`, implementation, review before the play test, play test
 - Brief: https://claude.ai/artifact/8cgtrT2AmfYeLtWHT4KCmJ (approved 2026-11-20)
-- Next: merge (play test passed, approval given 2026-11-20)
+- Next:
 - Blocked:
 
 ## Entries
@@ -29,3 +29,4 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
   - Automated checks again: pass.
 - Play scripts: `temp/play/play-1.sh` to `play-6.sh`.
 - Play test (owner, 2026-11-20): "109b tests pass". Diff review: 0 threads. This is the merge approval.
+- Merge: `master` had only `077g` and docs since the branch start, with no shared files or systems; no `master` merge into the branch. No conflicts. Squash `e1904c580`.

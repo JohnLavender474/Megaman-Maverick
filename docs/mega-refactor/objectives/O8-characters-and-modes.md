@@ -121,7 +121,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 | `061` | done | [Thin player view; locks and signals as components and functions](../items/061-thin-player/ITEM.md) |
 | `102` | idea | [A game mode concept](../items/102-game-modes/ITEM.md) (main) |
 | `108` | idea | [Spec Ops co-op missions](../items/108-spec-ops-mode/ITEM.md) |
-| `109` | idea | [PvP modes](../items/109-pvp-mode/ITEM.md) |
+| `109` | active | [PvP modes](../items/109-pvp-mode/ITEM.md) |
 | `113` | idea | [Character select screen](../items/113-character-select/ITEM.md) (main) |
 | `120` | idea | [A player that turns hostile and comes back](../items/120-hostile-player/ITEM.md) (main) |
 | `121` | idea | [Enemy clones of a playable character](../items/121-playable-character-clones/ITEM.md) |

@@ -5,7 +5,7 @@
 - Objectives: `O2`, `O8`
 - Depends on: `047`, `102`, `030`
 - Related: `023`, `024`, `094`, `095`, `108`, `111`, `118`, `119`, `120`, `122`
-- Branches: `mega-refactor-109a-screen-wrap` (merged), `mega-refactor-109b-pvp-respawn` (active)
+- Branches: `mega-refactor-109a-screen-wrap` (merged), `mega-refactor-109b-pvp-respawn` (merged)
 
 ## Goal
 
@@ -46,6 +46,8 @@ See `108` for the owner's reference to Call of Duty.
 - 2026-11-19: the wrap flag is a bool property `wrap` on the `game_rooms` object.
 - 2026-11-19: a room with `wrap=true` has no room transitions at all: no exit on any edge and no Gate transition. A `TODO` at the code says to revisit this in `111`.
 
+- 2026-11-20 (`109b`): in PvP, a death respawns only the dead slot at its own level spawn, after the `SlotRespawn` delay, with no life cost and a recovery flash (`SlotRespawnRule.AT_SPAWN`). No level-defeat routine and no level reset; the other player stays.
+
 ## Open questions
 
 - Camera: "large" can mean larger than one view. Then one shared camera cannot show all players, and a follow camera with one lead is not fair (inference). Is the first map limited to one view on a shared screen, or does PvP need one view for each player (`094`) from its start? This decides if `094` goes in "Depends on".
@@ -53,8 +55,8 @@ See `108` for the owner's reference to Call of Duty.
 - Player damage: `DamageRule` on `DAMAGER` and `DAMAGEABLE` already allows a hit, because `Megaman.canBeDamagedBy` refuses only the player's own shots (`Megaman.kt:423`). `MegamanDamageNegotiator` then scores a shot by `ISizable` size (2, 3 or 4), not by weapon. `047b` turns this off. Must friendly fire become a rule per team, in place of off? Must each weapon have a PvP value (`023`, `024`)?
 - Teams: `030` proposes `Faction { PLAYER, ENEMY, NEUTRAL }`, so all players are one faction. How does PvP express teams: a team ID on the slot, or more factions?
 - Score and match rules: `levelState.levelPoints` and `coins` are session values, and `END_LEVEL` is the only level exit that a match can use. Where do kills, team score, the time limit and the win condition live? Do the objective modes need new map objects?
-- Respawn: `PlayerCheckpointManager` holds one current spawn, and `PLAYER_JUST_DIED` is a level flow. What are the respawn delay, the spawn point choice and the spawn protection? Do lives exist in a match?
-  - Must fix (owner, 2026-11-20, found in the `109a` play test): when slot 1 kills slot 0, the level-defeat routine runs (`MegaLevelScreen.kt` `PLAYER_JUST_DIED`, `respawn.startAtDeath()`). It removes every other player (`RespawnSteps.kt` `defeat()`), resets the level and costs slot 0 a life. A PvP death must respawn only that slot, with no level reset, and the other player must stay. The opposite case is a gap too: with `slotRespawn=false`, a dead slot 1 stays dead until slot 0 dies.
+- Respawn (partly answered by `109b`; spawn point choice and lives in a match stay open): `PlayerCheckpointManager` holds one current spawn, and `PLAYER_JUST_DIED` is a level flow. What are the respawn delay, the spawn point choice and the spawn protection? Do lives exist in a match?
+  - Fixed by `109b` (2026-11-20). Must fix (owner, 2026-11-20, found in the `109a` play test): when slot 1 kills slot 0, the level-defeat routine runs (`MegaLevelScreen.kt` `PLAYER_JUST_DIED`, `respawn.startAtDeath()`). It removes every other player (`RespawnSteps.kt` `defeat()`), resets the level and costs slot 0 a life. A PvP death must respawn only that slot, with no level reset, and the other player must stay. The opposite case is a gap too: with `slotRespawn=false`, a dead slot 1 stays dead until slot 0 dies.
 - Enemies and hazards in PvP: can a map hold them? `targetPlayer` and `IHazard.getDamageToMegaman` assume that all players are on one side.
 - Netplay: does PvP need rollback? See `095`.
 - See `102` for the mode concept, the menu, the start flow and progress.
