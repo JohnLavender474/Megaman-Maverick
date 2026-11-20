@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: no
@@ -34,3 +34,7 @@ Found in the review before the play test of `077g`.
 
 Owner decision (2026-11-20, owner accepted the recommendation): fix it, in `fix/glacier-man-issues`; short contract
 in `2026-11-20-glacier-man-jump-over-lands-short.md`.
+
+## Resolution
+
+Fixed in `fix/glacier-man-issues`, squash commit `15d5eb772` (2026-11-20). An icicle leaves the boss's list when it is destroyed (`runnablesOnDestroyQueued`, the `Spawner` pattern); the defeat and the destroy act only on the list. Tests: the 2 "queues again" cases in `GlacierManIcicleRainTest`. Owner play test passed.

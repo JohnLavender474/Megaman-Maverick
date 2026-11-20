@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -75,3 +75,7 @@ Checks:
   2. Same command: stand on a ledge or jump high: `aim_up` throws, no duck.
   3. Control: `./run-game-alpha.sh --level GLACIER_MAN --room room12 --heartTanks all --healthTanks all`: the full
      fight to the stage exit.
+
+## Resolution
+
+Fixed in `fix/glacier-man-issues`, squash commit `15d5eb772` (2026-11-20). `jumpOverTargetPlayer` computes the air time with the y drag of the body (Newton steps on the drag model), so he lands 2 tiles past the player; the arc is unchanged. Test: the sled chain case of `GlacierManMoveChoiceTest` checks the landing. Owner play test passed.

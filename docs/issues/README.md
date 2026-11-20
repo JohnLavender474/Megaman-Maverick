@@ -181,6 +181,6 @@ related-items: [<mega-refactor item IDs>]
 | [The floating-points combo carries over into the next level](2026-11-17-floating-points-combo-carries-over.md) | yes | core | open |
 | [The `MetHelmet` spin lags 1 frame when the helmet seats or comes to rest](2026-11-18-met-helmet-spin-lags-one-frame.md) | yes | core | open |
 | [A desperate `Met` at a pit shows `NoHelmetRun` for 1 frame](2026-11-18-desperate-met-run-frame-at-pit.md) | yes | core | open |
-| [Glacier Man's jump over the player lands about 1 tile past the player, not 2](2026-11-20-glacier-man-jump-over-lands-short.md) | yes | core | open |
-| [Glacier Man can take a player who stands on his floor as "above"](2026-11-20-glacier-man-standing-player-counts-as-above.md) | yes | core | open |
-| [Glacier Man takes any queued icicle in its list as its own](2026-11-20-glacier-man-queued-icicle-ownership.md) | yes | core | open |
+| [Glacier Man's jump over the player lands about 1 tile past the player, not 2](2026-11-20-glacier-man-jump-over-lands-short.md) | yes | core | closed |
+| [Glacier Man can take a player who stands on his floor as "above"](2026-11-20-glacier-man-standing-player-counts-as-above.md) | yes | core | closed |
+| [Glacier Man takes any queued icicle in its list as its own](2026-11-20-glacier-man-queued-icicle-ownership.md) | yes | core | closed |

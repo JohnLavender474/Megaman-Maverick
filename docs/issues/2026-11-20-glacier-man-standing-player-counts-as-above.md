@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -34,3 +34,7 @@ depends on the float positions of the bodies.
 
 Owner decision (2026-11-20, owner accepted the recommendation): the offset goes to 2 tiles. Fixed in
 `fix/glacier-man-issues`; short contract in `2026-11-20-glacier-man-jump-over-lands-short.md`.
+
+## Resolution
+
+Fixed in `fix/glacier-man-issues`, squash commit `15d5eb772` (2026-11-20). `MEGAMAN_ABOVE_OFFSET_Y` is 2 tiles; a player who stands on his floor is not above. Tests: the 2.0 / 1.99 boundary and the standing-player case in `GlacierManMoveChoiceTest`. Owner play test passed.
