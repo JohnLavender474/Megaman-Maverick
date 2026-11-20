@@ -118,9 +118,33 @@ Sources:
 
 - Today a shot dies 0.05 s after it leaves the camera (`AbstractProjectile.kt:42-50`, `IProjectileEntity.kt:32`).
   70 classes extend `AbstractProjectile`; 72 spawn sites set `CULL_OUT_OF_BOUNDS`.
-- For wrapping shots: set the wrap flag once in `AbstractProjectile.onSpawn` when the room wraps, and add a
-  lifetime cap, because the camera cull no longer fires (inference). An ABSTRACT body updates only while it overlaps
-  the camera or moves (`IBodyExtensions.kt:28`).
+- For wrapping shots: the wrap filter accepts them, and a wrap counter limits them (see "Wrap filter and counter").
+  An ABSTRACT body updates only while it overlaps the camera or moves (`IBodyExtensions.kt:28`).
+
+### Wrap filter and counter (design sketch, 2026-11-19)
+
+Owner decisions are in `ITEM.md`. Names are proposals.
+
+```kotlin
+// core: the central filter (phase 1: players and shots)
+object WrapPolicy {
+    // TODO: phase 2: a per-instance override, and enemies, items and effects (item 109)
+    fun wraps(e: MegaGameEntity) = e.isPlayer || e is IProjectileEntity
+    fun maxWraps(e: MegaGameEntity) = if (e is IProjectileEntity) 1 else UNLIMITED
+}
+
+// engine: no wrap until a wrap room sets a region
+worldSystem.wrap = WorldWrap(region, wraps = { body -> WrapPolicy.wraps(body.entity) })
+spritesSystem.wrap = SpriteWrap(region, wraps = { entity -> WrapPolicy.wraps(entity) })
+```
+
+- No wrap room: the region is null, and the step and the draw skip all wrap code.
+- Wrap count on the body (physics state). `BodyComponent.reset()` at destroy clears it, so a pooled shot starts at 0.
+- At max count the body does not wrap: it leaves through the edge, and `CULL_OUT_OF_BOUNDS` removes it. A shot that
+  never reaches an edge stays, as in other levels.
+- A flag on `GameSprite` (draw state), set by `SpritesSystem` each frame, tells the draw loop to draw the far half
+  (owner rule `134b` D1: draw state stays on the draw side).
+- On its last crossing a shot draws no far half and cannot hit on the far side.
 
 ### Test level
 
