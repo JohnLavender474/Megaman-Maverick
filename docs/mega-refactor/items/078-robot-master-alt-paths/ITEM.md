@@ -113,6 +113,27 @@ The owner calls it "Gravity Man's stage".
    and too simple, so the enemies and their behaviors get little use and give no special gameplay. Make it larger,
    and design each new room around one behavior of the enemies (for example the eggs from `MockingByteEgg` or the
    nest from `MockingByteNest`).
+2. **Art make-over: a logging camp in a bayou.** Today the stage repeats one Anokolisa tree and canopy, a plain
+   `Tileset1` plank fort with ropes, a static Anokolisa cave with blue water blobs, and one background
+   (`ForestBKG_v2`). Concept: Timber Woman's logging camp eats an old bayou, and the damage grows along the route.
+   Four areas, each with its own tiles, one moving motif and its own background:
+
+   | Area | Rooms | Content |
+   |---|---|---|
+   | Old bayou | `room1`, `room8`, `room13` | cypress, hollow trunk and dead snag; swaying moss; stumps that grow in number along the route; bramble pit floors |
+   | Sawmill fort | `room2` to `room7`, `room14` | log palisade, stacked log ends, beams, chains and pulleys; a water wheel and log conveyors in the back layer |
+   | Root caves | `room9` to `room12`, `heart_room` | roots through the ceiling, pulsing glow fungus, drips, light shafts, teal to brown water; a glowing-root grotto in `heart_room` |
+   | Felling yard | `boss_room` | a clear-cut yard at sunset around one last giant tree |
+
+   First art branch: art only (tiles, tile animations, backgrounds, leaf looks per area); the blocks stay.
+3. **`FallingLeaf` fall kinds** (decor code, after the art branch): spin fall, pendulum, and land and rest, picked per
+   spawn area by a Tiled property. The leaf looks per area belong to the art branch.
+4. **Bayou set pieces** (stage redesign, later): mud water (slower run, about half the jump height, no swim boost;
+   `QuickSand` stays the hazard that sinks), lily pads that sink and come back up, and a log flume ride. They fit the
+   larger `MockingBit` section of part 1.
+
+Idea page: https://claude.ai/artifact/7XQ7cVBsLbcLNo2hUk9jWQ (source `temp/078-timber-art/ideas.src.html` in the
+main checkout, not in git).
 
 ### Wily Stage 1 (`WILY_STAGE_1`, `WilyStage1_v2.tmx`): art make-over (from `076`)
 
@@ -207,6 +228,12 @@ where the back wall was. Art only: blocks and spawns stay.
 - 2026-11-20 (owner): Precious Woman art make-over as branch `078e` (merge target `master`). Background concept
   "crystal abyss"; the stage reads as a jewel mine (the girders stay as mine scaffolds); the `tiles2` back wall goes.
   Art by Claude Fable 5.2 (confirmed). Details in the branch `docs/NOTES.md`.
+
+- 2026-11-20 (owner): Timber Woman art concept "logging camp in a bayou" (ideation only; no stage redesign now).
+- 2026-11-20 (owner accepted the recommendations of the idea page): the first Timber Woman art branch is art only
+  (the blocks stay); bramble pit floors so the pits still read as death; morning mist at the start and sunset in the
+  boss room; leaf fall kinds spin fall, pendulum, and land and rest (decor code, after the art branch); mud water,
+  lily pads and the log flume ride go on the redesign list.
 
 Decisions carried over from `076` (they apply to the tileset and background work):
 
