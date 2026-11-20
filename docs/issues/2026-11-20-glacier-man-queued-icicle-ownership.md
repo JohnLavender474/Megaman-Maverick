@@ -31,3 +31,6 @@ Read the code. No live map puts an `IcicleTelly` near Glacier Man.
 ## Notes
 
 Found in the review before the play test of `077g`.
+
+Owner decision (2026-11-20, owner accepted the recommendation): fix it, in `fix/glacier-man-issues`; short contract
+in `2026-11-20-glacier-man-jump-over-lands-short.md`.

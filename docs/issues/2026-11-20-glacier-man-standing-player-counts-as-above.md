@@ -1,8 +1,8 @@
 ---
 status: open
-verified: question
+verified: yes
 area: core
-gameplay-change: unknown
+gameplay-change: yes
 found-by: `mega-refactor-077g-glacier-man` (2026-11-20)
 related-items: [077]
 ---
@@ -31,3 +31,6 @@ gives the "above" weights (`GlacierManMoveChoiceTest`, the 1.5 / 1.49 boundary c
 depends on the float positions of the bodies.
 
 ## Notes
+
+Owner decision (2026-11-20, owner accepted the recommendation): the offset goes to 2 tiles. Fixed in
+`fix/glacier-man-issues`; short contract in `2026-11-20-glacier-man-jump-over-lands-short.md`.
