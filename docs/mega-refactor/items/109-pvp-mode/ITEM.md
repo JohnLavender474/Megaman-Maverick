@@ -54,6 +54,7 @@ See `108` for the owner's reference to Call of Duty.
 - Teams: `030` proposes `Faction { PLAYER, ENEMY, NEUTRAL }`, so all players are one faction. How does PvP express teams: a team ID on the slot, or more factions?
 - Score and match rules: `levelState.levelPoints` and `coins` are session values, and `END_LEVEL` is the only level exit that a match can use. Where do kills, team score, the time limit and the win condition live? Do the objective modes need new map objects?
 - Respawn: `PlayerCheckpointManager` holds one current spawn, and `PLAYER_JUST_DIED` is a level flow. What are the respawn delay, the spawn point choice and the spawn protection? Do lives exist in a match?
+  - Must fix (owner, 2026-11-20, found in the `109a` play test): when slot 1 kills slot 0, the level-defeat routine runs (`MegaLevelScreen.kt` `PLAYER_JUST_DIED`, `respawn.startAtDeath()`). It removes every other player (`RespawnSteps.kt` `defeat()`), resets the level and costs slot 0 a life. A PvP death must respawn only that slot, with no level reset, and the other player must stay. The opposite case is a gap too: with `slotRespawn=false`, a dead slot 1 stays dead until slot 0 dies.
 - Enemies and hazards in PvP: can a map hold them? `targetPlayer` and `IHazard.getDamageToMegaman` assume that all players are on one side.
 - Netplay: does PvP need rollback? See `095`.
 - See `102` for the mode concept, the menu, the start flow and progress.
