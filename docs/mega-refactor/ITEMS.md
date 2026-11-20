@@ -116,7 +116,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 106 | [Make a new line in the known-failures list visible](items/106-known-failures-growth-check/ITEM.md) | test | `O6` | idea | `004` | | |
 | 107 | [Tighter floor on the entity class count in the smoke test](items/107-tighter-entity-class-floor/ITEM.md) | test | `O6` | idea | `004` | | |
 | 108 | [Spec Ops co-op missions](items/108-spec-ops-mode/ITEM.md) | feature | `O2`, `O8` | idea | `047`, `102` | | |
-| 109 | [PvP modes](items/109-pvp-mode/ITEM.md) | feature | `O2`, `O8` | idea | `047`, `102`, `030` | | |
+| 109 | [PvP modes](items/109-pvp-mode/ITEM.md) | feature | `O2`, `O8` | active | `047`, `102`, `030` | 2026-11-19 | |
 | 110 | [Co-op in the main campaign](items/110-co-op-campaign/ITEM.md) | feature | `O2` | idea | `108`, `109` | | |
 | 111 | [PvP across multiple rooms](items/111-pvp-multi-room/ITEM.md) | feature | `O2` | idea | `109`, `094` | | |
 | 112 | [Targeting as a policy that each entity owns](items/112-targeting-policies/ITEM.md) | refactor | `O1`, `O2` | planned | `047b` | | |
@@ -309,4 +309,5 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-078b-wily-stage-3-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078b-wily-stage-3-art/process-log.md) | 078 | Wily Stage 3 art make-over: one new tileset in the mood of the X6 Gate stages, the repainted map, new backgrounds | merged | 2026-11-19 | 2026-11-19 |
 | [`mega-refactor-078c-wily-stage-3-enemy-skins`](items/078-robot-master-alt-paths/branches/mega-refactor-078c-wily-stage-3-enemy-skins/process-log.md) | 078 | A stage sprite skin for the Wily Stage 3 enemies and what they spawn (Claude Fable 5.2) | merged | 2026-11-19 | 2026-11-19 |
 | [`mega-refactor-078d-reactor-man-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078d-reactor-man-art/process-log.md) | 078 | Reactor Man stage touch-up: one merged tileset with an accent palette and a moving motif per area, decor entities, backgrounds | active | 2026-11-19 | |
+| [`mega-refactor-109a-screen-wrap`](items/109-pvp-mode/branches/mega-refactor-109a-screen-wrap/process-log.md) | 109 | Horizontal screen wrap in a room with the `wrap` flag (players and shots), and the test map `REFACTOR_TEST_109` | active | 2026-11-19 | |
 | [`mega-refactor-079a-smarter-met`](items/079-smarter-enemies/branches/mega-refactor-079a-smarter-met/process-log.md) | 079 | A smarter `Met`: pit avoidance with a shared ground probe, safe jumps, charged-shot stagger, helmet break and a desperate phase | merged | 2026-11-18 | 2026-11-18 |

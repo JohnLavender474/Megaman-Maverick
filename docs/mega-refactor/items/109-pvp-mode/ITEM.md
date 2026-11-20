@@ -1,11 +1,11 @@
 # 109: PvP modes
 
-- Status: idea
+- Status: active
 - Type: feature
 - Objectives: `O2`, `O8`
 - Depends on: `047`, `102`, `030`
 - Related: `023`, `024`, `094`, `095`, `108`, `111`, `118`, `119`, `120`, `122`
-- Branches: none yet
+- Branches: `mega-refactor-109a-screen-wrap` (active)
 
 ## Goal
 
@@ -41,6 +41,9 @@ See `108` for the owner's reference to Call of Duty.
 - 2026-11-19: the wrap is generic for any entity with a body or a sprite. A central filter in `core` decides who wraps. Phase 1: players and shots. The physics side and the draw side both ask the filter.
 - 2026-11-19: phase 1 has no per-instance override. Phase 2 adds it (for example a wrap flag that an enemy sets to true) with its first caller; until then, a `TODO` at the filter and here.
 - 2026-11-19: phase 1 draws a second half only for entities that the filter accepts. A body-less effect at the edge (for example a shot's explosion) shows half. Effects go with phase 2.
+- 2026-11-19: merge target: each branch merges directly into `master`. The wrap code runs only in a room with the wrap flag.
+- 2026-11-19: the first branch `109a` holds the screen wrap and the test map `REFACTOR_TEST_109`. PvP respawn and score come in a later branch.
+- 2026-11-19: the wrap flag is a bool property `wrap` on the `game_rooms` object.
 
 ## Open questions
 
@@ -53,7 +56,6 @@ See `108` for the owner's reference to Call of Duty.
 - Enemies and hazards in PvP: can a map hold them? `targetPlayer` and `IHazard.getDamageToMegaman` assume that all players are on one side.
 - Netplay: does PvP need rollback? See `095`.
 - See `102` for the mode concept, the menu, the start flow and progress.
-- Wrap room: where does the flag live? `NOTES.md` recommends a `wrap` property on the `game_rooms` object (inference).
 - Wrap room, phase 2 (`TODO`): which enemies, items and effects wrap, and the per-instance override that lets one opt in.
 - Wrap room: must ladders, sand, gravity changers and other rules that read the real fixture shape work across the edge, or does a wrap room leave them out?
 
