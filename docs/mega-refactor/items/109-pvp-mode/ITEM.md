@@ -5,7 +5,7 @@
 - Objectives: `O2`, `O8`
 - Depends on: `047`, `102`, `030`
 - Related: `023`, `024`, `094`, `095`, `108`, `111`, `118`, `119`, `120`, `122`
-- Branches: `mega-refactor-109a-screen-wrap` (active)
+- Branches: `mega-refactor-109a-screen-wrap` (merged), `mega-refactor-109b-pvp-respawn` (active)
 
 ## Goal
 
