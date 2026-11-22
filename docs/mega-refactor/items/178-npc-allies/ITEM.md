@@ -139,14 +139,16 @@ damage, enemy targeting) works at once, so the brain and the navigation can be p
 
   players.assign(PlayerSlot(1), BotPlayerSlotAgent(FollowBrain()))
   ```
+- 2026-11-22, owner accepted the recommendation: the ally shapes come in stages. A bot in a player slot first (phases
+  1 and 2), then slot agents (phase 3), and allies with no slot only for guests, escorts and NPCs (phase 4). See
+  `NOTES.md`, "Slots or a separate mechanism".
+- 2026-11-22, owner accepted the recommendation: the room lock does not apply to a bot in a player slot. The room
+  transition already carries a slot player, so the lock applies only to the allies with no slot (phase 4).
+- 2026-11-22, owner accepted the recommendation: each branch of this item squash-merges directly into `master`. No
+  parent branch. A bot is off unless a launch option turns it on, so each branch is safe to ship alone.
 
 ## Open questions
 
-- **Ally shape.** Recommended: a bot in a player slot first (phases 1 and 2), then slot agents (phase 3), and allies with no
-  slot only for guests, escorts and NPCs (phase 4). See `NOTES.md`, "Slots or a separate mechanism".
-- **The room lock and a bot in a slot.** Does the room lock also apply to a bot in a slot? Recommended: no. The room
-  transition already carries a slot player, so the lock applies to the allies of phase 4.
-- **The merge target** (directly into `master`, or a parent branch): ask at the item start.
 - **Player-only checks.** Which ones should an ally that is not a player join (group 5 in `NOTES.md`)?
 
 ## Sources
