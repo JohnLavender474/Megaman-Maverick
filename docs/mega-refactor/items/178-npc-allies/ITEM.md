@@ -122,12 +122,12 @@ damage, enemy targeting) works at once, so the brain and the navigation can be p
 - 2026-11-22, owner: an NPC acts in its own view, not in the shared camera view.
 - 2026-11-22, owner: in the first pass, an NPC is locked to one room. `TODO`s for (a) a teleport on room transition
   and (b) scripted events where it comes back into play; a mix of both is wanted.
+- 2026-11-22, owner accepted the recommendation: targeting uses the `TargetPolicy` / `TargetingComponent` design of
+  `112`, not a single `findAttackTarget` function. The candidates become "the foes of the seeker" from `030`, so
+  enemies can choose an ally and an ally can choose an enemy with the same policies.
 
 ## Open questions
 
-- **Targeting.** Recommended: use the `TargetPolicy` / `TargetingComponent` design of `112`, not a single
-  `findAttackTarget` function. The candidates become "the foes of the seeker" from `030`, so enemies can choose an ally
-  and an ally can choose an enemy with the same policies.
 - **Ally shape.** Recommended: a bot in a player slot first (phases 1 and 2), then seats (phase 3), and allies with no
   slot only for guests, escorts and NPCs (phase 4). See `NOTES.md`, "Slots or a separate mechanism".
 - **The room lock and a bot in a slot.** Does the room lock also apply to a bot in a slot? Recommended: no. The room
