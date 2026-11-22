@@ -3,6 +3,33 @@
 Read this file before you draw, fix or convert art (sprites, tiles, backgrounds). Atlases and packing are in
 `assets.md`.
 
+- **NES pixel size and NES palette** (owner, 2026-11-22, branch `078e`: round-4 art had pixels smaller than an NES
+  pixel, and no color from the NES palette). New and changed art looks like NES graphics:
+  - **Pixel size.** One NES pixel is 2x2 game px: the view of 16x14 tiles of 32 px is the NES screen of 256x224,
+    doubled. Art that the game draws at 1 art px per game px (tiles, backgrounds, a sprite drawn at its frame size,
+    for example a 32 px frame on 1 tile) is drawn on a 2 px grid: every aligned 2x2 block is one color. Art that the
+    game draws at 2 game px per art px (a 32 px frame on 2 tiles, as most entities) uses single art px. No detail is
+    finer than one NES pixel: not an edge, a highlight, a glint arm or a dither.
+  - **Palette.** Every color is from the NES (2C02) master palette:
+
+    ```text
+    000000 7C7C7C BCBCBC F8F8F8 FCFCFC 787878
+    0000FC 0000BC 4428BC 940084 A80020 A81000 881400 503000 007800 006800 005800 004058
+    0078F8 0058F8 6844FC D800CC E40058 F83800 E45C10 AC7C00 00B800 00A800 00A844 008888
+    3CBCFC 6888FC 9878F8 F878F8 F85898 F87858 FCA044 F8B800 B8F818 58D854 58F898 00E8D8
+    A4E4FC B8B8F8 D8B8F8 F8B8F8 F8A4C0 F0D0B0 FCE0A8 F8D878 D8F878 B8F8B8 B8F8D8 00FCFC F8D8F8
+    ```
+
+  - **Sprites** (entities): each 8x8 NES-px area of a frame uses one sprite palette of at most 3 colors plus
+    transparent. An entity uses at most 2 sprite palettes.
+  - **Background tiles:** each 16x16 NES-px area (one 32 px tile) uses one background palette of 3 colors plus the
+    backdrop color, also where a decor layer draws over the tile. Each area of a stage (what one screen shows) uses
+    at most 4 background palettes, which share one backdrop color. A room can change the palettes of the next area.
+  - **Parallax backgrounds** follow the background-tile rule in each 16x16 NES-px area of each texture, and their
+    colors count toward the 4 background palettes of the area.
+  - **Check by script** in each art round: the 2 px grid, the palette and the color counts. Old art keeps its look
+    until a task changes it; do not redo old art only for this rule.
+
 - **Credit the original and the update.** When new art in the game builds on existing art (a tileset, a sprite sheet
   or a background used as the premise), the `CREDITS` section of the root `README.md` names both, with the pattern
   that it already uses:
