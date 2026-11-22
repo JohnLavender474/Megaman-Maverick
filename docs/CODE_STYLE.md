@@ -48,6 +48,18 @@ them.
   fun Megaman.currentWeaponPrevents(move: BehaviorType)   // not firingBlocks(move)
   ```
 
+- **Long where a short name has two meanings** (owner, 2026-11-22, item `178`). Use the longer name when a short one
+  can mean two things in the code or the game. This applies most to a new type next to existing concepts. Build the
+  name from existing type names. Search the code to make sure that no other thing already uses the word, for example
+  "Controller" for gamepad and keyboard input. Give each implementation the full name of its interface, so that each
+  one reads clearly on its own. A long name costs little at a declaration and at a few call sites.
+
+  ```kotlin
+  sealed interface PlayerSlotAgent                     // not Agent, Seat or Controller
+  class HumanPlayerSlotAgent(...) : PlayerSlotAgent    // not Human
+  class BotPlayerSlotAgent(...) : PlayerSlotAgent      // not Bot
+  ```
+
 ## Errors
 
 - **Fail fast.** A state that only a mistake can cause (bad map data, a wrong label, a missing entity) throws at once;
