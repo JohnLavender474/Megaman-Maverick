@@ -56,19 +56,21 @@ damage, enemy targeting) works at once, so the brain and the navigation can be p
      because it is a player. Its target candidates are the live enemies and bosses, with a `TODO` to use the foes
      query of `030` and `112`.
 
-### Phase 3: seats, so that a bot is not a human
+### Phase 3: slot agents, so that a bot is not a human
 
-6. **`178e` seats.**
-   - **What:** split the seat (a human's input, settings, HUD and lives) from the slot (the identity of a hero on the
-     field). `MAX_PLAYERS` becomes a seat limit and a slot limit. A slot with no seat has an AI driver. Then a bot
-     death can be free, a bot can be kept from pickups, and 2 humans can each have a bot.
+6. **`178e` slot agents.**
+   - **What:** each player slot (the identity of a hero on the field) gets a `PlayerSlotAgent` that drives it: a
+     `HumanPlayerSlotAgent` (a human's input, settings, HUD and lives) or a `BotPlayerSlotAgent` (an AI brain).
+     `MAX_PLAYERS` becomes a human limit and a slot limit. Then a bot death can be free, a bot can be kept from
+     pickups, and 2 humans can each have a bot.
    - **Why here:** this is the first point where "a slot is a human" breaks: lives, HUD and `--players` all count the
      bot as a human. It changes the meaning of `O2-R5`, so the brief asks the owner first.
    - **Depends on:** `175` if it is merged by then.
 7. **`178f` takeover.**
    - **What:** a human who joins takes over a bot, and gives it back on leaving (as Tails, Kirby helpers and Left 4
      Dead bots).
-   - **Why after `178e`:** with seats, a takeover only binds or unbinds a seat; the entity stays the same. It
+   - **Why after `178e`:** a takeover only replaces the slot's `BotPlayerSlotAgent` with a `HumanPlayerSlotAgent`;
+     the entity stays the same. It
      depends on `047f` (join and leave).
 
 ### Phase 4: allies and NPCs that are not players
@@ -125,10 +127,22 @@ damage, enemy targeting) works at once, so the brain and the navigation can be p
 - 2026-11-22, owner accepted the recommendation: targeting uses the `TargetPolicy` / `TargetingComponent` design of
   `112`, not a single `findAttackTarget` function. The candidates become "the foes of the seeker" from `030`, so
   enemies can choose an ally and an ally can choose an enemy with the same policies.
+- 2026-11-22, owner: the names of the human and AI sides of a player slot (called "seat" in the research). A sealed
+  interface `PlayerSlotAgent` drives a player slot. Its implementations are `HumanPlayerSlotAgent` and
+  `BotPlayerSlotAgent`. "Controller" is not used, because it means gamepad and keyboard input; the implementation names
+  are as long as the interface name, so each one is clear on its own.
+
+  ```kotlin
+  sealed interface PlayerSlotAgent
+  class HumanPlayerSlotAgent(val device: InputDevice, val settings: PlayerSettings, val hud: PlayerHud) : PlayerSlotAgent
+  class BotPlayerSlotAgent(val brain: BotBrain) : PlayerSlotAgent
+
+  players.assign(PlayerSlot(1), BotPlayerSlotAgent(FollowBrain()))
+  ```
 
 ## Open questions
 
-- **Ally shape.** Recommended: a bot in a player slot first (phases 1 and 2), then seats (phase 3), and allies with no
+- **Ally shape.** Recommended: a bot in a player slot first (phases 1 and 2), then slot agents (phase 3), and allies with no
   slot only for guests, escorts and NPCs (phase 4). See `NOTES.md`, "Slots or a separate mechanism".
 - **The room lock and a bot in a slot.** Does the room lock also apply to a bot in a slot? Recommended: no. The room
   transition already carries a slot player, so the lock applies to the allies of phase 4.

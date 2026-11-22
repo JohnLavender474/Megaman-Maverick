@@ -154,7 +154,7 @@ The options:
 
 - **S:** the ally takes a player slot, with input from an AI.
 - **R:** a separate ally roster. Allies are not players, and the teams decide damage and targeting.
-- **H:** S plus a seat layer. The slot stays the identity of the hero on the field (`O2-R5`). A seat is a human's
+- **H:** S plus a seat layer (named `PlayerSlotAgent` on 2026-11-22; see `ITEM.md`, "Decisions"). The slot stays the identity of the hero on the field (`O2-R5`). A seat is a human's
   input, settings, HUD and lives, and it binds to a slot. An AI driver drives a slot that has no seat.
 
 | Scenario | S | R | H |
