@@ -76,11 +76,13 @@ Intended changes:
 - A new class `AutoPerformance` (`core/.../state/AutoPerformance.kt`) holds the auto-perf rule. The game gives it the
   raw frame delta and the current tier each frame (only with auto-perf on), and it gives back the lower tier when the
   tier must drop. The game keeps `setPerformance`, the notification and the log line.
-- `AutoPerformance` measures the frame rate itself from the deltas it gets, with the same 1 s window count as libGDX
-  `framesPerSecond`. It does not read `Gdx.graphics.framesPerSecond`.
-- A frame with a delta over 0.25 s is a hitch, not a sample: it does not go into the frame-rate window, the 3 s timer or
-  the 5 s grace timer. So one freeze (a stopped process, a GC pause, a window drag, a slow level load) does not drop the
-  tier and does not use up the grace period.
+- `AutoPerformance` measures the frame rate itself from the deltas it gets, in 1 s windows: the reading is the frames
+  of the window divided by the window time. It does not read `Gdx.graphics.framesPerSecond`.
+- Every frame is a sample, but a frame adds at most 0.25 s (the hitch limit) to the frame-rate window, the 3 s timer and
+  the 5 s grace timer. So one or two freezes in a row (a stopped process, a GC pause, a window drag, a slow level load)
+  do not drop the tier and do not use up the grace period. A machine whose frames are all over 0.25 s (under 4 fps)
+  still drops its tier, and so does a steady stutter (long frames between fast frames). Owner accepted the
+  recommendation, 2026-11-23 (code review round 2; it replaces the "3rd long frame in a row" rule of Diffity round 1).
 - Before the first full window there is no reading, and the tier does not drop (today the grace period covers this).
 
 Not changed:
@@ -94,10 +96,12 @@ Not changed:
 - The frame delta that the game passes to the screens: no clamp here (`2026-10-22-frame-delta-not-clamped.md`, item
   `010a`).
 
-- A slow machine is not a freeze: from the 3rd long frame in a row on, a long frame counts as a sample again. So a
-  machine whose frames are all over 0.25 s (under 4 fps) still drops its tier, and one or two freezes in a row are
-  still ignored. Owner accepted the recommendation, 2026-11-23 (Diffity round 1; it replaces the accepted edge case and
-  its `TODO`).
+Accepted edge cases (owner accepted the recommendation, 2026-11-23, code review round 2):
+
+- A window that the OS slows to about 1 frame/s while it is hidden (reported for macOS with a covered window, not
+  checked) counts as a slow machine. After about 26 s of hidden time it drops one tier. `TODO` at the hitch rule in
+  `AutoPerformance.update`.
+- 3 or more freezes in a row (no normal frame between them) can drop the tier.
 
 `010a`: its frame clock passes the raw delta to `AutoPerformance.update`, in place of `Gdx.graphics.deltaTime`. The
 hitch limit stays an auto-perf value. It is not the clamp of `010a`.
@@ -106,8 +110,9 @@ Checks:
 
 - New unit tests in `core` (`AutoPerformanceTest`): a steady 60 fps at MEDIUM never drops; a steady 30 fps at MEDIUM
   drops to LOW; one freeze of 0.6, 1, 1.5, 3 or 10 s between 60 fps frames does not drop the tier; two freezes in a row do not drop the tier; a steady 3 fps
-  at MEDIUM drops to LOW; a freeze does not use up the grace period; a steady 30 fps with a freeze still drops; `VERY_LOW` never drops. A mutation that treats every
-  frame as a sample (hitch limit `Float.MAX_VALUE`) makes the freeze and grace tests fail.
+  at MEDIUM drops to LOW; a steady stutter of 0.3 s frames between 60 fps frames drops to LOW; a freeze does not use up
+  the grace period; a steady 30 fps with a freeze still drops; `VERY_LOW` never drops. A mutation with no hitch limit
+  (`Float.MAX_VALUE`) makes the freeze and grace tests fail.
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar detektMain core:verifyRandomRule` passes.
 
 Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/auto-perf-freeze`. The helper
