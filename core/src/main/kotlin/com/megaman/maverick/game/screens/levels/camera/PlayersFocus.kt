@@ -57,7 +57,8 @@ class PlayersFocus(
     private val lead: IPlayer
         get() = players.get(PlayerSlot(0))!!
 
-    fun inGroup(player: IPlayer) = player.hasBody && player.existenceState.liveNow && !excluded(player)
+    fun inGroup(player: IPlayer) =
+        player.hasBody && player.existenceState.liveNow && !players.isBot(player.slot) && !excluded(player)
 
     override fun getSubjectBounds(): GameRectangle {
         players.forEach { if (inGroup(it)) return lastBounds.set(it.roomSubject.getSubjectBounds()) }

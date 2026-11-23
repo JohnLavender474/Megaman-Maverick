@@ -76,6 +76,7 @@ class SlotRespawn(
 
     private fun start(player: IPlayer) {
         val slot = player.slot
+        // TODO: a bot death costs a shared life as in co-op; a free bot death comes with the slot agents (item 178e)
         if (rule.costsLife) {
             services.gameState.removeLife(slot)
             if (services.gameState.livesExhausted()) {

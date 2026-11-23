@@ -1,68 +1,68 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>178a Bot Input</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 178 · Branch 178a · Objectives O8, O2, O4 · <span class="chip ok">approved 2026-11-22</span></p>
+    <h1>A bot drives player slot 1</h1>
+    <p class="lead">With <code>--bot follow</code>, an AI brain writes the input of slot 1 in place of a pad. It copies P1's buttons with a short delay and walks back to where P1 was, as Tails does in Sonic 2.</p>
+    <p class="meta"><b>In play:</b> a second Megaman follows P1, jumps and shoots after P1, and warps back to P1 when it falls behind. With no option, nothing changes.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>Only the source of slot 1's held buttons changes</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: a pad drives slot 1">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  K["keyboard + pads"] -->|held bits| B0["frame builder 0"] -->|frame| S0["slot 0 Megaman"]
+  P["last pad"] -->|held bits| B1["frame builder 1"] -->|frame| S1["slot 1 Megaman"]
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>With <code>--players 2</code>, the last connected pad drives slot 1.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: the follow brain drives slot 1">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  K["keyboard + all pads"] -->|held bits| B0["frame builder 0"] -->|frame| S0["slot 0 Megaman"]
+  B0 -->|"P1 frame, recorded"| R["FollowBrain ring"]
+  S0 -->|"P1 position, recorded"| R
+  R -->|"held bits from 0.25 s ago, steered"| B1["frame builder 1"] -->|frame| S1["slot 1 Megaman (bot)"]
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>The bot gives only held bits. The same edge builder, lock and player code run for it.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>The input step of the game feeds slot 1 from the brain</h2></div>
+    <p>Today, <code>MegamanMaverickGame.render()</code>:</p>
+<pre><code>players.inputs[PlayerSlot(0)] = frameBuilders[0].build(keyboardInput.held() or gamepadInput.held())
+slot1GamepadInput?.let { players.inputs[PlayerSlot(1)] = frameBuilders[1].build(it.held()) }</code></pre>
     <p>After:</p>
-<pre><code><new code></code></pre>
+<pre><code>val leaderFrame = frameBuilders[0].build(keyboardInput.held() or gamepadInput.held())
+players.inputs[PlayerSlot(0)] = leaderFrame
+slot1GamepadInput?.let { players.inputs[PlayerSlot(1)] = frameBuilders[1].build(it.held()) }
+followBrain?.let { players.inputs[PlayerSlot(1)] = frameBuilders[1].build(it.held(leaderFrame, delta)) }</code></pre>
+    <p>The launch: <code>--bot follow</code> gives <code>ResolvedLaunch.bot = BotKind.FOLLOW</code>, and the slot count is humans plus bots.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>4 decisions, all as recommended</h2></div>
+    <p>A bot session uses the co-op rules today: a group camera on the mean of both players, walls at the side view edges, a warp at the bottom edge, and a shared life for each death.</p>
+    <p><b>D1 · What does the camera follow in a bot session?</b><br><span class="chip ok">Chosen</span> P1 only, as in Sonic 2. The bot never moves the view.</p>
+    <p><b>D2 · What happens when the bot falls behind at a side of the view?</b><br><span class="chip ok">Chosen</span> It warps to P1, as Tails does. The bot session sets the side edges to WARP (needs D1 a).</p>
+    <p><b>D3 · What does a bot death cost in this branch?</b><br><span class="chip ok">Chosen</span> A shared life, as in co-op today. A free bot death comes with the slot agents (178e); a TODO marks it.</p>
+    <p><b>D4 · What is the launch option?</b><br><span class="chip ok">Chosen</span> <code>--bot follow</code>: it adds a bot in slot 1; an error with <code>--players 2</code>.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>A stuck bot can hold P1 at an exit</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>Exits and gates wait for every live player.</b> A bot stuck in view under a high wall holds P1 there. The jump assist and the side warp (D2) free it; check 4 and 5 test it.</li>
+      <li><span class="chip warn">risk</span> <b>The delay is counted in frame time.</b> At a low frame rate the copy is coarser. The fixed tick comes with item 010.</li>
+      <li><span class="chip warn">risk</span> <b>A plain copy goes wrong from another start point.</b> A copied jump can miss a ledge. The steer and the jump assist correct it; the values are tuned at the play test.</li>
     </ul>
   </section>
 
@@ -70,14 +70,21 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-178a-bot-input</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_178 --room follow_flat --bot follow</code>: the bot runs and jumps after P1 and stops near P1. <code>START</code> pauses only for P1.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_178 --room follow_steps --bot follow</code>: the bot climbs the steps; after a missed copy it jumps up by itself.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_178 --room follow_pit --bot follow</code>: the bot falls in the pit and warps next to P1.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_178 --room follow_outrun --bot follow</code>: P1 runs past the tall wall; the bot leaves the view at the side and warps (D2).</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_178 --room follow_exit --bot follow</code>: P1 waits at the side exit for the bot; both go to the next room.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_178 --room follow_enemies --bot follow</code>: the bot's shots hurt the <code>Met</code>s; a <code>Met</code> aims at the bot when it is nearer.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_178 --room follow_flat</code>: 1 player, no bot, as before.</li>
+      <li><code>./run-game-test-coop.sh --room group_wide</code>: co-op with 2 humans, as before.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
     <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-178a-bot-input/docs/SCOPE.md</code></p>
+    <p><code>docs/mega-refactor/items/178-npc-allies/branches/mega-refactor-178a-bot-input/docs/SCOPE.md</code></p>
   </section>
 </main>
 </body>

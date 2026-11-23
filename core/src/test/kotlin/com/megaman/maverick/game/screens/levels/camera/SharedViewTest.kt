@@ -269,6 +269,14 @@ class SharedViewTest : DescribeSpec({
             focus.getFocusPosition() shouldBe Vector2(100f, 20f)
         }
 
+        it("leaves out a bot slot, so the camera follows player 1 only (178a D1)") {
+            val session = Session()
+            session.players.setBot(PlayerSlot(1))
+            val focus = PlayersFocus(session.players)
+            focus.getFocusPosition() shouldBe Vector2(100f, 20f)
+            focus.getSubjectBounds().getCenter(Vector2()) shouldBe Vector2(100f, 20f)
+        }
+
         it("eases when the midpoint jumps by more than a tile in one read") {
             val session = Session()
             val focus = PlayersFocus(session.players)

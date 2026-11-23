@@ -109,6 +109,8 @@ import com.megaman.maverick.game.players.PlayerRoster
 import com.megaman.maverick.game.players.PlayerSettingsStore
 import com.megaman.maverick.game.players.WorldGravity
 import com.megaman.maverick.game.players.applyBootSettings
+import com.megaman.maverick.game.players.bots.BotKind
+import com.megaman.maverick.game.players.bots.FollowBrain
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.debug.DebugWindow
 import com.megaman.maverick.game.screens.levels.MegaLevelScreen
@@ -235,6 +237,7 @@ class MegamanMaverickGame(
     private lateinit var settingsStore: PlayerSettingsStore
     lateinit var gamepadInput: GamepadInput
     private var slot1GamepadInput: GamepadInput? = null
+    private var followBrain: FollowBrain? = null
     private lateinit var keyboardInput: KeyboardInput
     private val frameBuilders = List(MAX_PLAYERS) { InputFrameBuilder(MegaControllerButton.entries) }
     private val systemFrameBuilder = InputFrameBuilder(SystemButton.entries)
@@ -335,11 +338,16 @@ class MegamanMaverickGame(
         if (params.resetBindings) GameLogger.log(TAG, "create(): cleared the saved bindings")
         if (params.loadKeyboardPrefs) GameLogger.log(TAG, "create(): loaded keyboard prefs")
         keyboardInput = KeyboardInput(players.settings(PlayerSlot(0)))
-        val slot0Pads = if (launch.players > 1) PadShare.ALL_BUT_LAST else PadShare.ALL
+        val slot1Pad = launch.slots > 1 && launch.bot == null
+        val slot0Pads = if (slot1Pad) PadShare.ALL_BUT_LAST else PadShare.ALL
         gamepadInput = GamepadInput(players.settings(PlayerSlot(0)), settingsStore, slot0Pads)
-        if (launch.players > 1) slot1GamepadInput = GamepadInput(
+        if (slot1Pad) slot1GamepadInput = GamepadInput(
             players.settings(PlayerSlot(1)), PlayerSettingsStore(PlayerSlot(1)), PadShare.LAST_ONLY
         )
+        followBrain = when (launch.bot) {
+            BotKind.FOLLOW -> FollowBrain(players, clock)
+            null -> null
+        }
 
         events = EventsManager()
         events.addListener(this)
@@ -463,7 +471,7 @@ class MegamanMaverickGame(
         // TODO: should replace EntityFactories with MegaEntityFactory
         EntityFactories.initialize(services)
 
-        for (i in 0 until launch.players) {
+        for (i in 0 until launch.slots) {
             val megaman = Megaman(services)
             // manually call init and set initialized to true before megaman is spawned
             megaman.init()
@@ -473,6 +481,10 @@ class MegamanMaverickGame(
 
             players.register(PlayerSlot(i), megaman)
             roster.add(megaman, if (i == 0) PlayerCharacter.MEGAMAN else null)
+        }
+        if (launch.bot != null) {
+            players.setBot(PlayerSlot(1))
+            players.settings(PlayerSlot(1)).selectButtonAction = players.settings(PlayerSlot(0)).selectButtonAction
         }
 
         gameState.addListener(WeaponRewardListener(levelState, players))
@@ -613,8 +625,10 @@ class MegamanMaverickGame(
             diagnostics?.endEntry()
 
             diagnostics?.beginEntry("inputFrames")
-            players.inputs[PlayerSlot(0)] = frameBuilders[0].build(keyboardInput.held() or gamepadInput.held())
+            val leaderFrame = frameBuilders[0].build(keyboardInput.held() or gamepadInput.held())
+            players.inputs[PlayerSlot(0)] = leaderFrame
             slot1GamepadInput?.let { players.inputs[PlayerSlot(1)] = frameBuilders[1].build(it.held()) }
+            followBrain?.let { players.inputs[PlayerSlot(1)] = frameBuilders[1].build(it.held(leaderFrame, delta)) }
             systemFrameBuilder.build(keyboardInput.systemHeld())
             diagnostics?.endEntry()
 
@@ -1106,7 +1120,7 @@ class MegamanMaverickGame(
         val levelScreen = screens.get(ScreenEnum.LEVEL_SCREEN.name) as MegaLevelScreen
 
         val currentLevel = levelState.currentLevel!!
-        roster.putInSlot0(currentLevel.characters, launch.players)
+        roster.putInSlot0(currentLevel.characters, launch.slots)
         levelScreen.music = currentLevel.music
         levelScreen.screenOnCompletion = currentLevel.screenOnCompletion
         levelScreen.start(currentLevel.source)

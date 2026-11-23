@@ -8,6 +8,7 @@ import com.megaman.maverick.game.players.CharacterLoadouts
 import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.players.PlayerCharacter
+import com.megaman.maverick.game.players.bots.BotKind
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.state.GameMode
 import com.megaman.maverick.game.state.SessionRules
@@ -37,8 +38,12 @@ data class ResolvedLaunch(
     val rules: SessionRules = mode.rules,
     val saveFile: String = PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE,
     val difficulty: DifficultyMode? = null,
-    val randSeed: Long? = null
+    val randSeed: Long? = null,
+    val bot: BotKind? = null
 ) {
+
+    val slots: Int
+        get() = players + if (bot != null) 1 else 0
 
     val savesAllowed: Boolean
         get() = heartTanks.isEmpty() && healthTanks.isEmpty() && difficulty == null
@@ -75,14 +80,20 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     val heartTanks = parseEnumListOption<MegaHeartTank>("--heartTanks", options.heartTanks, errors)
     val healthTanks = parseEnumListOption<MegaHealthTank>("--healthTanks", options.healthTanks, errors)
     val players = parsePlayers(options.players, errors)
-    val mode = parseMode(options.mode, players, errors)
-    val viewEdges = parseViewEdges(options.viewEdges, players, mode.rules.viewEdges, errors)
+    val bot = parseBot(options.bot, players, errors)
+    val slots = players?.let { it + if (bot != null) 1 else 0 }
+    val mode = parseMode(options.mode, slots, errors)
+    if (bot != null && mode == GameMode.PVP) errors.add("--bot plays only in coop; remove --mode pvp.")
+    val viewEdgeDefaults = if (bot != null) BOT_VIEW_EDGES else mode.rules.viewEdges
+    val viewEdges = parseViewEdges(options.viewEdges, slots, viewEdgeDefaults, errors)
     val saveFile = parseSaveFile(options.saveFile, errors)
     val difficulty = options.difficulty?.takeIf { it.isNotBlank() }
         ?.let { parseEnumOption<DifficultyMode>("--difficulty", it, errors) }
     val randSeed = parseRandSeed(options.randSeed, errors)
-    if (level != null && players != null && players > 1 && PlayerCharacter.MEGAMAN !in level.characters)
-        errors.add("--level $level plays only with 1 player (${level.characters.joinToString()}); remove --players.")
+    if (level != null && slots != null && slots > 1 && PlayerCharacter.MEGAMAN !in level.characters) {
+        val remove = if (bot != null) "--bot" else "--players"
+        errors.add("--level $level plays only with 1 player (${level.characters.joinToString()}); remove $remove.")
+    }
 
     if (errors.isNotEmpty()) return LaunchResult(null, errors)
 
@@ -99,18 +110,30 @@ fun resolveLaunchOptions(options: LaunchOptions): LaunchResult {
     return LaunchResult(
         ResolvedLaunch(
             start, room, logTags, logAllTags, options.autoPerf, weapons, heartTanks, healthTanks, players!!, mode,
-            mode.rules.copy(viewEdges = viewEdges), saveFile, difficulty, randSeed
+            mode.rules.copy(viewEdges = viewEdges), saveFile, difficulty, randSeed, bot
         ),
         errors
     )
 }
 
-private fun parseMode(value: String?, players: Int?, errors: MutableList<String>): GameMode {
+private val BOT_VIEW_EDGES = GameMode.COOP.rules.viewEdges.copy(left = ViewEdgeRule.WARP, right = ViewEdgeRule.WARP)
+
+private fun parseBot(value: String?, players: Int?, errors: MutableList<String>): BotKind? {
     val text = value?.trim()
-    if (text.isNullOrEmpty()) return if (players != null && players > 1) GameMode.COOP else GameMode.SINGLE
+    if (text.isNullOrEmpty()) return null
+
+    val bot = parseEnumOption<BotKind>("--bot", text, errors) ?: return null
+    if (players != null && players > 1)
+        errors.add("--bot puts the bot in slot 1, so it needs 1 player; remove --players $players.")
+    return bot
+}
+
+private fun parseMode(value: String?, slots: Int?, errors: MutableList<String>): GameMode {
+    val text = value?.trim()
+    if (text.isNullOrEmpty()) return if (slots != null && slots > 1) GameMode.COOP else GameMode.SINGLE
 
     val mode = parseEnumOption("--mode", text, errors, arrayOf(GameMode.COOP, GameMode.PVP)) ?: return GameMode.SINGLE
-    if (players == 1) errors.add("--mode $text needs --players 2.")
+    if (slots == 1) errors.add("--mode $text needs --players 2 or --bot.")
     return mode
 }
 
@@ -118,13 +141,13 @@ private val VIEW_EDGE_KEYS = listOf("left", "right", "top", "bottom", "delay", "
 
 private fun parseViewEdges(
     value: String?,
-    players: Int?,
+    slots: Int?,
     defaults: ViewEdgeRules,
     errors: MutableList<String>
 ): ViewEdgeRules {
     val text = value?.trim()
     if (text.isNullOrEmpty()) return defaults
-    if (players == 1) errors.add("--viewEdges needs --players 2.")
+    if (slots == 1) errors.add("--viewEdges needs --players 2 or --bot.")
 
     var rules = defaults
     for (entry in text.split(",").map { it.trim() }.filter { it.isNotEmpty() }) {

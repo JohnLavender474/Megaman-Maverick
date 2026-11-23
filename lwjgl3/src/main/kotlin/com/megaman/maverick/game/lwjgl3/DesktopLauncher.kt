@@ -90,6 +90,7 @@ object DesktopLauncher {
             healthTanks = appArgs.healthTanks,
             autoPerf = appArgs.autoPerf,
             players = appArgs.players,
+            bot = appArgs.bot,
             mode = appArgs.mode,
             viewEdges = appArgs.viewEdges,
             saveFile = appArgs.saveFile,
@@ -115,6 +116,7 @@ object DesktopLauncher {
         println("- Health Tanks: " + appArgs.healthTanks)
         println("- Auto Perf: " + appArgs.autoPerf)
         println("- Players: " + appArgs.players)
+        println("- Bot: " + appArgs.bot)
         println("- Mode: " + appArgs.mode)
         println("- View Edges: " + appArgs.viewEdges)
         println("- Save File: " + appArgs.saveFile)
@@ -449,6 +451,14 @@ object DesktopLauncher {
         var players: String? = null
 
         @Parameter(
+            names = ["--bot"],
+            description = "Dev option: a bot in slot 1, next to 1 player. Kinds: follow (copies player 1's input " +
+                "with a delay). A session with a bot uses the coop rules, with WARP at the left and right view " +
+                "edges, and the camera follows player 1 only. An error with --players 2 or --mode pvp."
+        )
+        var bot: String? = null
+
+        @Parameter(
             names = ["--mode"],
             description = "Dev option: the rules of a session with 2 players, coop or pvp. Default value = coop."
         )
@@ -456,7 +466,7 @@ object DesktopLauncher {
 
         @Parameter(
             names = ["--viewEdges"],
-            description = "Dev option, needs --players 2: the rule at each edge of the shared view, " +
+            description = "Dev option, needs --players 2 or --bot: the rule at each edge of the shared view, " +
                 "for example left=WALL,right=WALL,top=NONE,bottom=WARP,delay=1.5,damage=3,cap=3. " +
                 "Rules: NONE, WALL, BOUNCE, WARP, KILL. A missing key keeps its default " +
                 "(left=WALL,right=WALL,top=NONE,bottom=NONE,delay=0,damage=0,cap=3). " +

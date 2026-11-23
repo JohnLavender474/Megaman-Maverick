@@ -13,6 +13,7 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import com.megaman.maverick.game.players.CharacterLoadouts
+import com.megaman.maverick.game.players.bots.BotKind
 
 class LaunchOptionsResolverTest : DescribeSpec({
 
@@ -115,6 +116,76 @@ class LaunchOptionsResolverTest : DescribeSpec({
             val result = resolve(LaunchOptions(players = "9", mode = "pvp"))
             result.errors.size shouldBe 1
             result.errors[0] shouldContain "Invalid --players '9'"
+        }
+    }
+
+    describe("--bot") {
+        it("gives no bot and 1 slot by default") {
+            val resolved = resolve(LaunchOptions()).resolved!!
+            resolved.bot shouldBe null
+            resolved.slots shouldBe 1
+        }
+
+        it("puts a follow bot in slot 1, case-insensitively, with 1 player and 2 slots") {
+            val resolved = resolve(LaunchOptions(bot = " FOLLOW ")).resolved!!
+            resolved.bot shouldBe BotKind.FOLLOW
+            resolved.players shouldBe 1
+            resolved.slots shouldBe 2
+        }
+
+        it("accepts --players 1") {
+            resolve(LaunchOptions(players = "1", bot = "follow")).resolved!!.slots shouldBe 2
+        }
+
+        it("uses the co-op mode, also with --mode coop") {
+            resolve(LaunchOptions(bot = "follow")).resolved!!.mode shouldBe GameMode.COOP
+            resolve(LaunchOptions(bot = "follow", mode = "coop")).resolved!!.mode shouldBe GameMode.COOP
+        }
+
+        it("uses the co-op view edges with WARP at the left and right edges") {
+            val rules = resolve(LaunchOptions(bot = "follow")).resolved!!.rules
+            rules.viewEdges shouldBe
+                GameMode.COOP.rules.viewEdges.copy(left = ViewEdgeRule.WARP, right = ViewEdgeRule.WARP)
+            rules.slotRespawn shouldBe GameMode.COOP.rules.slotRespawn
+        }
+
+        it("lets --viewEdges override the bot view edges") {
+            val rules = resolve(LaunchOptions(bot = "follow", viewEdges = "left=WALL")).resolved!!.rules.viewEdges
+            rules.left shouldBe ViewEdgeRule.WALL
+            rules.right shouldBe ViewEdgeRule.WARP
+        }
+
+        it("rejects an unknown kind") {
+            val result = resolve(LaunchOptions(bot = "lead"))
+            result.isValid shouldBe false
+            result.errors.size shouldBe 1
+            result.errors[0] shouldContain "Invalid --bot 'lead'"
+            result.errors[0] shouldContain "Allowed: FOLLOW"
+        }
+
+        it("rejects --players 2") {
+            val result = resolve(LaunchOptions(players = "2", bot = "follow"))
+            result.isValid shouldBe false
+            result.errors.size shouldBe 1
+            result.errors[0] shouldContain "remove --players 2"
+        }
+
+        it("rejects --mode pvp") {
+            val result = resolve(LaunchOptions(bot = "follow", mode = "pvp"))
+            result.isValid shouldBe false
+            result.errors.size shouldBe 1
+            result.errors[0] shouldContain "--bot plays only in coop"
+        }
+
+        it("rejects a level with no Megaman") {
+            val result = resolve(LaunchOptions(level = "X6_INTRO", bot = "follow"))
+            result.isValid shouldBe false
+            result.errors[0] shouldContain "--level X6_INTRO plays only with 1 player"
+            result.errors[0] shouldContain "remove --bot"
+        }
+
+        it("accepts a Megaman level") {
+            resolve(LaunchOptions(level = "TEST_1", bot = "follow")).resolved!!.bot shouldBe BotKind.FOLLOW
         }
     }
 

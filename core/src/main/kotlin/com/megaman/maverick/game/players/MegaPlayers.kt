@@ -23,8 +23,16 @@ class MegaPlayers(capacity: Int = 1, val inputs: PlayerInputs = PlayerInputs(cap
     Players<IPlayer>(capacity) {
 
     private val settings = Array(capacity) { PlayerSettings() }
+    private val botSlots = BooleanArray(capacity)
 
     fun settings(slot: PlayerSlot) = settings[slot.index]
+
+    fun setBot(slot: PlayerSlot) {
+        botSlots[slot.index] = true
+    }
+
+    // TODO: a slot agent (BotPlayerSlotAgent) replaces this flag, and a bot death becomes free (item 178e)
+    fun isBot(slot: PlayerSlot) = botSlots[slot.index]
 
     val menuInput get() = inputs[PlayerSlot(0)]
 
