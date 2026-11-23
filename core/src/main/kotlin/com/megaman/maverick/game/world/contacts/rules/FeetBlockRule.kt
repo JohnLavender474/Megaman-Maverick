@@ -16,6 +16,7 @@ object FeetBlockRule : IContactRule {
 
     private fun begin(feetFixture: IFixture, blockFixture: IFixture, delta: Float) {
         if (blockFixture.hasFixtureLabel(FixtureLabel.NO_FEET_TOUCHIE)) return
+        if (blockFixture.getBody().hasBodyLabel(BodyLabel.CEILING)) return
         if (feetFixture.receiver(Receivers.FILTER)?.invoke(blockFixture) == false) return
 
         val block = blockFixture.getEntity() as Block
@@ -46,6 +47,7 @@ object FeetBlockRule : IContactRule {
 
     private fun continueContact(feetFixture: IFixture, blockFixture: IFixture, delta: Float) {
         if (blockFixture.hasFixtureLabel(FixtureLabel.NO_FEET_TOUCHIE)) return
+        if (blockFixture.getBody().hasBodyLabel(BodyLabel.CEILING)) return
         if (feetFixture.receiver(Receivers.FILTER)?.invoke(blockFixture) == false) return
 
         val block = blockFixture.getEntity() as Block
@@ -76,6 +78,7 @@ object FeetBlockRule : IContactRule {
 
     private fun end(feetFixture: IFixture, blockFixture: IFixture, delta: Float) {
         if (blockFixture.hasFixtureLabel(FixtureLabel.NO_FEET_TOUCHIE)) return
+        if (blockFixture.getBody().hasBodyLabel(BodyLabel.CEILING)) return
         if (feetFixture.receiver(Receivers.FILTER)?.invoke(blockFixture) == false) return
 
         val block = blockFixture.getEntity() as Block

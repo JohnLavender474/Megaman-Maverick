@@ -17,6 +17,7 @@ object HeadBlockRule : IContactRule {
     private fun begin(headFixture: IFixture, blockFixture: IFixture, delta: Float) {
         if (blockFixture.getBody().hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY)) return
         if (blockFixture.getBody().hasBodyLabel(BodyLabel.SLOPE)) return
+        if (blockFixture.getBody().hasBodyLabel(BodyLabel.CEILING)) return
 
         val body = headFixture.getBody()
         body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
@@ -31,6 +32,7 @@ object HeadBlockRule : IContactRule {
     private fun continueContact(headFixture: IFixture, blockFixture: IFixture, delta: Float) {
         if (blockFixture.getBody().hasBodyLabel(BodyLabel.COLLIDE_DOWN_ONLY)) return
         if (blockFixture.getBody().hasBodyLabel(BodyLabel.SLOPE)) return
+        if (blockFixture.getBody().hasBodyLabel(BodyLabel.CEILING)) return
 
         val body = headFixture.getBody()
         body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, true)
@@ -43,6 +45,7 @@ object HeadBlockRule : IContactRule {
 
     private fun end(headFixture: IFixture, blockFixture: IFixture, delta: Float) {
         if (blockFixture.getBody().hasBodyLabel(BodyLabel.SLOPE)) return
+        if (blockFixture.getBody().hasBodyLabel(BodyLabel.CEILING)) return
 
         val body = headFixture.getBody()
         body.setBodySense(BodySense.HEAD_TOUCHING_BLOCK, false)

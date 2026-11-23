@@ -8,7 +8,8 @@ enum class BodyLabel {
     COLLIDE_DOWN_ONLY,
     COLLIDE_UP_ONLY,
     PRESS_UP_FALL_THRU,
-    SLOPE
+    SLOPE,
+    CEILING
 }
 
 fun IBody.addBodyLabel(bodyLabel: BodyLabel) {

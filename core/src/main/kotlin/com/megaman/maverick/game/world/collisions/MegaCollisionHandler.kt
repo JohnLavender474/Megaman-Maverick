@@ -9,6 +9,7 @@ import com.maverick.game.engine.world.collisions.StandardCollisionHandler
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.blocks.Block
+import com.megaman.maverick.game.entities.blocks.CeilingPolygonBlock
 import com.megaman.maverick.game.entities.blocks.GroundSlope
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.world.body.*
@@ -47,8 +48,18 @@ class MegaCollisionHandler : ICollisionHandler {
             dynamicBodyFilters.any { it.invoke(staticEntity, dynamicEntity) }
         ) return true
 
-        // TODO: the slope checks here run for every static-dynamic collision in every level, with no before-and-after
-        //  measure (accepted O5-R2 gap of 068a, see docs/mega-refactor/objectives/O5-performance.md; item 009)
+        // TODO: the ceiling and slope checks here run for every static-dynamic collision in every level (accepted O5-R2
+        //  gap of 068a; 182a measures with one --diagnostics pair, see docs/mega-refactor/objectives/O5-performance.md; item 009)
+        if (staticBody.hasBodyLabel(BodyLabel.CEILING)) {
+            val ceiling = try {
+                staticEntity as CeilingPolygonBlock
+            } catch (e: ClassCastException) {
+                throw InvalidCeilingLabelException(staticEntity, e)
+            }
+            if (directionOf(dynamicEntity) == Direction.UP) ceiling.collide(dynamicBody)
+            return true
+        }
+
         if (staticBody.hasBodyLabel(BodyLabel.SLOPE)) {
             val slope = try {
                 staticEntity as GroundSlope

@@ -27,7 +27,9 @@ class GroundProbe(private val owner: IBodyEntity, private val levelState: LevelS
         private const val EDGE_TOLERANCE = 0.01f
         private const val FLOOR_TOLERANCE = 0.1f
         private const val SCAN_STRIP_WIDTH = 0.1f
-        private val PASSABLE_LABELS = gdxArrayOf(BodyLabel.SLOPE, BodyLabel.COLLIDE_DOWN_ONLY, BodyLabel.COLLIDE_UP_ONLY)
+        private val PASSABLE_LABELS = gdxArrayOf(
+            BodyLabel.SLOPE, BodyLabel.COLLIDE_DOWN_ONLY, BodyLabel.COLLIDE_UP_ONLY, BodyLabel.CEILING
+        )
     }
 
     private val ppm = ConstVals.PPM.toFloat()
@@ -136,7 +138,7 @@ class GroundProbe(private val owner: IBodyEntity, private val levelState: LevelS
     // TODO: COLLIDE_UP_ONLY is never ground here, also for a turned entity under it; it follows the direction TODO in MegaCollisionHandler
     private fun isGround(body: IBody): Boolean {
         if (!isSolidFor(body)) return false
-        return !body.hasBodyLabel(BodyLabel.COLLIDE_UP_ONLY)
+        return !body.hasBodyLabel(BodyLabel.COLLIDE_UP_ONLY) && !body.hasBodyLabel(BodyLabel.CEILING)
     }
 
     private fun isSolidFor(body: IBody): Boolean {

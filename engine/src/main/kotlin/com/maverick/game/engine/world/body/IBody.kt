@@ -32,6 +32,8 @@ interface IBody : IRectangle, IProcessable, IDirectional, IPropertizable, Resett
 
     fun getStepMove(out: Vector2): Vector2
 
+    fun getStepStart(out: Vector2): Vector2
+
     val wrapCount: Int
 
     val lastWrapDx: Float

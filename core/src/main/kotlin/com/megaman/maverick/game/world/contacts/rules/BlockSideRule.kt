@@ -65,7 +65,10 @@ object BlockSideRule : IContactRule {
             !it.isActive() || !it.getEntity().existenceState.liveNow || !sideShape.overlaps(it.getShape())
         }
 
-        if (blockFixture.getBody().hasBodyLabel(BodyLabel.SLOPE) || touched.notEmpty()) return
+        if (blockFixture.getBody().hasBodyLabel(BodyLabel.SLOPE) ||
+            blockFixture.getBody().hasBodyLabel(BodyLabel.CEILING) ||
+            touched.notEmpty()
+        ) return
 
         val body = sideFixture.getBody()
 

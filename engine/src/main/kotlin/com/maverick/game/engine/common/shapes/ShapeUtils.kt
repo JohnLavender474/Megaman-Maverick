@@ -10,6 +10,8 @@ import kotlin.math.min
 
 object ShapeUtils {
 
+    private const val HIT_EPSILON = 0.001f
+
     private val out1 = Vector2()
     private val out2 = Vector2()
     private val out3 = Vector2()
@@ -47,6 +49,31 @@ object ShapeUtils {
                 for (i in 0 until count) if (out[i] == hit) duplicate = true
                 if (!duplicate) count++
             }
+        }
+
+        return count
+    }
+
+    fun intersectPolygonAndLine(polygon: GamePolygon, line: GameLine, out: Array<Vector2>): Int {
+        if (out.size < 2) throw IllegalArgumentException("Out must hold at least 2 vectors: size=${out.size}")
+
+        line.calculateWorldPoints(out1, out2)
+        val vertices = polygon.libgdxPolygon.transformedVertices
+
+        var count = 0
+        var i = 0
+        while (i < vertices.size && count < out.size) {
+            val j = (i + 2) % vertices.size
+            out3.set(vertices[i], vertices[i + 1])
+            out4.set(vertices[j], vertices[j + 1])
+
+            val hit = out[count]
+            if (Intersector.intersectSegments(out1, out2, out3, out4, hit)) {
+                var duplicate = false
+                for (k in 0 until count) if (out[k].epsilonEquals(hit, HIT_EPSILON)) duplicate = true
+                if (!duplicate) count++
+            }
+            i += 2
         }
 
         return count

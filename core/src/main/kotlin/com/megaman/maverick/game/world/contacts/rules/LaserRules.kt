@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.enums.ProcessState
 import com.maverick.game.engine.common.shapes.GameLine
-import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.GamePolygon
 import com.maverick.game.engine.common.shapes.ShapeUtils
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.world.body.Body
@@ -25,6 +25,18 @@ class LaserBlockRule : IContactRule {
 
     override fun onContinue(a: IFixture, b: IFixture, delta: Float) = continueContact(a, b)
 
+    private fun addHits(laserFixture: IFixture, blockFixture: IFixture) {
+        val laserLine = laserFixture.getShape() as GameLine
+        val contacts = laserFixture.getProperty(ConstKeys.COLLECTION) as LaserContacts
+
+        val blockShape = blockFixture.getShape()
+        val count = when (blockShape) {
+            is GamePolygon -> ShapeUtils.intersectPolygonAndLine(blockShape, laserLine, hitPoints)
+            else -> ShapeUtils.intersectRectangleAndLine(blockShape.getBoundingRectangle(), laserLine, hitPoints)
+        }
+        for (i in 0 until count) contacts.add(hitPoints[i], blockFixture)
+    }
+
     private fun begin(laserFixture: IFixture, blockFixture: IFixture) {
         val blockBody = blockFixture.getBody() as Body
         // If the block's body also has a shield fixture, then ignore the block. This assumes that the
@@ -35,13 +47,7 @@ class LaserBlockRule : IContactRule {
         val blockEntity = blockFixture.getEntity() as Block
 
         if (laserEntity != blockEntity && !laserEntity.isLaserIgnoring(blockEntity)) {
-            val blockRectangle = blockFixture.getShape() as GameRectangle
-            val laserLine = laserFixture.getShape() as GameLine
-
-            val contacts = laserFixture.getProperty(ConstKeys.COLLECTION) as LaserContacts
-
-            val count = ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, hitPoints)
-            for (i in 0 until count) contacts.add(hitPoints[i], blockFixture)
+            addHits(laserFixture, blockFixture)
         }
     }
 
@@ -55,13 +61,7 @@ class LaserBlockRule : IContactRule {
         val blockEntity = blockFixture.getEntity() as Block
 
         if (laserEntity != blockEntity && !laserEntity.isLaserIgnoring(blockEntity)) {
-            val blockRectangle = blockFixture.getShape().getBoundingRectangle()
-            val laserLine = laserFixture.getShape() as GameLine
-
-            val contacts = laserFixture.getProperty(ConstKeys.COLLECTION) as LaserContacts
-
-            val count = ShapeUtils.intersectRectangleAndLine(blockRectangle, laserLine, hitPoints)
-            for (i in 0 until count) contacts.add(hitPoints[i], blockFixture)
+            addHits(laserFixture, blockFixture)
         }
     }
 }

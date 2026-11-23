@@ -5,6 +5,7 @@ blocks.Block: Block
 blocks.BreakableBlock: BreakableBlock,Block
 blocks.BreakableIce: BreakableIce,Block
 blocks.CameraEdgeBlock: CameraEdgeBlock,Block,AbstractBlock
+blocks.CeilingPolygonBlock: CeilingPolygonBlock,Block
 blocks.CollideDownOnlyBlock: CollideDownOnlyBlock,Block
 blocks.ConveyorBelt: ConveyorBelt,Block
 blocks.CrumblingBlock: CrumblingBlock,Block

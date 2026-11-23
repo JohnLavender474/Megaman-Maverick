@@ -20,6 +20,36 @@ class ShapeUtilsTest : DescribeSpec({
 
     describe("ShapeUtils") {
 
+        describe("intersectPolygonAndLine method") {
+
+            fun polygonHits(polygon: GamePolygon, line: GameLine): Set<Vector2> {
+                val count = ShapeUtils.intersectPolygonAndLine(polygon, line, hitPoints)
+                return (0 until count).map { Vector2(hitPoints[it]) }.toSet()
+            }
+
+            it("hits the two faces of a V that a vertical line crosses") {
+                val polygon = GamePolygon(floatArrayOf(0f, 32f, 32f, 0f, 64f, 32f))
+                polygonHits(polygon, GameLine(16f, -10f, 16f, 50f)) shouldBe setOf(Vector2(16f, 16f), Vector2(16f, 32f))
+            }
+
+            it("uses the polygon position") {
+                val polygon = GamePolygon(floatArrayOf(0f, 32f, 32f, 0f, 64f, 32f))
+                polygon.setPosition(100f, 200f)
+                polygonHits(polygon, GameLine(116f, 190f, 116f, 250f)) shouldBe
+                    setOf(Vector2(116f, 216f), Vector2(116f, 232f))
+            }
+
+            it("counts a hit on a vertex once") {
+                val polygon = GamePolygon(floatArrayOf(0f, 32f, 32f, 0f, 64f, 32f))
+                polygonHits(polygon, GameLine(32f, -10f, 32f, 50f)) shouldBe setOf(Vector2(32f, 0f), Vector2(32f, 32f))
+            }
+
+            it("gives no hit for a line that misses") {
+                val polygon = GamePolygon(floatArrayOf(0f, 32f, 32f, 0f, 64f, 32f))
+                polygonHits(polygon, GameLine(4f, -10f, 4f, 20f)) shouldBe emptySet()
+            }
+        }
+
         // Test case for intersectRectangleAndLine
         describe("intersectRectangleAndLine method") {
 

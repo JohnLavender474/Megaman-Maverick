@@ -73,6 +73,8 @@ class Body(
 
     override fun getStepMove(out: Vector2): Vector2 = out.set(stepMoveX, stepMoveY)
 
+    override fun getStepStart(out: Vector2): Vector2 = out.set(stepStartX, stepStartY)
+
     override var wrapCount = 0
         private set
 
