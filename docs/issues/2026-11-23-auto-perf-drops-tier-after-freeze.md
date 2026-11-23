@@ -94,8 +94,10 @@ Not changed:
 - The frame delta that the game passes to the screens: no clamp here (`2026-10-22-frame-delta-not-clamped.md`, item
   `010a`).
 
-Accepted edge case: a machine whose frames are all over 0.25 s (under 4 fps) never drops its tier. `TODO` at the hitch
-rule.
+- A slow machine is not a freeze: from the 3rd long frame in a row on, a long frame counts as a sample again. So a
+  machine whose frames are all over 0.25 s (under 4 fps) still drops its tier, and one or two freezes in a row are
+  still ignored. Owner accepted the recommendation, 2026-11-23 (Diffity round 1; it replaces the accepted edge case and
+  its `TODO`).
 
 `010a`: its frame clock passes the raw delta to `AutoPerformance.update`, in place of `Gdx.graphics.deltaTime`. The
 hitch limit stays an auto-perf value. It is not the clamp of `010a`.
@@ -103,8 +105,8 @@ hitch limit stays an auto-perf value. It is not the clamp of `010a`.
 Checks:
 
 - New unit tests in `core` (`AutoPerformanceTest`): a steady 60 fps at MEDIUM never drops; a steady 30 fps at MEDIUM
-  drops to LOW; one freeze of 0.6, 1, 1.5, 3 or 10 s between 60 fps frames does not drop the tier; a freeze does not use up
-  the grace period; a steady 30 fps with a freeze still drops; `VERY_LOW` never drops. A mutation that treats every
+  drops to LOW; one freeze of 0.6, 1, 1.5, 3 or 10 s between 60 fps frames does not drop the tier; two freezes in a row do not drop the tier; a steady 3 fps
+  at MEDIUM drops to LOW; a freeze does not use up the grace period; a steady 30 fps with a freeze still drops; `VERY_LOW` never drops. A mutation that treats every
   frame as a sample (hitch limit `Float.MAX_VALUE`) makes the freeze and grace tests fail.
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar detektMain core:verifyRandomRule` passes.
 
