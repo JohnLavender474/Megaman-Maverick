@@ -92,3 +92,64 @@ def test_build_scenario_matches_expected_at_each_step(interactive):
         _pause(interactive, f'step {stem} complete')
 
     _analyze('end', work)
+
+
+GATES = 'temp/gates.tmx'
+
+
+def _run_fails(cmd, message):
+    result = subprocess.run(cmd, shell=True, cwd=HERE, capture_output=True, text=True)
+    assert result.returncode != 0, f'command did not fail: {cmd}\n{result.stdout}'
+    assert message in result.stderr, f'unexpected error for: {cmd}\n{result.stderr}'
+
+
+def test_gates_and_boss_room_match_expected_at_each_step(interactive):
+    TEMP.mkdir(exist_ok=True)
+    work = TEMP / 'gates.tmx'
+    work.unlink(missing_ok=True)
+
+    # Layout (rows 0-13 at the bottom): room1 | room2 (boss) | room3, and room4 above room3.
+    steps = [
+        ('20_gates_rooms',
+         f'./run.sh init {GATES} --width 48 --height 28 && '
+         f'./run.sh add-room {GATES} room1 --col 0 --row 0 --w 16 --h 14 && '
+         f'./run.sh add-room {GATES} room2 --col 16 --row 0 --w 16 --h 14 && '
+         f'./run.sh add-room {GATES} room3 --col 32 --row 0 --w 16 --h 14 && '
+         f'./run.sh add-room {GATES} room4 --col 32 --row 14 --w 16 --h 14 && '
+         f'./run.sh add-block {GATES} --col 15 --row 0 --w 2 --h 14 && '
+         f'./run.sh add-block {GATES} --col 31 --row 0 --w 2 --h 14 && '
+         f'./run.sh add-block {GATES} --col 32 --row 13 --w 16 --h 2'),
+        # Entry gate on the room1/room2 edge (col 16): player from the left, so no direction and
+        # no key. Exit gate on the room2/room3 edge (col 32) takes the new boss_key 1.
+        ('21_add_boss_room',
+         f"./run.sh add-boss-room {GATES} room2 --boss '?' --boss-col 24 --boss-row 2 --mini "
+         f'--entry-from room1 --entry-col 15 --entry-row 2 '
+         f'--exit-to room3 --exit-col 31 --exit-row 2'),
+        # A second entry into the boss room, from room3 on the right: direction=right.
+        ('22_add_gate_from_right',
+         f'./run.sh add-gate {GATES} --col 31 --row 8 --to room2 --from right'),
+        # Up gate on the room3/room4 edge (row 14): 3x2 tiles, player from below: direction=down.
+        ('23_add_gate_from_down',
+         f'./run.sh add-gate {GATES} --col 39 --row 13 --to room4 --from down'),
+    ]
+
+    for stem, cmd in steps:
+        _pause(interactive, f'about to run step {stem}:\n  {cmd}')
+        _run(cmd)
+        expected = (EXPECTED / f'{stem}.tmx').read_text()
+        assert work.read_text() == expected, f'mismatch after step {stem}'
+        _analyze(stem, work)
+        _pause(interactive, f'step {stem} complete')
+
+    before = work.read_text()
+    _run_fails(f'./run.sh add-gate {GATES} --col 31 --row 8 --to room2 --from right --boss-key 1',
+               'Refused: "room2" is a boss room')
+    _run_fails(f'./run.sh add-gate {GATES} --col 31 --row 8 --to room2 --from left',
+               '--from left does not match the rooms')
+    _run_fails(f'./run.sh add-gate {GATES} --col 32 --row 8 --to room2 --from right',
+               'does not sit on the shared edge')
+    _run_fails(f'./run.sh add-gate {GATES} --col 31 --row 8 --to nowhere --from right',
+               'No room named "nowhere"')
+    _run_fails(f'./run.sh add-gate {GATES} --col 31 --row 2 --to room3 --from left --boss-key 2',
+               'does not match boss_key=1')
+    assert work.read_text() == before, 'a refused command changed the file'

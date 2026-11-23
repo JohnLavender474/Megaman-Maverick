@@ -15,6 +15,13 @@ MARKER_LAYERS = ('enemies', 'hazards', 'TODO')
 
 LADDER_TOP_HEIGHT = 8
 
+GATE_SIDES = ('left', 'right', 'up', 'down')
+GATE_DEFAULT_SIDE = 'left'
+GATE_LONG_TILES = 3
+GATE_SHORT_TILES = 2
+
+UNLOCK_KEY_PROPS = ('boss_key', 'gauntlet_key')
+
 
 def _fmt(n) -> str:
     n = float(n)
@@ -256,6 +263,269 @@ def cmd_add_marker(args):
     _save(tree, args.file, dry_run=args.dry_run)
     print(f'Added marker "{args.name}" in {args.layer} '
           f'at col={args.col} row={args.row}')
+
+
+def _fail(msg):
+    print(msg, file=sys.stderr)
+    sys.exit(1)
+
+
+def _rect(obj):
+    return (float(obj.get('x', 0)), float(obj.get('y', 0)),
+            float(obj.get('width', 0)), float(obj.get('height', 0)))
+
+
+def _props(obj):
+    props = obj.find('properties')
+    if props is None:
+        return {}
+    return {p.get('name'): p for p in props.findall('property')}
+
+
+def _set_props(obj, values):
+    props = obj.find('properties')
+    if props is None:
+        props = ET.Element('properties')
+        obj.insert(0, props)
+    for name, value, typ in values:
+        prop = ET.SubElement(props, 'property', {'name': name})
+        if typ is not None:
+            prop.set('type', typ)
+        prop.set('value', str(value))
+    ordered = sorted(props.findall('property'), key=lambda p: p.get('name'))
+    for p in list(props):
+        props.remove(p)
+    props.extend(ordered)
+
+
+def _find_room(root, name):
+    group = _find_group(root, 'game_rooms')
+    if group is None:
+        return None
+    for obj in group.findall('object'):
+        if obj.get('name') == name:
+            return obj
+    return None
+
+
+def _is_boss_room(room):
+    event = _props(room).get('event')
+    return event is not None and event.get('value') == 'boss'
+
+
+def _gate_size_px(horizontal):
+    if horizontal:
+        return GATE_SHORT_TILES * TILE, GATE_LONG_TILES * TILE
+    return GATE_LONG_TILES * TILE, GATE_SHORT_TILES * TILE
+
+
+def _gate_rooms(root, x, y, horizontal):
+    w, h = _gate_size_px(horizontal)
+    group = _find_group(root, 'game_rooms')
+    rooms = group.findall('object') if group is not None else []
+    near, far = [], []
+    if horizontal:
+        edge = x + w / 2
+        for room in rooms:
+            rx, ry, rw, rh = _rect(room)
+            if ry > y or ry + rh < y + h:
+                continue
+            if rx + rw == edge:
+                near.append(room)
+            elif rx == edge:
+                far.append(room)
+        return {'left': near, 'right': far}
+    edge = y + h / 2
+    for room in rooms:
+        rx, ry, rw, rh = _rect(room)
+        if rx > x or rx + rw < x + w:
+            continue
+        if ry + rh == edge:
+            near.append(room)
+        elif ry == edge:
+            far.append(room)
+    return {'up': near, 'down': far}
+
+
+def _gate_fit(root, col, row, horizontal):
+    w, h = _gate_size_px(horizontal)
+    x = col * TILE
+    y = _row_to_y_px(root, row, h / TILE)
+    sides = _gate_rooms(root, x, y, horizontal)
+    if all(len(rooms) == 1 for rooms in sides.values()):
+        return x, y, w, h, {side: rooms[0] for side, rooms in sides.items()}
+    return None
+
+
+OPPOSITE_SIDE = {'left': 'right', 'right': 'left', 'up': 'down', 'down': 'up'}
+
+
+def _gate_edge_hint(horizontal):
+    if horizontal:
+        return ('a left/right gate is 2x3 tiles; its --col is the edge column - 1, and both rooms '
+                'must cover its 3 rows')
+    return ('an up/down gate is 3x2 tiles; its --row is the edge row - 1, and both rooms '
+            'must cover its 3 columns')
+
+
+def _resolve_gate(root, col, row, to_room, from_side=None):
+    if _find_room(root, to_room) is None:
+        _fail(f'No room named "{to_room}" in game_rooms.')
+    orientations = [from_side in ('left', 'right')] if from_side else [True, False]
+    fits = [(hz, _gate_fit(root, col, row, hz)) for hz in orientations]
+    fits = [(hz, fit) for hz, fit in fits if fit is not None]
+    if not fits:
+        hints = '; '.join(_gate_edge_hint(hz) for hz in orientations)
+        _fail(f'Gate at col={col} row={row} does not sit on the shared edge of exactly 2 rooms: {hints}.')
+    if len(fits) > 1:
+        _fail(f'Gate at col={col} row={row} fits both a left/right and an up/down room edge; '
+              f'give --from to choose.')
+    horizontal, (x, y, w, h, sides) = fits[0]
+    target_side = next((s for s, room in sides.items() if room.get('name') == to_room), None)
+    if target_side is None:
+        names = ', '.join(f'"{room.get("name")}"' for room in sides.values())
+        _fail(f'Gate at col={col} row={row} is between rooms {names}; '
+              f'--to "{to_room}" must be one of them.')
+    derived_from = OPPOSITE_SIDE[target_side]
+    if from_side is not None and from_side != derived_from:
+        _fail(f'--from {from_side} does not match the rooms: "{to_room}" is on the {target_side} '
+              f'side of the edge, so the player comes from the {derived_from} side '
+              f'(--from {derived_from}).')
+    source = sides[derived_from]
+    return x, y, w, h, derived_from, source
+
+
+def _check_gate_key(root, to_room, source, boss_key):
+    target = _find_room(root, to_room)
+    if boss_key is not None and _is_boss_room(target):
+        _fail(f'Refused: "{to_room}" is a boss room (event=boss), so this is its entry gate. A gate '
+              f'with boss_key stays locked until the fight sends UNLOCK_GATE after the boss is '
+              f'defeated; only the exit gate of a boss room takes the key.')
+    warnings = []
+    if _is_boss_room(source):
+        ref = _props(source).get('object')
+        _, boss = _find_object(root, ref.get('value')) if ref is not None else (None, None)
+        boss_value = _props(boss).get('boss_key') if boss is not None else None
+        boss_value = boss_value.get('value') if boss_value is not None else None
+        if boss_key is None:
+            warnings.append(f'Warning: this gate leaves the boss room "{source.get("name")}" and has '
+                            f'no boss_key, so the player can leave during the fight.')
+        elif boss_value is not None and boss_value != str(boss_key):
+            _fail(f'--boss-key {boss_key} does not match boss_key={boss_value} of the boss object '
+                  f'id={boss.get("id")} of room "{source.get("name")}".')
+    return warnings
+
+
+def _gate_block_warning(root, x, y, w, h):
+    group = _find_group(root, 'blocks')
+    for block in (group.findall('object') if group is not None else []):
+        bx, by, bw, bh = _rect(block)
+        if bx <= x and by <= y and bx + bw >= x + w and by + bh >= y + h:
+            return None
+    return ('Warning: no block in "blocks" covers the gate rectangle; the wall block must run '
+            'through the gate, or the player walks past it.')
+
+
+def _write_gate(root, col, row, to_room, from_side, boss_key):
+    x, y, w, h, side, source = _resolve_gate(root, col, row, to_room, from_side)
+    warnings = _check_gate_key(root, to_room, source, boss_key)
+    block_warning = _gate_block_warning(root, x, y, w, h)
+    if block_warning:
+        warnings.append(block_warning)
+    gate = _add_object(root, _find_or_create_group(root, 'sensors'), {
+        'name': 'Gate', 'x': _fmt(x), 'y': _fmt(y), 'width': _fmt(w), 'height': _fmt(h),
+    })
+    values = [('room', to_room, None)]
+    if side != GATE_DEFAULT_SIDE:
+        values.append(('direction', side, None))
+    if boss_key is not None:
+        values.append(('boss_key', boss_key, None))
+    _set_props(gate, values)
+    return gate, side, source, warnings
+
+
+def _next_unlock_key(root):
+    keys = [0]
+    for obj in root.iter('object'):
+        for name, prop in _props(obj).items():
+            if name in UNLOCK_KEY_PROPS and prop.get('value', '').isdigit():
+                keys.append(int(prop.get('value')))
+    return str(max(keys) + 1)
+
+
+def cmd_add_gate(args):
+    tree, root = _load(args.file)
+    gate, side, source, warnings = _write_gate(
+        root, args.col, args.row, args.to, args.from_side, args.boss_key)
+    _save(tree, args.file, dry_run=args.dry_run)
+    key = f', boss_key={args.boss_key}' if args.boss_key is not None else ''
+    print(f'Added Gate id={gate.get("id")} at col={args.col} row={args.row}: '
+          f'"{source.get("name")}" -> "{args.to}", player from {side}{key}')
+    for w in warnings:
+        print(w)
+
+
+def cmd_add_boss_room(args):
+    tree, root = _load(args.file)
+    rect = (args.col, args.row, args.w, args.h)
+    room = _find_room(root, args.name)
+    if room is not None and any(v is not None for v in rect):
+        _fail(f'Room "{args.name}" exists; give no --col/--row/--w/--h, or choose a new name.')
+    if room is None:
+        if any(v is None for v in rect):
+            _fail(f'No room named "{args.name}"; give --col, --row, --w and --h to add it.')
+        room = _add_object(root, _find_or_create_group(root, 'game_rooms'), {
+            'name': args.name,
+            'x': args.col * TILE, 'y': _row_to_y_px(root, args.row, args.h),
+            'width': args.w * TILE, 'height': args.h * TILE,
+        })
+    if 'event' in _props(room) or 'object' in _props(room):
+        _fail(f'Room "{args.name}" already has an event or object property.')
+    for group, label in (((args.entry_from, args.entry_col, args.entry_row),
+                          '--entry-from, --entry-col and --entry-row'),
+                         ((args.exit_to, args.exit_col, args.exit_row),
+                          '--exit-to, --exit-col and --exit-row')):
+        if any(v is not None for v in group) and any(v is None for v in group):
+            _fail(f'Give {label} together.')
+
+    key = _next_unlock_key(root)
+    boss = _add_object(root, _find_or_create_group(root, 'children'), {
+        'name': args.boss,
+        'x': _fmt(args.boss_col * TILE), 'y': _fmt(_row_to_y_px(root, args.boss_row, 1)),
+        'width': TILE, 'height': TILE,
+    })
+    boss_props = [('boss_key', key, None)]
+    if args.mini:
+        boss_props.append(('mini', 'true', 'bool'))
+    _set_props(boss, boss_props)
+    _set_props(room, [('event', 'boss', None), ('object', boss.get('id'), 'object')])
+    print(f'Boss room "{args.name}": event=boss, object={boss.get("id")} '
+          f'("{args.boss}" in children, boss_key={key}{", mini=true" if args.mini else ""})')
+
+    warnings = []
+    if args.entry_from is not None:
+        gate, side, source, w = _write_gate(root, args.entry_col, args.entry_row, args.name, None, None)
+        if source.get('name') != args.entry_from:
+            _fail(f'The entry gate at col={args.entry_col} row={args.entry_row} is between '
+                  f'"{source.get("name")}" and "{args.name}", not "{args.entry_from}".')
+        warnings += w
+        print(f'Added entry Gate id={gate.get("id")}: "{args.entry_from}" -> "{args.name}", '
+              f'player from {side}, no key')
+    if args.exit_to is not None:
+        gate, side, source, w = _write_gate(root, args.exit_col, args.exit_row, args.exit_to, None, key)
+        if source.get('name') != args.name:
+            _fail(f'The exit gate at col={args.exit_col} row={args.exit_row} does not leave '
+                  f'"{args.name}" (it leaves "{source.get("name")}").')
+        warnings += w
+        print(f'Added exit Gate id={gate.get("id")}: "{args.name}" -> "{args.exit_to}", '
+              f'player from {side}, boss_key={key}')
+        if not args.mini:
+            warnings.append('Warning: a full boss fight unlocks no gate unless the boss object has '
+                            'end=false (mid boss); set it in Tiled, or remove the exit gate.')
+
+    _save(tree, args.file, dry_run=args.dry_run)
+    for w in warnings:
+        print(w)
 
 
 def cmd_list(args):
@@ -547,6 +817,58 @@ def build_parser():
     p.add_argument('--row', type=int, required=True)
     _add_dry_run_arg(p)
     p.set_defaults(func=cmd_add_marker)
+
+    p = sub.add_parser(
+        'add-gate',
+        help='add a Gate to sensors, centered on the shared edge of 2 rooms',
+        description='Add a Gate to the sensors layer. A left/right gate is 2x3 tiles (64x96 px) '
+                    'and its --col is the edge column - 1; an up/down gate is 3x2 tiles '
+                    '(96x64 px) and its --row is the edge row - 1. Rules: "room" names the room '
+                    'the gate LEADS TO (--to); "direction" is the side the player comes FROM '
+                    '(--from; the Gate puts its touch fixture on that side; left is the default '
+                    'and is not written); only the EXIT gate of a boss room takes boss_key. '
+                    'The wall block must run through the gate (add it with add-block).')
+    p.add_argument('file')
+    p.add_argument('--col', type=int, required=True, help='left column of the gate rectangle')
+    p.add_argument('--row', type=int, required=True, help='bottom row of the gate rectangle')
+    p.add_argument('--to', required=True, help='the room the gate leads to')
+    p.add_argument('--from', dest='from_side', required=True, choices=GATE_SIDES,
+                   help='the side the player comes from; must match the room layout')
+    p.add_argument('--boss-key',
+                   help='lock the gate until the fight with this boss_key is won; refused when '
+                        '--to is a boss room (entry gate)')
+    _add_dry_run_arg(p)
+    p.set_defaults(func=cmd_add_gate)
+
+    p = sub.add_parser(
+        'add-boss-room',
+        help='make a room a boss room (event=boss, object=boss marker in children), with '
+             'optional entry and exit gates',
+        description='Set event=boss and object on a room (existing, or new with --col/--row/--w/'
+                    '--h), and add a 1-tile boss marker in the children layer with boss_key '
+                    '(the next free boss_key/gauntlet_key in the map) and mini=true with --mini. '
+                    'Other boss properties are set by hand in Tiled. --entry-from adds the entry '
+                    'gate (no key) and --exit-to adds the exit gate (with the boss_key); their '
+                    '--*-col/--*-row are as for add-gate, and the player side comes from the room '
+                    'layout.')
+    p.add_argument('file')
+    p.add_argument('name', help='the boss room name')
+    p.add_argument('--col', type=int, help='new room only')
+    p.add_argument('--row', type=int, help='new room only')
+    p.add_argument('--w', type=int, help='new room only')
+    p.add_argument('--h', type=int, help='new room only')
+    p.add_argument('--boss', default='?', help='boss class name, e.g. ReactorMonkey (default "?")')
+    p.add_argument('--boss-col', type=float, required=True, help='marker column (may be .5)')
+    p.add_argument('--boss-row', type=float, required=True, help='marker bottom row (may be .5)')
+    p.add_argument('--mini', action='store_true', help='mini boss fight (mini=true on the boss)')
+    p.add_argument('--entry-from', help='the room before the boss room')
+    p.add_argument('--entry-col', type=int)
+    p.add_argument('--entry-row', type=int)
+    p.add_argument('--exit-to', help='the room after the boss room')
+    p.add_argument('--exit-col', type=int)
+    p.add_argument('--exit-row', type=int)
+    _add_dry_run_arg(p)
+    p.set_defaults(func=cmd_add_boss_room)
 
     p = sub.add_parser('list', help='list objects in a layer (with ids)')
     p.add_argument('file')

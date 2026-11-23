@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="34" height="16" tilewidth="32" tileheight="32" infinite="0" nextlayerid="11" nextobjectid="14">
+ <tileset firstgid="1" source="../tsx/Tileset1.tsx"/>
+ <layer id="10" name="tiles" width="34" height="16">
+  <data encoding="csv">
+176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,
+176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,0,0,0,0,0,0,0,0,0,0,0,0,0,0,176,176,
+176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,
+176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,
+176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176,176
+</data>
+ </layer>
+ <objectgroup id="1" name="game_rooms">
+  <object id="1" name="walker_gate" x="32" y="32" width="512" height="448"/>
+  <object id="2" name="timber_walker" x="544" y="32" width="512" height="448">
+   <properties>
+    <property name="event" value="boss"/>
+    <property name="object" type="object" value="11"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="2" name="blocks">
+  <object id="3" x="0" y="416" width="1088" height="96"/>
+  <object id="4" x="0" y="0" width="512" height="96"/>
+  <object id="5" x="0" y="96" width="64" height="320"/>
+  <object id="6" x="512" y="32" width="64" height="384"/>
+  <object id="7" x="1024" y="32" width="64" height="384"/>
+  <object id="13" x="512" y="0" width="576" height="32"/>
+ </objectgroup>
+ <objectgroup id="3" name="player">
+  <object id="9" name="0" x="128" y="384" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="7" name="sensors">
+  <object id="10" name="Gate" x="512" y="320" width="64" height="96">
+   <properties>
+    <property name="room" value="timber_walker"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="children">
+  <object id="11" name="TimberWalker" x="784" y="384" width="32" height="32">
+   <properties>
+    <property name="boss_key" value="1"/>
+    <property name="far_start" type="object" value="12"/>
+    <property name="left_wall" type="object" value="6"/>
+    <property name="mini" type="bool" value="true"/>
+    <property name="right_wall" type="object" value="7"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="9" name="walker_points">
+  <object id="12" name="far_start" x="672" y="192" width="32" height="32"/>
+ </objectgroup>
+</map>

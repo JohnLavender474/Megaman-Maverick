@@ -21,6 +21,7 @@ import com.megaman.maverick.game.entities.bosses.ReactorMan
 import com.megaman.maverick.game.entities.bosses.ReactorMonkey
 import com.megaman.maverick.game.entities.bosses.RodentMan
 import com.megaman.maverick.game.entities.bosses.SigmaRat
+import com.megaman.maverick.game.entities.bosses.TimberWalker
 import com.megaman.maverick.game.entities.bosses.TimberWoman
 import com.megaman.maverick.game.entities.bosses.WilyFinalBoss
 
@@ -35,7 +36,7 @@ object FightPlans {
             TimberWoman.TAG, MoonMan.TAG, ReactorMan.TAG,
             GlacierMan.TAG, DesertMan.TAG, InfernoMan.TAG, RodentMan.TAG, PreciousWoman.TAG,
             SigmaRat.TAG,
-            MoonHead.TAG, MechaDragon.TAG, ReactorMonkey.TAG, PenguinMiniBoss.TAG -> null
+            MoonHead.TAG, MechaDragon.TAG, ReactorMonkey.TAG, PenguinMiniBoss.TAG, TimberWalker.TAG -> null
             WilyFinalBoss.TAG -> return finalBossPlan()
             else -> throw MissingFightPlanException(bossName)
         }

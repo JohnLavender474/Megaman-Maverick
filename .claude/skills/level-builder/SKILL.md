@@ -50,6 +50,36 @@ these layers it only drops single-tile placeholder markers whose `name` is `TODO
 enemies/hazards (properties, targets, facing, hard-mode flags, etc.) is done by the
 **user** in Tiled. Keep this boundary; do not invent enemy properties.
 
+One exception: `add-boss-room` writes the properties that wire a boss fight, and no others. On the
+boss marker in `children` it writes `boss_key` and, with `--mini`, `mini=true`; on the room it writes
+`event=boss` and the `object` reference to the marker. All other boss properties (for example arena
+references such as `left_wall`, or `end=false` for a mid boss) are set by the user in Tiled.
+
+## Gates and boss rooms
+
+Use `add-gate` and `add-boss-room` for every `Gate` and boss room. Do not write gates with a script.
+See `--help` of each command for the arguments.
+
+- `add-gate`: one `Gate` in `sensors`, centered on the shared edge of 2 rooms (2x3 tiles for
+  `--from left|right`, 3x2 tiles for `--from up|down`). It checks the rooms and the key rules below.
+- `add-boss-room`: `event=boss` and `object` on a room, a boss marker in `children` with the next
+  free `boss_key`, and with `--entry-from` / `--exit-to` the entry gate (no key) and the exit gate
+  (with the key).
+
+The gate rules (each one broke a gate in `RefactorTest078.tmx`):
+
+1. `room` names the room that the gate leads to, not the room that the gate is in.
+2. `direction` is the side that the player comes from (default `left`). `Gate` puts its touch
+   fixture on that side of its body. With the wrong side, the fixture is inside the wall block and the
+   player cannot touch it.
+3. Only the exit gate of a boss room has `boss_key`. A gate with `boss_key` stays locked until the
+   fight sends `UNLOCK_GATE` after the boss is defeated, so a key on the entry gate locks the player
+   out of the fight.
+
+Add the wall block through the gate first (`add-block`, as block 231 under gate 196 in
+`ReactorMan_v3.tmx`); `add-gate` warns when no block covers the gate. The other gate properties
+(`type`, `trigger`, `reset`, `close`, `trans_direction`) are set by hand when a level needs them.
+
 ## TODO Layer
 
 Use `add-marker --layer TODO` to flag anything needing follow-up. Keep each marker

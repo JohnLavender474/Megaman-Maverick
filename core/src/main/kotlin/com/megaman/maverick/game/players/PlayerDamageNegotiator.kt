@@ -21,6 +21,7 @@ import com.megaman.maverick.game.entities.bosses.ElecDevilBodyPiece
 import com.megaman.maverick.game.entities.bosses.ElecDevilBodyPieces
 import com.megaman.maverick.game.entities.bosses.ElecDevilClaw
 import com.megaman.maverick.game.entities.bosses.GlacierMan
+import com.megaman.maverick.game.entities.bosses.TimberWalker
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
@@ -40,6 +41,8 @@ import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle
 import com.megaman.maverick.game.entities.projectiles.Needle
 import com.megaman.maverick.game.entities.projectiles.Snowhead
+import com.megaman.maverick.game.entities.projectiles.TimberWalkerChipWave
+import com.megaman.maverick.game.entities.projectiles.TimberWalkerLog
 import com.megaman.maverick.game.entities.state.tags
 import com.megaman.maverick.game.entities.utils.hardMode
 
@@ -81,6 +84,9 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
         D1000CeilingDebris.TAG pairTo dmgNeg(D1000CeilingDebris.DAMAGE),
         PropellerPlatform.TAG pairTo dmgNeg(1),
         RocketPlatform.TAG pairTo dmgNeg(1),
+        TimberWalker.TAG pairTo dmgNeg(4),
+        TimberWalkerLog.TAG pairTo dmgNeg(3),
+        TimberWalkerChipWave.TAG pairTo dmgNeg(2),
         Laser.TAG pairTo dmgNeg { if (services.gameState.hardMode) 15 else 8 },
     )
     private val entityTypes = objectSetOf(EntityType.ENEMY, EntityType.EXPLOSION)

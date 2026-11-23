@@ -67,6 +67,7 @@ bosses.ReactorMonkey: ReactorMonkey
 bosses.RodentMan: RodentMan
 bosses.SigmaRatClaw: SigmaRatClaw
 bosses.SigmaRat: SigmaRat
+bosses.TimberWalker: TimberWalker
 bosses.TimberWoman: TimberWoman
 bosses.WilyFinalBoss: WilyFinalBoss
 decorations.AirConditioner: AirConditioner
@@ -404,6 +405,8 @@ projectiles.SpitFireball: SpitFireball
 projectiles.SubmarineMissile: SubmarineMissile
 projectiles.SuperCoolActionStarWarsSpaceLazer: SuperCoolActionStarWarsSpaceLazer
 projectiles.TeardropBlast: TeardropBlast
+projectiles.TimberWalkerChipWave: TimberWalkerChipWave
+projectiles.TimberWalkerLog: TimberWalkerLog
 projectiles.ToxicGoopShot: ToxicGoopShot
 projectiles.TubeBeam: TubeBeam
 projectiles.UFOBomb: UFOBomb

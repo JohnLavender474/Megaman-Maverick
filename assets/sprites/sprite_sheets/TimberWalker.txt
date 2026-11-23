@@ -1,0 +1,768 @@
+TimberWalker.png
+size: 1980, 1950
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+TimberWalker/attack_strike
+  rotate: false
+  xy: 1, 1
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/attack_windup
+  rotate: false
+  xy: 307, 1
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/claw_ext_1
+  rotate: false
+  xy: 613, 1
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/claw_ext_2
+  rotate: false
+  xy: 919, 1
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/claw_ext_3
+  rotate: false
+  xy: 1225, 1
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/claw_ext_4
+  rotate: false
+  xy: 1531, 1
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/crouch
+  rotate: false
+  xy: 1, 131
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/damaged_idle_1
+  rotate: false
+  xy: 307, 131
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/damaged_idle_2
+  rotate: false
+  xy: 613, 131
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/damaged_walk_1
+  rotate: false
+  xy: 919, 131
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/damaged_walk_2
+  rotate: false
+  xy: 1225, 131
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/damaged_walk_3
+  rotate: false
+  xy: 1531, 131
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/damaged_walk_4
+  rotate: false
+  xy: 1, 261
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/defeat_break
+  rotate: false
+  xy: 307, 261
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/defeat_shake_1
+  rotate: false
+  xy: 613, 261
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/defeat_shake_2
+  rotate: false
+  xy: 919, 261
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/defeat_wreck
+  rotate: false
+  xy: 1225, 261
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/far_crouch
+  rotate: false
+  xy: 1531, 261
+  size: 101, 43
+  orig: 101, 43
+  offset: 0, 0
+  index: -1
+TimberWalker/far_jump
+  rotate: false
+  xy: 1634, 261
+  size: 101, 43
+  orig: 101, 43
+  offset: 0, 0
+  index: -1
+TimberWalker/far_walk_1
+  rotate: false
+  xy: 1737, 261
+  size: 101, 43
+  orig: 101, 43
+  offset: 0, 0
+  index: -1
+TimberWalker/far_walk_2
+  rotate: false
+  xy: 1840, 261
+  size: 101, 43
+  orig: 101, 43
+  offset: 0, 0
+  index: -1
+TimberWalker/far_walk_3
+  rotate: false
+  xy: 1, 391
+  size: 101, 43
+  orig: 101, 43
+  offset: 0, 0
+  index: -1
+TimberWalker/far_walk_4
+  rotate: false
+  xy: 104, 391
+  size: 101, 43
+  orig: 101, 43
+  offset: 0, 0
+  index: -1
+TimberWalker/grab_1
+  rotate: false
+  xy: 207, 391
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/grab_2
+  rotate: false
+  xy: 513, 391
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/grab_3
+  rotate: false
+  xy: 819, 391
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/grab_hold
+  rotate: false
+  xy: 1125, 391
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/grab_in
+  rotate: false
+  xy: 1431, 391
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/grab_lift
+  rotate: false
+  xy: 1, 521
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/grab_throw
+  rotate: false
+  xy: 307, 521
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/guard_close_1
+  rotate: false
+  xy: 613, 521
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/guard_close_2
+  rotate: false
+  xy: 919, 521
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/guard_close_3
+  rotate: false
+  xy: 1225, 521
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/guard_crack_1
+  rotate: false
+  xy: 1531, 521
+  size: 34, 25
+  orig: 34, 25
+  offset: 0, 0
+  index: -1
+TimberWalker/guard_crack_2
+  rotate: false
+  xy: 1567, 521
+  size: 34, 25
+  orig: 34, 25
+  offset: 0, 0
+  index: -1
+TimberWalker/guard_crack_3
+  rotate: false
+  xy: 1603, 521
+  size: 34, 25
+  orig: 34, 25
+  offset: 0, 0
+  index: -1
+TimberWalker/guard_hit
+  rotate: false
+  xy: 1639, 521
+  size: 34, 25
+  orig: 34, 25
+  offset: 0, 0
+  index: -1
+TimberWalker/guard_open_1
+  rotate: false
+  xy: 1675, 521
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/guard_open_2
+  rotate: false
+  xy: 1, 651
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/guard_open_3
+  rotate: false
+  xy: 307, 651
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/hit_flash
+  rotate: false
+  xy: 613, 651
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/hop_shadow
+  rotate: false
+  xy: 919, 651
+  size: 112, 8
+  orig: 112, 8
+  offset: 0, 0
+  index: -1
+TimberWalker/hop_tuck
+  rotate: false
+  xy: 1033, 651
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/idle_1
+  rotate: false
+  xy: 1339, 651
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/idle_2
+  rotate: false
+  xy: 1645, 651
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/idle_3
+  rotate: false
+  xy: 1, 781
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/idle_4
+  rotate: false
+  xy: 307, 781
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/idle_5
+  rotate: false
+  xy: 613, 781
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/idle_6
+  rotate: false
+  xy: 919, 781
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/jump
+  rotate: false
+  xy: 1225, 781
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/jump_mid_1
+  rotate: false
+  xy: 1531, 781
+  size: 152, 64
+  orig: 152, 64
+  offset: 0, 0
+  index: -1
+TimberWalker/jump_mid_2
+  rotate: false
+  xy: 1685, 781
+  size: 228, 96
+  orig: 228, 96
+  offset: 0, 0
+  index: -1
+TimberWalker/land
+  rotate: false
+  xy: 1, 911
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/log_grab
+  rotate: false
+  xy: 307, 911
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/log_in
+  rotate: false
+  xy: 613, 911
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/log_lift
+  rotate: false
+  xy: 919, 911
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/log_reach
+  rotate: false
+  xy: 1225, 911
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/log_swing
+  rotate: false
+  xy: 1531, 911
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/log_throw
+  rotate: false
+  xy: 1, 1041
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/met_hit
+  rotate: false
+  xy: 307, 1041
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/met_recover_1
+  rotate: false
+  xy: 613, 1041
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/met_recover_2
+  rotate: false
+  xy: 919, 1041
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/met_recover_3
+  rotate: false
+  xy: 1225, 1041
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/met_recover_4
+  rotate: false
+  xy: 1531, 1041
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/met_stunned_1
+  rotate: false
+  xy: 1, 1171
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/met_stunned_2
+  rotate: false
+  xy: 307, 1171
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/met_stunned_3
+  rotate: false
+  xy: 613, 1171
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/met_stunned_4
+  rotate: false
+  xy: 919, 1171
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/recover
+  rotate: false
+  xy: 1225, 1171
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/roar_1
+  rotate: false
+  xy: 1531, 1171
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/roar_2
+  rotate: false
+  xy: 1, 1301
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/roar_in
+  rotate: false
+  xy: 307, 1301
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/saw_level_1
+  rotate: false
+  xy: 613, 1301
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/saw_level_2
+  rotate: false
+  xy: 919, 1301
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/saw_level_3
+  rotate: false
+  xy: 1225, 1301
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/saw_level_4
+  rotate: false
+  xy: 1531, 1301
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/saw_low_1
+  rotate: false
+  xy: 1, 1431
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/saw_low_2
+  rotate: false
+  xy: 307, 1431
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/saw_low_3
+  rotate: false
+  xy: 613, 1431
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/saw_low_4
+  rotate: false
+  xy: 919, 1431
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/stuck_1
+  rotate: false
+  xy: 1225, 1431
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/stuck_2
+  rotate: false
+  xy: 1531, 1431
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_button_claw_1
+  rotate: false
+  xy: 1, 1561
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_button_claw_2
+  rotate: false
+  xy: 307, 1561
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_button_claw_3
+  rotate: false
+  xy: 613, 1561
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_lever_chop_1
+  rotate: false
+  xy: 919, 1561
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_lever_chop_2
+  rotate: false
+  xy: 1225, 1561
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_lever_chop_3
+  rotate: false
+  xy: 1531, 1561
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_lever_level_1
+  rotate: false
+  xy: 919, 1561
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_lever_level_2
+  rotate: false
+  xy: 1, 1691
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_lever_level_3
+  rotate: false
+  xy: 307, 1691
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_lever_low_1
+  rotate: false
+  xy: 919, 1561
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_lever_low_2
+  rotate: false
+  xy: 613, 1691
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/tell_lever_low_3
+  rotate: false
+  xy: 919, 1691
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/turn_1
+  rotate: false
+  xy: 1225, 1691
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/turn_2
+  rotate: false
+  xy: 1531, 1691
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/walk_1
+  rotate: false
+  xy: 1, 1821
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/walk_2
+  rotate: false
+  xy: 307, 1821
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/walk_3
+  rotate: false
+  xy: 613, 1821
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/walk_4
+  rotate: false
+  xy: 919, 1821
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalker/windup_in
+  rotate: false
+  xy: 1225, 1821
+  size: 304, 128
+  orig: 304, 128
+  offset: 0, 0
+  index: -1
+TimberWalkerChipWave/wave_1
+  rotate: false
+  xy: 1531, 1821
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+TimberWalkerChipWave/wave_2
+  rotate: false
+  xy: 1565, 1821
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+TimberWalkerChipWave/wave_3
+  rotate: false
+  xy: 1599, 1821
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+TimberWalkerLog/break
+  rotate: false
+  xy: 1633, 1821
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+TimberWalkerLog/spin_1
+  rotate: false
+  xy: 1667, 1821
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+TimberWalkerLog/spin_2
+  rotate: false
+  xy: 1701, 1821
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+TimberWalkerLog/spin_3
+  rotate: false
+  xy: 1735, 1821
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+TimberWalkerLog/spin_4
+  rotate: false
+  xy: 1769, 1821
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
