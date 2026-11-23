@@ -117,6 +117,7 @@ import com.megaman.maverick.game.screens.levels.MegaLevelScreen
 import com.megaman.maverick.game.screens.menus.*
 import com.megaman.maverick.game.screens.menus.level.LevelSelectScreenV2
 import com.megaman.maverick.game.screens.other.*
+import com.megaman.maverick.game.state.AutoPerformance
 import com.megaman.maverick.game.state.GameClock
 import com.megaman.maverick.game.state.GameSettings
 import com.megaman.maverick.game.state.GameState
@@ -179,14 +180,6 @@ class MegamanMaverickGame(
         private const val ASSET_MILLIS = 17
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
-        private const val AUTO_PERF_SUSTAINED_DUR = 3f
-        private const val AUTO_PERF_GRACE_DUR = 5f         // suppression window after any perf change
-        private const val AUTO_PERF_NEAR_DEFICIT = 5       // fps below target → ~10s tolerance
-        private const val AUTO_PERF_MODERATE_DEFICIT = 10  // fps below target → ~6s tolerance
-        private const val AUTO_PERF_NEAR_SPEED = 0.3f      // timer multiplier: 3s / ~10s
-        private const val AUTO_PERF_MODERATE_SPEED = 0.5f  // timer multiplier: 3s / ~6s
-        private const val AUTO_PERF_HIGH_SPEED = 1.0f      // timer multiplier: 3s / ~3s
-        private const val AUTO_PERF_CRISIS_SPEED = 2.0f    // timer multiplier: 3s / ~1.5s
         private const val NOTIFICATION_DUR = 5f
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (IFixture, IFixture) -> Boolean = { fixture1, fixture2 ->
@@ -272,8 +265,7 @@ class MegamanMaverickGame(
     private var showNotification = false
     private var notificationColor = Color.WHITE
 
-    private val autoPerfTimer = Timer(AUTO_PERF_SUSTAINED_DUR)
-    private val autoPerfGraceTimer = Timer(AUTO_PERF_GRACE_DUR)
+    private val autoPerformance = AutoPerformance()
 
     private var logFileWriter: AsyncFileWriter? = null
     private var debugWindow: DebugWindow? = null
@@ -594,33 +586,13 @@ class MegamanMaverickGame(
         } else {
             diagnostics?.beginEntry("autoPerf")
 
-            if (launch.autoPerf) autoPerfGraceTimer.update(delta)
-            if (launch.autoPerf && autoPerfGraceTimer.isFinished()) {
-                val performance = settings.performance
-                val currentFps = Gdx.graphics.framesPerSecond
-                if (performance != Performance.VERY_LOW && currentFps < performance.fps) {
-                    val deficit = performance.fps - currentFps
-                    val nextLowerFps = Performance.entries[performance.ordinal - 1].fps
-                    val timerMultiplier = when {
-                        deficit <= AUTO_PERF_NEAR_DEFICIT -> AUTO_PERF_NEAR_SPEED
-                        deficit <= AUTO_PERF_MODERATE_DEFICIT -> AUTO_PERF_MODERATE_SPEED
-                        currentFps > nextLowerFps -> AUTO_PERF_HIGH_SPEED
-                        else -> AUTO_PERF_CRISIS_SPEED
-                    }
-                    autoPerfTimer.update(delta * timerMultiplier)
-
-                    if (autoPerfTimer.isFinished()) {
-                        val newPerformance = Performance.entries[performance.ordinal - 1]
-                        setPerformance(newPerformance)
-
-                        autoPerfTimer.reset()
-
-                        val message = "Performance issue detected! Downgrading to ${newPerformance.fps} FPS."
-                        GameLogger.error(TAG, message)
-                        showNotification(message, Color.RED)
-                    }
-                } else autoPerfTimer.reset()
-            } else autoPerfTimer.reset()
+            val lowerPerformance = if (launch.autoPerf) autoPerformance.update(delta, settings.performance) else null
+            if (lowerPerformance != null) {
+                setPerformance(lowerPerformance)
+                val message = "Performance issue detected! Downgrading to ${lowerPerformance.fps} FPS."
+                GameLogger.error(TAG, message)
+                showNotification(message, Color.RED)
+            }
 
             diagnostics?.endEntry()
 
@@ -1169,11 +1141,10 @@ class MegamanMaverickGame(
         Gdx.graphics.setForegroundFPS(performance.fps)
         getSystem(WorldSystem::class)?.fixedStep = performance.fixedStep
         events.submitEvent(Event(EventType.CHANGE_PERFORMANCE_MODE, props(ConstKeys.MODE pairTo performance)))
-        autoPerfGraceTimer.reset()
-        autoPerfTimer.reset()
+        autoPerformance.restartGracePeriod()
     }
 
     fun isPerformanceSubpar() = settings.performance.ordinal > Performance.LOW.ordinal
 
-    fun resetAutoPerfGracePeriod() = autoPerfGraceTimer.reset()
+    fun resetAutoPerfGracePeriod() = autoPerformance.restartGracePeriod()
 }
