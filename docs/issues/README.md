@@ -195,7 +195,7 @@ related-items: [<mega-refactor item IDs>]
 | [Question: player 2 has only a debug tint, and no plan exists for a real look](2026-11-22-player-2-debug-tint-only.md) | question | core | open |
 | [`Animation.reset()` does not set the frame index back to 0](2026-11-22-animation-reset-keeps-index.md) | yes | engine | open |
 | [A camera shake request during a running shake is dropped](2026-11-22-camera-shake-dropped-while-shaking.md) | yes | core | open |
-| [One freeze of about 1.5 s can make auto-perf drop the tier for the rest of the session](2026-11-23-auto-perf-drops-tier-after-freeze.md) | yes | core | open |
+| [One freeze of about 1.5 s can make auto-perf drop the tier for the rest of the session](2026-11-23-auto-perf-drops-tier-after-freeze.md) | yes | core | closed |
 | [`--room` can start in another room when a spawn is near the world origin](2026-11-23-launch-room-spawn-taken-by-camera-origin.md) | yes | core | open |
 
 ## Folded into items

@@ -1,5 +1,5 @@
 ---
-status: open
+status: closed
 verified: yes
 area: core
 gameplay-change: yes
@@ -132,3 +132,7 @@ Run them from a second terminal while the game window shows the level.
   the JVM for 300 ms in each 350 ms, so each long frame is over 0.25 s). A steady stutter drops the tier:
   "Downgrading to 45 FPS." comes after about 2 s, and "Downgrading to 30 FPS." about 8 s later. Added 2026-11-23 for the
   code review round 2 rule; the play checks above passed on 2026-11-23.
+
+## Resolution
+
+Fixed in `fix/auto-perf-freeze`, squash commit `4326413fb` (2026-11-23). `AutoPerformance` (`core/.../state/AutoPerformance.kt`) measures its own frame rate from the raw delta, and each frame adds at most 0.25 s to the window and the timers. So 1 or 2 freezes in a row do not drop the tier, and a slow machine or a steady stutter still does. Tests: `AutoPerformanceTest` (15 cases; the no-limit mutation fails 8). Owner play checks 1 to 4 passed.
