@@ -33,6 +33,17 @@ Read this file before you draw, fix or convert art (sprites, tiles, backgrounds)
     another angle, draw a frame for each angle (for example the 8 directions at 45 degrees, drawn as pixel art with
     stepped edges), or build the shape from unrotated parts. Much old art breaks this rule; it keeps its look until a
     task changes it.
+  - **One pixel grid for all art** (owner, 2026-11-22, branch `078e`: Mega Man's feet cut into the black top outline
+    of the new `LaserBeamer`; its sprite sat 3.2 game px off the grid). An NES game draws all tiles and sprites on
+    one screen pixel grid, so two objects never overlap by part of a pixel. Here the grid is the NES pixel of 2 game
+    px:
+    - A fixed placement of a sprite, and every draw offset in code, is a whole number of NES pixels (a multiple of 2
+      game px), for example `-10f / ConstVals.PPM`, not `-0.1f`.
+    - Art that a body touches meets the body at a pixel edge. A surface that the player stands on has its top art row
+      at the top of the block body, so the feet stand on the outline, not in it. Fix a gap of whole pixels in the art
+      (see "Fix art in the art"), and the place of the sprite in code only when it is off the grid.
+    - Check each new placement against the body numbers: the top of the art = the sprite position + its size minus the
+      empty rows of the frame (in game px).
   - **Check by script** in each art round: the 2 px grid, the palette and the color counts. Old art keeps its look
     until a task changes it; do not redo old art only for this rule.
 
