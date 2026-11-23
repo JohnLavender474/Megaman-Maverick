@@ -128,3 +128,7 @@ Run them from a second terminal while the game window shows the level.
 - `./run-game-alpha.sh --level INTRO_STAGE --room room1`: play for 10 s, then run `temp/play/throttle.sh 15`. A
   sustained low frame rate still drops the tier: "Downgrading to 45 FPS." comes after about 3 s, and "Downgrading to
   30 FPS." about 7 s later.
+- `./run-game-alpha.sh --level INTRO_STAGE --room room1`: play for 10 s, then run `temp/play/stutter.sh 20` (it stops
+  the JVM for 300 ms in each 350 ms, so each long frame is over 0.25 s). A steady stutter drops the tier:
+  "Downgrading to 45 FPS." comes after about 2 s, and "Downgrading to 30 FPS." about 8 s later. Added 2026-11-23 for the
+  code review round 2 rule; the play checks above passed on 2026-11-23.
