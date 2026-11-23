@@ -502,6 +502,9 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
   for a stage look uses that stage's tiles (`docs/ways-of-working/levels.md`). Give this rule to the
   subagent that builds the map, and look at a render of the tiles with the blocks before the
   handover.
+- **Each check starts in its own room:** only spawn `0` may sit near the world origin
+  (`docs/ways-of-working/levels.md`, "Only spawn `0` near the world origin"). Before the
+  handover, check the map with a script for this rule.
 - **When:** in the first plan steps of the branch, before the code changes. Do not launch the game
   to check that a new room loads. The review before the play test checks it (see "Review before
   the play test").

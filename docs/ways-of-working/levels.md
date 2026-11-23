@@ -25,6 +25,17 @@ Read this file before you draft or edit a level (TMX), or an entity that reads p
   Example (owner, 2026-11-23, branch `182a`): the polygon ceilings of `RefactorTest182` were painted with the flat
   tile 175. The check was about the V-point crystal ceilings of the Precious Woman stage, so the room showed a flat
   ceiling and the owner could not see the V points.
+- **Only spawn `0` near the world origin.** At level start the camera is near the world origin (the bottom-left
+  corner of the map), and a player spawn that overlaps that first view takes the place of the `--room` spawn (issue
+  `docs/issues/2026-11-23-launch-room-spawn-taken-by-camera-origin.md`). `--room` drops only the spawns whose names
+  sort before its start spawn, so a spawn `0` near the origin is harmless. Until that issue is closed, a spawn whose
+  bottom is less than 8 tiles above the bottom edge of the map and less than 16 tiles from its left edge must be spawn
+  `0`. Otherwise leave empty rows at the bottom, or move that room. Check it with a script before you hand over the
+  checks, and give the same rule to a subagent that builds the map.
+
+  Example (owner, 2026-11-23, branch `182a`): room `rect_ceiling` was the bottom room of `RefactorTest182`, and its
+  spawn was 7 tiles above the map bottom. Checks 1 to 5 all started in `rect_ceiling`, and the owner tested the wrong
+  room twice.
 - **Read room geometry from map objects, not from hard-coded values.** When an entity needs a place in its room (a
   floor, a wall, a ceiling, an arena, a spawn or target point), give its map object an object property that refers
   to the map object of that place, and read it in `onSpawn` with `!!`, so that a missing reference fails fast. Do

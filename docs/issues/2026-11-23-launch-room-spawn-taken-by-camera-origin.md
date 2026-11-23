@@ -37,3 +37,6 @@ The player starts at the first spawn of room `R`, whatever other spawns are near
 
 - Workaround in `182a`: the map has 16 empty rows at its bottom, so no spawn is near the origin.
 - Item `036` plans checkpoint ranks; its `TODO` at `startAt` is about the order of the names, not this case.
+- A spawn `0` near the origin is harmless: `startAt` removes it for any other start spawn. A scan of the test maps on
+  2026-11-23 found one other map with a later spawn near the origin: `RefactorTest047.tmx`, spawn `24` (4 tiles above
+  the map bottom), so a `--room` start of `REFACTOR_TEST_047` whose spawn sorts before `24` can start in that room.

@@ -207,6 +207,11 @@ in its box, as for any other block. See
 `RefactorTest068.tmx` for examples of each case.
 
 ### Iteration 3 — Player spawns
+Only spawn `0` may sit near the world origin (bottom less than 8 tiles above the map bottom and
+less than 16 tiles from its left edge). Another spawn there overlaps the camera at level start and
+takes the place of the `--room` spawn (`docs/ways-of-working/levels.md`, "No player spawn near
+the world origin"). Leave empty rows at the bottom of the map, or move that room.
+
 Add the stage-start spawn `0` and any respawn points `1..n` with `add-spawn`, each a
 single tile placed directly above a plain block (never a conveyor or other special
 floor). Slot 1 spawns 1 tile to the right of each spawn with no `player_2` property, so
