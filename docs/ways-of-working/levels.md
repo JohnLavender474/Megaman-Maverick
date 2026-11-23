@@ -11,6 +11,20 @@ Read this file before you draft or edit a level (TMX), or an entity that reads p
   - Tile layers in a level draft: ask the owner whether to paint them to match the blocks or to leave them out
     (default: leave them out; no empty placeholder layers). A test map is different: it always has a painted `tiles`
     layer (`docs/mega-refactor/CLAUDE.md`, "Test maps").
+- **The tiles agree with the goal.** The tiles show the same shape as the blocks, and the look that the task is
+  about. A plain square tile on a block that is not a rectangle (a polygon, a slope) is wrong: the room looks flat,
+  and a check of that shape cannot be done by eye.
+  - Before you paint, find the real art. When the task names a stage or a stage look (for example "the spiked
+    ceilings of Precious Woman"), read that stage's TMX, note the tileset and the tile ids at that place, and add
+    that tileset to the map. Paint each cell of a shaped block with a tile whose art follows the block's edges.
+  - Give each block only a shape that the art can show. If no tile fits a shape that the task needs, ask the owner
+    before you build: change the shape to one the art fits, draw new tiles (`art.md`), or accept plain tiles.
+  - After you paint, render the tiles with the block outlines over them to a PNG in `temp/`, look at it, and fix
+    each cell where the art and the block do not agree.
+
+  Example (owner, 2026-11-23, branch `182a`): the polygon ceilings of `RefactorTest182` were painted with the flat
+  tile 175. The check was about the V-point crystal ceilings of the Precious Woman stage, so the room showed a flat
+  ceiling and the owner could not see the V points.
 - **Read room geometry from map objects, not from hard-coded values.** When an entity needs a place in its room (a
   floor, a wall, a ceiling, an arena, a spawn or target point), give its map object an object property that refers
   to the map object of that place, and read it in `onSpawn` with `!!`, so that a missing reference fails fast. Do

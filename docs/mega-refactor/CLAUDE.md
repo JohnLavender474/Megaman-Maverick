@@ -498,7 +498,10 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
   step. The map is rough by design; the owner can fix it by hand.
 - **Paint the blocks:** every test map and room has a `tiles` tile layer with a tile on each block
   cell (see the `level-builder` skill and `Test1.tmx`). Block objects alone are invisible in the
-  game.
+  game. The tiles agree with the goal: a shaped block gets tiles that follow its edges, and a room
+  for a stage look uses that stage's tiles (`docs/ways-of-working/levels.md`). Give this rule to the
+  subagent that builds the map, and look at a render of the tiles with the blocks before the
+  handover.
 - **When:** in the first plan steps of the branch, before the code changes. Do not launch the game
   to check that a new room loads. The review before the play test checks it (see "Review before
   the play test").

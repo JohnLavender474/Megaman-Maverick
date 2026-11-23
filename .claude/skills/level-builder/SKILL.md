@@ -114,6 +114,12 @@ script or by hand, and raise `nextlayerid`. Use a tile from a tileset the map al
 example tile 175 of `Tileset1.tsx`, the most common floor tile in `Test1.tmx`. See the `tiles`
 layer of `Test1.tmx` for the format.
 
+Tile 175 is for plain rectangle blocks only. The tiles must agree with the goal
+(`docs/ways-of-working/levels.md`): a block that is not a rectangle (a polygon, a slope) gets tiles
+whose art follows its edges, and a room for a stage look uses that stage's tileset and tile ids.
+If no tile fits a shape, ask the user before you build. Render the tiles with the block outlines
+over them to a PNG and look at it before you hand off.
+
 #### Room barriers, block count and wall faces
 
 Follow `level-designer` Rules 17–19:
