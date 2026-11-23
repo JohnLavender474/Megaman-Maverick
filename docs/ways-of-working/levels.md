@@ -36,6 +36,14 @@ Read this file before you draft or edit a level (TMX), or an entity that reads p
   Example (owner, 2026-11-23, branch `182a`): room `rect_ceiling` was the bottom room of `RefactorTest182`, and its
   spawn was 7 tiles above the map bottom. Checks 1 to 5 all started in `rect_ceiling`, and the owner tested the wrong
   room twice.
+- **Polygon ceilings (`CeilingPolygonBlock`) are for ceilings only** (owner, 2026-11-23, item `182`).
+  - Draw each one as an unrotated convex polygon with each edge flat or at 45 degrees; the block throws at spawn
+    otherwise. A saw-tooth is several objects.
+  - Keep enough clearance under each polygon: a grounded body that walks into a face is only pushed sideways out
+    of it, so a gap under a tip that is lower than the walker is a wall. Leave such a gap only where a wall is meant.
+  - Do not use one in a level or room where the gravity turns: the block throws when it spawns with gravity not
+    `UP`, and it gives no push-out to a body whose gravity is not `UP`.
+  - Paint it with tiles whose art follows its edges (see "The tiles agree with the goal").
 - **Read room geometry from map objects, not from hard-coded values.** When an entity needs a place in its room (a
   floor, a wall, a ceiling, an arena, a spawn or target point), give its map object an object property that refers
   to the map object of that place, and read it in `onSpawn` with `!!`, so that a missing reference fails fast. Do

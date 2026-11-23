@@ -3032,3 +3032,21 @@ newest entry at the bottom.
 - Reason: the owner asked for a `TODO` at `TimberWalker` that points to item `180` (first pass, test map only). A
   comment is not a code change, so no branch, build or tests (owner decision; new paragraph in "Small ad-hoc changes
   on `master`" in `CLAUDE.md`).
+
+## 2026-11-23 — mega-refactor-182a-polygon-ceilings
+
+- Summary: new block `CeilingPolygonBlock` (a convex Tiled polygon, edges flat or 45 degrees) pushes a body down by
+  its polygon when the body comes from below, and sideways otherwise; head contact from the push-out; no side, feet or
+  head rule contact; fail fast on a bad polygon and on gravity not `UP`. Engine `CeilingProfile`,
+  `ShapeUtils.intersectPolygonAndLine` and `IBody.getStepStart`. `LaserBlockRule` hits polygon blocks by their edges
+  (fixes the `GroundSlope` cast crash). Test map `REFACTOR_TEST_182` with a test tileset of the Precious Woman V
+  tiles. Squash commit `d30e27565`.
+- Contract check: `engine:test` 776, `core:test` 2909, `core:smokeTest`, `lwjgl3:jar`, `detektMain
+  core:verifyRandomRule` passed (the last 3 before play test round 1; round 1 fixes ran `engine:test core:test` and
+  mutation checks). Review before the play test: 1 agent, findings in the branch log. Play checks 1 to 8 passed after
+  round 1 (snap at the end of a wall slide fixed; test map rebuilt with V tiles and sections); check 9 (`O5-R2`
+  diagnostics pair) dropped by the owner. Diffity: 0 threads.
+- Follow-up: the Precious Woman map conversion (26 V points) waits for `078e` (item `182` stays active). Bug filed:
+  `2026-11-23-launch-room-spawn-taken-by-camera-origin.md`. New level rules in `docs/ways-of-working/levels.md`
+  (tiles agree with the goal; only spawn `0` near the world origin; polygon ceilings). `078e` and `183b` will meet
+  simple list conflicts in `LevelDefinition.kt` and `LevelCompletionScreensTest.kt`.
