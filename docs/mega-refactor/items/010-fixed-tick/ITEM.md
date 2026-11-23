@@ -15,7 +15,7 @@ Make gameplay time independent of the frame rate and the performance tier, so th
 
 From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 
-- Step 1: route all time reads through one clock. Remove the direct `Gdx.graphics.deltaTime` and `getPerformance().fixedStep` reads. Clamp the frame delta (at most `maxIterations × step`). Auto-perf must not count a clamped hitch frame (see `docs/issues/2026-11-23-auto-perf-drops-tier-after-freeze.md`; that bug may be fixed first in a `fix/` branch).
+- Step 1: route all time reads through one clock. Remove the direct `Gdx.graphics.deltaTime` and `getPerformance().fixedStep` reads. Clamp the frame delta (at most `maxIterations × step`). The clock passes its raw delta to `AutoPerformance.update` (from `fix/auto-perf-freeze`, see `docs/issues/2026-11-23-auto-perf-drops-tier-after-freeze.md`), which has its own hitch limit (0.25 s); auto-perf does not use the clamped delta.
 - Step 2: one physics step for all performance tiers. Tiers change only the FPS cap and cosmetic budgets.
 - Step 3: a fixed gameplay tick (for example 60 Hz): latch input once per tick; run events, spawns, systems and physics each tick; render once per frame.
 - Remove the FPS-dependent gameplay rules (`DrillHead`, `Laser`, `FallingLeaf`, `Bat`, `FloatingCan`).
