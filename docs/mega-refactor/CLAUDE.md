@@ -471,6 +471,9 @@ just merged (a wrong name, a misleading message, a missing test). Such a change:
 - gets an entry in `process-log.md` with the same reason;
 - passes the build and the tests on `master` before the commit (step 9 of "Branch merge").
 
+A change to code comments only (for example a `TODO` that points to an item) is not a code change: it needs no build
+and no tests (owner decision, 2026-11-23). The other rules above still apply.
+
 Anything larger, or anything that changes gameplay, is a new item or a branch.
 
 ### Dropped branch or item

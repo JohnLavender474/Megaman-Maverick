@@ -3026,3 +3026,9 @@ newest entry at the bottom.
 - Follow-up: new item `180` (refine with an artist and put into the game). Bugs filed:
   `2026-11-22-animation-reset-keeps-index.md`, `2026-11-22-camera-shake-dropped-while-shaking.md`. `078e` will meet
   a simple list conflict in `TextureAsset.kt` (both add an atlas entry).
+
+## 2026-11-23 — direct change on `master`: Timber Walker TODO, comment-only rule
+
+- Reason: the owner asked for a `TODO` at `TimberWalker` that points to item `180` (first pass, test map only). A
+  comment is not a code change, so no branch, build or tests (owner decision; new paragraph in "Small ad-hoc changes
+  on `master`" in `CLAUDE.md`).

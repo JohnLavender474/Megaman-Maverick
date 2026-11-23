@@ -70,6 +70,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sign
 
+// TODO: first pass, spawned only in RefactorTest078; art with an artist and the Timber Woman stage place (item 180)
 class TimberWalker(services: MegaServices) :
     AbstractBoss(services, dmgDuration = DEFAULT_MINI_BOSS_DMG_DURATION, size = Size.LARGE), IFaceable {
 
