@@ -189,7 +189,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 179 | [Named player slots (`PlayerSlot.PLAYER_1`, `PlayerSlot.PLAYER_2`)](items/179-named-player-slots/ITEM.md) | refactor | `O1`, `O2` | idea | none | | |
 | 180 | [Timber Walker: refine with an artist and put into the game](items/180-timber-walker-integration/ITEM.md) | feature | `O4`, `O9` | idea | `078f` (stage place) | | |
 | 181 | [Entity pools and factories owned by the session](items/181-session-owned-pools/ITEM.md) | refactor | `O1`, `O6` | idea | none | | |
-| 182 | [Polygon ceilings: blocks that push bodies out by their polygon](items/182-polygon-ceilings/ITEM.md) | feature | `O4`, `O5` | idea | none | | |
+| 182 | [Polygon ceilings: blocks that push bodies out by their polygon](items/182-polygon-ceilings/ITEM.md) | feature | `O4`, `O5` | active | none | 2026-11-23 | |
 
 ## Branches
 
@@ -324,3 +324,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-109b-pvp-respawn`](items/109-pvp-mode/branches/mega-refactor-109b-pvp-respawn/process-log.md) | 109 | PvP respawn: a death respawns only the dead slot, with no level-defeat routine | merged | 2026-11-20 | 2026-11-20 |
 | [`mega-refactor-079a-smarter-met`](items/079-smarter-enemies/branches/mega-refactor-079a-smarter-met/process-log.md) | 079 | A smarter `Met`: pit avoidance with a shared ground probe, safe jumps, charged-shot stagger, helmet break and a desperate phase | merged | 2026-11-18 | 2026-11-18 |
 | [`mega-refactor-178a-bot-input`](items/178-npc-allies/branches/mega-refactor-178a-bot-input/process-log.md) | 178 | Bot input on slot 1: an AI brain copies P1's input with a delay; launch option and test map `REFACTOR_TEST_178` | merged | 2026-11-22 | 2026-11-23 |
+| [`mega-refactor-182a-polygon-ceilings`](items/182-polygon-ceilings/branches/mega-refactor-182a-polygon-ceilings/process-log.md) | 182 | Polygon ceilings: `CeilingPolygonBlock` pushes bodies down by its polygon; no wall slide on it; laser fix; test map `REFACTOR_TEST_182` | active | 2026-11-23 | |

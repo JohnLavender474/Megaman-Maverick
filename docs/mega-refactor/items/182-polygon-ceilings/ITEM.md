@@ -1,12 +1,12 @@
 # 182: Polygon ceilings: blocks that push bodies out by their polygon
 
-- Status: idea
+- Status: active
 - Type: feature
 - Objectives: `O4`, `O5`
 - Depends on: none
 - Related: `068` (floor slopes), `123`, `078e` (Precious Woman art: the V-point ceilings), `O5-R2` (the TODO at
   `MegaCollisionHandler.kt:50`)
-- Branches: none yet
+- Branches: [`mega-refactor-182a-polygon-ceilings`](branches/mega-refactor-182a-polygon-ceilings/process-log.md)
 
 ## Goal
 
@@ -56,7 +56,26 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - 2026-11-23: the owner rejected a sprite-only lift of `DrillHead` (the body and its damager would stay below the
   sprite). A lift of body and sprite, drawn behind the tiles (E+ in `NOTES.md`), stays a possible stopgap.
 
+## Decisions
+
+All on 2026-11-23, owner accepted the recommendation:
+
+- Merge target: directly into `master`, one branch, `182a`.
+- Q1 push direction: down only (as X6: a slanted ceiling stops the rise).
+- Q2 head contact: (b) the push-out reports the head contact (sets `HEAD_TOUCHING_BLOCK`, calls `hitByHead` and
+  `HIT_BY_BLOCK`; a typed per-body step field clears it), so the 38 reads in 32 files work unchanged.
+- Q3 grounded body under a low face: (a) an x push with no side sense, plus (c) a level rule: enough clearance under
+  each polygon.
+- Q4 gravity other than `UP`: no response, plus a rule: no polygon ceilings in levels where gravity turns.
+- Q5 edge angles: 0 and 45 degrees only, fail fast on others.
+- The Precious Woman map (`PreciousWoman_v2.tmx`) is not changed in `182a`: branch `078e` has uncommitted work in it.
+  Its 26 V points become polygon ceilings in a later step, after `078e` and `182a` merge.
+
 ## Open questions
+
+None. The 5 questions below were answered on 2026-11-23 (see "Decisions"); they stay for the record.
+
+### Answered
 
 Each with the research recommendation in bold.
 
