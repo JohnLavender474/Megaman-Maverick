@@ -209,7 +209,7 @@ in its box, as for any other block. See
 ### Iteration 3 — Player spawns
 Only spawn `0` may sit near the world origin (bottom less than 8 tiles above the map bottom and
 less than 16 tiles from its left edge). Another spawn there overlaps the camera at level start and
-takes the place of the `--room` spawn (`docs/ways-of-working/levels.md`, "No player spawn near
+takes the place of the `--room` spawn (`docs/ways-of-working/levels.md`, "Only spawn `0` near
 the world origin"). Leave empty rows at the bottom of the map, or move that room.
 
 Add the stage-start spawn `0` and any respawn points `1..n` with `add-spawn`, each a
