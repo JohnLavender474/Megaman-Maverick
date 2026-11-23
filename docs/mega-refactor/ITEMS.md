@@ -185,7 +185,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 175 | [`LevelPlayers`: player spawns, deaths and slot respawn out of `MegaLevelScreen`](items/175-level-players/ITEM.md) | refactor | `O1`, `O2` | idea | none | | |
 | 176 | [One level animation clock for tiles and entities](items/176-level-animation-clock/ITEM.md) | refactor | `O9`, `O1` | idea | none | | |
 | 177 | [Backgrounds drawn per room](items/177-backgrounds-per-room/ITEM.md) | feature | `O9`, `O4` | idea | none | | |
-| 178 | [NPCs and AI allies that fight next to the players](items/178-npc-allies/ITEM.md) | feature | `O8`, `O2`, `O4` | planned | `031`; later branches `015`, `030`, `112`, `128`, `082` | | |
+| 178 | [NPCs and AI allies that fight next to the players](items/178-npc-allies/ITEM.md) | feature | `O8`, `O2`, `O4` | active | `031`; later branches `015`, `030`, `112`, `128`, `082` | 2026-11-22 | |
 
 ## Branches
 
@@ -319,3 +319,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-109a-screen-wrap`](items/109-pvp-mode/branches/mega-refactor-109a-screen-wrap/process-log.md) | 109 | Horizontal screen wrap in a room with the `wrap` flag (players and shots), and the test map `REFACTOR_TEST_109` | merged | 2026-11-19 | 2026-11-20 |
 | [`mega-refactor-109b-pvp-respawn`](items/109-pvp-mode/branches/mega-refactor-109b-pvp-respawn/process-log.md) | 109 | PvP respawn: a death respawns only the dead slot, with no level-defeat routine | merged | 2026-11-20 | 2026-11-20 |
 | [`mega-refactor-079a-smarter-met`](items/079-smarter-enemies/branches/mega-refactor-079a-smarter-met/process-log.md) | 079 | A smarter `Met`: pit avoidance with a shared ground probe, safe jumps, charged-shot stagger, helmet break and a desperate phase | merged | 2026-11-18 | 2026-11-18 |
+| [`mega-refactor-178a-bot-input`](items/178-npc-allies/branches/mega-refactor-178a-bot-input/process-log.md) | 178 | Bot input on slot 1: an AI brain copies P1's input with a delay; launch option and test map `REFACTOR_TEST_178` | active | 2026-11-22 | |
