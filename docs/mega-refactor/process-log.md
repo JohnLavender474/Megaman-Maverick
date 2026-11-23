@@ -3046,6 +3046,8 @@ newest entry at the bottom.
   mutation checks). Review before the play test: 1 agent, findings in the branch log. Play checks 1 to 8 passed after
   round 1 (snap at the end of a wall slide fixed; test map rebuilt with V tiles and sections); check 9 (`O5-R2`
   diagnostics pair) dropped by the owner. Diffity: 0 threads.
+- Checks on `master` after the squash: `engine:test`, `core:test` (2923), `core:smokeTest`, `lwjgl3:jar`, `detektMain
+  core:verifyRandomRule` pass.
 - Follow-up: the Precious Woman map conversion (26 V points) waits for `078e` (item `182` stays active). Bug filed:
   `2026-11-23-launch-room-spawn-taken-by-camera-origin.md`. New level rules in `docs/ways-of-working/levels.md`
   (tiles agree with the goal; only spawn `0` near the world origin; polygon ceilings). `078e` and `183b` will meet
