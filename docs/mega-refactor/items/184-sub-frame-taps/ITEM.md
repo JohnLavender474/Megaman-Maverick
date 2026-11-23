@@ -1,11 +1,11 @@
 # 184: Keep button taps that are shorter than one frame
 
-- Status: planned
+- Status: active
 - Type: feature
 - Objectives: `O9`, `O5`
 - Depends on: none
 - Related: `010`, `031`, `047`, `070`, `178`
-- Branches: none yet
+- Branches: `mega-refactor-184a-sub-frame-taps` (keyboard and gamepad, by D3)
 
 ## Goal
 
@@ -71,10 +71,11 @@ Owner accepted the recommendations, 2026-11-23:
 - D2: a short release between two presses gives `JUST_RELEASED` in this frame and `JUST_PRESSED` in the next frame,
   so each mashed press counts. The control lock ignores the latch.
 - D3: one branch for keyboard and gamepad.
+- Merge target: directly into `master` (owner, 2026-11-23).
 
 ## Open questions
 
-- Merge target (directly into `master` or into a parent branch): ask at item start.
+None.
 
 ## Sources
 
