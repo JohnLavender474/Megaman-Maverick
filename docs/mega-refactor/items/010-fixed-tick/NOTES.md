@@ -371,3 +371,38 @@ New open questions for `ITEM.md`:
   (MEDIUM) is the source of truth for how the game looks and feels. See `ITEM.md`, "Decisions".
 - Is it acceptable that a weak machine runs more simulation work per second than VERY_LOW does today, or must the
   tick rate or the step count go down on weak machines?
+
+## Gameplay need per step (scan, 2026-11-23)
+
+Question from the owner: is `010` needed for real gameplay, or only for tests? Five read-only scans at `36048d9c0`.
+Nothing was measured in a running game: the pixel and frame numbers are arithmetic from the code.
+
+| Step | Gameplay need | Test/tool need |
+|---|---|---|
+| 1: one clock + delta clamp | Yes, today: hitch bugs, auto-perf drop after one freeze | the base for one tick |
+| 2: one physics step for all tiers | Yes, small: tiers below MEDIUM differ by a few px and one frame; worse on web | repeatable physics |
+| 3: fixed tick, input per tick | Not for single-player at 60 fps; needed for `095`, the `094` camera, exact bot timing (`178c`) | `055`, `006` compare, `178i`, `O3-R5` |
+
+At MEDIUM with a steady 60 fps, a player feels almost no difference. The gameplay value of `010` is that hitches do no harm,
+and that the other tiers and the web build match MEDIUM. No recorded bug needs step 3 alone.
+
+Hitch cases (a frame longer than `maxIterations × step` = 40 ms at MEDIUM):
+
+- Timers get the full delta, but physics advances at most 40 ms (`WorldSystem.kt:199-201`). A 100 ms frame cuts about 60 ms of
+  air dash (`PlayerAirDash.kt:102-105`). The slide and i-frames behave the same way. This is real.
+- Auto-perf reads a partial-second `framesPerSecond` after a freeze of 1.5 s or more and drops the tier for the session
+  (`MegamanMaverickGame.kt:597-614`). This is real. **Add it to the step 1 scope:** auto-perf ignores a clamped frame or uses the clamped delta.
+- Movers that set position from delta skip contacts, and the camera lerp factor `20·dt` goes over 1 above 50 ms
+  (`MegaLevelScreen.kt:305`). These are real but rare.
+- Jump height and body tunneling in a hitch: not bugs (velocity is set once; the step per sub-step is fixed).
+
+Tier differences at a steady frame rate:
+
+- Jump apex: −5.3 px (VERY_LOW) to −1.8 px (HIGH) against the analytic apex. This needs step 2.
+- Short-hop steps: about 26 px at 30 fps and 13 px at 60. Timers round up to whole frames (`engine/.../Timer.kt:55`). Slide and dash
+  end on frame bounds. These need step 3.
+- `DrillHead.kt:147` and `Laser.kt:292` FPS guards: effects are off below 50 fps.
+
+Consequence: step 1 is a gameplay fix in its own right. That supports "Option C" above (measure, then step 1 alone) and
+the frame clock before `006`. Decide steps 2 and 3 after the weak-machine measurement (`O5`). Step 3 must come before `094`, `095` and
+`178c`. Full tables: `temp/010-gameplay-need/findings.md` (not committed).

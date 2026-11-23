@@ -5,7 +5,7 @@
 - Objectives: `O2`, `O6`, `O5`
 - Depends on: `011`, `017`
 - Related: `006`, `008`, `012`, `019`, `031`, `055`
-- Branches: none yet
+- Branches: `010a` planned (frame clock and the simulation/present split, before `006`)
 
 ## Goal
 
@@ -15,11 +15,21 @@ Make gameplay time independent of the frame rate and the performance tier, so th
 
 From the review. Not approved. The branch `SCOPE.md` decides the final scope.
 
-- Step 1: route all time reads through one clock. Remove the direct `Gdx.graphics.deltaTime` and `getPerformance().fixedStep` reads. Clamp the frame delta.
+- Step 1: route all time reads through one clock. Remove the direct `Gdx.graphics.deltaTime` and `getPerformance().fixedStep` reads. Clamp the frame delta (at most `maxIterations × step`). Auto-perf must not count a clamped hitch frame (see `docs/issues/2026-11-23-auto-perf-drops-tier-after-freeze.md`; that bug may be fixed first in a `fix/` branch).
 - Step 2: one physics step for all performance tiers. Tiers change only the FPS cap and cosmetic budgets.
 - Step 3: a fixed gameplay tick (for example 60 Hz): latch input once per tick; run events, spawns, systems and physics each tick; render once per frame.
 - Remove the FPS-dependent gameplay rules (`DrillHead`, `Laser`, `FallingLeaf`, `Bat`, `FloatingCan`).
 - Record the timing data for each frame (raw delta, sub-steps, step, tier, FPS, seed, input) for replay and divergence checks.
+
+## Bugs folded in
+
+- `Bat` (`Bat.kt:223-230`) and `FloatingCan` (`FloatingCan.kt:175-182`) set the re-path interval from the
+  `CHANGE_PERFORMANCE_MODE` event: a live enemy goes to 0.25 s at a low tier and 0.5 s at MEDIUM/HIGH, while the
+  spawn default is 0.1 s (`PathfindingComponent.kt:14`). The mapping looks inverted. The scope line on FPS rules
+  removes it. Found by the gameplay-need scan (2026-11-23).
+- `WorldSystem` loops on `accumulator >= fixedStep` but subtracts `fixedStep / fixedStepScalar`
+  (`engine/.../world/WorldSystem.kt:188-190`). With `--fixedStepScalar` other than 1, the number of sub-steps is wrong. It is a dev
+  flag only. Found by the same scan (2026-11-23).
 
 ## Owner's input
 
@@ -40,6 +50,14 @@ Answer to review item 9 (2026-10-22, verbatim):
 - Input frames are built once per render (`MegamanMaverickGame.kt:573`); they must be built once per tick.
 - `timeSpawned` is wall-clock time, and it sorts weapons (`MegaGameEntity.kt:57`, `MegamanWeaponsHandler.kt:338`).
 - Async paths must apply on a set tick (`AsyncPathfindingSystem.kt`).
+
+- 2026-11-23 (owner accepted the recommendation): branch `010a` comes before `006`. It holds step 1 (one frame clock,
+  clamp) and the split of the frame into a simulation call and a present call: the camera update and the viewport size
+  move to the simulation side, and the producer frame clears the drawables and shapes queues. The draw side owns the renderers.
+  Reason: the owner rule "no stopgaps" (`docs/ways-of-working/planning.md`); `006` uses the real seams, not a
+  test fake. Cost: until `006` exists, only the existing tests and a play test check `010a`. Full plan:
+  `006` scan, `temp/006-headless-scan/findings.md` ("Real-fix plan").
+- 2026-11-23: gameplay need per step is in `NOTES.md` ("Gameplay need per step").
 
 ## Open questions
 

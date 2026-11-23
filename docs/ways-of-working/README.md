@@ -13,6 +13,7 @@ to every task.
 | [`temp-files.md`](temp-files.md) | write a helper script, a generator or a draft |
 | [`gameplay.md`](gameplay.md) | change gameplay that the owner play-tests in rounds |
 | [`levels.md`](levels.md) | draft or edit a level, or an entity that reads places from its room |
+| [`planning.md`](planning.md) | plan an item or branch, or choose between a stopgap and the real fix |
 
 Related, in other places:
 

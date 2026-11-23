@@ -13,7 +13,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 003 | [Level content validator (local tool in `utils/`, CI test)](items/003-level-validator/ITEM.md) | tooling | `O6`, `O7` | planned | `002` | | |
 | 004 | [Entity build-and-init smoke test](items/004-entity-smoke-test/ITEM.md) | test | `O6` | done | `002` | 2026-11-01 | 2026-11-01 |
 | 005 | [Golden damage-table test](items/005-golden-damage-test/ITEM.md) | test | `O6` | planned | `004`, `002` | | |
-| 006 | [Headless boot-and-run per level (stage A)](items/006-headless-boot-run/ITEM.md) | test | `O6` | idea | `002`, `004` | | |
+| 006 | [Headless boot-and-run per level (stage A)](items/006-headless-boot-run/ITEM.md) | test | `O6` | idea | `002`, `004`, `010a` | | |
 | 007 | [Versioned JSON save slots with legacy import](items/007-json-save-slots/ITEM.md) | feature | `O9` | planned | none | | |
 | 008 | [Dev launch options and level staging](items/008-dev-launch-options/ITEM.md) | tooling | `O6` | active | none | 2026-10-22 | |
 | 009 | [Allocation and GC baseline per branch](items/009-gc-baseline/ITEM.md) | tooling | `O5`, `O6` | planned | none | | |

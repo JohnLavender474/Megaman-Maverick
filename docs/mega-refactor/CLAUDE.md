@@ -554,7 +554,11 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
 
 - Bugs go in `docs/issues/`, one Markdown file per bug (decision A in `items/000-bugs/ITEM.md`). The rules and
   the index are in `docs/issues/README.md`.
-- If a branch must change buggy behavior, its contract names the bug under "Intended changes".
+- A bug that an item rewrites anyway is folded into that item (`ITEM.md`, "Bugs folded in"), with no issue file. A bug
+  that players feel before the item lands, or whose fix stands alone, gets an issue file and a `fix/` branch. The rule
+  and the "Folded into items" list are in `docs/issues/README.md` (owner decision 2026-11-23).
+- If a branch must change buggy behavior, its contract names the bug (the issue file, or the item's folded bug) under
+  "Intended changes".
 - A `fix/` branch and a direct change on `master` read the always-on rules in
   `objectives/README.md`. They do not need an "Objective check" section. A conflict goes in the
   fix's short contract.

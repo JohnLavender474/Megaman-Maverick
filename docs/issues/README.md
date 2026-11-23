@@ -20,7 +20,14 @@ are items in `docs/mega-refactor/ITEMS.md`.
 - Each time a commit on `master` changes the issue file or the short contract of an open fix branch,
   merge `master` into that branch at once (`git merge master` in its worktree), so that the copy in
   the branch stays current. A docs-only merge needs no test run.
-- A refactor branch that must change buggy behavior names the issue file in its contract
+- Choose the home of a new bug (owner decision 2026-11-23):
+  - **Fold it into an item** when the item rewrites the buggy code anyway, so a separate fix would be thrown away.
+    Write the bug in the item's `ITEM.md` (section "Bugs folded in": what happens, `file:line`, found by) and later
+    under "Intended changes" in the branch contract. Make no issue file. Add one line to "Folded into items" below.
+  - **Make an issue file and a `fix/` branch** when players feel the bug before the item lands, or when the fix
+    stands alone. If an item is related, put it in `related-items`. The item does not copy the fix: its contract
+    keeps the fixed behavior like all other behavior.
+- A refactor branch that must change the buggy behavior of an open issue names the issue file in its contract
   (the "Contract" part of `SCOPE.md`) under "Intended changes".
 - To close an issue, set `status: closed` and add a `## Resolution` section with the commit or
   branch. Do not delete the file.
@@ -188,3 +195,13 @@ related-items: [<mega-refactor item IDs>]
 | [Question: player 2 has only a debug tint, and no plan exists for a real look](2026-11-22-player-2-debug-tint-only.md) | question | core | open |
 | [`Animation.reset()` does not set the frame index back to 0](2026-11-22-animation-reset-keeps-index.md) | yes | engine | open |
 | [A camera shake request during a running shake is dropped](2026-11-22-camera-shake-dropped-while-shaking.md) | yes | core | open |
+| [One freeze of about 1.5 s can make auto-perf drop the tier for the rest of the session](2026-11-23-auto-perf-drops-tier-after-freeze.md) | no | core | open |
+
+## Folded into items
+
+Bugs that an item fixes as part of its own rewrite. They have no issue file; the item's `ITEM.md` holds the facts.
+
+| Bug | Item | Found |
+|-----|------|-------|
+| `Bat` and `FloatingCan` set the re-path interval from a tier event, and the mapping looks inverted | [`010`](../mega-refactor/items/010-fixed-tick/ITEM.md) | 2026-11-23 |
+| `WorldSystem` loops on `accumulator >= fixedStep` but subtracts `fixedStep / fixedStepScalar` | [`010`](../mega-refactor/items/010-fixed-tick/ITEM.md) | 2026-11-23 |
