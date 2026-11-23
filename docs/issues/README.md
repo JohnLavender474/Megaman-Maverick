@@ -205,3 +205,4 @@ Bugs that an item fixes as part of its own rewrite. They have no issue file; the
 |-----|------|-------|
 | `Bat` and `FloatingCan` set the re-path interval from a tier event, and the mapping looks inverted | [`010`](../mega-refactor/items/010-fixed-tick/ITEM.md) | 2026-11-23 |
 | `WorldSystem` loops on `accumulator >= fixedStep` but subtracts `fixedStep / fixedStepScalar` | [`010`](../mega-refactor/items/010-fixed-tick/ITEM.md) | 2026-11-23 |
+| `LaserRules` casts a polygon block shape to `GameRectangle` (`ClassCastException` on a `GroundSlope`) | [`182`](../mega-refactor/items/182-polygon-ceilings/ITEM.md) | 2026-11-23 |

@@ -71,8 +71,7 @@ hardware) and per-entity fixes (only `DrillHead`).
 ## Bug found
 
 `LaserRules.kt:38` casts the block shape to `GameRectangle`: a laser that hits a `GroundSlope` throws
-`ClassCastException` (checked 2026-11-23). It must be fixed for polygon blocks anyway; file it under `docs/issues/`
-if this item does not start soon.
+`ClassCastException` (checked 2026-11-23). It must be fixed for polygon blocks anyway, so it is folded into this item (`ITEM.md`, "Bugs folded in").
 
 ## Tests today and needed
 

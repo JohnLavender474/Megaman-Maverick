@@ -38,6 +38,12 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 - The Precious Woman map: 26 polygon objects for the V points; the 18 rectangle blocks over the V rows cut back to the
   row above each V. A test map `RefactorTest182.tmx` (`REFACTOR_TEST_182`) with a room per check.
 
+## Bugs folded in
+
+- `LaserRules.kt:38` casts the block shape to `GameRectangle`, so a laser that hits a `GroundSlope` (a polygon
+  `BLOCK` fixture) throws `ClassCastException`. No live map has a laser near a slope today. Found 2026-11-23 by the
+  polygon-ceiling research (`NOTES.md`, "Bug found"); this item rewrites the laser-block intersection anyway.
+
 ## Owner's input
 
 - 2026-11-23: "In the old tileset, the ceilings were flat so that when the `DrillHead` enemy rises up and hits the
