@@ -189,6 +189,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 179 | [Named player slots (`PlayerSlot.PLAYER_1`, `PlayerSlot.PLAYER_2`)](items/179-named-player-slots/ITEM.md) | refactor | `O1`, `O2` | idea | none | | |
 | 180 | [Timber Walker: refine with an artist and put into the game](items/180-timber-walker-integration/ITEM.md) | feature | `O4`, `O9` | idea | `078f` (stage place) | | |
 | 181 | [Entity pools and factories owned by the session](items/181-session-owned-pools/ITEM.md) | refactor | `O1`, `O6` | idea | none | | |
+| 182 | [Polygon ceilings: blocks that push bodies out by their polygon](items/182-polygon-ceilings/ITEM.md) | feature | `O4`, `O5` | idea | none | | |
 
 ## Branches
 
