@@ -205,7 +205,7 @@ A pool in this code does 2 things: it reuses an object, and it treats `destroy` 
 - **Second `init()`:** it would replace `ControllerComponent` (the bind is lost), `PlayerProgressComponent` (the listener is orphaned) and `FocusComponent`.
 - **Max health:** a new object has the base value until a heart tank changes. Join only.
 - **World gravity in `onSpawn`:** see fetch step 8. Join and virus.
-- **Tint:** `SpritesComponent.kt:135` never clears it. Only when an object moves from slot 1 to slot 0.
+- **Tint:** `SpritesComponent.kt:115` never clears it. Only when an object moves from slot 1 to slot 0.
 - **`RoomTransitionCarryComponent.reset()`:** it leaves `carriedX/Y`. `beginRoomTransitionCarry` clears them, so only an `END` with no `BEGIN` can reach them: a join during a transition.
 - **Unspawned listener:** `onCurrencyAdded` queues a sound on an unspawned entity. Inference: it plays at the next spawn.
 - **`spawnedUpdateFunc`:** it casts and moves a stale `PreciousGemCluster` (`:373-390`). This is part of the `spawned` bug.

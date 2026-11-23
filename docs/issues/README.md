@@ -184,3 +184,5 @@ related-items: [<mega-refactor item IDs>]
 | [Glacier Man's jump over the player lands about 1 tile past the player, not 2](2026-11-20-glacier-man-jump-over-lands-short.md) | yes | core | closed |
 | [Glacier Man can take a player who stands on his floor as "above"](2026-11-20-glacier-man-standing-player-counts-as-above.md) | yes | core | closed |
 | [Glacier Man takes any queued icicle in its list as its own](2026-11-20-glacier-man-queued-icicle-ownership.md) | yes | core | closed |
+| [No co-op level or co-op test room ends in a boss fight](2026-11-22-no-coop-boss-level.md) | yes | content | open |
+| [Question: player 2 has only a debug tint, and no plan exists for a real look](2026-11-22-player-2-debug-tint-only.md) | question | core | open |

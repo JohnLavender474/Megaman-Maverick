@@ -5,7 +5,7 @@
 - Objectives: `O2`
 - Depends on: `029`, `031`
 - Related: `007`, `008`, `013`, `030`, `038`, `051`, `094`, `095`, `102`, `108`, `109`, `110`, `118`, `119`, `120`
-- Branches: `047a` (merged), `047b` (merged), `047g` (merged), `047h` (merged), `047j` (merged), `047c` (merged), `047i` (merged), `047k` (active)
+- Branches: `047a` (merged), `047b` (merged), `047g` (merged), `047h` (merged), `047j` (merged), `047c` (merged), `047i` (merged), `047k` (merged)
 
 ## Goal
 
@@ -167,7 +167,7 @@ Proposed 2026-11-01. Not approved. Each later branch gets its own scope, which c
 
 - How often does an enemy choose its target? `047b` plans the nearest present player. If the choice runs each frame, a target can change on each frame between 2 players. Options: each frame, sticky for a time, at set points of the enemy's behavior. What does `targetFor` give when no player is present (`MegaPlayers.kt:38`)?
 - Do enemies and bosses scale with the player count? Nothing reads the count now. If a boss scales its health, what happens when a player joins or leaves in the fight? **(mode)**
-- What happens to a player outside a boss room when the `Gate` closes, and to a player who joins in a fight? `AbstractBoss` destroys itself on any `PLAYER_SPAWN` (`AbstractBoss.kt:167`), so a late spawn must not use that event (`038`). **(mode)**
+- What happens to a player outside a boss room when the `Gate` closes, and to a player who joins in a fight? `AbstractBoss` listens only to `END_BOSS_SPAWN` and `LEVEL_RESET` now (`AbstractBoss.kt:110`), so a late `PLAYER_SPAWN` no longer destroys it. **(mode)**
 
 ### Shared objects
 
