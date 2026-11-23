@@ -1,11 +1,11 @@
 # 183: NES-faithful rotation: no sprite drawn at an angle that is not a multiple of 90
 
-- Status: idea
+- Status: active
 - Type: feature
 - Objectives: `O9`, `O4`
 - Depends on: none
 - Related: `058`, `168`, GitHub issue #4
-- Branches: none yet
+- Branches: `mega-refactor-183b-charged-shot`
 
 ## Goal
 
@@ -26,9 +26,10 @@ Small branches, each one independent. The gravity turn is done alone, in its own
 
 | Branch | Content |
 |---|---|
-| `183a` | Gravity turn behind a screen flash (see below) |
-| `183b` | Sites with 45-degree steps or a few fixed angles: a drawn 45-degree region plus turns that are multiples of 90 (the `HomingMissile` pattern) |
-| `183c` and later | Spinning and aimed sites, a few per branch: snap each one to 8 or 16 directions with drawn regions; the count is set per entity |
+| `183a` | Gravity turn behind a screen flash (see below); deferred |
+| `183b` | `ChargedShot`, `ChargedShotExplosion` and `ChargedShotResidual`: a small first batch |
+| `183c` | Sites with 45-degree steps or a few fixed angles: a drawn 45-degree region plus turns that are multiples of 90 (the `HomingMissile` pattern) |
+| `183d` and later | Spinning and aimed sites, a few per branch: snap each one to 8 or 16 directions with drawn regions; the count is set per entity |
 | last | A guard that flags a sprite rotation that is not a multiple of 90 (a debug check, a detekt rule or a smoke test) |
 
 ### `183a`: gravity turn behind a flash
@@ -58,6 +59,9 @@ special cases like the gravity turn are done separately in isolation"
 - 2026-11-23 (owner accepted the recommendation): one new item with branches, not a separate item
   for the flash. The gravity turn is its own branch (`183a`).
 - 2026-11-23 (owner accepted the recommendation): the flash colour is white.
+- 2026-11-23 (owner): defer `183a` (the gravity turn). Start with small batches first; the first branch is
+  `183b`, the charged shot only.
+- 2026-11-23 (owner accepted the recommendation): each `183` branch squash-merges directly into `master`.
 
 ## Open questions
 

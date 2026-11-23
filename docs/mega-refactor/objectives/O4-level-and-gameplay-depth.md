@@ -103,7 +103,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `177` | idea | [Backgrounds drawn per room](../items/177-backgrounds-per-room/ITEM.md) |
 | `178` | active | [NPCs and AI allies that fight next to the players](../items/178-npc-allies/ITEM.md) |
 | `182` | idea | [Polygon ceilings: blocks that push bodies out by their polygon](../items/182-polygon-ceilings/ITEM.md) (main) |
-| `183` | idea | [NES-faithful rotation: no sprite drawn at an angle that is not a multiple of 90](../items/183-nes-faithful-rotation/ITEM.md) |
+| `183` | active | [NES-faithful rotation: no sprite drawn at an angle that is not a multiple of 90](../items/183-nes-faithful-rotation/ITEM.md) |
 
 ## Gaps with no item
 
