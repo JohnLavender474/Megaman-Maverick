@@ -2,12 +2,13 @@
 
 ## Status
 
-- State: active
+- State: merged
 - Goal: an AI brain drives player slot 1: a delayed copy of P1's input, with a launch option and the test map `REFACTOR_TEST_178`
 - Done: branch start; planning (brief approved 2026-11-22, D1 to D4 as recommended; `PLAN.md` written); `PLAN.md` steps 1 to 6 (automated checks pass, review before the play test done)
 - Done also: owner play test, all 8 checks pass (2026-11-23)
 - Done also: diff review closed (0 threads)
-- Next: merge into `master` (new session)
+- Done also: squash merge into `master` (`86e58c2ee`, 2026-11-23)
+- Next:
 - Brief: https://claude.ai/artifact/44yTaHzqxUghJ99iooaMfR
 - Blocked:
 
@@ -64,3 +65,12 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Owner: all 8 manual checks pass. Diff review open at `http://localhost:5392/diff?ref=781211e25da52174688005fe06c414e6a9e5349c`.
 - Diff review: owner closed it with 0 threads. No code change since the last full automated checks (after the
   review fixes), so they were not run again. Diffity server stopped.
+
+## 2026-11-23 (merge)
+
+- `master` changed since the branch start: docs only (`docs/issues/`, `047` docs, `art.md`); no `master` merge into
+  the branch.
+- Other active branches: `compactor-level` and `078g` also add to `LevelDefinition.kt` and
+  `LevelCompletionScreensTest.kt` (list entries; a simple conflict for them later). No other shared files.
+- Squash `86e58c2ee`. The owner's unstaged change in `PlayerStatsHandler.kt` (main checkout) is not in it.
+- New item `179` (named player slots) from the backlog candidate.

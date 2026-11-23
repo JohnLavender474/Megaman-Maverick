@@ -83,7 +83,7 @@ These items do not block the stages. Many are `idea`, so they are not agreed yet
 - Design: `025`, `042`, `048`, `049`, `052`, `053`, `057`, `058`, `059`, `070`, `086`, `114`
 - Boss fights: `082b` after `082a`. `048` step 6 can move the boss hooks into `BossComponent` now. `013` and `047e` can use the fight routine now
 - Later features: `120` after `030`, `047e`, `112`, `118`, `119`; `121` after `081`; `122` after `102`;
-  `178a` → `178b` → `178c` now, `178d` after `015`, `178e` → `178f` (after `047f`), `178g` after `030`, `112`, `128`,
+  `178b` → `178c` now, `178d` after `015`, `178e` → `178f` (after `047f`), `178g` after `030`, `112`, `128`,
   `178h` after `082`
 - Content: `077`, `078` (stage redesigns), `079`, `089`, `115`, `117`; `123` after `017`; `124`
 

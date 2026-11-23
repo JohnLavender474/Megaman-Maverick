@@ -100,7 +100,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `172` | idea | [Mega Man picks up and wears a `Met` helmet](../items/172-wear-met-helmet/ITEM.md) (main) |
 | `173` | idea | [Copied foot-sensor pairs to `GroundProbe`](../items/173-foot-sensors-to-ground-probe/ITEM.md) |
 | `177` | idea | [Backgrounds drawn per room](../items/177-backgrounds-per-room/ITEM.md) |
-| `178` | planned | [NPCs and AI allies that fight next to the players](../items/178-npc-allies/ITEM.md) |
+| `178` | active | [NPCs and AI allies that fight next to the players](../items/178-npc-allies/ITEM.md) |
 
 ## Gaps with no item
 

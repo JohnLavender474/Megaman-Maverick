@@ -181,6 +181,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `173` | idea | [Copied foot-sensor pairs to `GroundProbe`](../items/173-foot-sensors-to-ground-probe/ITEM.md) (main) |
 | `175` | idea | [`LevelPlayers`: player spawns, deaths and slot respawn out of `MegaLevelScreen`](../items/175-level-players/ITEM.md) (main) |
 | `176` | idea | [One level animation clock for tiles and entities](../items/176-level-animation-clock/ITEM.md) |
+| `179` | idea | [Named player slots (`PlayerSlot.PLAYER_1`, `PlayerSlot.PLAYER_2`)](../items/179-named-player-slots/ITEM.md) (main) |
 
 ## Gaps with no item
 

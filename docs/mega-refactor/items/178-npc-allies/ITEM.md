@@ -5,7 +5,7 @@
 - Objectives: `O8`, `O2`, `O4`
 - Depends on: `031`; later branches `015`, `030`, `112`, `128`, `082`
 - Related: `029`, `047`, `079`, `081`, `102`, `108`, `109`, `113`, `118`, `120`, `128`, `171`, `175`
-- Branches: [`mega-refactor-178a-bot-input`](branches/mega-refactor-178a-bot-input/process-log.md) (active)
+- Branches: [`mega-refactor-178a-bot-input`](branches/mega-refactor-178a-bot-input/process-log.md) (merged)
 
 ## Goal
 

@@ -3001,3 +3001,14 @@ newest entry at the bottom.
   the clock is an updatable, so the water and waterfalls animate in a pause (the water did so before `078d`; the
   waterfalls did not); written in item `176`.
 - Checks: `engine:test core:test core:smokeTest detektMain core:verifyRandomRule lwjgl3:jar` pass.
+
+## 2026-11-23 — mega-refactor-178a-bot-input
+
+- Summary: first branch of item `178`. An AI brain drives player slot 1: `--bot follow` (with `--players 2`, co-op
+  only), `FollowBrain` gives a delayed copy of slot 0's input (16/60 s) with a steer toward slot 0 and a jump assist,
+  `MegaPlayers.isBot`, and the group camera focus (`PlayersFocus`) leaves a bot out. Test map `REFACTOR_TEST_178`
+  (`RefactorTest178.tmx`). Squash `86e58c2ee`.
+- Contract check: `engine:test core:test core:smokeTest lwjgl3:jar detektMain core:verifyRandomRule` pass; 8
+  mutations failed their cases. Review before the play test: 1 Sonnet agent, 2 check fixes (assist at exactly the
+  assist height, check 4 text). Owner play test: 8 of 8 checks pass. Diffity: 0 threads.
+- Follow-up: new item `179` (named player slots). No bug candidates.
