@@ -27,6 +27,12 @@ Read this file before you draw, fix or convert art (sprites, tiles, backgrounds)
     at most 4 background palettes, which share one backdrop color. A room can change the palettes of the next area.
   - **Parallax backgrounds** follow the background-tile rule in each 16x16 NES-px area of each texture, and their
     colors count toward the 4 background palettes of the area.
+  - **No rotated pixels** (owner, 2026-11-22, branch `078e`: the lasers and laser beamers turned their pixels, which
+    NES art never does). The game turns new art only in 90-degree steps (or flips it), so that each pixel stays
+    square and aligned with the screen grid. Do not plan new art on a free-angle turn of its sprite. For an object at
+    another angle, draw a frame for each angle (for example the 8 directions at 45 degrees, drawn as pixel art with
+    stepped edges), or build the shape from unrotated parts. Much old art breaks this rule; it keeps its look until a
+    task changes it.
   - **Check by script** in each art round: the 2 px grid, the palette and the color counts. Old art keeps its look
     until a task changes it; do not redo old art only for this rule.
 
