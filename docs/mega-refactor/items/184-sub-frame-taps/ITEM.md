@@ -1,6 +1,6 @@
 # 184: Keep button taps that are shorter than one frame
 
-- Status: idea
+- Status: planned
 - Type: feature
 - Objectives: `O9`, `O5`
 - Depends on: none
@@ -62,16 +62,19 @@ thinks that the cause is the poll once per render frame.
 
 ## Decisions
 
+Owner accepted the recommendations, 2026-11-23:
+
+- D1: the gamepad uses a sampler thread at 500 Hz that latches each "went down" and "went up" for `render()` to read
+  and clear. First check that SDL2 joystick calls are safe from a second thread on Linux, Windows and macOS; if not,
+  move all Jamepad calls to the sampler thread. If that check fails, fall back to extra reads on the main thread at
+  more points of the frame. Details in `NOTES.md`, "Options".
+- D2: a short release between two presses gives `JUST_RELEASED` in this frame and `JUST_PRESSED` in the next frame,
+  so each mashed press counts. The control lock ignores the latch.
+- D3: one branch for keyboard and gamepad.
+
 ## Open questions
 
-- D1: how does the gamepad see a tap between two frames? Options: (a) a sampler thread at a fixed rate that ORs each
-  read into a latch; (b) extra reads on the main thread at more points of the frame; (c) wait for `010` and read per
-  tick. Recommendation: (a), at 500 Hz, after a check of the SDL thread rules on Linux, Windows and macOS. Details in
-  `NOTES.md`, "Options".
-- D2: what does a short release between two presses give (for example a fast shot mash)? Options: (a) `JUST_RELEASED`
-  in this frame and `JUST_PRESSED` in the next frame; (b) nothing, as today (the presses merge). Recommendation: (a).
-- D3: one branch for keyboard and gamepad, or the keyboard latch first? Recommendation: one branch, because the
-  builder change is shared and the owner's report is about the gamepad.
+- Merge target (directly into `master` or into a parent branch): ask at item start.
 
 ## Sources
 
