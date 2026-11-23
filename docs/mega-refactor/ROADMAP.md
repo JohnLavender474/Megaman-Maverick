@@ -16,6 +16,24 @@ The recommended order of the work. Change this file only on `master`.
   "Any time" when it gets a row in `ITEMS.md`.
 - After a full review, change the commit in "Last full review".
 
+## Current track: one clock, headless runs, bot harness
+
+Owner decision 2026-11-23 (owner accepted the recommendation). It goes ahead of the stages below for `006` and `010`.
+Reason: the smart bot (`178`) needs course tests on real levels, and the owner rule "no stopgaps"
+(`docs/ways-of-working/planning.md`) puts the real seams first. Research: `items/010-fixed-tick/NOTES.md` ("Gameplay
+need per step"), `items/006-headless-boot-run/ITEM.md` ("Decisions").
+
+1. `fix/auto-perf-freeze` (issue `2026-11-23-auto-perf-drops-tier-after-freeze.md`). Players feel it today.
+2. `010a`: one frame clock, delta clamp, simulation and present split, renderers owned by the present side. `010` must be
+   `planned` first.
+3. `181`: entity pools and factories owned by the session.
+4. `006`: headless boot and run per level, the run-twice check.
+5. Measure the simulation and render cost on a weak machine (`O5`). It decides the tick rate and "slow down or skip".
+6. `010b` one physics step for all tiers, `010c` fixed tick. The `006` runs check them.
+7. `178i` bot course harness → `178c` → `178j` → `178k`.
+
+In parallel with steps 1 to 6: `178b` (ground graph, perception, skills for walk and fall; unit tests only).
+
 ## Stage 1: crashes, co-op faults and small safe items
 
 Reason: these are small and independent. They fix live crashes and known co-op faults before more co-op work builds on
@@ -45,11 +63,11 @@ parts are the first real callers of the policy.
 
 | Co-op                              | Time             | Logic                 | Data                        | Characters             |
 |------------------------------------|------------------|-----------------------|-----------------------------|------------------------|
-| `047d` HUD and pause               | `010` fixed tick | `013` level flow      | `022` → `041`, `050`, `101` | `069` dash button      |
+| `047d` HUD and pause               | `010` (current track) | `013` level flow      | `022` → `041`, `050`, `101` | `069` dash button      |
 | `047e` with first `112` branch     |                  | `023` damage profiles |                             | `113` character select |
 | `030` factions, then rest of `112` |                  | `082` dialogue        |                             |                        |
 
-`010` is an `idea`, and it must be `planned` before this stage.
+`010` is an `idea`, and it must be `planned` before `010a` starts (current track).
 
 ## Stage 4: modes and replay
 
@@ -57,7 +75,7 @@ Reason: the modes need the finished co-op rules, `030` and `102`. Replay needs `
 
 | Modes                                        | Replay                                        | Characters                          |
 |----------------------------------------------|-----------------------------------------------|-------------------------------------|
-| `102` game modes → `108` Spec Ops, `109` PvP | `006` headless boot → `055` record and replay | `060h` Proto Man's weapons on the loadout |
+| `102` game modes → `108` Spec Ops, `109` PvP | `055` record and replay (after `006`, current track) | `060h` Proto Man's weapons on the loadout |
 | `047f` join and leave                        |                                               |                                     |
 
 `102` is an `idea`, and it must be `planned` before this stage.
@@ -83,7 +101,7 @@ These items do not block the stages. Many are `idea`, so they are not agreed yet
 - Design: `025`, `042`, `048`, `049`, `052`, `053`, `057`, `058`, `059`, `070`, `086`, `114`
 - Boss fights: `082b` after `082a`. `048` step 6 can move the boss hooks into `BossComponent` now. `013` and `047e` can use the fight routine now
 - Later features: `120` after `030`, `047e`, `112`, `118`, `119`; `121` after `081`; `122` after `102`;
-  `178b` → `178i` (after `006`, `010`) → `178c` → `178j` → `178k`, `178d` after `015`, `178e` → `178f` (after `047f`), `178g` after `030`, `112`, `128`,
+  `178b`, then `178i` → `178c` → `178j` → `178k` (current track), `178d` after `015`, `178e` → `178f` (after `047f`), `178g` after `030`, `112`, `128`,
   `178h` after `082`
 - Content: `077`, `078` (stage redesigns), `079`, `089`, `115`, `117`; `123` after `017`; `124`
 
@@ -93,7 +111,7 @@ These items do not block the stages. Many are `idea`, so they are not agreed yet
 
 An item in this list closes these issues, so they need no fix branch of their own.
 
-- `010`: frame delta clamp
+- `010` (`010a`): frame delta clamp
 - `012`, `013`: pause during a gate, health fill during a pause, `START` release, focus-loss pause
 - `036`: silent checkpoint change, same-name "4" spawns
 - `007`, `034`: volume not saved, health tank fill not saved

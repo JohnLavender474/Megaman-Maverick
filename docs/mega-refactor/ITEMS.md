@@ -13,7 +13,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 003 | [Level content validator (local tool in `utils/`, CI test)](items/003-level-validator/ITEM.md) | tooling | `O6`, `O7` | planned | `002` | | |
 | 004 | [Entity build-and-init smoke test](items/004-entity-smoke-test/ITEM.md) | test | `O6` | done | `002` | 2026-11-01 | 2026-11-01 |
 | 005 | [Golden damage-table test](items/005-golden-damage-test/ITEM.md) | test | `O6` | planned | `004`, `002` | | |
-| 006 | [Headless boot-and-run per level (stage A)](items/006-headless-boot-run/ITEM.md) | test | `O6` | idea | `002`, `004`, `010a` | | |
+| 006 | [Headless boot-and-run per level (stage A)](items/006-headless-boot-run/ITEM.md) | test | `O6` | idea | `002`, `004`, `010a`, `181` | | |
 | 007 | [Versioned JSON save slots with legacy import](items/007-json-save-slots/ITEM.md) | feature | `O9` | planned | none | | |
 | 008 | [Dev launch options and level staging](items/008-dev-launch-options/ITEM.md) | tooling | `O6` | active | none | 2026-10-22 | |
 | 009 | [Allocation and GC baseline per branch](items/009-gc-baseline/ITEM.md) | tooling | `O5`, `O6` | planned | none | | |
@@ -188,6 +188,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 178 | [NPCs and AI allies that fight next to the players](items/178-npc-allies/ITEM.md) | feature | `O8`, `O2`, `O4` | active | `031`; later branches `006`, `010`, `015`, `030`, `112`, `128`, `082` | 2026-11-22 | |
 | 179 | [Named player slots (`PlayerSlot.PLAYER_1`, `PlayerSlot.PLAYER_2`)](items/179-named-player-slots/ITEM.md) | refactor | `O1`, `O2` | idea | none | | |
 | 180 | [Timber Walker: refine with an artist and put into the game](items/180-timber-walker-integration/ITEM.md) | feature | `O4`, `O9` | idea | `078f` (stage place) | | |
+| 181 | [Entity pools and factories owned by the session](items/181-session-owned-pools/ITEM.md) | refactor | `O1`, `O6` | idea | none | | |
 
 ## Branches
 

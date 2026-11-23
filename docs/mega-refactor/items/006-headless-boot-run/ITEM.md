@@ -3,7 +3,7 @@
 - Status: idea
 - Type: test
 - Objectives: `O6`
-- Depends on: `002`, `004`, `010a`
+- Depends on: `002`, `004`, `010a`, `181`
 - Related: `008`, `009`, `010`, `033`, `055`
 - Branches: none yet
 
@@ -38,8 +38,8 @@ Answer to review item 5 (2026-10-22, verbatim):
   hash per frame (Mega position, entity count). It does not fail the build: it shows whether the hash sets keyed on entities, bodies or fixtures
   break repeatability before `055` and `178i`.
 - Scan of gaps, risks and options (2026-11-23): `temp/006-headless-scan/findings.md` (not committed). Open from it:
-  pools and factories owned by the session, not a global `object`. No item covers this yet (`045` covers
-  `GameObjectPools` scratch rules only).
+  pools and factories owned by the session, not a global `object`: item `181` (owner accepted the recommendation,
+  2026-11-23).
 
 ## Open questions
 

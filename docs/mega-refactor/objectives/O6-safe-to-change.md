@@ -99,6 +99,7 @@ None found.
 | `142` | idea | [Remove the reflection from `FriendlyFireTest` and `EntityExistenceTest`](../items/142-tests-no-reflection/ITEM.md) (main) |
 | `168` | idea | [`allowRotation` off in the TexturePacker projects](../items/168-texture-packer-no-rotation/ITEM.md) (main) |
 | `174` | idea | [Move the D-1000 frames out of `Bosses3` so that it packs with `Basic`](../items/174-bosses3-atlas-split/ITEM.md) (main) |
+| `181` | idea | [Entity pools and factories owned by the session](../items/181-session-owned-pools/ITEM.md) |
 
 ## Gaps with no item
 

@@ -182,6 +182,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `175` | idea | [`LevelPlayers`: player spawns, deaths and slot respawn out of `MegaLevelScreen`](../items/175-level-players/ITEM.md) (main) |
 | `176` | idea | [One level animation clock for tiles and entities](../items/176-level-animation-clock/ITEM.md) |
 | `179` | idea | [Named player slots (`PlayerSlot.PLAYER_1`, `PlayerSlot.PLAYER_2`)](../items/179-named-player-slots/ITEM.md) (main) |
+| `181` | idea | [Entity pools and factories owned by the session](../items/181-session-owned-pools/ITEM.md) (main) |
 
 ## Gaps with no item
 
