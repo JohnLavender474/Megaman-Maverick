@@ -191,6 +191,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 181 | [Entity pools and factories owned by the session](items/181-session-owned-pools/ITEM.md) | refactor | `O1`, `O6` | idea | none | | |
 | 182 | [Polygon ceilings: blocks that push bodies out by their polygon](items/182-polygon-ceilings/ITEM.md) | feature | `O4`, `O5` | active | none | 2026-11-23 | |
 | 183 | [NES-faithful rotation: no sprite drawn at an angle that is not a multiple of 90](items/183-nes-faithful-rotation/ITEM.md) | feature | `O9`, `O4` | active | none | 2026-11-23 | |
+| 184 | [Keep button taps that are shorter than one frame](items/184-sub-frame-taps/ITEM.md) | feature | `O9`, `O5` | idea | none | | |
 
 ## Branches
 
