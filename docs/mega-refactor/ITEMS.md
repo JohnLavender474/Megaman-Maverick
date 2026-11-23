@@ -187,6 +187,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 177 | [Backgrounds drawn per room](items/177-backgrounds-per-room/ITEM.md) | feature | `O9`, `O4` | idea | none | | |
 | 178 | [NPCs and AI allies that fight next to the players](items/178-npc-allies/ITEM.md) | feature | `O8`, `O2`, `O4` | active | `031`; later branches `015`, `030`, `112`, `128`, `082` | 2026-11-22 | |
 | 179 | [Named player slots (`PlayerSlot.PLAYER_1`, `PlayerSlot.PLAYER_2`)](items/179-named-player-slots/ITEM.md) | refactor | `O1`, `O2` | idea | none | | |
+| 180 | [Timber Walker: refine with an artist and put into the game](items/180-timber-walker-integration/ITEM.md) | feature | `O4`, `O9` | idea | `078f` (stage place) | | |
 
 ## Branches
 
@@ -316,7 +317,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-078d-reactor-man-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078d-reactor-man-art/process-log.md) | 078 | Reactor Man stage touch-up: one merged tileset with an accent palette and a moving motif per area, decor entities, backgrounds | merged | 2026-11-19 | 2026-11-20 |
 | [`mega-refactor-078e-precious-woman-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078e-precious-woman-art/process-log.md) | 078 | Precious Woman art make-over: a jewel mine in a crystal abyss; one new tileset, no back-wall tiles, new parallax background | active | 2026-11-20 | |
 | [`mega-refactor-078f-timber-woman-art`](items/078-robot-master-alt-paths/branches/mega-refactor-078f-timber-woman-art/process-log.md) | 078 | Timber Woman art make-over: a logging camp in a bayou; new tiles per area, tile animations, leaf looks, new backgrounds | active | 2026-11-20 | |
-| [`mega-refactor-078g-timber-walker`](items/078-robot-master-alt-paths/branches/mega-refactor-078g-timber-walker/process-log.md) | 078 | Timber Walker mini boss (Timber Woman redesign): first pass of the fight in a test room of `RefactorTest078` | active | 2026-11-22 | |
+| [`mega-refactor-078g-timber-walker`](items/078-robot-master-alt-paths/branches/mega-refactor-078g-timber-walker/process-log.md) | 078 | Timber Walker mini boss (Timber Woman redesign): first pass of the fight in a test room of `RefactorTest078` | merged | 2026-11-22 | 2026-11-23 |
 | [`mega-refactor-109a-screen-wrap`](items/109-pvp-mode/branches/mega-refactor-109a-screen-wrap/process-log.md) | 109 | Horizontal screen wrap in a room with the `wrap` flag (players and shots), and the test map `REFACTOR_TEST_109` | merged | 2026-11-19 | 2026-11-20 |
 | [`mega-refactor-109b-pvp-respawn`](items/109-pvp-mode/branches/mega-refactor-109b-pvp-respawn/process-log.md) | 109 | PvP respawn: a death respawns only the dead slot, with no level-defeat routine | merged | 2026-11-20 | 2026-11-20 |
 | [`mega-refactor-079a-smarter-met`](items/079-smarter-enemies/branches/mega-refactor-079a-smarter-met/process-log.md) | 079 | A smarter `Met`: pit avoidance with a shared ground probe, safe jumps, charged-shot stagger, helmet break and a desperate phase | merged | 2026-11-18 | 2026-11-18 |

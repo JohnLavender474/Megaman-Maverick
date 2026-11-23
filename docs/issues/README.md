@@ -186,3 +186,5 @@ related-items: [<mega-refactor item IDs>]
 | [Glacier Man takes any queued icicle in its list as its own](2026-11-20-glacier-man-queued-icicle-ownership.md) | yes | core | closed |
 | [No co-op level or co-op test room ends in a boss fight](2026-11-22-no-coop-boss-level.md) | yes | content | open |
 | [Question: player 2 has only a debug tint, and no plan exists for a real look](2026-11-22-player-2-debug-tint-only.md) | question | core | open |
+| [`Animation.reset()` does not set the frame index back to 0](2026-11-22-animation-reset-keeps-index.md) | yes | engine | open |
+| [A camera shake request during a running shake is dropped](2026-11-22-camera-shake-dropped-while-shaking.md) | yes | core | open |

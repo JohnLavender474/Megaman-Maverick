@@ -78,6 +78,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `165` | dropped | [Tiled automapping rules for the Desert Man tileset](../items/165-desert-tileset-automapping/ITEM.md) (main) |
 | `166` | dropped | [Desert Man's stage rework (epic)](../items/166-desert-man-stage/ITEM.md) |
 | `078` | idea | [Stage redesigns (epic)](../items/078-robot-master-alt-paths/ITEM.md) |
+| `180` | idea | [Timber Walker: refine with an artist and put into the game](../items/180-timber-walker-integration/ITEM.md) |
 | `082` | planned | [Dialogue boxes, in-level dialogue scenes and cutscenes](../items/082-dialogue-and-cutscenes/ITEM.md) (main) |
 | `031` | done | [Input frames per player (`InputFrame`), devices and bindings](../items/031-input-frames/ITEM.md) |
 | `113` | idea | [Character select screen](../items/113-character-select/ITEM.md) |

@@ -5,7 +5,7 @@
 - Objectives: `O4`, `O9`
 - Depends on: none
 - Related: `077`, `079`, `089`, `051`, `067`
-- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`); `mega-refactor-078b-wily-stage-3-art` (merged, 2026-11-19, squash `e346c558d`); `mega-refactor-078c-wily-stage-3-enemy-skins` (merged, 2026-11-19, squash `464775afc`); `mega-refactor-078d-reactor-man-art` (merged, 2026-11-20, squash `e4f083bb6`); `mega-refactor-078e-precious-woman-art` (active, 2026-11-20); `mega-refactor-078f-timber-woman-art` (active, 2026-11-20); `mega-refactor-078g-timber-walker` (active, 2026-11-22)
+- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`); `mega-refactor-078b-wily-stage-3-art` (merged, 2026-11-19, squash `e346c558d`); `mega-refactor-078c-wily-stage-3-enemy-skins` (merged, 2026-11-19, squash `464775afc`); `mega-refactor-078d-reactor-man-art` (merged, 2026-11-20, squash `e4f083bb6`); `mega-refactor-078e-precious-woman-art` (active, 2026-11-20); `mega-refactor-078f-timber-woman-art` (active, 2026-11-20); `mega-refactor-078g-timber-walker` (merged, 2026-11-23, squash `c17c1df88`)
 
 ## Goal
 

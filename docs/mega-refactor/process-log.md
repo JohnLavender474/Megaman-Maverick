@@ -3012,3 +3012,17 @@ newest entry at the bottom.
   mutations failed their cases. Review before the play test: 1 Sonnet agent, 2 check fixes (assist at exactly the
   assist height, check 4 text). Owner play test: 8 of 8 checks pass. Diffity: 0 threads.
 - Follow-up: new item `179` (named player slots). No bug candidates.
+
+## 2026-11-23 — mega-refactor-078g-timber-walker
+
+- Summary: first pass of the Timber Walker mini boss (item `078`, Timber Woman redesign), in the test map
+  `REFACTOR_TEST_078` (`RefactorTest078.tmx`) only. Intro from the background; saw thrusts, chop, log throw, high hop
+  with chip waves, claw reach and grab; a shield guard that opens after 4 hits with a stunned Met; lever and button
+  tells. Art round 7 by Claude Fable 5.2. `level-builder` gained `add-gate` and `add-boss-room`. Squash `c17c1df88`.
+- Contract check: after the `master` merge, `engine:test core:test core:smokeTest lwjgl3:jar detektMain
+  core:verifyRandomRule` pass; the `master` tree equals the checked branch tree. By owner decision (merge as a first
+  pass), not done: the tests from the branch `TEST-DEBT.md`, mutation checks, the review before the play test, and a
+  passed play test of round 2. Diffity: 0 threads.
+- Follow-up: new item `180` (refine with an artist and put into the game). Bugs filed:
+  `2026-11-22-animation-reset-keeps-index.md`, `2026-11-22-camera-shake-dropped-while-shaking.md`. `078e` will meet
+  a simple list conflict in `TextureAsset.kt` (both add an atlas entry).
