@@ -185,6 +185,35 @@ for free.
 - 25 `PlayerSlot(0)` reads in 15 files;
 - `MAX_PLAYERS = 2` (`LaunchOptionsResolver.kt:57`).
 
+## Smart-bot scan (2026-11-23)
+
+A read-only scan of what a bot needs to choose its own actions from what it sees (`master` `86e58c2ee`, 6 agents;
+full reports in `temp/bot-ai-research/` in the main checkout).
+
+```
+events ──► GoalSource (RoomGraph)  ──► Mode Fsm (015) ──► ground path (178b/c) ──► Skills ──► button mask
+BotView (WorldQuery, RoomStaticMap) ──┘      └─ utility pick in FIGHT (threats, foes)
+```
+
+| Gap | Evidence |
+|---|---|
+| No area query by fixture type, no line of sight, no damage preview (player negotiator is `protected`) | `IWorldContainer.kt:13-39`, `AbstractHealthEntity.kt:40` |
+| The live world is the view only, with no margin; it is almost empty during a camera turn | `MegaLevelScreen.kt:890`, `IBodyExtensions.kt:23-35` |
+| No room graph: side neighbours only; 226 rooms, 136 side pairs, 80 vertical pairs, 84 gates (29 locked), 16 teleports in 18 maps | `CameraRoomExits.kt:38-65` |
+| Fight state not in `MegaServices`; level rules treat slot 0 as the leader | `MegaLevelScreen.kt:177,213` |
+| A gate and a side exit wait for every player, so a bot that misses one blocks the human | `Gate.kt:234-244`, `CameraRoomExits.kt:128-142` |
+| An input edge needs a released frame first and lasts 1 render frame; hold times are in seconds | `InputFrameBuilder.kt:14-34`, `MegamanXMoves.kt:64` |
+| The brain is not reset on lock, warp, room transition or respawn | `FollowBrain.kt:58-73` |
+| Dynamic terrain needs live sense or timing: gates (14 of 15 live levels), timed hazards (11), surfaces that come and go (9), moving platforms (6) | `2-terrain-hazards.md` |
+| No common threat interface or fire test; 6 homing projectiles; the bot blocks P1's shots | `Bullet.kt:142`, `ChargedShot.kt:146-149` |
+| Determinism: only the world is fixed-step; 5 frame-time reads, 2 FPS-gated rules, async path results on wall clock, one shared random stream | `WorldSystem.kt:164-200`, `AsyncPathfindingSystem.kt:54,74` |
+| No headless course test: the level runs only inside the game object (232 `game.` reads in `MegaLevelScreen`) | `MegaLevelScreen.kt:130` |
+
+Architecture comparison (`5-decision-architecture.md`): a hierarchical FSM (`015`) for the modes, utility scoring
+only for the fight choices (`D1000Director.pick` is pure, roll passed in), the ground graph as the plan, and skills
+per link kind. GOAP and HTN were not chosen: a planner with a time budget is not deterministic (`O2`), and the path
+graph already is the plan.
+
 ## External techniques
 
 | Technique | Use here | Source |

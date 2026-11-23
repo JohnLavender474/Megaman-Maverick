@@ -185,7 +185,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 175 | [`LevelPlayers`: player spawns, deaths and slot respawn out of `MegaLevelScreen`](items/175-level-players/ITEM.md) | refactor | `O1`, `O2` | idea | none | | |
 | 176 | [One level animation clock for tiles and entities](items/176-level-animation-clock/ITEM.md) | refactor | `O9`, `O1` | idea | none | | |
 | 177 | [Backgrounds drawn per room](items/177-backgrounds-per-room/ITEM.md) | feature | `O9`, `O4` | idea | none | | |
-| 178 | [NPCs and AI allies that fight next to the players](items/178-npc-allies/ITEM.md) | feature | `O8`, `O2`, `O4` | active | `031`; later branches `015`, `030`, `112`, `128`, `082` | 2026-11-22 | |
+| 178 | [NPCs and AI allies that fight next to the players](items/178-npc-allies/ITEM.md) | feature | `O8`, `O2`, `O4` | active | `031`; later branches `006`, `010`, `015`, `030`, `112`, `128`, `082` | 2026-11-22 | |
 | 179 | [Named player slots (`PlayerSlot.PLAYER_1`, `PlayerSlot.PLAYER_2`)](items/179-named-player-slots/ITEM.md) | refactor | `O1`, `O2` | idea | none | | |
 | 180 | [Timber Walker: refine with an artist and put into the game](items/180-timber-walker-integration/ITEM.md) | feature | `O4`, `O9` | idea | `078f` (stage place) | | |
 
