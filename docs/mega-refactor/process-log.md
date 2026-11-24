@@ -3137,3 +3137,17 @@ newest entry at the bottom.
   scripts, `.gitignore` and docs only).
 - Checks on `master` after the squash: `bash -n` on all build and run scripts; `git status`
   shows no `game-builds/` file.
+
+## 2026-11-24 — `mega-refactor-183c-needles`
+
+- Summary: `Needle` draws 32 directions (11.25 degrees) from its velocity, from 5 drawn frames per type (`default`,
+  `ice`) with turns of 90 degrees and a mirror (`NeedleDrawDirection`); no sprite drawn at another angle. 8 new frames
+  by Claude Fable 5.2 (README credit under "Megaman"); `Projectiles2` repacked. `Needle/ice` edge color on the NES
+  palette (`C0F5FB` to `A4E4FC`). New `NeedleTest`. Squash `8df7d646f`.
+- Contract check: automated checks pass (`engine:test`, `core:test`, `core:smokeTest`, `lwjgl3:jar`, `detektMain
+  core:verifyRandomRule`; atlas script: 44 old regions keep name and pixels, `Needle/ice` changes as intended). Review
+  before the play test (1 Sonnet agent): no bug. Owner play test: all 5 checks pass. Diffity: 0 threads. `master` had
+  docs-only commits since the branch start; no merge into the branch.
+- Follow-up: item `183` stays active (`183a` deferred, `183d` and later). No backlog or bug candidates.
+- Checks on `master` after the squash: `engine:test`, `core:test`, `core:smokeTest`, `lwjgl3:jar`, `detektMain
+  core:verifyRandomRule` pass.
