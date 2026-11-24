@@ -10,6 +10,7 @@ import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.extensions.roundAngleToStep
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.time.Timer
@@ -34,6 +35,9 @@ class ChargedShotResidual(services: MegaServices) : MegaGameEntity(services), IS
     companion object {
         const val TAG = "ChargedShotResidual"
         private const val DUR = 0.2f
+        private const val DRAW_ANGLE_STEP = 45f
+        private const val FULL_DIAGONAL = "full_diagonal"
+        private const val HALF_DIAGONAL = "half_diagonal"
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -43,6 +47,7 @@ class ChargedShotResidual(services: MegaServices) : MegaGameEntity(services), IS
     private val spawn = Vector2()
     private val timer = Timer(DUR)
     private var rotation = 0f
+    private var diagonal = false
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -50,6 +55,8 @@ class ChargedShotResidual(services: MegaServices) : MegaGameEntity(services), IS
             val atlas = services.assets.getTextureAtlas(TextureAsset.DECORATIONS_1.source)
             regions.put("full", atlas.findRegion("FullChargedShotResidual"))
             regions.put("half", atlas.findRegion("ChargedShot_Residual_Half"))
+            regions.put(FULL_DIAGONAL, atlas.findRegion("FullChargedShotResidual_diagonal"))
+            regions.put(HALF_DIAGONAL, atlas.findRegion("ChargedShot_Residual_Half_diagonal"))
         }
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -68,7 +75,8 @@ class ChargedShotResidual(services: MegaServices) : MegaGameEntity(services), IS
         val dimensions = if (fullyCharged) 1.5f * ConstVals.PPM else ConstVals.PPM.toFloat()
         defaultSprite.setSize(dimensions)
 
-        rotation = spawnProps.get(ConstKeys.ROTATION, Float::class)!!
+        rotation = spawnProps.get(ConstKeys.ROTATION, Float::class)!!.roundAngleToStep(DRAW_ANGLE_STEP)
+        diagonal = rotation % 90f != 0f
 
         timer.reset()
     }
@@ -88,17 +96,26 @@ class ChargedShotResidual(services: MegaServices) : MegaGameEntity(services), IS
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
-            sprite.rotation = rotation
+            sprite.rotation = if (diagonal) rotation - DRAW_ANGLE_STEP else rotation
             sprite.setCenter(spawn)
         }
         return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (fullyCharged) "full" else "half" }
+        val keySupplier: (String?) -> String? = {
+            when {
+                fullyCharged && diagonal -> FULL_DIAGONAL
+                fullyCharged -> "full"
+                diagonal -> HALF_DIAGONAL
+                else -> "half"
+            }
+        }
         val animations = objectMapOf<String, IAnimation>(
             "full" pairTo Animation(regions["full"], 2, 2, 0.05f, false),
-            "half" pairTo Animation(regions["half"], 2, 1, 0.1f, false)
+            "half" pairTo Animation(regions["half"], 2, 1, 0.1f, false),
+            FULL_DIAGONAL pairTo Animation(regions[FULL_DIAGONAL], 2, 2, 0.05f, false),
+            HALF_DIAGONAL pairTo Animation(regions[HALF_DIAGONAL], 2, 1, 0.1f, false)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

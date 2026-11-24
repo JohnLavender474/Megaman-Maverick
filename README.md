@@ -152,6 +152,9 @@ comprehensive listing of the credits for the artwork used in this game.
 #### Megaman
 
 - Megaman spritesheet - [SamuelX4](https://www.deviantart.com/samuelx4) and [oldlavygenes](https://www.deviantart.com/oldlavygenes474)
+- Charged shot, its explosion and its residual: diagonal frames
+  - Original by [SamuelX4](https://www.deviantart.com/samuelx4) and [oldlavygenes](https://www.deviantart.com/oldlavygenes474) (the straight charged shot frames)
+  - Updated by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer: the diagonal frames
 
 #### Proto Man
 

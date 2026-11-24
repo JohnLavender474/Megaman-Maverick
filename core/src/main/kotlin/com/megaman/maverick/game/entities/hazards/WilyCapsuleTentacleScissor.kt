@@ -121,6 +121,7 @@ class WilyCapsuleTentacleScissor(services: MegaServices) : MegaGameEntity(servic
             val dx = tipPos.x - prevJoint.x
             val dy = tipPos.y - prevJoint.y
             val rawAngle = MathUtils.atan2(dx, -dy) * MathUtils.radiansToDegrees
+            // TODO: use Float.roundAngleToStep(45f) here (item 183, branch 183c)
             rotation = (rawAngle / 45f).roundToInt() * 45f
         }
     })

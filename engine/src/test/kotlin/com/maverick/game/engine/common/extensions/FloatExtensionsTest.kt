@@ -1,5 +1,6 @@
 package com.maverick.game.engine.common.extensions
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import java.util.Locale
@@ -23,6 +24,46 @@ class FloatExtensionsTest : DescribeSpec({
             } finally {
                 Locale.setDefault(default)
             }
+        }
+    }
+
+    describe("Float.roundAngleToStep") {
+
+        it("rounds to the nearest multiple of the step") {
+            26.6f.roundAngleToStep(45f) shouldBe 45f
+            22.4f.roundAngleToStep(45f) shouldBe 0f
+            153.4f.roundAngleToStep(45f) shouldBe 135f
+            63.4f.roundAngleToStep(45f) shouldBe 45f
+            100f.roundAngleToStep(22.5f) shouldBe 90f
+            91f.roundAngleToStep(90f) shouldBe 90f
+        }
+
+        it("keeps an angle that is already a multiple") {
+            listOf(0f, 45f, 90f, 135f, 180f, 225f, 270f, 315f).forEach { it.roundAngleToStep(45f) shouldBe it }
+        }
+
+        it("gives 0, not 360, near a full turn") {
+            350f.roundAngleToStep(45f) shouldBe 0f
+            359.9f.roundAngleToStep(90f) shouldBe 0f
+            360f.roundAngleToStep(45f) shouldBe 0f
+        }
+
+        it("wraps a negative angle or an angle past a full turn into [0, 360)") {
+            (-45f).roundAngleToStep(45f) shouldBe 315f
+            (-10f).roundAngleToStep(45f) shouldBe 0f
+            (-100f).roundAngleToStep(90f) shouldBe 270f
+            400f.roundAngleToStep(45f) shouldBe 45f
+            (-720f).roundAngleToStep(45f) shouldBe 0f
+        }
+
+        it("fails fast on a step that is not greater than 0") {
+            shouldThrow<IllegalArgumentException> { 10f.roundAngleToStep(0f) }
+            shouldThrow<IllegalArgumentException> { 10f.roundAngleToStep(-45f) }
+        }
+
+        it("fails fast on a step that does not divide 360") {
+            shouldThrow<IllegalArgumentException> { 10f.roundAngleToStep(50f) }
+            shouldThrow<IllegalArgumentException> { 10f.roundAngleToStep(7f) }
         }
     }
 })

@@ -1,5 +1,5 @@
 Decorations1.png
-size: 452, 1166
+size: 464, 1166
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -52,6 +52,13 @@ ChargedShot_Residual_Half
   orig: 32, 64
   offset: 0, 0
   index: -1
+ChargedShot_Residual_Half_diagonal
+  rotate: false
+  xy: 202, 128
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
 CrystalConveyorBKG
   rotate: false
   xy: 0, 654
@@ -75,7 +82,7 @@ DecorLaserTube/mid
   index: -1
 DesertTornado
   rotate: false
-  xy: 64, 192
+  xy: 160, 192
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -110,7 +117,14 @@ FloatingEmber/lab/FloatingEmber
   index: -1
 FullChargedShotResidual
   rotate: false
-  xy: 202, 128
+  xy: 234, 128
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+FullChargedShotResidual_diagonal
+  rotate: false
+  xy: 298, 128
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -124,14 +138,14 @@ Furnace
   index: -1
 GravitySwitchAura
   rotate: false
-  xy: 266, 128
+  xy: 362, 128
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 GravitySwitchAura/lab/GravitySwitchAura
   rotate: false
-  xy: 330, 128
+  xy: 0, 192
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -173,14 +187,14 @@ JetpackFlame
   index: -1
 Lantern
   rotate: false
-  xy: 394, 128
+  xy: 64, 192
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 LavaFall
   rotate: false
-  xy: 112, 192
+  xy: 208, 192
   size: 16, 96
   orig: 16, 96
   offset: 0, 0
@@ -208,14 +222,14 @@ MuzzleFlash
   index: -1
 PunkCityLampPost/alight
   rotate: false
-  xy: 160, 304
+  xy: 208, 304
   size: 192, 150
   orig: 192, 150
   offset: 0, 0
   index: -1
 PunkCityLampPost/broken
   rotate: false
-  xy: 352, 304
+  xy: 400, 304
   size: 64, 150
   orig: 64, 150
   offset: 0, 0
@@ -250,7 +264,7 @@ SandSplash
   index: -1
 SlashDissipation
   rotate: false
-  xy: 96, 304
+  xy: 144, 304
   size: 64, 144
   orig: 64, 144
   offset: 0, 0
@@ -271,56 +285,56 @@ SmallGrass/still
   index: -1
 Smoke/0
   rotate: false
-  xy: 128, 192
+  xy: 224, 192
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/0_gray
   rotate: false
-  xy: 176, 192
+  xy: 272, 192
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/1
   rotate: false
-  xy: 224, 192
+  xy: 320, 192
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/1_gray
   rotate: false
-  xy: 272, 192
+  xy: 368, 192
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/2
   rotate: false
-  xy: 320, 192
+  xy: 416, 192
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/2_gray
   rotate: false
-  xy: 368, 192
+  xy: 0, 304
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/3
   rotate: false
-  xy: 0, 304
+  xy: 48, 304
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
   index: -1
 Smoke/3_gray
   rotate: false
-  xy: 48, 304
+  xy: 96, 304
   size: 48, 112
   orig: 48, 112
   offset: 0, 0
@@ -397,14 +411,14 @@ ToxicWaterSplash
   index: -1
 UnderWaterBubble
   rotate: false
-  xy: 0, 192
+  xy: 96, 192
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 WarningSign
   rotate: false
-  xy: 32, 192
+  xy: 128, 192
   size: 32, 64
   orig: 32, 64
   offset: 0, 0

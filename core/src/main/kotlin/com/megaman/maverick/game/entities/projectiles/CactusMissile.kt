@@ -180,6 +180,7 @@ class CactusMissile(services: MegaServices) : AbstractProjectile(services), IHea
         if (recalcTimer.isFinished()) {
             recalcTimer.reset()
             val angle = targetPlayer.body.getCenter().sub(body.getCenter()).angleDeg()
+            // TODO: use Float.roundAngleToStep(45f) here (item 183, branch 183c)
             val roundedAngle45 = MathUtils.round(angle / 45f) * 45f
 
             val velocity = GameObjectPools.fetch(Vector2::class)

@@ -11,6 +11,7 @@ import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.extensions.roundAngleToStep
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.shapes.GameRectangle
@@ -53,6 +54,10 @@ class ChargedShotExplosion(services: MegaServices) : AbstractProjectile(services
         private const val FULL_BODY_SIZE = 1.5f
         private const val HALF_BODY_SIZE = 0.75f
 
+        private const val DRAW_ANGLE_STEP = 45f
+        private const val FULL_DIAGONAL = "full_diagonal"
+        private const val HALF_DIAGONAL = "half_diagonal"
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -66,6 +71,7 @@ class ChargedShotExplosion(services: MegaServices) : AbstractProjectile(services
     private lateinit var damagerFixture: Fixture
 
     private var rotation = 0f
+    private var diagonal = false
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -73,6 +79,8 @@ class ChargedShotExplosion(services: MegaServices) : AbstractProjectile(services
             val atlas = services.assets.getTextureAtlas(TextureAsset.EXPLOSIONS_1.source)
             regions.put("full", atlas.findRegion("ChargedShotExplosion"))
             regions.put("half", atlas.findRegion("HalfChargedShotExplosion"))
+            regions.put(FULL_DIAGONAL, atlas.findRegion("ChargedShotExplosion_diagonal"))
+            regions.put(HALF_DIAGONAL, atlas.findRegion("HalfChargedShotExplosion_diagonal"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -87,7 +95,8 @@ class ChargedShotExplosion(services: MegaServices) : AbstractProjectile(services
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         fullyCharged = spawnProps.get(ConstKeys.BOOLEAN, Boolean::class)!!
-        rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class)
+        rotation = spawnProps.getOrDefault(ConstKeys.ROTATION, 0f, Float::class).roundAngleToStep(DRAW_ANGLE_STEP)
+        diagonal = rotation % 90f != 0f
 
         val duration = spawnProps.getOrDefault(
             ConstKeys.DURATION, if (fullyCharged) FULLY_CHARGED_DURATION else HALF_CHARGED_DURATION, Float::class
@@ -139,17 +148,26 @@ class ChargedShotExplosion(services: MegaServices) : AbstractProjectile(services
         val component = SpritesComponent(sprite)
         component.putPreProcess { _, _ ->
             sprite.setOriginCenter()
-            sprite.rotation = rotation
+            sprite.rotation = if (diagonal) rotation - DRAW_ANGLE_STEP else rotation
             sprite.setCenter(body.getCenter())
         }
         return component
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { if (fullyCharged) "full" else "half" }
+        val keySupplier: (String?) -> String? = {
+            when {
+                fullyCharged && diagonal -> FULL_DIAGONAL
+                fullyCharged -> "full"
+                diagonal -> HALF_DIAGONAL
+                else -> "half"
+            }
+        }
         val animations = objectMapOf<String, IAnimation>(
             "full" pairTo Animation(regions["full"], 3, 1, 0.05f, true),
-            "half" pairTo Animation(regions["half"], 3, 1, 0.05f, true)
+            "half" pairTo Animation(regions["half"], 3, 1, 0.05f, true),
+            FULL_DIAGONAL pairTo Animation(regions[FULL_DIAGONAL], 3, 1, 0.05f, true),
+            HALF_DIAGONAL pairTo Animation(regions[HALF_DIAGONAL], 3, 1, 0.05f, true)
         )
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)

@@ -190,6 +190,7 @@ class HomingMissile(services: MegaServices) : AbstractProjectile(services), IHea
         val toMegaman = targetPlayer.body.getPositionPoint(position).sub(body.getCenter())
         val mathAngle = toMegaman.angleDeg()
         val gameAngle = 90f - mathAngle
+        // TODO: use Float.roundAngleToStep(45f) here (item 183, branch 183c)
         val snapped = MathUtils.round(gameAngle / 45f) * 45
         currentAngle = ((snapped % 360) + 360) % 360
         setVelocityFromAngle(currentAngle)

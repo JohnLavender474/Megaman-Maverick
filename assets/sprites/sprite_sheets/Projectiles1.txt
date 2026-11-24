@@ -82,7 +82,7 @@ CacaFlame/burst
   index: -1
 CacaFlame/fall
   rotate: false
-  xy: 192, 412
+  xy: 256, 412
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -122,9 +122,16 @@ ChargedShot_v2
   orig: 32, 64
   offset: 0, 0
   index: -1
-Cokonut
+ChargedShot_v2_diagonal
   rotate: false
   xy: 64, 284
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+Cokonut
+  rotate: false
+  xy: 96, 284
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -138,7 +145,7 @@ CryoPellet
   index: -1
 DarkSerketClaw
   rotate: false
-  xy: 240, 412
+  xy: 304, 412
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -271,7 +278,7 @@ Electric/Zap
   index: -1
 Fire/Fireball
   rotate: false
-  xy: 96, 284
+  xy: 128, 284
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -285,7 +292,7 @@ FirePellet
   index: -1
 FireWall/disintegrate
   rotate: false
-  xy: 288, 412
+  xy: 352, 412
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -306,77 +313,84 @@ GachappanBall
   index: -1
 GreenPelletBlast/blast
   rotate: false
-  xy: 160, 284
+  xy: 192, 284
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 GreenPelletBlast/burst
   rotate: false
-  xy: 384, 412
+  xy: 448, 412
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 GreenPelletBlast/lab/blast
   rotate: false
-  xy: 192, 284
+  xy: 224, 284
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 GreenPelletBlast/lab/burst
   rotate: false
-  xy: 416, 412
+  xy: 480, 412
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 GreenPelletBlast/wily/blast
   rotate: false
-  xy: 224, 284
+  xy: 256, 284
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 GreenPelletBlast/wily/burst
   rotate: false
-  xy: 448, 412
+  xy: 0, 508
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
   index: -1
 HalfChargedShot
   rotate: false
-  xy: 256, 284
+  xy: 288, 284
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+HalfChargedShot_diagonal
+  rotate: false
+  xy: 320, 284
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 HomingMissile/angled
   rotate: false
-  xy: 288, 284
+  xy: 352, 284
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 HomingMissile/angled_flash
   rotate: false
-  xy: 320, 284
+  xy: 384, 284
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 HomingMissile/straight
   rotate: false
-  xy: 384, 284
+  xy: 448, 284
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 HomingMissile/straight_flash
   rotate: false
-  xy: 416, 284
+  xy: 0, 348
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -390,7 +404,7 @@ HoneyDrip/drip
   index: -1
 HoneyDrip/splash
   rotate: false
-  xy: 480, 412
+  xy: 32, 508
   size: 32, 96
   orig: 32, 96
   offset: 0, 0
@@ -460,7 +474,7 @@ LampeonBullet/4
   index: -1
 MeanTorpedo
   rotate: false
-  xy: 0, 508
+  xy: 64, 508
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
@@ -509,21 +523,21 @@ MockingByteEgg/whole
   index: -1
 Monkey_Ball
   rotate: false
-  xy: 0, 348
+  xy: 64, 348
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Nuclear_Monkey_Ball
   rotate: false
-  xy: 64, 348
+  xy: 128, 348
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 Petal
   rotate: false
-  xy: 128, 348
+  xy: 192, 348
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
@@ -537,28 +551,28 @@ Picket
   index: -1
 PreciousGem/blue
   rotate: false
-  xy: 384, 348
+  xy: 448, 348
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PreciousGem/green
   rotate: false
-  xy: 448, 348
+  xy: 0, 412
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PreciousGem/pink
   rotate: false
-  xy: 0, 412
+  xy: 64, 412
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 PreciousGem/purple
   rotate: false
-  xy: 64, 412
+  xy: 128, 412
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -698,7 +712,7 @@ ReactorManProjectile/small
   index: -1
 ReactorMonkeyBall/0
   rotate: false
-  xy: 128, 412
+  xy: 192, 412
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -761,7 +775,7 @@ SealionBall
   index: -1
 SlashWave
   rotate: false
-  xy: 96, 508
+  xy: 160, 508
   size: 64, 96
   orig: 64, 96
   offset: 0, 0

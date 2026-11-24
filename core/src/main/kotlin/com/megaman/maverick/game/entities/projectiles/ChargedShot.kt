@@ -14,6 +14,7 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
+import com.maverick.game.engine.common.extensions.roundAngleToStep
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -52,6 +53,7 @@ import com.megaman.maverick.game.players.asPlayer
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 class ChargedShot(services: MegaServices) : AbstractProjectile(services), IAnimatedEntity {
 
@@ -62,6 +64,20 @@ class ChargedShot(services: MegaServices) : AbstractProjectile(services), IAnima
         val HALF_BODY_SIZE: Vector2 = Vector2(0.5f, 0.75f).scl(ConstVals.PPM.toFloat())
 
         private const val BOUNCE_MAX = 2
+
+        private const val TRAJECTORY_ANGLE_STEP = 45f
+        private const val FULL_DIAGONAL = "${ConstKeys.FULL}_diagonal"
+        private const val HALF_DIAGONAL = "${ConstKeys.HALF}_diagonal"
+        private val TRAJECTORY_DIRECTIONS = gdxArrayOf(
+            Vector2(1f, 0f),
+            Vector2(1f, 1f).nor(),
+            Vector2(0f, 1f),
+            Vector2(-1f, 1f).nor(),
+            Vector2(-1f, 0f),
+            Vector2(-1f, -1f).nor(),
+            Vector2(0f, -1f),
+            Vector2(1f, -1f).nor()
+        )
 
         private const val HALF_CHARGED_SHOT_REGION_PREFIX = "Half"
         private const val CHARGED_SHOT_REGION_SUFFIX = "_v2"
@@ -91,6 +107,8 @@ class ChargedShot(services: MegaServices) : AbstractProjectile(services), IAnima
             val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
             regions.put(ConstKeys.FULL, atlas.findRegion("${TAG}${CHARGED_SHOT_REGION_SUFFIX}"))
             regions.put(ConstKeys.HALF, atlas.findRegion("${HALF_CHARGED_SHOT_REGION_PREFIX}${TAG}"))
+            regions.put(FULL_DIAGONAL, atlas.findRegion("${TAG}${CHARGED_SHOT_REGION_SUFFIX}_diagonal"))
+            regions.put(HALF_DIAGONAL, atlas.findRegion("${HALF_CHARGED_SHOT_REGION_PREFIX}${TAG}_diagonal"))
         }
         super.init()
         addComponent(defineAnimationsComponent())
@@ -108,6 +126,7 @@ class ChargedShot(services: MegaServices) : AbstractProjectile(services), IAnima
         body.forEachFixture { ((it as Fixture).rawShape as GameRectangle).setSize(bodySize) }
 
         trajectory.set(spawnProps.get(ConstKeys.TRAJECTORY, Vector2::class)!!)
+        roundTrajectoryAngle(speed = trajectory.len())
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -227,11 +246,22 @@ class ChargedShot(services: MegaServices) : AbstractProjectile(services), IAnima
                 }
             }
         }
-        temp.nor().scl(trajectory.len())
+        val speed = trajectory.len()
         trajectory.set(temp)
+        roundTrajectoryAngle(speed)
 
         requestToPlaySound(SoundAsset.DINK_SOUND, false)
     }
+
+    private fun roundTrajectoryAngle(speed: Float) {
+        val angle = trajectory.angleDeg().roundAngleToStep(TRAJECTORY_ANGLE_STEP)
+        val index = (angle / TRAJECTORY_ANGLE_STEP).roundToInt()
+        trajectory.set(TRAJECTORY_DIRECTIONS[index]).scl(speed)
+    }
+
+    private fun drawAngle() = trajectory.angleDeg().roundAngleToStep(TRAJECTORY_ANGLE_STEP)
+
+    private fun isDiagonal(angle: Float) = angle % 90f != 0f
 
     override fun explodeAndDie(vararg params: Any?) {
         destroy()
@@ -277,7 +307,8 @@ class ChargedShot(services: MegaServices) : AbstractProjectile(services), IAnima
         .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
-            sprite.rotation = trajectory.angleDeg()
+            val angle = drawAngle()
+            sprite.rotation = if (isDiagonal(angle)) angle - TRAJECTORY_ANGLE_STEP else angle
         }
         .build()
 
@@ -285,10 +316,20 @@ class ChargedShot(services: MegaServices) : AbstractProjectile(services), IAnima
         .key(TAG)
         .animator(
             AnimatorBuilder()
-                .setKeySupplier { if (fullyCharged) ConstKeys.FULL else ConstKeys.HALF }
+                .setKeySupplier {
+                    val diagonal = isDiagonal(drawAngle())
+                    when {
+                        fullyCharged && diagonal -> FULL_DIAGONAL
+                        fullyCharged -> ConstKeys.FULL
+                        diagonal -> HALF_DIAGONAL
+                        else -> ConstKeys.HALF
+                    }
+                }
                 .addAnimations(
                     ConstKeys.FULL pairTo Animation(regions[ConstKeys.FULL], 2, 1, 0.05f, true),
-                    ConstKeys.HALF pairTo Animation(regions[ConstKeys.HALF], 2, 1, 0.05f, true)
+                    ConstKeys.HALF pairTo Animation(regions[ConstKeys.HALF], 2, 1, 0.05f, true),
+                    FULL_DIAGONAL pairTo Animation(regions[FULL_DIAGONAL], 2, 1, 0.05f, true),
+                    HALF_DIAGONAL pairTo Animation(regions[HALF_DIAGONAL], 2, 1, 0.05f, true)
                 )
                 .build()
         )
