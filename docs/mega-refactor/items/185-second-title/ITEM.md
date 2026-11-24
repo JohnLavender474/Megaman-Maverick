@@ -42,6 +42,9 @@ Order (option C in `NOTES.md`): no tree-wide move first. Add the new game as a m
    `entities/megaman/constants`, a level registry, the host contract `001b`.
 6. Last: move what is left of the Maverick content into `games/mega-man-maverick/`, in one
    mechanical commit while no other branch is active (as `001a`).
+7. Proposed 2026-11-24, not decided (open question 4): give each module its own package root
+   (`core` out of `com.megaman.maverick.game`), in its own branch after `185c` merges and while no
+   other branch changes `core`. Research in `NOTES.md`, "Package roots per module".
 
 ## Owner's input
 
@@ -121,6 +124,15 @@ Both fixed: `build.gradle:85` in `185a`, `build-game.sh` in `185b`.
    re-packed, or must step 4 re-pack them first?
 3. Answered 2026-11-23 (`185a` D4): yes. Was: does `core` keep its package name `com.megaman.maverick.game` for the shared layer, or does the
    shared layer get a neutral package?
+4. Opened 2026-11-24 (owner asked after the `185c` layout move): now that the games have their own
+   modules, does `core` get its own package root? The reason of item `001` (`ITEM.md`, "Do not rename
+   the `core` package": `EntityType.PACKAGE_PREFIX`) is gone since `185c` (`EntityClassResolver`
+   with package roots per title). Options (`NOTES.md`, "Package roots per module"):
+   - A. Keep `com.megaman.maverick.game` (answer 3 stays).
+   - B. `com.megaman.core` (or `com.mega.core`) for `core`, `com.megaman.maverick` for Maverick.
+   - C. `com.maverick.game.core` for `core`, next to `com.maverick.game.engine`; games under
+     `com.megaman.<game>`.
+   Recommendation: C, as a new branch of this item after `185c` merges, run alone like `001a`.
 
 ## Sources
 

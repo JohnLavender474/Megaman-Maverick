@@ -270,3 +270,53 @@ https://geometrian.com/projects/blog/write_games_not_engines.html
 - Test files that use `X6_INTRO` / X6 classes (6+, e.g. `D1000Rig`) not traced.
 - Indirect asset loads (child `TickFrames`) not traced.
 - Overlap with planned (not active) branches not checked.
+
+## Package roots per module (2026-11-24, read-only scan of the `185c` worktree)
+
+Question (owner): with the games in `games/`, should `core` get a short package root of its own, for example
+`com.mega.core`? Open question 4 in `ITEM.md`.
+
+### Why it is possible now
+
+- Item `001` (`ITEM.md:38`) kept the `core` package because `EntityType.PACKAGE_PREFIX` built class names from it.
+  `185c` replaced the prefix with `EntityClassResolver` and a list of package roots per title
+  (`IGameTitle.entityPackageRoots`).
+- TMX spawn names are simple class names, `entity-tags.txt` ids are relative to the root, and the save file stores
+  level names, not class names. None of them changes with a package rename.
+- Gradle keeps the `src` segment: `core/src/main/kotlin/<package path>/`.
+
+### Options
+
+| Option | `core` | Maverick module | Lost Memories | Notes |
+|---|---|---|---|---|
+| A. Keep | `com.megaman.maverick.game` | same (17 packages shared with `core`) | `com.megaman.lostmemories` | No change; `185a` D4 stays; `core` and Maverick share packages |
+| B. One root per game | `com.megaman.core` (or `com.mega.core`) | `com.megaman.maverick` | `com.megaman.lostmemories` | No shared packages |
+| C. Pair with the engine | `com.maverick.game.core` | `com.megaman.maverick` | `com.megaman.lostmemories` | Next to `com.maverick.game.engine`; a later move of `core` code into `engine` changes only `core` to `engine` in the package |
+
+Recommendation: C. `com.mega` is not a real domain and does not match the engine root; C keeps the shared layers
+under one "Maverick" root and each game under `com.megaman.<game>`.
+
+### Size (measured in the `185c` worktree)
+
+| What | Count |
+|---|---|
+| `.kt` files in `core/src` (package line, imports, folder move) | 740 |
+| `.kt` files with imports to change: Maverick / Lost Memories / `desktop-common` | 446 / 21 / 1, plus `desktop-common/.../StartupHelper.java` |
+| Text hits of `com.megaman.maverick.game` in `.kt` files | 11,829 |
+| Packages that `core` and the Maverick module share | 17 |
+| Maverick files that use `core` names of the same package with no import (upper bound: the scan also counts common names such as `TAG`) | 74 files, 120 names |
+| String literals | `EntityClassResolver.kt:11` (`CORE_PACKAGE_ROOT`), `GamepadInputTest.kt:83` (`mockkStatic`), `EntityClassResolverTest.kt:16`, `core/src/test/resources/spawn-allocation-baseline.txt` (1 line) |
+| Only if the Maverick root changes (B, C) | main class in `games/mega-man-maverick/desktop/build.gradle:23` and `build-game.sh:18`; macOS identifiers `build.gradle:102,110`; `nativeimage.gradle` |
+| Living docs that name the old path | 4 `.md` files and the root `CLAUDE.md` |
+
+Scan script: `temp/185-rename/split.py` in the `185c` worktree.
+
+### Risks and order
+
+- Every `core` file changes, so the rename conflicts with each branch that touches `core` (at the scan: `178b` 51
+  files, `183d` 19, `compactor-level`, 2 `fix/` branches, and `185c`). Precedent: `001a` (about 760 files) ran alone.
+- Git rename pairing: in `001a`, one commit paired only 278 of 304 moved files. Put the `git mv` in its own commit,
+  then the content edits; add the squash SHA to `.git-blame-ignore-revs`.
+- Order: `185c` merges; the other active branches merge or wait; a new branch of this item does the folder move
+  commit, then the package lines, imports, strings, build files and docs; full automated checks; a short play test
+  of each game.
