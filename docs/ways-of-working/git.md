@@ -15,6 +15,12 @@ Read this file before you commit, merge, run Gradle or stop a process. It applie
 - **Commit process docs without asking** (owner, 2026-11-19). A docs-only change on `master` that the mega-refactor
   process makes (an item decision or open question, research in a `NOTES.md`, a branch start, a new item) is
   committed at once. Do not ask "should I commit?". The rules above still apply.
+- **Do not wait for other sessions; tell the owner** (owner, 2026-11-23, after `183b`: a wait loop on another
+  session's Gradle run matched its own shell and hung for over 20 minutes). Never write a loop, a background wait or
+  a poll that waits for another session's process (Gradle, a test JVM, a shell) to end. When you cannot run the build
+  or the tests now (another session runs Gradle in the same checkout, memory is too low, or a run fails for a reason
+  outside your change, for example `NoClassDefFoundError` from a parallel build), stop and tell the owner: which
+  check, why it cannot run, and what is still open. The owner keeps track and says when to retry.
 - **Select a process by its PID.** Several sessions run Gradle at once on this machine. List the candidates with
   the PID, the age (`etimes`), the working folder (`readlink /proc/<pid>/cwd`) and the parent, keep only those whose
   folder is your worktree, and act on those PIDs. Never use `pkill -f <name>`, and never take `pgrep ... | head -1`
