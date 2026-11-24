@@ -3060,3 +3060,17 @@ newest entry at the bottom.
   `items/184-sub-frame-taps/ITEM.md`.
 - Contract check: not needed (no code).
 - Follow-up: none filed. The candidates are listed in the item `ITEM.md`.
+
+## 2026-11-23 — `mega-refactor-183b-charged-shot`
+
+- Summary: `ChargedShot` rounds its trajectory to 45-degree steps at spawn and after each bounce, so a bounce leaves at
+  45 degrees (before: about 26.6 or 63.4). The shot, its explosion and its residual draw a straight or a new diagonal
+  animation, turned only by multiples of 90 degrees. New engine function `Float.roundAngleToStep`. 6 diagonal frame
+  strips by Claude Fable 5.2 (README credit). Test map `RefactorTest183.tmx` (`REFACTOR_TEST_183`).
+- Contract check: automated checks pass (`engine:test`, `core:test`, `core:smokeTest`, `lwjgl3:jar`, `detektMain
+  core:verifyRandomRule`; atlas script: all old regions keep name and pixels). Review before the play test (1 Sonnet
+  agent): no bug. Owner play test: all 8 checks pass. Diffity: 0 threads. `master` merged into the branch first
+  (simple list conflicts in `LevelDefinition.kt` and `LevelCompletionScreensTest.kt`).
+- Follow-up: item `183` stays active (`183c` and later). The 3 inline 45-degree roundings (`HomingMissile`,
+  `CactusMissile`, `WilyCapsuleTentacleScissor`) have a `TODO` for `183c`. Art note: the straight charged-shot strips
+  use some colours off the NES palette, so the shade changes a little between the straight and the diagonal frames.
