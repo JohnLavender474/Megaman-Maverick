@@ -3074,6 +3074,9 @@ newest entry at the bottom.
 - Follow-up: item `183` stays active (`183c` and later). The 3 inline 45-degree roundings (`HomingMissile`,
   `CactusMissile`, `WilyCapsuleTentacleScissor`) have a `TODO` for `183c`. Art note: the straight charged-shot strips
   use some colours off the NES palette, so the shade changes a little between the straight and the diagonal frames.
+- Checks on `master` after the squash: `engine:test` (782), `core:test` (3006), `core:smokeTest` (481), `lwjgl3:jar`,
+  `detektMain core:verifyRandomRule` pass. A first run failed (`NoClassDefFoundError`, MockK errors): it ran at the
+  same time as the Gradle run of the `078e` merge in the main checkout.
 
 ## 2026-11-23 — `mega-refactor-078e-precious-woman-art`
 
