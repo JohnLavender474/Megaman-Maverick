@@ -30,6 +30,10 @@ Order (option C in `NOTES.md`): no tree-wide move first. Add the new game as a m
 `core`, then move code out of `core` only when the new game needs it.
 
 1. `games/<new>/`: game class, desktop launcher, assets root; depends on `:engine` and `:core`.
+   A `desktop-common` module holds the shared launcher part; each game has its own small
+   launcher module. `lwjgl3` stays the Maverick launcher until step 6. The build and run scripts
+   take the game (module, main class, assets folder, name) as a parameter. See `NOTES.md`,
+   "Desktop launcher and builds".
 2. A spawn-name registry per game in place of `EntityType.PACKAGE_PREFIX` (with `021`, `O7-R1`).
 3. A scan root and resource files per module for the smoke test and `EntityConstructorsTest`.
 4. An asset list per game in place of "queue every entry of the asset enums".
@@ -49,6 +53,23 @@ Order (option C in `NOTES.md`): no tree-wide move first. Add the new game as a m
 - 2026-11-23 (owner accepted the recommendation): same repo, option C (new game module on top of
   `core`, extract per need). Not a repo copy, and not a full lift and shift up front. Recorded as
   an item with status `idea`.
+- 2026-11-23 (owner accepted the recommendation): one desktop launcher module per game, on a
+  shared `desktop-common` module (JVM restart, window config, generic flags, window listener,
+  dispose on crash). The game launcher keeps the title, icon, game class and the game's own
+  options. `lwjgl3` stays the Maverick launcher at first; the rename to
+  `games/mega-man-maverick/desktop` comes with step 6. `build-game.sh` and the run scripts take the
+  game as a parameter; the packr step, the JRE bundles and the zip step do not change.
+
+## Bugs folded in
+
+- `build-game.sh:66` runs `unzip -q "$JDK_PATH/jdk.zip"` after the platform `case`, for every
+  platform. On Linux the download is `jdk.tar.gz` (`:53-55`), so a Linux build on a machine with no
+  `game-builds/jdk/linux64/` fails at that line. Found 2026-11-23 by the launcher research
+  (`NOTES.md`); this item rewrites `build-game.sh` anyway.
+- `build.gradle:85` sets `version = '$projectVersion'` with single quotes, so Groovy does not
+  fill in the value and `project.version` is the text `$projectVersion`. The jar name reads
+  `projectVersion` directly, so no output shows it today. Found 2026-11-23 by the build research;
+  this item sets the version per game anyway.
 
 ## Open questions
 

@@ -98,3 +98,66 @@ Recommendation: C. Steps in order:
 - https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction
 - https://en.wikipedia.org/wiki/Rule_of_three_(computer_programming)
 - https://geometrian.com/projects/blog/write_games_not_engines.html
+
+## Desktop launcher and builds (2026-11-23, `master` `379a5d883`)
+
+Read-only research in the main thread.
+
+```mermaid
+flowchart LR
+  m["games/mega-man-maverick/desktop"] --> c[desktop-common]
+  l["games/mega-man-lost-memories/desktop"] --> c
+  m --> mg[MegamanMaverickGame]
+  l --> lg[LostMemoriesGame]
+```
+
+### What `DesktopLauncher.kt` holds today (527 lines, 45 flags)
+
+| Part | Where | Game-specific? |
+|---|---|---|
+| JVM restart, window config, window listener, dispose on crash | `:62`, `:141-153`, `:197-225` | No |
+| Most flags (window, performance, debug, logs, volume, interpolation) | `:229-521` | No |
+| Title, icon | `:25-26` | Yes |
+| Game class and params | `:157`, `:195` | Yes |
+| Level, screen, weapons, tanks, difficulty, save options | `:80-99`, through `LaunchOptionsResolver.kt:4-12` | Yes: `LevelDefinition`, `ScreenEnum`, `MegaHeartTank`, `WeaponDef` |
+
+`--players`, `--mode` and `--bot` are genre features, but `LaunchOptionsResolver.kt:93` reads
+`PlayerCharacter` and `LevelDefinition.characters`.
+
+### Shape of the split (sketch)
+
+JCommander parses several argument objects in one pass (`addObject` per object), so the common
+flags and the game flags can be two classes.
+
+```kotlin
+// desktop-common
+fun runDesktop(args: Array<String>, title: String, icon: String,
+               gameArgs: Any, makeGame: (CommonArgs) -> ApplicationListener)
+
+// games/mega-man-lost-memories/desktop
+fun main(args: Array<String>) =
+    runDesktop(args, "Mega Man Lost Memories", "LostMemories.png", LmArgs()) { LostMemoriesGame(it) }
+```
+
+### Effect on builds and runs
+
+| Today | Fixed in | After the split |
+|---|---|---|
+| `./gradlew lwjgl3:run` in each `run-game-*.sh` | run scripts | `:games:<g>:desktop:run`; the Maverick scripts keep their names |
+| `run.workingDir` = root `assets/` | `lwjgl3/build.gradle:53` | assets folder per game, or a merged folder of shared + game assets |
+| Jar `${appName}-${projectVersion}.jar` | `build.gradle:86`, `lwjgl3/build.gradle:61` | name and version per game |
+| Jar path, main class, `--resources assets/*` | `build-game.sh:88-91` | arguments of `build-game.sh` |
+| `"Megaman-Maverick-$VERSION"` | `build-game-{linux,mac,windows}.sh:5-8` | one wrapper per game, or a game argument |
+| One `construo` block, one macOS identifier and icon | `lwjgl3/build.gradle:92-125` | one block per launcher module |
+| `lwjgl3:jar` in CI | `ci.yml:30` | one jar task per game |
+
+No change: the packr call itself, the JRE bundles in `game-builds/jdk/`, the zip step. Output
+folders are named after the executable, so the builds of two games do not collide in
+`game-builds/`.
+
+### Risks
+
+- A game run has one working folder. Shared and game assets must be merged into one folder (for
+  example a Gradle `Sync` task into `build/`) before `run` and before packr `--resources`. This
+  depends on open question 2.
+- Two bugs found here are folded into this item (`ITEM.md`, "Bugs folded in").
