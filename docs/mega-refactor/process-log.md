@@ -3151,3 +3151,10 @@ newest entry at the bottom.
 - Follow-up: item `183` stays active (`183a` deferred, `183d` and later). No backlog or bug candidates.
 - Checks on `master` after the squash: `engine:test`, `core:test`, `core:smokeTest`, `lwjgl3:jar`, `detektMain
   core:verifyRandomRule` pass.
+
+## 2026-11-24 — Interfaces with one implementation (docs only)
+
+- Summary: owner decision: an interface with only one implementation stays advisable to avoid, but it is allowed when
+  it narrows a dependency to the one part that a caller needs; the plan or the review names it. Rule added under
+  "During the branch" in `CLAUDE.md`, next to the "real caller" rule. Example: `178b`, the pathfinding search applies
+  its result through a one-method interface, not through the whole `PathfindingComponent`.
