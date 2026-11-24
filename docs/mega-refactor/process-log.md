@@ -3121,3 +3121,5 @@ newest entry at the bottom.
   `docs/mega-refactor/CLAUDE.md`, the branch template, item files). Branch folders and process
   logs keep the old names as history. Backlog candidates folded into the item `ITEM.md`
   ("Follow-ups from `185a`") in place of new items, because each is a later step of `185`.
+- Checks on `master` after the squash: `engine:test`, `core:test`, `core:smokeTest`,
+  `lwjgl3:jar`, `lost-memories-desktop:jar`, `detektMain core:verifyRandomRule` pass.
