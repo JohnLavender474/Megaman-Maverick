@@ -7,9 +7,9 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.maverick.game.engine.common.GameLogger
 import com.maverick.game.engine.common.enums.Position
-import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.extensions.roundAngleToStep
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
@@ -43,6 +43,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.DecorationsFactory
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.roundToInt
 import kotlin.reflect.KClass
 
 class Needle(services: MegaServices) : AbstractProjectile(services), IHealthEntity, IDamageableEntity {
@@ -62,7 +63,8 @@ class Needle(services: MegaServices) : AbstractProjectile(services), IHealthEnti
             MoonScythe::class pairTo ConstVals.MAX_HEALTH,
             ReactorManProjectile::class pairTo ConstVals.MAX_HEALTH
         )
-        private val regions = ObjectMap<String, TextureRegion>()
+        private const val SPRITE_ANGLE_OFFSET = 270f
+        private val regions = ObjectMap<NeedleType, Array<TextureRegion>>()
     }
 
     enum class NeedleType { DEFAULT, ICE }
@@ -77,12 +79,21 @@ class Needle(services: MegaServices) : AbstractProjectile(services), IHealthEnti
     private var blink = false
 
     private val ownerCollisionDelay = Timer(OWNER_COLLISION_DELAY)
+    private val drawDirection = NeedleDrawDirection()
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_2.source)
-            gdxArrayOf("default", "ice").forEach { regions.put(it, atlas.findRegion("${TAG}/${it}")) }
+            NeedleType.entries.forEach { needleType ->
+                val name = needleType.name.lowercase()
+                val frames = Array<TextureRegion>()
+                frames.add(atlas.findRegion("${TAG}/${name}"))
+                for (frame in 1 until NeedleDrawDirection.DRAWN_FRAMES) {
+                    frames.add(atlas.findRegion("${TAG}/${name}_step${frame}"))
+                }
+                regions.put(needleType, frames)
+            }
         }
         super.init()
         addComponent(defineUpdatablesComponent())
@@ -216,13 +227,40 @@ class Needle(services: MegaServices) : AbstractProjectile(services), IHealthEnti
         sprite.setSize(ConstVals.PPM.toFloat())
         val spritesComponent = SpritesComponent(sprite)
         spritesComponent.putPreProcess { _, _ ->
-            val region = regions[type.name.lowercase()]
-            sprite.setRegion(region)
+            drawDirection.set(body.physics.velocity.angleDeg() + SPRITE_ANGLE_OFFSET)
+            sprite.setRegion(regions[type][drawDirection.frame])
+            sprite.setFlip(drawDirection.flipX, false)
             sprite.setCenter(body.getCenter())
             sprite.setOriginCenter()
-            sprite.rotation = body.physics.velocity.angleDeg() + 270f
+            sprite.rotation = drawDirection.rotation
             sprite.hidden = !damageTimer.isFinished()
         }
         return spritesComponent
+    }
+}
+
+internal class NeedleDrawDirection {
+
+    companion object {
+        const val DRAW_ANGLE_STEP = 11.25f
+        const val DRAW_STEPS_PER_QUADRANT = 8
+        const val DRAWN_FRAMES = DRAW_STEPS_PER_QUADRANT / 2 + 1
+    }
+
+    var frame = 0
+        private set
+    var flipX = false
+        private set
+    var rotation = 0f
+        private set
+
+    fun set(spriteAngle: Float) {
+        val angle = spriteAngle.roundAngleToStep(DRAW_ANGLE_STEP)
+        val step = (angle / DRAW_ANGLE_STEP).roundToInt()
+        val quadrant = step / DRAW_STEPS_PER_QUADRANT
+        val stepInQuadrant = step % DRAW_STEPS_PER_QUADRANT
+        flipX = stepInQuadrant >= DRAWN_FRAMES
+        frame = if (flipX) DRAW_STEPS_PER_QUADRANT - stepInQuadrant else stepInQuadrant
+        rotation = quadrant * 90f + if (flipX) 90f else 0f
     }
 }

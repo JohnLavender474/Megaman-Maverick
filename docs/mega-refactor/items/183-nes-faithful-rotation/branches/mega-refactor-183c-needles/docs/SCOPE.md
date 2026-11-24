@@ -55,13 +55,13 @@ Scan of `master` at `a5e61cdb0`.
    - `j` 5 to 7: region `8 - j`, flip X, rotation `q * 90 + 90`. The mirror of the frame at `t` is the frame at `-t`,
      and the 90-degree turn makes it `90 - t`. This works because the art is symmetric about its long axis.
 2. **Art.** 4 new frames per type, the needle turned 11.25, 22.5, 33.75 and 45 degrees counterclockwise from up,
-   drawn as pixel art (D1 = a). Region names `Needle/default_1` to `default_4` and `Needle/ice_1` to `ice_4`; the
+   drawn as pixel art (D1 = a). Region names `Needle/default_step1` to `default_step4` and `Needle/ice_step1` to `ice_step4` (a name that ends in `_<n>` is an animation index for TexturePacker); the
    existing `default` and `ice` are step 0. The ice frames are a color map of the default frames.
 3. **Ice palette** (D2 = a). The ice edge color `C0F5FB` becomes `A4E4FC` (NES) in the new frames and in the existing
    `ice` frame, so a needle does not change shade when it turns.
 4. **Pack** the new frames into `Projectiles2` (`Basic` only, `assets.md`). A script checks that each other region
    keeps its name and pixels.
-5. **Test.** A unit test of the draw rule: for each of the 32 steps, the region index, the flip and the rotation; and
+5. **Test.** The draw rule is the `internal` class `NeedleDrawDirection` in `Needle.kt` (caller: the `Needle` sprite pre-process), so that a test can read the frame index: the needle regions are static and another spec (`DesertManNeedleSpinTest`) can load them first. A unit test of the draw rule: for each of the 32 steps, the region index, the flip and the rotation; and
    that the motion (velocity) is not changed.
 6. **Credits** in the root `README.md` for the new frames (`art.md`).
 
@@ -110,9 +110,12 @@ Checked on 2026-11-24: the diffs of `compactor-level`, `fix/auto-perf-freeze`, `
   (`art.md`, temporary rule).
 - D4 a: no new test room; play checks in live levels.
 
+- 2026-11-24 (owner): the Fable use is confirmed; the straight needle frames are by the authors of the Megaman spritesheet (SamuelX4 and oldlavygenes), for the credit.
+- 2026-11-24 (decision without the owner): the frames are packed before the owner's art review, so that the review happens with the play test.
+
 ## Open questions
 
-- The source of the needle art, for the credit (`art.md`: ask, do not guess).
+None.
 
 # Contract
 
@@ -129,12 +132,15 @@ Checked on 2026-11-24: the diffs of `compactor-level`, `fix/auto-perf-freeze`, `
 
 ## Manual playthrough
 
+Play scripts: `temp/play/play-1.sh` to `play-5.sh` in the worktree.
+
 | # | Level and room | What to check |
 |---|---|---|
-| 1 | `DESERT_MAN`, `room16` (walk right into the boss) | Desert Man's needle burst, thrown needles and needle-spin needles: each needle points along its path and turns in small steps through its arc; no rotated pixels. |
-| 2 | `DESERT_MAN`, `room1`, with `--weapons needle_spin` | Mega Man's needle spin: the same as check 1. Also with a turned gravity if a room has one. |
-| 3 | `DESERT_MAN`, `room1` (walk right) | `Cactus` needles: the same. |
-| 4 | `GLACIER_MAN`, `room1` (walk right) | Snow `SpikeBot` ice needles: the same, and the ice color reads as before. |
+| 1 | `DESERT_MAN`, `room1` (walk right) | `Cactus` needles point along their arc and turn in small steps; no rotated pixels. |
+| 2 | `DESERT_MAN`, `room1`, `--weapons needle_spin` | Mega Man's needle spin: the same as check 1. |
+| 3 | `GLACIER_MAN`, `room1` (walk right) | Snow `SpikeBot` ice needles: the same, and the ice color reads as before. |
+| 4 | `REFACTOR_TEST_183`, `gravity_left`, `--weapons needle_spin` | The needle spin under left gravity: the needles arc to the left and still point along their path. |
+| 5 | `DESERT_MAN`, `room16` (walk right into the boss), `--heartTanks all --healthTanks all` | Desert Man's needle burst, thrown needles and needle-spin needles: the same as check 1. |
 
 ## Behaviors to check
 

@@ -1,60 +1,60 @@
 Projectiles2.png
-size: 240, 856
+size: 240, 880
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 ArigockBall
   rotate: false
-  xy: 0, 256
+  xy: 0, 280
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
   index: -1
 Axe/spin
   rotate: false
-  xy: 116, 24
+  xy: 36, 48
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 Axe/stuck
   rotate: false
-  xy: 203, 0
+  xy: 96, 16
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 BunbyRedRocket
   rotate: false
-  xy: 112, 112
+  xy: 112, 136
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 BunbyRedRocket/lab/BunbyRedRocket
   rotate: false
-  xy: 144, 112
+  xy: 144, 136
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 CactusMissile/blink
   rotate: false
-  xy: 176, 112
+  xy: 176, 136
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 CactusMissile/fly
   rotate: false
-  xy: 0, 176
+  xy: 0, 200
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 ColdGust
   rotate: false
-  xy: 0, 64
+  xy: 0, 88
   size: 240, 48
   orig: 240, 48
   offset: 0, 0
@@ -68,35 +68,35 @@ CrystalSpike
   index: -1
 DeathBomb/tick
   rotate: false
-  xy: 32, 176
+  xy: 32, 200
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 DeathBomb/wait
   rotate: false
-  xy: 64, 176
+  xy: 64, 200
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 FallingIcicle/form
   rotate: false
-  xy: 96, 176
+  xy: 96, 200
   size: 24, 64
   orig: 24, 64
   offset: 0, 0
   index: -1
 FallingIcicle/shake
   rotate: false
-  xy: 0, 24
+  xy: 132, 16
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
   index: -1
 FallingIcicle/shatter
   rotate: false
-  xy: 24, 24
+  xy: 156, 16
   size: 24, 32
   orig: 24, 32
   offset: 0, 0
@@ -124,21 +124,21 @@ Harpoon
   index: -1
 MagmaGoop
   rotate: false
-  xy: 48, 24
+  xy: 180, 16
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 MagmaMeteor
   rotate: false
-  xy: 120, 176
+  xy: 120, 200
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 MagmaOrb
   rotate: false
-  xy: 152, 176
+  xy: 152, 200
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
@@ -152,42 +152,42 @@ MagmaPellet
   index: -1
 MagmaWave
   rotate: false
-  xy: 64, 376
+  xy: 64, 400
   size: 96, 192
   orig: 96, 192
   offset: 0, 0
   index: -1
 MagmaWave/disintegrate
   rotate: false
-  xy: 96, 568
+  xy: 96, 592
   size: 96, 288
   orig: 96, 288
   offset: 0, 0
   index: -1
 MagmaWave/wave
   rotate: false
-  xy: 0, 568
+  xy: 0, 592
   size: 96, 192
   orig: 96, 192
   offset: 0, 0
   index: -1
 MoonMan/crescent
   rotate: false
-  xy: 144, 256
+  xy: 144, 280
   size: 64, 120
   orig: 64, 120
   offset: 0, 0
   index: -1
 MoonMan/star
   rotate: false
-  xy: 0, 376
+  xy: 0, 400
   size: 64, 120
   orig: 64, 120
   offset: 0, 0
   index: -1
 MoonScythe
   rotate: false
-  xy: 48, 256
+  xy: 48, 280
   size: 48, 96
   orig: 48, 96
   offset: 0, 0
@@ -199,44 +199,100 @@ Needle/default
   orig: 16, 16
   offset: 0, 0
   index: -1
-Needle/ice
+Needle/default_step1
   rotate: false
   xy: 107, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-Nutt
+Needle/default_step2
   rotate: false
   xy: 123, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-Pebble
-  rotate: false
-  xy: 80, 24
-  size: 36, 36
-  orig: 36, 36
-  offset: 0, 0
-  index: -1
-SharpStar
-  rotate: false
-  xy: 96, 256
-  size: 48, 96
-  orig: 48, 96
-  offset: 0, 0
-  index: -1
-SmallGreenMissile
+Needle/default_step3
   rotate: false
   xy: 139, 0
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
+Needle/default_step4
+  rotate: false
+  xy: 155, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Needle/ice
+  rotate: false
+  xy: 171, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Needle/ice_step1
+  rotate: false
+  xy: 187, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Needle/ice_step2
+  rotate: false
+  xy: 203, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Needle/ice_step3
+  rotate: false
+  xy: 219, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Needle/ice_step4
+  rotate: false
+  xy: 0, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Nutt
+  rotate: false
+  xy: 16, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Pebble
+  rotate: false
+  xy: 0, 48
+  size: 36, 36
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+SharpStar
+  rotate: false
+  xy: 96, 280
+  size: 48, 96
+  orig: 48, 96
+  offset: 0, 0
+  index: -1
+SmallGreenMissile
+  rotate: false
+  xy: 32, 16
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 Snowhead/attached
   rotate: false
-  xy: 0, 112
+  xy: 0, 136
   size: 32, 48
   orig: 32, 48
   offset: 0, 0
@@ -250,70 +306,70 @@ Snowhead/blank
   index: -1
 Snowhead/default
   rotate: false
-  xy: 155, 0
+  xy: 48, 16
   size: 32, 16
   orig: 32, 16
   offset: 0, 0
   index: -1
 SphinxBall
   rotate: false
-  xy: 32, 112
+  xy: 32, 136
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 SpitFireball
   rotate: false
-  xy: 184, 176
+  xy: 184, 200
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 SuperCoolActionStarWarsSpaceLazer/burst
   rotate: false
-  xy: 223, 0
+  xy: 116, 16
   size: 8, 24
   orig: 8, 24
   offset: 0, 0
   index: -1
 SuperCoolActionStarWarsSpaceLazer/lab/burst
   rotate: false
-  xy: 231, 0
+  xy: 124, 16
   size: 8, 24
   orig: 8, 24
   offset: 0, 0
   index: -1
 SuperCoolActionStarWarsSpaceLazer/lab/lazer
   rotate: false
-  xy: 187, 0
+  xy: 80, 16
   size: 8, 16
   orig: 8, 16
   offset: 0, 0
   index: -1
 SuperCoolActionStarWarsSpaceLazer/lazer
   rotate: false
-  xy: 195, 0
+  xy: 88, 16
   size: 8, 16
   orig: 8, 16
   offset: 0, 0
   index: -1
 TeardropBlast
   rotate: false
-  xy: 64, 24
+  xy: 196, 16
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
 UFOBomb
   rotate: false
-  xy: 216, 176
+  xy: 216, 200
   size: 16, 80
   orig: 16, 80
   offset: 0, 0
   index: -1
 WilyPlaneBomb
   rotate: false
-  xy: 80, 112
+  xy: 80, 136
   size: 32, 48
   orig: 32, 48
   offset: 0, 0
