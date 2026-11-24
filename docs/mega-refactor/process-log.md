@@ -3123,3 +3123,17 @@ newest entry at the bottom.
   ("Follow-ups from `185a`") in place of new items, because each is a later step of `185`.
 - Checks on `master` after the squash: `engine:test`, `core:test`, `core:smokeTest`,
   `lwjgl3:jar`, `lost-memories-desktop:jar`, `detektMain core:verifyRandomRule` pass.
+
+## 2026-11-23 — `mega-refactor-185b-game-builds`
+
+- Summary: platform builds for each game (item `185`). `build-game.sh <game> <platform>` builds
+  the jar, runs packr with the shared JRE in `game-builds/jdk/`, and zips into
+  `game-builds/<game>/`. Wrappers `build-<game>-<platform>.sh` (6) replace `build-game-*.sh`.
+  `game-builds/` is git-ignored except `packr-all-4.0.0.jar`. Folded bug fixed: the stray
+  `unzip` of `jdk.zip` after a Linux download. Squash `12fc55c40`.
+- Contract check: `bash -n` on the build scripts; one linux64 build of each game
+  (`Mega-Man-X-Lost-Memories-0.1.0-linux64`, `Megaman-Maverick-1.0.1-linux64`); `git status`
+  clean. Owner play test of both bundles: passed. Diffity: 0 threads. No review agent (shell
+  scripts, `.gitignore` and docs only).
+- Checks on `master` after the squash: `bash -n` on all build and run scripts; `git status`
+  shows no `game-builds/` file.

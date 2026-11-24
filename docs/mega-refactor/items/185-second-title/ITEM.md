@@ -5,7 +5,7 @@
 - Objectives: `O1`, `O7`, `O8`
 - Depends on: none
 - Related: `001` (`001b` host contract), `021`, `032`, `072`, `081`, `181`
-- Branches: `mega-refactor-185a-lost-memories-launcher` (merged 2026-11-23), `mega-refactor-185b-game-builds`
+- Branches: `mega-refactor-185a-lost-memories-launcher` (merged 2026-11-23), `mega-refactor-185b-game-builds` (merged 2026-11-23)
 
 ## Goal
 
@@ -83,6 +83,9 @@ Order (option C in `NOTES.md`): no tree-wide move first. Add the new game as a m
 - The Graal native image setup stays in `lwjgl3` only.
 
 ## Bugs folded in
+
+Both fixed: `build.gradle:85` in `185a`, `build-game.sh` in `185b`.
+
 
 - `build-game.sh:66` runs `unzip -q "$JDK_PATH/jdk.zip"` after the platform `case`, for every
   platform. On Linux the download is `jdk.tar.gz` (`:53-55`), so a Linux build on a machine with no
