@@ -1,0 +1,67 @@
+plugins {
+  id "application"
+}
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+ext.appName = 'Mega-Man-X-Lost-Memories'
+
+sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
+mainClassName = 'com.megaman.lostmemories.desktop.LostMemoriesLauncher'
+application.setMainClass(mainClassName)
+eclipse.project.name = appName + '-desktop'
+java.sourceCompatibility = 17
+java.targetCompatibility = 17
+if (JavaVersion.current().isJava9Compatible()) {
+        compileJava.options.release.set(17)
+}
+kotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+
+dependencies {
+  implementation project(':desktop-common')
+  implementation project(':lost-memories-core')
+}
+
+def os = System.properties['os.name'].toLowerCase()
+
+run {
+  workingDir = rootProject.file('assets').path
+  setIgnoreExitValue(true)
+
+  if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
+}
+
+jar {
+  archiveFileName.set("${appName}-${lostMemoriesVersion}.jar")
+  duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+  dependsOn configurations.runtimeClasspath
+  from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+  exclude(
+    'META-INF/INDEX.LIST',
+    'META-INF/*.SF',
+    'META-INF/*.DSA',
+    'META-INF/*.RSA',
+    'music/**',
+    'sprites/**',
+    'tiled_maps/**',
+    'sounds/**',
+    'temp/**',
+    'diagrams/**'
+  )
+  dependencies {
+    exclude('META-INF/INDEX.LIST', 'META-INF/maven/**')
+  }
+  manifest {
+    attributes 'Main-Class': project.mainClassName
+  }
+  doLast {
+    file(archiveFile).setExecutable(true, false)
+  }
+}
+
+// TODO: per-game platform builds (construo, packr, build-game.sh) come in a later branch (item 185)
+
+tasks.register('dist') {
+  dependsOn 'jar'
+}

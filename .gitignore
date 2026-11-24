@@ -8,6 +8,8 @@ gradle-app.setting
 /core/out
 /lwjgl2/build/
 /lwjgl3/build/
+/desktop-common/build/
+/games/*/*/build/
 /html/build/
 /teavm/build/
 /ios/build/

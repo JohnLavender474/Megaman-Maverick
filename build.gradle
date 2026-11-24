@@ -82,7 +82,7 @@ configure(subprojects) {
 }
 
 subprojects {
-  version = '$projectVersion'
+  version = projectVersion
   ext.appName = 'Megaman-Maverick'
   repositories {
     mavenCentral()

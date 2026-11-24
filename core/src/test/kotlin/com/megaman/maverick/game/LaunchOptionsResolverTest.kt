@@ -31,8 +31,8 @@ class LaunchOptionsResolverTest : DescribeSpec({
     }
 
     describe("--saveFile") {
-        it("is the game's own save file by default") {
-            resolve(LaunchOptions()).resolved!!.saveFile shouldBe PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE
+        it("is null by default, so the game uses the save file of its title") {
+            resolve(LaunchOptions()).resolved!!.saveFile shouldBe null
         }
 
         it("passes a trimmed name through") {

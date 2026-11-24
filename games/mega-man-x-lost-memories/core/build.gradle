@@ -1,0 +1,15 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+java.sourceCompatibility = 17
+java.targetCompatibility = 17
+if (JavaVersion.current().isJava9Compatible()) {
+        compileJava.options.release.set(17)
+}
+kotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+
+dependencies {
+  api project(':engine')
+  api project(':core')
+}

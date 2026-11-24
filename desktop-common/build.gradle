@@ -1,0 +1,23 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+eclipse.project.name = appName + '-desktop-common'
+java.sourceCompatibility = 17
+java.targetCompatibility = 17
+if (JavaVersion.current().isJava9Compatible()) {
+        compileJava.options.release.set(17)
+}
+kotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+
+dependencies {
+  api project(':engine')
+  api project(':core')
+
+  api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
+  api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+  api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+  api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+  api "com.badlogicgames.jamepad:jamepad:$jamepadVersion"
+  api "com.beust:jcommander:1.82"
+}

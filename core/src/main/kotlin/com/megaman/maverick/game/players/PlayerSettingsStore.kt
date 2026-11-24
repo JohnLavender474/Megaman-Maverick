@@ -2,11 +2,10 @@ package com.megaman.maverick.game.players
 
 import com.badlogic.gdx.Gdx
 import com.maverick.game.engine.players.PlayerSlot
-import com.megaman.maverick.game.PreferenceFiles
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
 
-class PlayerSettingsStore(slot: PlayerSlot) {
+class PlayerSettingsStore(slot: PlayerSlot, fileNamePrefix: String) {
 
     companion object {
         private const val KEYBOARD_PREFIX = "KEYBOARD"
@@ -14,7 +13,7 @@ class PlayerSettingsStore(slot: PlayerSlot) {
         private const val SELECT_BUTTON_ACTION_KEY = "SELECT_BUTTON_ACTION"
     }
 
-    private val fileName = "${PreferenceFiles.MEGAMAN_MAVERICK_PLAYER_SETTINGS} - Slot ${slot.index}"
+    private val fileName = "$fileNamePrefix - Slot ${slot.index}"
 
     private fun prefs() = Gdx.app.getPreferences(fileName)
 

@@ -14,7 +14,7 @@
  */
 //Note, the above license and copyright applies to this file only.
 
-package com.megaman.maverick.game.lwjgl3;
+package com.megaman.maverick.game.desktop;
 
 import org.lwjgl.system.macosx.LibC;
 

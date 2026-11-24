@@ -122,6 +122,8 @@ import com.megaman.maverick.game.state.GameClock
 import com.megaman.maverick.game.state.GameSettings
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.state.Performance
+import com.megaman.maverick.game.titles.IGameTitle
+import com.megaman.maverick.game.titles.MaverickTitle
 import com.megaman.maverick.game.utils.AsyncFileWriter
 import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.utils.extensions.getMusics
@@ -166,6 +168,7 @@ class MegamanMaverickGameParams {
     var loadKeyboardPrefs: Boolean = false
     var resetBindings: Boolean = false
     var launchOptions: LaunchOptions = LaunchOptions()
+    var title: IGameTitle = MaverickTitle
 }
 
 class MegamanMaverickGame(
@@ -277,6 +280,7 @@ class MegamanMaverickGame(
         private set
 
     private lateinit var launch: ResolvedLaunch
+    private lateinit var saveFileName: String
     private var launchRoom: String? = null
     private var launchRoomLevel: LevelDefinition? = null
 
@@ -289,8 +293,8 @@ class MegamanMaverickGame(
             throw IllegalArgumentException("Invalid launch options: ${launchResult.errors.joinToString("; ")}")
         launch = launchResult.resolved!!
         launchRoom = launch.room
-        if (launch.saveFile != PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE)
-            GameLogger.log(TAG, "create(): save file: ${launch.saveFile}")
+        saveFileName = launch.saveFile ?: params.title.saveFileName
+        if (saveFileName != params.title.saveFileName) GameLogger.log(TAG, "create(): save file: $saveFileName")
         launchRoomLevel = when (val start = launch.start) {
             is LaunchStart.StartLevel -> start.level
             is LaunchStart.OpenScreen -> start.stagedLevel
@@ -325,7 +329,7 @@ class MegamanMaverickGame(
         batch = SpriteBatch()
 
         checkInputButtons(MegaControllerButton.entries)
-        settingsStore = PlayerSettingsStore(PlayerSlot(0))
+        settingsStore = PlayerSettingsStore(PlayerSlot(0), params.title.playerSettingsFileName)
         applyBootSettings(settingsStore, players.settings(PlayerSlot(0)), params.loadKeyboardPrefs, params.resetBindings)
         if (params.resetBindings) GameLogger.log(TAG, "create(): cleared the saved bindings")
         if (params.loadKeyboardPrefs) GameLogger.log(TAG, "create(): loaded keyboard prefs")
@@ -334,7 +338,7 @@ class MegamanMaverickGame(
         val slot0Pads = if (slot1Pad) PadShare.ALL_BUT_LAST else PadShare.ALL
         gamepadInput = GamepadInput(players.settings(PlayerSlot(0)), settingsStore, slot0Pads)
         if (slot1Pad) slot1GamepadInput = GamepadInput(
-            players.settings(PlayerSlot(1)), PlayerSettingsStore(PlayerSlot(1)), PadShare.LAST_ONLY
+            players.settings(PlayerSlot(1)), PlayerSettingsStore(PlayerSlot(1), params.title.playerSettingsFileName), PadShare.LAST_ONLY
         )
         followBrain = when (launch.bot) {
             BotKind.FOLLOW -> FollowBrain(players, clock)
@@ -513,6 +517,7 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.ENDING_SCREEN.name, EndingScreen(this))
         screens.put(ScreenEnum.CREDITS_SCREEN.name, CreditsScreen(this))
         screens.put(ScreenEnum.EXTRAS_SCREEN.name, ExtrasScreen(this))
+        params.title.registerScreens(this)
 
         val start = launch.start
         if (start is LaunchStart.StartLevel) start.level.levelOverride?.let { applyLevelOverride(it) }
@@ -522,10 +527,7 @@ class MegamanMaverickGame(
         launch.difficulty?.let { gameState.setDifficultyMode(it) }
 
         when (start) {
-            LaunchStart.Default -> when (params.runType) {
-                RunType.GAME -> setCurrentScreen(ScreenEnum.SIMPLE_INIT_GAME_SCREEN.name)
-                RunType.TEST -> startLevel(LevelDefinition.TEST_1)
-            }
+            LaunchStart.Default -> params.title.openDefaultStart(this)
 
             is LaunchStart.StartLevel -> startLevel(start.level)
 
@@ -884,18 +886,18 @@ class MegamanMaverickGame(
         val state = this.gameState.toString()
         GameLogger.debug(TAG, "saveState(): state=$state")
 
-        val saveFile = Gdx.app.getPreferences(launch.saveFile)
+        val saveFile = Gdx.app.getPreferences(saveFileName)
         saveFile.putString(ConstKeys.STATE, state)
         saveFile.flush()
     }
 
     fun hasSavedState(): Boolean {
-        val saveFile = Gdx.app.getPreferences(launch.saveFile)
+        val saveFile = Gdx.app.getPreferences(saveFileName)
         return saveFile.contains(ConstKeys.STATE)
     }
 
     fun loadSavedState(): Boolean {
-        val saveFile = Gdx.app.getPreferences(launch.saveFile)
+        val saveFile = Gdx.app.getPreferences(saveFileName)
 
         if (saveFile.contains(ConstKeys.STATE)) {
             val state = saveFile.getString(ConstKeys.STATE)
@@ -1047,7 +1049,10 @@ class MegamanMaverickGame(
         return engine
     }
 
-    fun setCurrentScreen(key: String, props: Properties = Properties()) {
+    fun setCurrentScreen(requestedKey: String, props: Properties = Properties()) {
+        // TODO: screen redirects are a stopgap until the host contract and a level registry give each title its own flow (item 185, 001b)
+        val key = params.title.redirectScreen(requestedKey) ?: requestedKey
+        if (key != requestedKey) GameLogger.debug(TAG, "setCurrentScreen(): redirect $requestedKey to $key")
         GameLogger.log(TAG, "setCurrentScreen(): set to screen with key = $key")
         currentScreen?.let {
             it.hide()

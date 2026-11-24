@@ -36,7 +36,7 @@ data class ResolvedLaunch(
     val players: Int = 1,
     val mode: GameMode = GameMode.SINGLE,
     val rules: SessionRules = mode.rules,
-    val saveFile: String = PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE,
+    val saveFile: String? = null,
     val difficulty: DifficultyMode? = null,
     val randSeed: Long? = null,
     val bot: BotKind? = null
@@ -183,8 +183,8 @@ private fun parseViewEdges(
     return rules
 }
 
-private fun parseSaveFile(value: String?, errors: MutableList<String>): String {
-    if (value == null) return PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE
+private fun parseSaveFile(value: String?, errors: MutableList<String>): String? {
+    if (value == null) return null
     val name = value.trim()
     if (name.isEmpty()) errors.add("--saveFile needs a name, for example --saveFile test-save.")
     return name

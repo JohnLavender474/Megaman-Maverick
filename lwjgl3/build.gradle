@@ -31,15 +31,7 @@ if (JavaVersion.current().isJava9Compatible()) {
 kotlin.compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
 
 dependencies {
-  implementation project(':engine')
-  implementation project(':core')
-
-  implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
-  implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-  implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-  implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-  implementation "com.badlogicgames.jamepad:jamepad:$jamepadVersion"
-  implementation "com.beust:jcommander:1.82"
+  implementation project(':desktop-common')
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"

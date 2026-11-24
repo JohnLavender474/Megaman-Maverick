@@ -1,6 +1,6 @@
 # Scope: mega-refactor-185a-lost-memories-launcher
 
-- Status: approved
+- Status: approved (merged 2026-11-23)
 - Approved: 2026-11-23 (owner asked for a full first pass and accepted the recommendations with
   `/go-with-recs`; no HTML brief, see the process log)
 
@@ -37,7 +37,7 @@ module, one small launcher module per game, run scripts that take the game), and
    window listener, dispose on crash). `lwjgl3` keeps the Maverick launcher, now thin.
 3. `games/mega-man-x-lost-memories/`: Gradle projects `lost-memories-core` (the title, the splash
    screen) and `lost-memories-desktop` (its launcher).
-4. Run scripts: `run-game-*.sh [maverick|lost-memories] [args]`; the default is `maverick`.
+4. Run scripts: one set per game, `run-<game>-<mode>.sh` (D9).
 5. CI builds the Lost Memories jar too.
 6. Folded bug: `version = projectVersion`.
 
@@ -83,13 +83,13 @@ None for the owner before the play test.
 
 ## Manual playthrough
 
-1. `./run-game-debug.sh lost-memories`: window title "Mega Man X: Lost Memories"; splash screen;
+1. `./run-mega-man-x-lost-memories-debug.sh`: window title "Mega Man X: Lost Memories"; splash screen;
    START opens the X6 intro level with X; the level end returns to the splash.
-2. `./run-game-debug.sh lost-memories`: die until game over; the game over screen returns to the
-   splash, not to the Maverick save screen.
-3. `./run-game-debug.sh`: Maverick starts as before (title "Megaman Maverick", init screen).
-4. `./run-game-test.sh` and `./run-game-test-coop.sh`: as before.
-5. `./run-game-alpha.sh maverick --level DESERT_MAN`: the game argument and the pass-through work.
+2. `./run-mega-man-x-lost-memories-debug.sh`: die until game over; the game over screen returns to the
+   splash, not to the Maverick save screen; no music plays on the splash.
+3. `./run-mega-man-maverick-debug.sh`: Maverick starts as before (title "Megaman Maverick", init screen).
+4. `./run-mega-man-maverick-test.sh` and `./run-mega-man-maverick-test-coop.sh`: as before.
+5. `./run-mega-man-maverick-alpha.sh --level DESERT_MAN`: the pass-through works. `./run-mega-man-x-lost-memories-alpha.sh`: the splash shows.
 
 ## Behaviors to check
 
@@ -97,4 +97,4 @@ None for the owner before the play test.
 
 ## Intended changes
 
-- New game "Mega Man X: Lost Memories"; run scripts take a game argument.
+- New game "Mega Man X: Lost Memories"; the run scripts are renamed to one set per game (D9).

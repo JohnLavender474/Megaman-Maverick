@@ -5,6 +5,7 @@ import com.maverick.game.engine.players.PlayerSlot
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.controllers.SelectButtonAction
 import com.megaman.maverick.game.input.GamepadInput
+import com.megaman.maverick.game.titles.MaverickTitle
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
@@ -21,13 +22,13 @@ class PlayerSettingsStoreTest : DescribeSpec({
     beforeEach {
         files = FakePreferencesFiles()
         files.install()
-        store = PlayerSettingsStore(PlayerSlot(0))
+        store = PlayerSettingsStore(PlayerSlot(0), MaverickTitle.playerSettingsFileName)
         settings = PlayerSettings()
     }
 
     describe("files") {
         it("opens one file per slot, and the values of 2 slots do not mix") {
-            val other = PlayerSettingsStore(PlayerSlot(1))
+            val other = PlayerSettingsStore(PlayerSlot(1), MaverickTitle.playerSettingsFileName)
             settings.selectButtonAction = SelectButtonAction.AIR_DASH
             val otherSettings = PlayerSettings().apply { selectButtonAction = SelectButtonAction.START }
 

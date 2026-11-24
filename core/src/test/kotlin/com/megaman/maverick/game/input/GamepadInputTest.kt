@@ -9,6 +9,7 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.players.FakePreferencesFiles
 import com.megaman.maverick.game.players.PlayerSettings
 import com.megaman.maverick.game.players.PlayerSettingsStore
+import com.megaman.maverick.game.titles.MaverickTitle
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.*
@@ -77,7 +78,7 @@ class GamepadInputTest : DescribeSpec({
     beforeEach {
         files = FakePreferencesFiles()
         files.install()
-        store = PlayerSettingsStore(PlayerSlot(0))
+        store = PlayerSettingsStore(PlayerSlot(0), MaverickTitle.playerSettingsFileName)
         mockkObject(ControllerUtils)
         mockkStatic("com.megaman.maverick.game.controllers.ControllerMappingExtensionsKt")
     }

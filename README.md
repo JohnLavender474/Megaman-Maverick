@@ -63,18 +63,30 @@ generated JAR, you need Java 17+ on your local machine. Gradle runs on JDK 17 or
 2. From the root directory of the game project, run one of the following:
    1. Mac/Linux:
       ```bash
-      ./run-game-alpha.sh
+      ./run-mega-man-maverick-alpha.sh
       ```
-      The other run scripts are `./run-game-debug.sh` (debug text, debug window and diagnostics) and
-      `./run-game-test.sh` (starts the test level). The scripts pass extra arguments to the game, for example
-      `./run-game-alpha.sh --level DESERT_MAN`.
+      The other Maverick run scripts are `./run-mega-man-maverick-debug.sh` (debug text, debug window and
+      diagnostics), `./run-mega-man-maverick-test.sh` (starts the test level) and
+      `./run-mega-man-maverick-test-coop.sh` (2 players). The scripts pass extra arguments to the game, for example
+      `./run-mega-man-maverick-alpha.sh --level DESERT_MAN`.
    2. Windows (will have to pass program args if you want to change any settings):
       ```bash
       ./gradlew lwjgl3:run
       ```
 3. To build a runnable JAR, run `./gradlew lwjgl3:jar`. The output is `lwjgl3/build/libs/Megaman-Maverick-<version>.jar`.
 4. To build a release zip with a Java runtime, run `./build-game-linux.sh`, `./build-game-windows.sh` or
-   `./build-game-mac.sh`.
+   `./build-game-mac.sh`. These build Megaman Maverick only for now.
+
+### Mega Man X: Lost Memories
+
+The repo also holds a second game, "Mega Man X: Lost Memories" (work in progress, in
+`games/mega-man-x-lost-memories/`). It uses the same engine and shared code. Today it is a splash screen that starts
+the X6 intro level.
+
+- Run it with `./run-mega-man-x-lost-memories-alpha.sh` or `./run-mega-man-x-lost-memories-debug.sh`
+  (Windows: `./gradlew lost-memories-desktop:run`).
+- Build a runnable JAR with `./gradlew lost-memories-desktop:jar`. The output is
+  `games/mega-man-x-lost-memories/desktop/build/libs/Mega-Man-X-Lost-Memories-<version>.jar`.
 - See the [GDX Liftoff](#GDX-Liftoff) section for more gradle commands and details.
 
 ---
