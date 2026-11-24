@@ -270,6 +270,12 @@ approval, but write the reason in the process log.
   leave a `TODO` comment at the place where it will be needed. At the scope and plan steps, list
   each new API with its first caller in the branch; drop any API that has none. (Lessons from
   `029a`: `ComponentKey` and `nearestTo` were added with no caller and later removed.)
+- An interface with only one implementation is advisable to avoid, but it is not forbidden. Use the concrete
+  type by default, and say in the plan or the review when an interface has one implementation. An interface
+  with one implementation is a good choice when it narrows a dependency: the caller needs one small part of a
+  larger type, and the interface names only that part (owner decision, 2026-11-24, `178b`: the pathfinding
+  search applies its result through a one-method interface, not through the whole `PathfindingComponent`).
+  Name the interface for its job, not after the class that implements it.
 - Keep concerns separate. Put new state and new API on the type that owns the concern, not on the
   type that is easiest to reach. For example, the body (`Body`, `IBody`) is the physics and world
   state of an entity. Draw state, such as a draw offset or a link to the body whose offset a sprite
