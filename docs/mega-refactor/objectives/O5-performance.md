@@ -79,7 +79,7 @@ None found. Numbers for merged hot-path work (`014c`, `031c`, `031d`, `051b`, `0
 | `147` | idea | [Render interpolation for riders and for bodies that move once per frame](../items/147-interpolation-riders-frame-moved/ITEM.md) |
 | `167` | idea | [No per-frame allocations in `AnimatedBackground` and `Background`](../items/167-background-frame-allocations/ITEM.md) (main) |
 | `182` | idea | [Polygon ceilings: blocks that push bodies out by their polygon](../items/182-polygon-ceilings/ITEM.md) |
-| `184` | idea | [Keep button taps that are shorter than one frame](../items/184-sub-frame-taps/ITEM.md) |
+| `184` | dropped | [Keep button taps that are shorter than one frame](../items/184-sub-frame-taps/ITEM.md) |
 
 ## Gaps with no item
 

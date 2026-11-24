@@ -3052,3 +3052,11 @@ newest entry at the bottom.
   `2026-11-23-launch-room-spawn-taken-by-camera-origin.md`. New level rules in `docs/ways-of-working/levels.md`
   (tiles agree with the goal; only spawn `0` near the world origin; polygon ceilings). `078e` and `183b` will meet
   simple list conflicts in `LevelDefinition.kt` and `LevelCompletionScreensTest.kt`.
+
+## 2026-11-23 — `mega-refactor-184a-sub-frame-taps` (dropped)
+
+- Summary: the owner abandoned item `184` and its branch `184a` at the end of planning. No code was written. Research
+  (SDL2 thread safety, input4j, sdl2gdx) is in the branch `docs/NOTES.md`; the reasons and the unfinished work are in
+  `items/184-sub-frame-taps/ITEM.md`.
+- Contract check: not needed (no code).
+- Follow-up: none filed. The candidates are listed in the item `ITEM.md`.

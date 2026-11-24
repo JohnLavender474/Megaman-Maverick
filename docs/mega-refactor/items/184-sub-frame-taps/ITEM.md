@@ -1,11 +1,32 @@
 # 184: Keep button taps that are shorter than one frame
 
-- Status: active
+- Status: dropped (2026-11-23)
 - Type: feature
 - Objectives: `O9`, `O5`
 - Depends on: none
 - Related: `010`, `031`, `047`, `070`, `178`
 - Branches: `mega-refactor-184a-sub-frame-taps` (keyboard and gamepad, by D3)
+
+## Dropped (2026-11-23)
+
+The owner abandoned the item on 2026-11-23, at the end of the planning of `184a`. Facts from the planning (branch
+`docs/NOTES.md`):
+
+- SDL2 2.0.20 and Jamepad are not safe from a second thread next to the gdx-controllers monitor (use-after-free at
+  hot-plug), so the 500 Hz pad sampler of D1 needs one thread that owns every Jamepad call.
+- input4j and sdl2gdx compare the pad state once per poll and lose sub-frame taps as Jamepad does. Only LWJGL 3.4
+  `lwjgl-sdl` (SDL 3) gives timestamped gamepad button events.
+- The owner then cut `184a` to the keyboard latch only (`isKeyJustPressed` into `InputFrameBuilder.build(held, downs)`),
+  with the pad at one read per frame and a target of at least 60 FPS. That scope was not implemented.
+
+Unfinished work, for a later item (not filed as items):
+
+- The keyboard latch and the builder `downs` mask (`184a` `docs/SCOPE.md`, "In scope" and "Steps").
+- Pad taps through SDL 3 gamepad events with LWJGL 3.4 `lwjgl-sdl`, behind a custom gdx `ControllerManager`.
+- A 60 FPS policy for auto-perf.
+- `gradle.properties` says `jamepadVersion=2.0.14.2`, but `2.0.20.0` resolves.
+- Not checked: Windows DirectInput-only pads may not open in Jamepad (no `SDL_HelperWindow`).
+- The idea of a 60 Hz loop with a 30 Hz update is a note in `010` `NOTES.md`.
 
 ## Goal
 

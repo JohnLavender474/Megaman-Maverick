@@ -1,68 +1,66 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>184a Sub-frame Taps</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 184 · Branch 184a · Objectives O9, O5 · <span class="chip ok">approved 2026-11-23</span></p>
+    <h1>Every key tap counts, at every frame rate</h1>
+    <p class="lead">The game reads each button once per frame, so a key tap or a short key release between two reads is lost. The branch latches each key press between two reads. <b>Scope change, 2026-11-23:</b> keyboard only. The pad stays at one read per frame, and the game targets at least 60 FPS.</p>
+    <p class="meta"><b>In play:</b> fast key taps and mashed keys count at 30 FPS as at 60 FPS. A sub-frame tap is one frame of press. The pad does not change.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>The keyboard adds a went-down mask to the build</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: one read per frame">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  K["GLFW keys"] -->|"isKeyPressed"| KI["KeyboardInput.held()"]
+  P["pad"] -->|"getButton"| G["GamepadInput.held()"]
+  KI --> B["build(held)"]
+  G --> B
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>A key tap between two reads never reaches the held mask.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: keyboard went-down mask">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  K["GLFW keys"] -->|"isKeyPressed"| KI["KeyboardInput.held()"]
+  K -->|"isKeyJustPressed"| KD["KeyboardInput.downs()"]
+  P["pad"] -->|"getButton (no change)"| G["GamepadInput.held()"]
+  KI --> B["build(held, downs)"]
+  G --> B
+  KD --> B
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>GLFW already records each key press between frames. The 35 readers of the frame do not change.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>The frame build gets a second mask</h2></div>
+    <p>Today, <code>MegamanMaverickGame.render()</code>:</p>
+<pre><code>frameBuilders[0].build(keyboardInput.held() or gamepadInput.held())</code></pre>
     <p>After:</p>
-<pre><code><new code></code></pre>
+<pre><code>frameBuilders[0].build(
+    held = keyboardInput.held() or gamepadInput.held(),
+    downs = keyboardInput.downs()
+)</code></pre>
+    <p>A tap gives <code>JUST_PRESSED</code>, then <code>JUST_RELEASED</code>. A short release gives <code>JUST_RELEASED</code>, then <code>JUST_PRESSED</code>. The control lock ignores the latch.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>Keyboard only; the pad thread is dropped</h2></div>
+    <p><span class="chip ok">Chosen</span> Keyboard latch only. SDL2 and Jamepad are not safe from a second thread, and no drop-in Java pad library (input4j, sdl2gdx) keeps sub-frame taps. Pad events through LWJGL 3.4 and SDL 3 become a backlog candidate. The earlier questions D4 to D6 are void.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>Low risk: no thread, no new device code</h2></div>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip warn">risk</span> <b>Keyboard and pad on one button.</b> A new key press while the pad holds the same button gives a short release. It needs both devices on one button at once.</li>
+      <li><span class="chip warn">risk</span> <b>Menus.</b> A key tap now always gives one press in the menus too. A play check covers it.</li>
     </ul>
   </section>
 
@@ -70,14 +68,18 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-184a-sub-frame-taps</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_178 --room follow_flat --performance low</code>: keyboard at 30 FPS. Short taps of jump and shoot; mash shoot. Each tap gives a hop or a shot.</li>
+      <li>Same command: hold shoot to charge, release for a very short moment, press again. The charge shot fires.</li>
+      <li><code>./run-game-alpha.sh --level REFACTOR_TEST_029 --room movement</code>: keyboard and pad at 60 FPS. No double presses, no lost holds.</li>
+      <li>Same command with a pad only: as today.</li>
+      <li>Menus: <code>ENTER</code> and the arrow keys act once per press.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
-    <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-184a-sub-frame-taps/docs/SCOPE.md</code></p>
+    <p>The scan, the research of the pad libraries and the full contract are in the branch folder:</p>
+    <p><code>docs/mega-refactor/items/184-sub-frame-taps/branches/mega-refactor-184a-sub-frame-taps/docs/SCOPE.md</code></p>
   </section>
 </main>
 </body>
