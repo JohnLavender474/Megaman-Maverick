@@ -3158,3 +3158,13 @@ newest entry at the bottom.
   it narrows a dependency to the one part that a caller needs; the plan or the review names it. Rule added under
   "During the branch" in `CLAUDE.md`, next to the "real caller" rule. Example: `178b`, the pathfinding search applies
   its result through a one-method interface, not through the whole `PathfindingComponent`.
+
+## 2026-11-24 — Hook against poll loops (tooling, direct change on `master`)
+
+- Summary: owner request after a `185c` subagent hung for about 1h47m in a wait loop whose process match (`pgrep`
+  with the full-command flag) matched its own shell. New project hook `.claude/hooks/block-poll-loops.sh`, set in
+  `.claude/settings.json` (`PreToolUse` on `Bash`): it denies a command with an `until`/`while` loop that calls
+  `sleep`, and any `pgrep` with the full-command flag, and tells the agent to use `run_in_background` and wait for
+  the notification. The text match also hits such words inside a commit message or heredoc. The owner's global
+  settings have the same hook. Direct change on `master` so that every session and every clone has it at once; no
+  game code, so no build.
