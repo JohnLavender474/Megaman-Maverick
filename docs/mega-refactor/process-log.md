@@ -3074,3 +3074,22 @@ newest entry at the bottom.
 - Follow-up: item `183` stays active (`183c` and later). The 3 inline 45-degree roundings (`HomingMissile`,
   `CactusMissile`, `WilyCapsuleTentacleScissor`) have a `TODO` for `183c`. Art note: the straight charged-shot strips
   use some colours off the NES palette, so the shade changes a little between the straight and the diagonal frames.
+
+## 2026-11-23 — `mega-refactor-078e-precious-woman-art`
+
+- Summary: Precious Woman stage art (item `078`), drawn by Claude Fable 5.2 in 10 art rounds (part of round 6 by
+  Claude Opus 5.5). One new original mine tileset `precious_woman_mine_tileset` on the NES grid and palette (19
+  animated tiles), the map repainted with no back-wall tiles and a `decor` layer; crystal abyss parallax backgrounds
+  (`Backgrounds12`) and animated haze motes (new atlas `Backgrounds13`). New `PreciousBlock`, `PinkBlock` (with
+  debris), `LaserBeamer` and `Laser` art; `LaserBeamSprite` draws stepped beams with no turned pixels (also in Wily
+  Stage 1); the up-facing beamer sprite and 6 beamers moved onto the pixel grid. Round 8: `LaserBeamLoop` (one laser
+  loop sound for all beamers) and the `PinkBlock` burst (2 explosions, debris, one sound per group), 2 synthesized
+  sounds. The V ceilings of `182a` used in the map (42 `CeilingPolygonBlock`s, `HoverSpot`s at the V tips). Squash
+  `b03a1975b`.
+- Contract check: automated checks pass on the branch (`engine:test`, `core:test`, `core:smokeTest`, `detektMain`,
+  `core:verifyRandomRule`, `lwjgl3:jar`); map object script and atlas scripts pass. Review before the play test: 1
+  Sonnet agent per round (findings fixed). Owner play test: passed. Diffity: 0 open threads. `master` had only docs
+  commits since the last merge into the branch.
+- Follow-up: bug `docs/issues/2026-11-23-platforms1-png8-color-shift.md`. Backlog candidate added to `177` (the boss
+  room background). Process: a stray change in the main checkout is now committed first, then the work continues
+  (`docs/ways-of-working/git.md`).

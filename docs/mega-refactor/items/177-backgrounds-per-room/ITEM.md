@@ -23,6 +23,8 @@ Not approved. The branch `SCOPE.md` decides the final scope. In phases (owner, 2
 2. Move the Reactor Man triggers to it. The borders `room7`/`room8`, `room10`/`room11` and `room13`/`room14` still pop
    on a backtrack (the `room3`/`room4` border is solved in `078d` by a switch in a fully covered room).
 3. The other levels that use show and hide triggers (Desert Man uses a gate today).
+4. Precious Woman (`078e`, 2026-11-23): the boss room background is one fixed picture, with a seam in the pan from
+   `room7`. Give the boss room its own far and mid objects clipped to the room.
 
 ## Owner's input
 
