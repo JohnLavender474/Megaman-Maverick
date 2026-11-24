@@ -406,3 +406,40 @@ Tier differences at a steady frame rate:
 Consequence: step 1 is a gameplay fix in its own right. That supports "Option C" above (measure, then step 1 alone) and
 the frame clock before `006`. Decide steps 2 and 3 after the weak-machine measurement (`O5`). Step 3 must come before `094`, `095` and
 `178c`. Full tables: `temp/010-gameplay-need/findings.md` (not committed).
+
+## Idea: 60 Hz loop and input, 30 Hz update on weak machines (study, 2026-11-23, `master` `89410de1f`)
+
+The owner's idea (not a decision): when a machine cannot hold 60 FPS, keep the loop and the input read at 60 Hz, and
+run the update (sprites, physics, logic) at 30 Hz, in place of the lower tier. Reason: the pad is read once per loop, so
+a faster loop keeps more pad taps (item `184`). Study by a read-only subagent; nothing run.
+
+```
+display 60 Hz:  |  16.7  |  16.7  |  16.7  |
+read input:     R        R        R
+update 30 Hz:   U(33ms)           U(33ms)
+draw:           D        D'       D        (D' = repeat or interpolated)
+```
+
+- [I] On one thread it does not help: the frame that runs the update still costs a full update plus a draw, so the
+  peak frame does not get shorter. With the LibGDX `Sync` (`nextFrame = max(nextFrame + 1/fps, now)`, no catch-up), a
+  slow update gives an update rate below `VERY_LOW`. If the draw alone is over 16.7 ms, no version helps.
+- [F] The existing captures (`assets/179401*-diagnostics.txt`, `temp/mega-refactor-134a-draw-interpolation/134a-diagnostics/`)
+  are from the owner's machine: the update is 76 to 85 % of `render()`, `WorldSystem` 41 to 60 %. The GPU time
+  (`glfwSwapBuffers`) is in no capture. No weak-machine capture exists.
+- [F] A frame with no update draws no entities today: `SpritesSystem` fills the drawables inside `engine.update`, and
+  `MegaLevelScreen.draw` empties them with `poll()`. The `134` interpolation smooths sub-steps inside one update, not
+  the gap between two ticks.
+- [I] Input: build the frame once per update, and OR the `downs` of all loop frames since the last update into
+  `InputFrameBuilder.build(held, downs)` (`184a`); the pad `downs` comes from the change between 2 loop reads.
+- [F] To change: the frame-rate reads (`performance.fps`: `MegamanXMoves.kt:86`, `FallingLeaf.kt:165`;
+  `Gdx.graphics.framesPerSecond`: `DrillHead.kt:147`, `Laser.kt:292`; direct `Gdx.graphics.deltaTime`: 4 sites), the
+  11 `performance.fixedStep` reads, the level-screen work outside the engine, `events.run()`, and auto-perf.
+- [I] The idea is step 3 of this item with a 30 Hz tick and 2 loop frames per tick. A tick that depends on the machine
+  breaks `O2-R3` and the `MEDIUM` feel decision. It needs `010a` (simulation call apart from present call) and step 1.
+  It helps only with a sim thread or an update split over 2 frames.
+- Next fact to get, before any code: `U` (update) and `D` (draw plus GPU) per frame at `MEDIUM`, `--autoPerf false`,
+  on a named weak machine (`O5` open question), with a new diagnostics entry for the wall frame interval.
+
+Sources: https://gafferongames.com/post/fix_your_timestep/ ,
+https://jakubtomsu.github.io/posts/input_in_fixed_timestep ,
+https://docs.unity3d.com/Packages/com.unity.inputsystem@1.12/manual/timing-missed-duplicate-events.html
