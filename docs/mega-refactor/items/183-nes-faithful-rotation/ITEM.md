@@ -5,7 +5,7 @@
 - Objectives: `O9`, `O4`
 - Depends on: none
 - Related: `058`, `168`, GitHub issue #4
-- Branches: `mega-refactor-183b-charged-shot`, `mega-refactor-183c-needles`
+- Branches: `mega-refactor-183b-charged-shot`, `mega-refactor-183c-needles`, `mega-refactor-183d-gravity-turn-flash`
 
 ## Goal
 
@@ -26,13 +26,13 @@ Small branches, each one independent. The gravity turn is done alone, in its own
 
 | Branch | Content |
 |---|---|
-| `183a` | Gravity turn behind a screen flash (see below); deferred |
+| `183d` | Gravity turn behind a screen flash (see below; first named `183a`) |
 | `183b` | `ChargedShot`, `ChargedShotExplosion` and `ChargedShotResidual`: a small first batch |
 | `183c` | Sites with 45-degree steps or a few fixed angles: a drawn 45-degree region plus turns that are multiples of 90 (the `HomingMissile` pattern) |
-| `183d` and later | Spinning and aimed sites, a few per branch: snap each one to 8 or 16 directions with drawn regions; the count is set per entity |
+| `183e` and later | Spinning and aimed sites, a few per branch: snap each one to 8 or 16 directions with drawn regions; the count is set per entity |
 | last | A guard that flags a sprite rotation that is not a multiple of 90 (a debug check, a detekt rule or a smoke test) |
 
-### `183a`: gravity turn behind a flash
+### `183d`: gravity turn behind a flash
 
 - The camera does not turn on screen. The screen flashes to a full colour, and while the flash
   covers the screen, the camera turns as it does today.
@@ -63,12 +63,17 @@ special cases like the gravity turn are done separately in isolation"
   `183b`, the charged shot only.
 - 2026-11-23 (owner accepted the recommendation): each `183` branch squash-merges directly into `master`.
 - 2026-11-24 (owner): `183c` is the needle (`Needle`), with many directions so that its arc still looks natural.
+- 2026-11-24 (owner): the gravity turn is branch `183d` (`mega-refactor-183d-gravity-turn-flash`), not `183a`. The
+  sequence: the player touches a gravity change, a longer delay, the screen fades to white, the whirl
+  (`GravitySwitchAura`) draws over the white (both are `FOREGROUND` sprites), the turn runs hidden under the white,
+  and the white fades out on the turned view.
+- 2026-11-24 (owner accepted the recommendations, after the `183d` scan): enemies, shots and non-player bodies stay
+  frozen for the whole sequence; durations 0.25 s delay, 0.25 s fade in, 0.75 s turn, 0.25 s fade out; the sequence
+  spawns one whirl at the player for every turn, in place of the 3 spawns per trigger; `MoonMan`'s gravity-change end
+  state lasts the full sequence.
 
 ## Open questions
 
-- `183a`: the durations of the fade in, the hold and the fade out.
-- `183a`: does play pause during the flash (as the player stops during the turn today), and do
-  the enemies stop too?
 - Fixed angles: which order of entity batches after `183b`.
 - `Snow.kt:176` has a spin path behind `ROTATION_ENABLED` (off today). Recommendation: remove the
   path in a `183` branch.
