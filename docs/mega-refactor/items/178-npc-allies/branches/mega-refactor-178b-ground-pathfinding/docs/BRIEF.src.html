@@ -1,0 +1,84 @@
+<!doctype html>
+<!--
+  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
+  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
+  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
+  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
+  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
+  - Decisions: one <ve-ask> per question, with default on the recommended option.
+  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
+    <p><span class="chip ok">Chosen</span> <answer></p>.
+  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
+-->
+<html lang="en" data-register="blueprint">
+<head>
+<title><id><letter> <Short Name></title>
+<link rel="stylesheet" href="kit.css" data-ve-kit>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
+    <h1><Short name></h1>
+    <p class="lead"><One or two sentences: what the branch changes and why.></p>
+    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+  </header>
+
+  <section>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <figure>
+      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+flowchart LR
+  A["<sender>"] -->|<EVENT>| B["<listener>"]
+</pre></div>
+      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+    </figure>
+    <figure>
+      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+flowchart LR
+  A["<sender>"] --> B["<new owner>"]
+</pre></div>
+      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
+    <p>Today, <code><Caller></code>:</p>
+<pre><code><old code></code></pre>
+    <p>After:</p>
+<pre><code><new code></code></pre>
+  </section>
+
+  <section>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
+    <p><The context that the question needs, in one or two sentences.></p>
+    <ve-ask id="d1" q="D1 · <Question?>">
+      <ve-opt value="a" default><Option. Why.></ve-opt>
+      <ve-opt value="b"><Option. Trade-off.></ve-opt>
+    </ve-ask>
+  </section>
+
+  <section>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <ul>
+      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
+<pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-178b-ground-pathfinding</code></pre>
+    <ol>
+      <li><code>./run-mega-man-maverick-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+    </ol>
+  </section>
+
+  <section class="sources" aria-label="Details">
+    <p class="ve-label caps">Details</p>
+    <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
+    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-178b-ground-pathfinding/docs/SCOPE.md</code></p>
+  </section>
+</main>
+</body>
+</html>
