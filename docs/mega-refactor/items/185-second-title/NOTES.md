@@ -106,7 +106,7 @@ Read-only research in the main thread.
 ```mermaid
 flowchart LR
   m["games/mega-man-maverick/desktop"] --> c[desktop-common]
-  l["games/mega-man-lost-memories/desktop"] --> c
+  l["games/mega-man-x-lost-memories/desktop"] --> c
   m --> mg[MegamanMaverickGame]
   l --> lg[LostMemoriesGame]
 ```
@@ -134,7 +134,7 @@ flags and the game flags can be two classes.
 fun runDesktop(args: Array<String>, title: String, icon: String,
                gameArgs: Any, makeGame: (CommonArgs) -> ApplicationListener)
 
-// games/mega-man-lost-memories/desktop
+// games/mega-man-x-lost-memories/desktop
 fun main(args: Array<String>) =
     runDesktop(args, "Mega Man Lost Memories", "LostMemories.png", LmArgs()) { LostMemoriesGame(it) }
 ```
@@ -161,3 +161,112 @@ folders are named after the executable, so the builds of two games do not collid
   example a Gradle `Sync` task into `build/`) before `run` and before packr `--resources`. This
   depends on open question 2.
 - Two bugs found here are folded into this item (`ITEM.md`, "Bugs folded in").
+
+## Research of 2026-11-24 (`master` `5d6ded9ca`): next steps, layout, mock game
+
+Read-only research by 6 agents (185 state, screens and levels, entities and assets, engine and core, X6 intro closure, web). The main thread checked the prefix, the fight-plan throw, the screen registration order, the audio map keys and the engine import count.
+
+### 1. State of item 185
+
+| Step (`ITEM.md`) | State |
+|---|---|
+| 1 game module, launcher, builds | Done (`185a`, `185b`), except: no LM assets root, Maverick icon (`LostMemoriesLauncher.kt:11` TODO) |
+| 2 spawn-name registry | Not started. `EntityType.kt:20` prefix; 5 resolve sites: `MegaEntityFactory.kt:50`, `SensorsLayerBuilder.kt:30`, `BossSpawnEventHandler.kt:16`, `HeartTank.kt:142` (+ `GauntletMaster.kt:146` through `getEntityClass`) |
+| 3 test scan roots | Not started. `EntityInitSmokeTest.kt:19,27`, `EntityConstructorsTest.kt:21-22`; LM entities skipped silently |
+| 4 asset list per game | Not started. `MegamanMaverickGame.kt:926-933` queues all enum entries + all `LevelDefinition` maps |
+| 5 per-need extractions | Not started. `001b` blocked (waits on `010`, `032`) |
+| 6 Maverick content into `games/` | Not started; needs no other active branch |
+
+Naming: live folder `games/mega-man-x-lost-memories/`; docs say `games/mega-man-lost-memories/`; owner says
+`games/megaman-lost-memories/`. Maverick target in docs: `games/mega-man-maverick/`. Run/build scripts and
+`game-builds/` use the `mega-man-x-lost-memories` slug.
+
+Conflict landscape for step 6 (files changed vs master): `178b` 51 (high overlap), `183d` 19, `compactor-level` 8,
+`fix/projectiles-ignore-death` 7, `fix/auto-perf-freeze` 3, two art branches 2 each. Steps 2-4 overlap only
+`fix/auto-perf-freeze` (`MegamanMaverickGame.kt`).
+
+### 2. Blockers for the mock LM game
+
+| Need | Blocker | Where | Smallest change |
+|---|---|---|---|
+| Own title menu, level picker | None: screen keys are `String`; `registerScreens` runs after Maverick's | `MegamanMaverickGame.kt:222,520` | Build on `MegaMenuScreen` in LM module |
+| Own levels | Closed `enum LevelDefinition`; typed into `startLevel`, `LevelState.currentLevel`, `GameState.levelsCompleted` (`valueOf` at `GameState.kt:387`), `--level`, asset queue | `LevelDefinition.kt:21`, `MegamanMaverickGame.kt:1094-1106,933` | `ILevelDef` interface; `LevelDefinition` implements it; `IGameTitle.levels` |
+| Level exits | `screenOnCompletion` returns `ScreenEnum`; hard-coded `ENDING` (`MegaLevelScreen.kt:813`), `GAME_OVER` (`RespawnSteps.kt:88`), `SAVE_GAME` (`GameOverScreen.kt:86`, `LevelPauseScreen.kt:462`) | | String keys + title hooks; removes `redirectScreen` stopgap (`:1053`) |
+| LM entities from TMX | Package prefix | `EntityType.kt:20-24` | Accept a fully qualified name, or package roots per title |
+| LM boss | `FightPlans.find` closed `when`, throws | `FightPlans.kt:31-41` | `register(tag, plan)` or default plan |
+| LM sounds/music | Audio maps keyed by closed enums, hard casts; `AbstractBoss.kt:279` `MusicAsset.valueOf` | `MegaAudioManager.kt:17,62,128,173,179` | Key by `IAsset`; `IGameTitle` asset list |
+| LM atlases | Not blocked (`getTextureAtlas(String)`) | `engine/.../AssetManagerExtensions.kt:8` | Title asset list for clean queue |
+| `--level`/`--screen` for LM | Parsed against the two enums | `LaunchOptionsResolver.kt:64-102` | Resolve against `title.levels` and `game.screens` keys |
+| Tests of LM entities | Scan core only; harness in core `smokeTest` | see step 3 | Parameterize scan root; LM `smokeTest` suite |
+
+Not blockers: `MegaEntityFactory` (any `KClass`), `AbstractEnemy`/`AbstractBoss` content checks (overridable),
+`PlayerDamageNegotiator` (unknown damager falls back by size / `IHazard`), `EventType` (`Event.key: Any`),
+`FixtureType`/`EntityType` (LM reuses values). `StandardDamageNegotiator` gives 0 damage for an unknown
+damager (`:164,178,180`): LM projectiles that hurt enemies need overrides on LM enemies.
+
+Reusable for mock levels (concrete classes): blocks 45, hazards 53, special 39, items 7, sensors 6,
+decorations 51. Avoid `ConveyorBelt` (known failure).
+
+Reusable screens: `MegaMenuScreen`, `screens/utils/` (`BlinkingArrow`, `MenuScrollPane`, `Fade`, `ScreenSlide`),
+`MegaFontHandle`, `ControllerSettingsScreen` (2 enum refs), `MegaLevelScreen` and `GameOverScreen` once exits
+are configurable. Maverick content: `MainMenuScreen`, `LevelSelectScreenV2` (8-boss grid), `ExtrasScreen`,
+save/difficulty/intro/weapon/logo/opening/ending/credits screens.
+
+Counts outside `levels/` and `screens/`: `ScreenEnum` 28 lines; `LevelDefinition` 43 lines in 15 files
+(13 are `== LevelDefinition.X` checks in Maverick entities).
+
+### 3. X6 intro closure
+
+- 12 spawned classes. X6-only: `Junkroid`, `HoverGunner`, `MetaWheelF`, `MetaDridler`, `D1000`, `SabreBlock`.
+  Shared: `Block`, `AbstractBlock`, `LadderTop`, `GroundSlope`, `Ladder`, `Gate`, (`MapSprite`).
+- Movable to LM: 41 files, 9,097 lines (32 X6 entity files / 7,651 lines; 9 `megamanx` files / 1,446 lines),
+  plus `MMX6_*` music entries, `MEGAMAN_X` atlas entry, `X6_INTRO` definition, TMX/TSX.
+- Edges to cut first: 9 entries in `PlayerDamageNegotiator.kt:76-84`; `FightPlans.kt:33`;
+  `EnemyShot` uses `Junkroid.HURL_GRAVITY` (`:41,108,118`); `MegamanX` → `MegamanValues.STUN_*`,
+  `MegaChargeStatus`, `SpringHead`; 3 core refs to `MegamanX` (`TextureAsset.kt:46`,
+  `MegamanMaverickGame.kt:488`, `MegaLevelScreen.kt:871`); the package prefix.
+- Shared atlases: D1000 regions in `BOSSES_3` (shared with Maverick bosses); X6 enemies in `ENEMIES_2`
+  (about 50 Maverick enemies). No X6-only sounds.
+- No worktree touches these files.
+
+### 4. Engine vs core: merge or keep
+
+| Module | main files | tests | suite time (last local run) |
+|---|---|---|---|
+| `engine` | 301 | 782 | 11.3 s |
+| `core` | 906 | 3071 | 308.6 s |
+
+- `engine` has 0 imports of game code; Gradle enforces it (decision P, item `001`).
+- Merge costs: loses compile-time guard (decision P), conflicts with item `032` (platform-neutral engine;
+  `core` has desktop/Graal deps), pulls closed enums and `MegaServices` into the engine, engine tests
+  get core's test time.
+- Merge gains: one package root (settles open question 3), no "wrong side" for mechanisms (item `084`).
+- Even the "clean" core packages depend on `MegaServices`, `ConstKeys`, `FixtureType`. That is what keeps
+  them out of `engine` today.
+- Engine candidates (0 content, 0 service imports): `animations`, `behaviors`, `difficulty`, `locks`,
+  most of `entities/state`, `input`, `assets` (generic part).
+- After step 6, `core` = shared genre layer. Once services/enums open per game and `001b` lands, most of it
+  can sink into `engine`; two layers then suffice.
+
+### 5. Web
+
+- Extraction over invention: DHH "frameworks are extractions"; Roberts & Johnson "Three Examples";
+  Muratori "semantic compression"; "write games, not engines".
+- Three-layer practice: Chocolate Doom (shared code + per-game subfolders for Doom/Heretic/Hexen/Strife);
+  Unreal Engine → Gameplay Framework → game/plugins; Monocle extracted from TowerFall, reused for Celeste;
+  Now in Android `core`/`feature`/`app` one-way deps.
+- Rule of three: a mock second game is user #2. Treat the boundary as provisional; promote to `core` only
+  what both games use.
+- Make the mock differ from Maverick (other character, other rules, own screens), or the boundary overfits.
+
+Sources: https://www.doomwiki.org/wiki/Chocolate_Doom ; https://research.tedneward.com/patterns/evolving-frameworks.html ;
+https://caseymuratori.com/blog_0015 ; https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-framework-in-unreal-engine ;
+https://github.com/android/nowinandroid/blob/main/docs/ModularizationLearningJourney.md ;
+https://geometrian.com/projects/blog/write_games_not_engines.html
+
+### Gaps
+
+- Classloader behaviour of `Class.forName` for an LM class from core: not run.
+- Test files that use `X6_INTRO` / X6 classes (6+, e.g. `D1000Rig`) not traced.
+- Indirect asset loads (child `TickFrames`) not traced.
+- Overlap with planned (not active) branches not checked.
