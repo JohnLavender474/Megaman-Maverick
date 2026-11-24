@@ -3087,7 +3087,8 @@ newest entry at the bottom.
   sounds. The V ceilings of `182a` used in the map (42 `CeilingPolygonBlock`s, `HoverSpot`s at the V tips). Squash
   `b03a1975b`.
 - Contract check: automated checks pass on the branch (`engine:test`, `core:test`, `core:smokeTest`, `detektMain`,
-  `core:verifyRandomRule`, `lwjgl3:jar`); map object script and atlas scripts pass. Review before the play test: 1
+  `core:verifyRandomRule`, `lwjgl3:jar`), and again on `master` after the squash; map object script and atlas
+  scripts pass. Review before the play test: 1
   Sonnet agent per round (findings fixed). Owner play test: passed. Diffity: 0 open threads. `master` had only docs
   commits since the last merge into the branch.
 - Follow-up: bug `docs/issues/2026-11-23-platforms1-png8-color-shift.md`. Backlog candidate added to `177` (the boss
