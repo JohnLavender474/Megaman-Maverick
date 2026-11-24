@@ -171,13 +171,8 @@ Thumbs.db
 /engine/build
 
 ## Game Builds
-/game-builds/jdk
-/game-builds/*-linux64
-/game-builds/*-linux64.zip
-/game-builds/*-windows64
-/game-builds/*-windows64.zip
-/game-builds/*-mac
-/game-builds/*-mac.zip
+/game-builds/*
+!/game-builds/packr-all-4.0.0.jar
 
 ## Assets
 /assets/assets.txt

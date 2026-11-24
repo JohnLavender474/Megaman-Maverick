@@ -1,6 +1,6 @@
 # Scope: mega-refactor-185b-game-builds
 
-- Status: approved
+- Status: approved (merged 2026-11-23)
 - Approved: 2026-11-23 (owner request: builds for each game into `game-builds/<game>/`,
   `game-builds/` git-ignored, at least one build of each game). Small branch: no brief, no
   `PLAN.md`.
@@ -71,7 +71,7 @@ bug `build-game.sh:66` (`unzip` of `jdk.zip` on every platform).
 
 1. Start `game-builds/mega-man-x-lost-memories/Mega-Man-X-Lost-Memories-0.1.0-linux64/Mega-Man-X-Lost-Memories`:
    the splash shows; START opens the X6 intro.
-2. Start `game-builds/mega-man-maverick/Megaman-Maverick-<version>-linux64/Megaman-Maverick`: Maverick
+2. Start `game-builds/mega-man-maverick/Megaman-Maverick-1.0.1-linux64/Megaman-Maverick`: Maverick
    starts as before.
 
 ## Intended changes

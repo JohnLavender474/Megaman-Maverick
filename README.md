@@ -74,8 +74,9 @@ generated JAR, you need Java 17+ on your local machine. Gradle runs on JDK 17 or
       ./gradlew lwjgl3:run
       ```
 3. To build a runnable JAR, run `./gradlew lwjgl3:jar`. The output is `lwjgl3/build/libs/Megaman-Maverick-<version>.jar`.
-4. To build a release zip with a Java runtime, run `./build-game-linux.sh`, `./build-game-windows.sh` or
-   `./build-game-mac.sh`. These build Megaman Maverick only for now.
+4. To build a release zip with a Java runtime, run `./build-mega-man-maverick-linux.sh`,
+   `./build-mega-man-maverick-windows.sh` or `./build-mega-man-maverick-mac.sh`. The output goes to
+   `game-builds/mega-man-maverick/`.
 
 ### Mega Man X: Lost Memories
 
@@ -87,6 +88,8 @@ the X6 intro level.
   (Windows: `./gradlew lost-memories-desktop:run`).
 - Build a runnable JAR with `./gradlew lost-memories-desktop:jar`. The output is
   `games/mega-man-x-lost-memories/desktop/build/libs/Mega-Man-X-Lost-Memories-<version>.jar`.
+- Build a release zip with `./build-mega-man-x-lost-memories-linux.sh`, `-windows.sh` or `-mac.sh`. The output goes
+  to `game-builds/mega-man-x-lost-memories/`.
 - See the [GDX Liftoff](#GDX-Liftoff) section for more gradle commands and details.
 
 ---

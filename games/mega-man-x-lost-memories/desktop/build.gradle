@@ -60,8 +60,6 @@ jar {
   }
 }
 
-// TODO: per-game platform builds (construo, packr, build-game.sh) come in a later branch (item 185)
-
 tasks.register('dist') {
   dependsOn 'jar'
 }

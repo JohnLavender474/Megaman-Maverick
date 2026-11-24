@@ -18,5 +18,7 @@ See `core/src/main/kotlin/com/megaman/maverick/game/titles/README.md`.
 
 - `./run-mega-man-x-lost-memories-debug.sh` or `./run-mega-man-x-lost-memories-alpha.sh` (from the repo root)
 - `./gradlew lost-memories-desktop:jar` writes `Mega-Man-X-Lost-Memories-<lostMemoriesVersion>.jar`.
+- `./build-mega-man-x-lost-memories-linux.sh` (or `-mac.sh`, `-windows.sh`) writes a platform bundle and its zip to
+  `game-builds/mega-man-x-lost-memories/`.
 
 The game runs from the root `assets/` folder for now. It has no assets of its own.
