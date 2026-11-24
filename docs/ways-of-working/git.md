@@ -7,8 +7,11 @@ Read this file before you commit, merge, run Gradle or stop a process. It applie
   squash merge, run `git diff --stat <base> <branch>` with no path filter, and confirm the list of files.
 - **The main checkout is shared.** All sessions that work on `master` use the same index there, and a plain
   `git commit` takes what another session staged. Before a merge or a commit in the main checkout, run
-  `git status --short`. If a change is staged or modified that is not yours, stop and ask the owner. Commit with
-  explicit paths where you can, and check `git show --stat HEAD` after the commit.
+  `git status --short`. If a change is staged or modified that is not yours, commit it to `master` in its own
+  commit first (by its paths), and then continue (owner, 2026-11-23). Stop and ask the owner only when the change
+  conflicts with your merge or commit: it touches the same files, it does not compile, or it looks like half-done
+  work of another session. Commit with explicit paths where you can, and check `git show --stat HEAD` after the
+  commit.
 - **Commit process docs without asking** (owner, 2026-11-19). A docs-only change on `master` that the mega-refactor
   process makes (an item decision or open question, research in a `NOTES.md`, a branch start, a new item) is
   committed at once. Do not ask "should I commit?". The rules above still apply.
