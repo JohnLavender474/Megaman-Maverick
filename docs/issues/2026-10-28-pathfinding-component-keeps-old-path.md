@@ -31,7 +31,7 @@ per-spawn state of the component).
 
 Not played yet. Kill a `Bat` that is following a path, then let the same pooled `Bat` spawn again (leave the area and
 come back, or a level with many bats). Watch whether its first movement follows the old path toward the old target.
-`./run-game-debug.sh --debugPathfinding` (after that flag exists) shows the path lines.
+`./run-mega-man-maverick-debug.sh --debugPathfinding` (after that flag exists) shows the path lines.
 
 ## Notes
 

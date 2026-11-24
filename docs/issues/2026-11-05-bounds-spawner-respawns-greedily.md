@@ -31,7 +31,7 @@ A map object can set a re-arm margin. The spawner re-arms only when the spawn sh
 
 ## How to reproduce
 
-1. `./run-game-alpha.sh --level X6_INTRO` on the branch `x6-intro-extra-level`, in the room with the two Meta Wheels.
+1. `./run-mega-man-maverick-alpha.sh --level X6_INTRO` on the branch `x6-intro-extra-level`, in the room with the two Meta Wheels.
 2. Go back to the left, and kill both wheels.
 3. Go to the right. The wheels spawn again as soon as their spawn shapes enter the view.
 
@@ -72,10 +72,10 @@ Checks:
 
 Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/spawner-rearm-margin`:
 
-- `./run-game-alpha.sh --level FIX_TEST_SPAWNER_REARM --room margin`: kill the enemy. Go back by a few tiles, so that its spawn point just leaves the view, and come back. The enemy does not spawn again. Go back past the marker, and come back. The enemy spawns again.
-- `./run-game-alpha.sh --level FIX_TEST_SPAWNER_REARM --room death`: kill the enemy near the start, then die in the pit. After the respawn, the enemy is there again.
-- `./run-game-alpha.sh --level FIX_TEST_SPAWNER_REARM --room control`: the same layout as `margin`, with no `rearm_margin`. Kill the enemy, step back until its spawn point leaves the view, and come back. The enemy spawns again, as today.
-- `./run-game-alpha.sh --level INTRO_STAGE`: play the first rooms. Enemies spawn and respawn as before.
+- `./run-mega-man-maverick-alpha.sh --level FIX_TEST_SPAWNER_REARM --room margin`: kill the enemy. Go back by a few tiles, so that its spawn point just leaves the view, and come back. The enemy does not spawn again. Go back past the marker, and come back. The enemy spawns again.
+- `./run-mega-man-maverick-alpha.sh --level FIX_TEST_SPAWNER_REARM --room death`: kill the enemy near the start, then die in the pit. After the respawn, the enemy is there again.
+- `./run-mega-man-maverick-alpha.sh --level FIX_TEST_SPAWNER_REARM --room control`: the same layout as `margin`, with no `rearm_margin`. Kill the enemy, step back until its spawn point leaves the view, and come back. The enemy spawns again, as today.
+- `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE`: play the first rooms. Enemies spawn and respawn as before.
 
 ## Notes
 

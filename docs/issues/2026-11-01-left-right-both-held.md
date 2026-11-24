@@ -34,7 +34,7 @@ Only the last pressed of `LEFT` and `RIGHT` counts for the run, the wall slide a
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level REFACTOR_TEST_029 --room movement`: run, press the other button too, and keep both held. For the wall case, do the sequence above at a wall.
+`./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_029 --room movement`: run, press the other button too, and keep both held. For the wall case, do the sequence above at a wall.
 
 ## Notes
 

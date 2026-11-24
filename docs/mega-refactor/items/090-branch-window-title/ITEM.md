@@ -18,8 +18,8 @@ Not approved. The branch `SCOPE.md` decides the final scope.
 
 - A new launcher option, proposed name `--branch <name>`, in `DesktopLauncher.DesktopAppArgs`. With the option, the title
   is `Megaman Maverick - <name>`. Without it, the title stays `Megaman Maverick`, so a packaged build does not change.
-- `run-game-alpha.sh` and `run-game-debug.sh` read the current branch from git and pass the option.
-- `run-game-test.sh` does the same. The owner did not name this script, but it has the same problem.
+- `run-mega-man-maverick-alpha.sh` and `run-mega-man-maverick-debug.sh` read the current branch from git and pass the option.
+- `run-mega-man-maverick-test.sh` does the same. The owner did not name this script, but it has the same problem.
 - Add the option to the launcher flag list in the root `CLAUDE.md`.
 
 Gameplay does not change.

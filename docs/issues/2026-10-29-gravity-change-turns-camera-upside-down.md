@@ -63,7 +63,7 @@ Unknown. The owner decides. Options:
 
 ## How to reproduce
 
-`./run-game-alpha.sh --debugShapes --level REFACTOR_TEST_016 --room gravity_change` on branch
+`./run-mega-man-maverick-alpha.sh --debugShapes --level REFACTOR_TEST_016 --room gravity_change` on branch
 `mega-refactor-016d-system-services` (the test map is only on that branch). Walk right into the red (`down`) area.
 
 On `master`, `Test1.tmx` has the same setup (`GravityChange` objects 63, 106 and 107: an `up`, a `down` and an `up`

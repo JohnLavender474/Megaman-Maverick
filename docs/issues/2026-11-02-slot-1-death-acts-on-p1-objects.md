@@ -30,7 +30,7 @@ An owned object reacts only to the death of its owner. A gauntlet resets only wh
 
 ## How to reproduce
 
-1. `./run-game-alpha.sh --level GAUNTLET_1 --players 2`.
+1. `./run-mega-man-maverick-alpha.sh --level GAUNTLET_1 --players 2`.
 2. Start a wave, and let slot 1 die while slot 0 stays alive.
 3. Look for the room to stay locked with no way to finish it.
 

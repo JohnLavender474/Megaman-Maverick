@@ -27,7 +27,7 @@ The player has a way out on each device.
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level REFACTOR_TEST_051 --room basic --pauseOnFocusLost`: run right into `basic_right`, and press `Alt`+`Tab` during the camera move. The pause menu opens, and only `Esc` responds.
+`./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_051 --room basic --pauseOnFocusLost`: run right into `basic_right`, and press `Alt`+`Tab` during the camera move. The pause menu opens, and only `Esc` responds.
 
 ## Notes
 

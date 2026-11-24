@@ -30,7 +30,7 @@ The player starts at the first spawn of room `R`, whatever other spawns are near
 - In a test map, put the room with the highest spawn name at the bottom of the map, with its spawn less than half a
   view height (7 tiles) above the map bottom. `RefactorTest182.tmx` at `mega-refactor-182a-polygon-ceilings` commit
   `3bd834731` has this layout: room `rect_ceiling`, spawn `5`.
-- `./run-game-alpha.sh --level REFACTOR_TEST_182 --room v_jump`: the player starts in `rect_ceiling` (owner's
+- `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_182 --room v_jump`: the player starts in `rect_ceiling` (owner's
   screenshots, 2026-11-23). Checks 1 to 5 of branch `182a` all started there.
 
 ## Notes

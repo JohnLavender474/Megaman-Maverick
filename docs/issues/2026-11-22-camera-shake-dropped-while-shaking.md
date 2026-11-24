@@ -24,7 +24,7 @@ The owner decides: restart the shake, keep the stronger or longer one, or keep t
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level REFACTOR_TEST_078 --room walker_gate --heartTanks all --healthTanks all`: when the
+`./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_078 --room walker_gate --heartTanks all --healthTanks all`: when the
 walker chops soon after a hop landing, the chop has no shake.
 
 ## Notes

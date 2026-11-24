@@ -31,7 +31,7 @@ off on purpose, the objects can be deleted, so the level loads with no errors.
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level DESERT_MAN --room room3` and read `assets/logs.txt`: five `SpawnersLayerBuilder` errors
+`./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room3` and read `assets/logs.txt`: five `SpawnersLayerBuilder` errors
 at load.
 
 ## Notes

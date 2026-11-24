@@ -24,7 +24,7 @@ The helmet is upright in the same frame in which it seats or comes to rest.
 
 ## How to reproduce
 
-Read the code. In the game: `./run-game-alpha.sh --level REFACTOR_TEST_079 --room charged_stagger`, hit the `Met`
+Read the code. In the game: `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_079 --room charged_stagger`, hit the `Met`
 with a charged shot, and step through the frames when the helmet lands.
 
 ## Notes

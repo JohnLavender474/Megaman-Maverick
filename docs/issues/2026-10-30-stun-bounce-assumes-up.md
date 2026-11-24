@@ -47,7 +47,7 @@ The `UP` row is the current behavior, and it must not change.
 
 No room has a `TestStunPulser` and a gravity change. The fix adds one: a `TestStunPulser` in the `knockback` room of `RefactorTest084.tmx`, which has `GravitySwitcharoo` objects for all 4 directions, or a new room.
 
-Then `./run-game-alpha.sh --level REFACTOR_TEST_084 --room knockback`: turn gravity to each direction, stand on a surface and wait for a pulse.
+Then `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_084 --room knockback`: turn gravity to each direction, stand on a surface and wait for a pulse.
 
 ## Notes
 

@@ -5,7 +5,7 @@
 - Objectives: `O1`, `O7`, `O8`
 - Depends on: none
 - Related: `001` (`001b` host contract), `021`, `032`, `072`, `081`, `181`
-- Branches: `mega-refactor-185a-lost-memories-launcher`
+- Branches: `mega-refactor-185a-lost-memories-launcher` (merged 2026-11-23), `mega-refactor-185b-game-builds`
 
 ## Goal
 
@@ -66,6 +66,21 @@ Order (option C in `NOTES.md`): no tree-wide move first. Add the new game as a m
 - 2026-11-23 (owner accepted the recommendation): merge target directly into `master`. Open
   question 1: start now. Open question 2: the first pass runs from the root `assets/`, no re-pack.
   Open question 3: `core` keeps its package name. Details in the `185a` branch `docs/NOTES.md`.
+
+- 2026-11-23 (owner, at the `185a` play test): one run script set per game, named
+  `run-<game>-<mode>.sh`, each with its own flags, because the flags of the games can drift
+  apart. This replaces the game argument of the decision above.
+- 2026-11-23 (owner): the next branch `185b` makes platform builds for each game. The builds go
+  to `game-builds/<game>/`. `game-builds/` becomes git-ignored. At least one build of each game.
+
+## Follow-ups from `185a`
+
+- Lost Memories has no window icon and no assets folder of its own (open question 2).
+- `generateAssetList` (root `build.gradle`) runs its body in every subproject: part of step 4
+  (asset list per game).
+- `--screen` with a Maverick menu opens it in Lost Memories (no redirect): ends with the host
+  contract `001b`.
+- The Graal native image setup stays in `lwjgl3` only.
 
 ## Bugs folded in
 

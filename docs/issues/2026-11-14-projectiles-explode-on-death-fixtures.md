@@ -36,7 +36,7 @@ Only the projectiles that are made to die in lava explode: `MagmaMeteor`, `Fireb
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level INTRO_STAGE --room room3`: let `BuilderKibbo` throw hammers that fall into the spike pit.
+`./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room3`: let `BuilderKibbo` throw hammers that fall into the spike pit.
 Each hammer explodes on the spikes.
 
 ## Notes
@@ -98,10 +98,10 @@ Checks:
 
 Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/projectiles-ignore-death`:
 
-- `./run-game-alpha.sh --level INTRO_STAGE --room room3`: the hammers that `BuilderKibbo` throws fall into the spike
+- `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room3`: the hammers that `BuilderKibbo` throws fall into the spike
   pit and do not explode on the spikes.
-- `./run-game-alpha.sh --level INTRO_STAGE --room room3`: Mega Man walks into the spike pit and dies, as before.
-- `./run-game-alpha.sh --level INFERNO_MAN --room room4`: go right to `room4a`, the lava room after `room4`. Each
+- `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room3`: Mega Man walks into the spike pit and dies, as before.
+- `./run-mega-man-maverick-alpha.sh --level INFERNO_MAN --room room4`: go right to `room4a`, the lava room after `room4`. Each
   `MagmaMeteor` that falls between the platforms into the lava explodes in the lava, as before.
 
 No live room was found where a `Fireball`, `MagmaOrb` or `MagmaWave` touches a `DEATH` fixture: Inferno Man's boss

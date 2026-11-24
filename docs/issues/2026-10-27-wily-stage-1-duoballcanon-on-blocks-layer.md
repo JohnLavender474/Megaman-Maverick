@@ -28,7 +28,7 @@ purpose, the object can be deleted, so the level loads with no error.
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level WILY_STAGE_1 --room room8` and read `assets/logs.txt`: one `SpawnersLayerBuilder` error at
+`./run-mega-man-maverick-alpha.sh --level WILY_STAGE_1 --room room8` and read `assets/logs.txt`: one `SpawnersLayerBuilder` error at
 load.
 
 ## Notes

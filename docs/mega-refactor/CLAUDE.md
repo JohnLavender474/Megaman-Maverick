@@ -542,7 +542,7 @@ Use targeted test maps for the manual checks in a branch contract where it is pr
   applies to checks listed in a draft contract that you show to the owner. Put each full command (from the
   worktree, with `--level` and `--room`) in its own inline code span on its own line, followed by what to look at.
   Example:
-  - `./run-game-alpha.sh --level REFACTOR_TEST_029 --room enemy_aim`: `Met` and `SniperJoe` face
+  - `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_029 --room enemy_aim`: `Met` and `SniperJoe` face
     Megaman on both sides, aim and fire.
 - Give a `--room` for every check, also in real levels, so the owner never has to play a level from
   its start. If one level has several checks in different places, list the level once for each,

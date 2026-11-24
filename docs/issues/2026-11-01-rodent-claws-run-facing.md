@@ -25,7 +25,7 @@ The same rule on both sides. With the last-pressed rule, the case with both held
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level REFACTOR_TEST_029 --room movement --weapons RODENT_CLAWS`: face left, slash on the ground, and press both `LEFT` and `RIGHT` during the slash. Mega faces right.
+`./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_029 --room movement --weapons RODENT_CLAWS`: face left, slash on the ground, and press both `LEFT` and `RIGHT` during the slash. Mega faces right.
 
 ## Notes
 

@@ -27,7 +27,7 @@ The player stands on the painted floor, and a walk into gate 14 opens it.
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level X6_INTRO --room room2`: look at the feet against the floor art, then walk into the gate
+`./run-mega-man-maverick-alpha.sh --level X6_INTRO --room room2`: look at the feet against the floor art, then walk into the gate
 on the right.
 
 ## Notes

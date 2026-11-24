@@ -17,7 +17,7 @@ related-items: [117]
 
 ## What happens
 
-The owner's words (2026-11-02, verbatim): "In the playthrough of `./run-game-alpha.sh --level RODENT_MAN --room room8`, there was one instance where a block looked like it should fall into the hole, but it levitated, and one more bullet was required from Mega Man in order to trigger it to fall in."
+The owner's words (2026-11-02, verbatim): "In the playthrough of `./run-mega-man-maverick-alpha.sh --level RODENT_MAN --room room8`, there was one instance where a block looked like it should fall into the hole, but it levitated, and one more bullet was required from Mega Man in order to trigger it to fall in."
 
 From a read of the code and a calculation, not from a run:
 
@@ -83,17 +83,17 @@ Always-on rules:
 
 Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/pushable-block-ledge-sliver`. Rooms 9 to 11 have no player spawn, so `RODENT_MAN` checks start in `room8`, the nearest room with one.
 
-- `./run-game-alpha.sh --level RODENT_MAN --room room8 --performance low --autoPerf false`: in `room9`, stand left of block 219 and shoot it 4 times. The block drops on the shot that leaves it over the hole, and it does not float.
-- `./run-game-alpha.sh --level RODENT_MAN --room room8 --performance high --autoPerf false`: the same steps, with the same result.
-- `./run-game-alpha.sh --level RODENT_MAN --room room8`: in `room9`, push block 219 slowly on foot, and stop near the hole. The block stays or drops, and it never floats with more than a thin edge past the ledge in view. Then in `room10`, drop blocks 229 and 279 into their holes. In `room11`, block 301 drops on 1 shot, and block 308 drops into its hole.
-- `./run-game-alpha.sh --level RODENT_MAN --room room8`: control. Each block that lands on its plate holds the plate down, the `SwitchGate` of the plate acts as before, and Mega Man can stand on the block and on the plate. Play from `room9` to `room12` with no stuck block.
-- `./run-game-alpha.sh --level REFACTOR_TEST_047 --room sand_entities`: shoot the block so that it stops with a thin edge on the ledge and the rest over the sand. It leaves the ledge and sinks, and it does not bob.
-- `./run-game-alpha.sh --level REFACTOR_TEST_047 --room sand_entities`: control. The block sinks in the sand, carries a rider, and goes when its top is 0.5 tile under.
-- `./run-game-alpha.sh --level REFACTOR_TEST_029 --room push_flip`: control. Push and shoot the block from both sides. It moves as before.
+- `./run-mega-man-maverick-alpha.sh --level RODENT_MAN --room room8 --performance low --autoPerf false`: in `room9`, stand left of block 219 and shoot it 4 times. The block drops on the shot that leaves it over the hole, and it does not float.
+- `./run-mega-man-maverick-alpha.sh --level RODENT_MAN --room room8 --performance high --autoPerf false`: the same steps, with the same result.
+- `./run-mega-man-maverick-alpha.sh --level RODENT_MAN --room room8`: in `room9`, push block 219 slowly on foot, and stop near the hole. The block stays or drops, and it never floats with more than a thin edge past the ledge in view. Then in `room10`, drop blocks 229 and 279 into their holes. In `room11`, block 301 drops on 1 shot, and block 308 drops into its hole.
+- `./run-mega-man-maverick-alpha.sh --level RODENT_MAN --room room8`: control. Each block that lands on its plate holds the plate down, the `SwitchGate` of the plate acts as before, and Mega Man can stand on the block and on the plate. Play from `room9` to `room12` with no stuck block.
+- `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_047 --room sand_entities`: shoot the block so that it stops with a thin edge on the ledge and the rest over the sand. It leaves the ledge and sinks, and it does not bob.
+- `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_047 --room sand_entities`: control. The block sinks in the sand, carries a rider, and goes when its top is 0.5 tile under.
+- `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_029 --room push_flip`: control. Push and shoot the block from both sides. It moves as before.
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level RODENT_MAN --room room8`, go to `room9`, stand left of block 219, and shoot it 4 times with no push. The block stops over the hole, about 13 px from the wall. A 5th shot drops it.
+`./run-mega-man-maverick-alpha.sh --level RODENT_MAN --room room8`, go to `room9`, stand left of block 219, and shoot it 4 times with no push. The block stops over the hole, about 13 px from the wall. A 5th shot drops it.
 
 ## Notes
 

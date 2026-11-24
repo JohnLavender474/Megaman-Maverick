@@ -11,7 +11,7 @@
 
 The Timber Walker mini boss becomes a finished fight in the Timber Woman stage. Branch `078g` merged it as a first
 pass: AI-made art (round 7) and a first moveset, spawned only in the test map `RefactorTest078`
-(`./run-game-alpha.sh --level REFACTOR_TEST_078 --room walker_gate --heartTanks all --healthTanks all`).
+(`./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_078 --room walker_gate --heartTanks all --healthTanks all`).
 
 ## Proposed scope
 

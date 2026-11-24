@@ -28,7 +28,7 @@ landing as final.
 ## How to reproduce
 
 `GlacierManMoveChoiceTest` (the sled chain case) checks only the launch speed; read `maxX` in the rig. In the game:
-`./run-game-alpha.sh --level REFACTOR_TEST_077 --room glacier_man`, wait for a sled that stops at a wall and jumps.
+`./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_077 --room glacier_man`, wait for a sled that stops at a wall and jumps.
 
 ## Notes
 
@@ -69,11 +69,11 @@ Checks:
     defeat or destroy;
   - a mutation check for each new rule (`docs/ways-of-working/git.md`).
 - Play checks, from `/home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/glacier-man-issues`:
-  1. `./run-game-alpha.sh --level REFACTOR_TEST_077 --room glacier_man --heartTanks all --healthTanks all`: stand
+  1. `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_077 --room glacier_man --heartTanks all --healthTanks all`: stand
      on the floor: he ducks, throws `chunk` and `aim` (not only `aim_up`); after a sled that stops at a wall and
      jumps over, he lands about 2 tiles past you.
   2. Same command: stand on a ledge or jump high: `aim_up` throws, no duck.
-  3. Control: `./run-game-alpha.sh --level GLACIER_MAN --room room12 --heartTanks all --healthTanks all`: the full
+  3. Control: `./run-mega-man-maverick-alpha.sh --level GLACIER_MAN --room room12 --heartTanks all --healthTanks all`: the full
      fight to the stage exit.
 
 ## Resolution

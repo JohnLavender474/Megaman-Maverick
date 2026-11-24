@@ -33,7 +33,7 @@ The tank sinks into the sand, and Mega Man must catch it before it is gone. Mega
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level DESERT_MAN --room room13`: go through the gate to `room14`, stay off the sand, and let the tank fall on it.
+`./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room13`: go through the gate to `room14`, stay off the sand, and let the tank fall on it.
 
 ## Origin
 

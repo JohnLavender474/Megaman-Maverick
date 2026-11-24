@@ -26,7 +26,7 @@ The `Met` shows `NoHelmetStand` in every frame while the way ahead is blocked.
 
 ## How to reproduce
 
-Read the code. In the game: `./run-game-alpha.sh --level REFACTOR_TEST_079 --room helmet_break`, break the helmet,
+Read the code. In the game: `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_079 --room helmet_break`, break the helmet,
 and watch the `Met` at a pit edge frame by frame.
 
 ## Notes

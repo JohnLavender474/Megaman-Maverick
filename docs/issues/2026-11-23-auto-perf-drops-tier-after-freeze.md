@@ -30,7 +30,7 @@ A single hitch does not change the tier. Only a sustained low frame rate does, a
 
 ## How to reproduce
 
-1. `./run-game-alpha.sh --level INTRO_STAGE --room room1` (auto-perf is on by default; MEDIUM tier).
+1. `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room1` (auto-perf is on by default; MEDIUM tier).
 2. Stop the game JVM for about 3 s and continue it (`kill -STOP <pid>`, then `kill -CONT <pid>`). On Linux this is the
    reliable way to get one long frame: a minimized window keeps rendering (continuous rendering, `pauseWhenMinimized`
    is off), and a window drag does not block the GLFW loop on most Linux window managers.
@@ -120,15 +120,15 @@ scripts are in `temp/play/` of the worktree: `freeze.sh <seconds>` stops the gam
 and `throttle.sh <seconds>` stops it for 50 ms in each 70 ms for that time (about 15 fps, each frame under 0.25 s).
 Run them from a second terminal while the game window shows the level.
 
-- `./run-game-alpha.sh --level INTRO_STAGE --room room1`: play for 10 s, then run `temp/play/freeze.sh 3` three
+- `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room1`: play for 10 s, then run `temp/play/freeze.sh 3` three
   times, with about 5 s of play between them. No "Performance issue detected!" notification, and no "Downgrading"
   line in the log.
-- `./run-game-alpha.sh --level INTRO_STAGE --room room1`: play for 10 s, then run `temp/play/freeze.sh 1` five times,
+- `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room1`: play for 10 s, then run `temp/play/freeze.sh 1` five times,
   with about 3 s of play between them. No "Performance issue detected!" notification.
-- `./run-game-alpha.sh --level INTRO_STAGE --room room1`: play for 10 s, then run `temp/play/throttle.sh 15`. A
+- `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room1`: play for 10 s, then run `temp/play/throttle.sh 15`. A
   sustained low frame rate still drops the tier: "Downgrading to 45 FPS." comes after about 3 s, and "Downgrading to
   30 FPS." about 7 s later.
-- `./run-game-alpha.sh --level INTRO_STAGE --room room1`: play for 10 s, then run `temp/play/stutter.sh 20` (it stops
+- `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room1`: play for 10 s, then run `temp/play/stutter.sh 20` (it stops
   the JVM for 300 ms in each 350 ms, so each long frame is over 0.25 s). A steady stutter drops the tier:
   "Downgrading to 45 FPS." comes after about 2 s, and "Downgrading to 30 FPS." about 8 s later. Added 2026-11-23 for the
   code review round 2 rule; the play checks above passed on 2026-11-23.

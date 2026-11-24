@@ -27,4 +27,4 @@ A spot with a damager that would hurt the player counts as unsafe, also while th
 ## How to reproduce
 
 Not confirmed. Check in which existence state `SlotRespawn` tests the spots, then play
-`./run-game-test-coop.sh --room slot_0_death` with an enemy near the partner.
+`./run-mega-man-maverick-test-coop.sh --room slot_0_death` with an enemy near the partner.

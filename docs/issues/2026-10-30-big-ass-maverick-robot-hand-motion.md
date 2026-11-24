@@ -93,7 +93,7 @@ the boss health and damage table, the spawn and defeat sequences, and the map.
 From the main checkout:
 
 ```
-./run-game-alpha.sh --level INTRO_STAGE --room room12
+./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room12
 ```
 
 `room12` holds the last player spawn before the boss. Go right into `boss_room`. When the boss is ready, watch the hands

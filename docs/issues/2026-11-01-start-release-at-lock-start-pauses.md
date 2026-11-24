@@ -38,7 +38,7 @@ The boss-defeat lock (`MegaLevelScreen.kt:754`) and the `WilyFinalBoss.kt:311` l
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level REFACTOR_TEST_051 --room basic`: wait for control, hold `Enter`, run right into `basic_right`, and keep `Enter` held as the transition begins. The pause menu opens by itself, and no input responds.
+`./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_051 --room basic`: wait for control, hold `Enter`, run right into `basic_right`, and keep `Enter` held as the transition begins. The pause menu opens by itself, and no input responds.
 
 ## Notes
 

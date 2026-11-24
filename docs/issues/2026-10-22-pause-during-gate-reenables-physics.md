@@ -88,19 +88,19 @@ Checks:
 - Play checks: a temporary hook, not committed, pauses the game by itself at `GATE_INIT_OPENING`, `ADD_PLAYER_HEALTH`,
   `ATTAIN_HEART_TANK` and `ATTAIN_HEALTH_TANK` when the environment variable `MAVERICK_AUTO_PAUSE=1` is set. The hook
   is removed before the merge, and the merge diff is checked for it.
-  - Experimental: `MAVERICK_AUTO_PAUSE=1 ./run-game-alpha.sh --level DESERT_MAN --room room13`: walk into the gate.
+  - Experimental: `MAVERICK_AUTO_PAUSE=1 ./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room13`: walk into the gate.
     The game pauses. Wait 2 s, hold right and resume. Mega Man and the enemies do not move or fall during the camera
     move; Mega Man arrives on the far side as without a pause.
-  - Experimental: `MAVERICK_AUTO_PAUSE=1 ./run-game-alpha.sh --level REFACTOR_TEST_029 --room pickups`: take the large
+  - Experimental: `MAVERICK_AUTO_PAUSE=1 ./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_029 --room pickups`: take the large
     health bulb, then the health tank. The game pauses at each. Wait 2 s, resume. Nothing moves under the pause
     menu; after resume Mega Man can move.
-  - Experimental: `MAVERICK_AUTO_PAUSE=1 ./run-game-alpha.sh --level REFACTOR_TEST_029 --room heart`: take the heart
+  - Experimental: `MAVERICK_AUTO_PAUSE=1 ./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_029 --room heart`: take the heart
     tank. The game pauses. Wait 2 s, resume. After resume Mega Man can move, and the health bar is longer.
-  - Control: `./run-game-alpha.sh --level DESERT_MAN --room room13`: walk into the gate with no pause. The door
+  - Control: `./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room13`: walk into the gate with no pause. The door
     opens, the camera moves and the door closes as before.
-  - Control: `./run-game-alpha.sh --level REFACTOR_TEST_029 --room pickups` and `--room heart`: take each item with no
+  - Control: `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_029 --room pickups` and `--room heart`: take each item with no
     pause. The world freezes during the fill and moves again after it, as before.
-  - Control: `./run-game-alpha.sh --level DESERT_MAN --room room14`: pause with START during play, wait, resume.
+  - Control: `./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room14`: pause with START during play, wait, resume.
     Mega Man, the enemies and the sounds continue as before.
 
 ## Resolution

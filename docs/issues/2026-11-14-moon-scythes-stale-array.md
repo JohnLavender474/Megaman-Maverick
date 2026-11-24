@@ -31,7 +31,7 @@ The count holds each live scythe once. Only the oldest scythes over 4 fade.
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level TEST_1 --room room35 --weapons MOON_SCYTHES`: fire Moon Scythes a few times with a pause
+`./run-mega-man-maverick-alpha.sh --level TEST_1 --room room35 --weapons MOON_SCYTHES`: fire Moon Scythes a few times with a pause
 between shots, so that 4 or fewer stay alive after each shot. Then fire again and look at how many scythes fade.
 
 ## Notes

@@ -29,7 +29,7 @@ At least one level that 2 players can start from Extras, with a boss room at the
 ## How to reproduce
 
 - Open Extras: the list has `GAUNTLET_1` and `X6_INTRO` only.
-- `./run-game-test-coop.sh`: `REFACTOR_TEST_047` has no boss room.
+- `./run-mega-man-maverick-test-coop.sh`: `REFACTOR_TEST_047` has no boss room.
 
 ## Notes
 

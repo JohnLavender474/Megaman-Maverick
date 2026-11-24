@@ -51,7 +51,7 @@ An entity keeps its own copy of any value that it reads after the frame of the f
 
 ## How to reproduce
 
-On branch `compactor-level`, run `./run-game-alpha.sh --level COMPACTOR` and enter room `blind_line`. The owner saw the crushers appear over Mega Man, flicker and crush him. Reuse depends on how many vectors each frame fetches, so other levels with these entities may not show it.
+On branch `compactor-level`, run `./run-mega-man-maverick-alpha.sh --level COMPACTOR` and enter room `blind_line`. The owner saw the crushers appear over Mega Man, flicker and crush him. Reuse depends on how many vectors each frame fetches, so other levels with these entities may not show it.
 
 ## Scan
 

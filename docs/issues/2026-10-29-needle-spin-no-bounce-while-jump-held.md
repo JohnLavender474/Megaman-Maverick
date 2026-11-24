@@ -45,7 +45,7 @@ Needle Spin bounces Megaman up by the same impulse whether JUMP is held or not.
 ## How to reproduce
 
 ```
-./run-game-debug.sh --level INTRO_STAGE --room room1 --weapons NEEDLE_SPIN
+./run-mega-man-maverick-debug.sh --level INTRO_STAGE --room room1 --weapons NEEDLE_SPIN
 ```
 
 1. Select Needle Spin.

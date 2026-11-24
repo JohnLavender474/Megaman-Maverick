@@ -28,7 +28,7 @@ A piece dies only when its art touches a block, a body or a shield that the play
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level TEST_1 --room room35 --weapons all --debugShapes`: fire Reactor Shots at the walls and
+`./run-mega-man-maverick-alpha.sh --level TEST_1 --room room35 --weapons all --debugShapes`: fire Reactor Shots at the walls and
 the floor, and look at what each piece touches when it dies.
 
 ## Notes

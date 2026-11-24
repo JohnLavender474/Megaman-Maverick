@@ -30,7 +30,7 @@ With more than 4 scythes, the oldest scythes fade and the new shot stays.
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level INTRO_STAGE --room room1 --weapons MOON_SCYTHES`: fire Moon Scythes quickly so that more
+`./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room1 --weapons MOON_SCYTHES`: fire Moon Scythes quickly so that more
 than 4 are alive. Look at which scythes fade.
 
 ## Notes
@@ -78,12 +78,12 @@ Checks:
 
 Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/moon-scythes`:
 
-- `./run-game-alpha.sh --level INTRO_STAGE --room room1 --weapons MOON_SCYTHES`: fire Moon Scythes, wait a bit more
+- `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room1 --weapons MOON_SCYTHES`: fire Moon Scythes, wait a bit more
   than 1 s while the 4 scythes fly (a shot sooner is refused while more than 1 scythe is alive), and fire again. The
   4 older scythes stop and fade, and the 4 new scythes fly on. Do it a few times: never more than 4 scythes fly.
-- Control: `./run-game-alpha.sh --level TEST_1 --room room35 --weapons MOON_SCYTHES`: fire, and wait until all 4
+- Control: `./run-mega-man-maverick-alpha.sh --level TEST_1 --room room35 --weapons MOON_SCYTHES`: fire, and wait until all 4
   scythes are gone. Fire again: all 4 new scythes fly, none fades at once. Do this a few times.
-- Control: `./run-game-alpha.sh --level DESERT_MAN --room room16 --weapons MOON_SCYTHES --heartTanks all --healthTanks all`:
+- Control: `./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room16 --weapons MOON_SCYTHES --heartTanks all --healthTanks all`:
   go right into the boss room and fight Desert Man with Moon Scythes. The scythes fly, bounce on the walls, leave the
   trail and hurt the boss. Expected change: on each new shot the older scythes stop, fade and do no more damage.
 

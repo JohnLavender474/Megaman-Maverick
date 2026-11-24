@@ -106,22 +106,22 @@ Checks:
 
 Play checks, experimental first:
 
-- `./run-game-alpha.sh --level REFACTOR_TEST_047 --room sand_players --players 2`: Each player sinks, rises and jumps out alone. One player's jump does not lift the other.
-- `./run-game-alpha.sh --level REFACTOR_TEST_047 --room sand_entities --weapons MOON_SCYTHES`: Rest the block for about 30 s, push it off the ledge, and stand on it. It falls straight down and sinks at once. It stays until its top is fully under the sand, and Mega Man sinks with it with no shake and no stop. Die, and do the same with a push at once after the respawn. The `Met` sinks and dies with no drop, `SniperJoe` sinks, `HealthBulb` stays on the sand, and `HeartTank` drops from its box as before.
-- `./run-game-alpha.sh --level REFACTOR_TEST_047 --room sand_level_ledge`: Sand level with the ground: walk from the ground onto the sand and back. With the feet on both, Mega Man does not bounce. The small pose on the last edge of the ledge is accepted (`2026-11-02-ledge-sliver-jump-pose.md`).
-- `./run-game-alpha.sh --level DESERT_MAN --room room1 --players 2 --logTags FeetRiseSinkBlock`: The case in "How to reproduce". Stay on the first sand for 2 s, and jump with one player only. That player gets out, and the other sinks alone.
-- `./run-game-alpha.sh --level DESERT_MAN --room room1`: Control. Sand in `room1` and `room2` acts as before with 1 player: sink, rise, jump out, `Death`.
-- `./run-game-alpha.sh --level DESERT_MAN --room room13`: Control. Sand in `room13` to `room15`.
-- `./run-game-alpha.sh --level WILY_STAGE_1 --room room7`: Control. Sand in `room7` and `room8` with 1 player.
-- `./run-game-alpha.sh --level RODENT_MAN --room room8`: Control for each `PushableBlock` puzzle. Walk through `room9`, `room10` and `room11`. Wait a few seconds, then push the block into its hole. It drops in and hits the button. Pushing, stopping at walls, standing on the block, and the reset after a death act as before.
-- `./run-game-alpha.sh --level INFERNO_MAN --room room1`: Control. `InfernoChainPlatform`s sink and rise as before.
+- `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_047 --room sand_players --players 2`: Each player sinks, rises and jumps out alone. One player's jump does not lift the other.
+- `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_047 --room sand_entities --weapons MOON_SCYTHES`: Rest the block for about 30 s, push it off the ledge, and stand on it. It falls straight down and sinks at once. It stays until its top is fully under the sand, and Mega Man sinks with it with no shake and no stop. Die, and do the same with a push at once after the respawn. The `Met` sinks and dies with no drop, `SniperJoe` sinks, `HealthBulb` stays on the sand, and `HeartTank` drops from its box as before.
+- `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_047 --room sand_level_ledge`: Sand level with the ground: walk from the ground onto the sand and back. With the feet on both, Mega Man does not bounce. The small pose on the last edge of the ledge is accepted (`2026-11-02-ledge-sliver-jump-pose.md`).
+- `./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room1 --players 2 --logTags FeetRiseSinkBlock`: The case in "How to reproduce". Stay on the first sand for 2 s, and jump with one player only. That player gets out, and the other sinks alone.
+- `./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room1`: Control. Sand in `room1` and `room2` acts as before with 1 player: sink, rise, jump out, `Death`.
+- `./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room13`: Control. Sand in `room13` to `room15`.
+- `./run-mega-man-maverick-alpha.sh --level WILY_STAGE_1 --room room7`: Control. Sand in `room7` and `room8` with 1 player.
+- `./run-mega-man-maverick-alpha.sh --level RODENT_MAN --room room8`: Control for each `PushableBlock` puzzle. Walk through `room9`, `room10` and `room11`. Wait a few seconds, then push the block into its hole. It drops in and hits the button. Pushing, stopping at walls, standing on the block, and the reset after a death act as before.
+- `./run-mega-man-maverick-alpha.sh --level INFERNO_MAN --room room1`: Control. `InfernoChainPlatform`s sink and rise as before.
 
 ## How to reproduce
 
 Run from the `047a` worktree, or from `master` after `047a` merges:
 
 ```
-./run-game-alpha.sh --level DESERT_MAN --room room1 --players 2 --logTags FeetRiseSinkBlock
+./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room1 --players 2 --logTags FeetRiseSinkBlock
 ```
 
 Walk both players onto the first sand area (`QuickSand` 76, at x 1184). Stay on it for 2 s. Then jump with one player only. The player does not get out, and the block continues to sink. Then try two jumps at the same time.

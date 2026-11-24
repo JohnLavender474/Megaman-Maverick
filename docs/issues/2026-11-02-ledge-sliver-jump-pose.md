@@ -69,7 +69,7 @@ Owner's decision is needed. The proposal below is that Mega Man does not stay in
 The window is 1.6 px in 32 px, so it takes several tries. The moon case is the one that holds on a real map:
 
 ```
-./run-game-alpha.sh --level MOON_MAN --performance high --autoPerf false
+./run-mega-man-maverick-alpha.sh --level MOON_MAN --performance high --autoPerf false
 ```
 
 Stand near a ledge and tap toward it until Mega Man shows the jump pose and does not fall. In a normal level, the same steps give a jump pose of at most 0.227 s (calculated).

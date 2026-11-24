@@ -27,7 +27,7 @@ The owner decides how player 2 looks, for example a palette swap of the NES colo
 
 ## How to reproduce
 
-`./run-game-test-coop.sh`: slot 1 is orange; its jetpack flame and shots have the normal colors.
+`./run-mega-man-maverick-test-coop.sh`: slot 1 is orange; its jetpack flame and shots have the normal colors.
 
 ## Notes
 

@@ -73,17 +73,17 @@ Checks:
 
 Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/players-any-dead-slot`:
 
-- `./run-game-test-coop.sh --room dead_scanner` (new room in `RefactorTest047.tmx`, one view; a big `Cactus` at the
+- `./run-mega-man-maverick-test-coop.sh --room dead_scanner` (new room in `RefactorTest047.tmx`, one view; a big `Cactus` at the
   left wall, a spike 2 tiles right of it, both players spawn inside the scanner): walk slot 0 to the right wall, out of
   the scanner (the last 5 tiles of floor). Walk slot 1 left into the spike. After its last volley, the `Cactus` goes
   idle (it closes and stops flashing and shooting) while slot 1 is dead, about 1 s before slot 1 beams in next to slot
   0. Do it 3 times: after the third death slot 1 stays out (0 lives), and the `Cactus` stays idle. Before the fix it
   kept flashing and spraying needles every 2 s at the dead body. Then walk slot 0 left into the scanner: the `Cactus`
   turns, faces and shoots again.
-- `./run-game-alpha.sh --level DESERT_MAN --room room1`: control with 1 player. Walk right. Each `Cactus` faces
+- `./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room1`: control with 1 player. Walk right. Each `Cactus` faces
   Megaman, flashes and sprays needles when he is within about 8 tiles, and goes idle when he leaves; the
   `LampeonBandito` stands and shoots when he is near, as before.
-- `./run-game-alpha.sh --level DESERT_MAN --room room10`: control with 1 player. Walk right and stand on the cart: it
+- `./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room10`: control with 1 player. Walk right and stand on the cart: it
   moves right while Megaman stands on it, as before.
 
 ## Resolution

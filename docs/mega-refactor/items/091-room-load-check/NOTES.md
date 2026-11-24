@@ -20,7 +20,7 @@ The launch does not show that:
 
 ## Problems of the current launch
 
-- The rule is `timeout 12 ./run-game-alpha.sh ...`, one launch for each room. At least 11 branch process logs record
+- The rule is `timeout 12 ./run-mega-man-maverick-alpha.sh ...`, one launch for each room. At least 11 branch process logs record
   launches of this type.
 - The window opens on the owner's desktop, and it can take the focus. The owner's input can then go to it.
 - The level screen starts the music (`MegaLevelScreen.start()`), so a launch plays sound.

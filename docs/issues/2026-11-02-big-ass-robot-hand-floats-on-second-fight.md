@@ -30,7 +30,7 @@ Both hands fall with the boss body in every fight.
 
 ## How to reproduce
 
-1. `./run-game-alpha.sh --level INTRO_STAGE --room room12`.
+1. `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room12`.
 2. Go through the gate, and die in the fight.
 3. Go through the gate again, and watch the hands while the boss falls.
 
@@ -58,8 +58,8 @@ Checks:
 
 Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/fix/big-ass-robot-hand-block-position`:
 
-- `./run-game-alpha.sh --level INTRO_STAGE --room room12`: go through the gate, and die in the fight. Go through the gate again. Both hands fall with the boss body, then move out and rotate.
-- `./run-game-alpha.sh --level INTRO_STAGE --room room12`: beat the boss in the first fight. The intro, the hand attacks, the platform on each hand, and the defeat look as before.
+- `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room12`: go through the gate, and die in the fight. Go through the gate again. Both hands fall with the boss body, then move out and rotate.
+- `./run-mega-man-maverick-alpha.sh --level INTRO_STAGE --room room12`: beat the boss in the first fight. The intro, the hand attacks, the platform on each hand, and the defeat look as before.
 
 ## Notes
 

@@ -32,7 +32,7 @@ uses an existing region for its frozen state.
 ## How to reproduce
 
 Place a `GapingFish` in the `enemies` layer of a test map (for example in water in `RefactorTest029.tmx`), and start
-that room with `./run-game-alpha.sh --level REFACTOR_TEST_029 --room <room>`.
+that room with `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_029 --room <room>`.
 
 ## Notes
 

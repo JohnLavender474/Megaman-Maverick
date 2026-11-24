@@ -31,7 +31,7 @@ The backgrounds draw as before the change, in the new viewport mode.
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level DESERT_MAN --room room14`: pause, change the pixel-perfect setting, resume, and walk
+`./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room14`: pause, change the pixel-perfect setting, resume, and walk
 right into `room15`. Minimize and restore the window: the backgrounds come back.
 
 ## Short contract
@@ -54,9 +54,9 @@ Checks:
   only that suite loads) fails without the fix and passes with it: after `TOGGLE_PIXEL_PERFECT` (both values), the
   background viewport has a screen size above 0.
 - `./gradlew engine:test core:test core:smokeTest lwjgl3:jar` passes.
-- Play check (experimental): `./run-game-alpha.sh --level DESERT_MAN --room room14`: pause, change pixel-perfect,
+- Play check (experimental): `./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room14`: pause, change pixel-perfect,
   resume, walk into `room15`: the sky and the sunset draw. Change it back and look again.
-- Play check (control): `./run-game-alpha.sh --level DESERT_MAN --room room14` with no setting change: the sky and the
+- Play check (control): `./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room14` with no setting change: the sky and the
   sunset draw in `room15` as before.
 
 ## Resolution

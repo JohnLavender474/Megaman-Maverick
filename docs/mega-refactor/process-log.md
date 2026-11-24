@@ -3097,3 +3097,27 @@ newest entry at the bottom.
 - Follow-up: bug `docs/issues/2026-11-23-platforms1-png8-color-shift.md`. Backlog candidate added to `177` (the boss
   room background). Process: a stray change in the main checkout is now committed first, then the work continues
   (`docs/ways-of-working/git.md`).
+
+## 2026-11-23 — `mega-refactor-185a-lost-memories-launcher`
+
+- Summary: second title "Mega Man X: Lost Memories" (item `185`, step 1 without builds).
+  `IGameTitle` in `core/.../titles/` (save and settings file names, own screens, default start,
+  screen redirects; `MaverickTitle` keeps today's values). New module `desktop-common`
+  (`DesktopRunner`); `lwjgl3` is the thin Maverick launcher. `games/mega-man-x-lost-memories/`
+  with `lost-memories-core` (title, splash screen into `X6_INTRO`) and `lost-memories-desktop`.
+  Run scripts: one set per game, `run-mega-man-maverick-*.sh` and
+  `run-mega-man-x-lost-memories-{debug,alpha}.sh`. Folded bug `version = projectVersion`.
+  Squash `d19cd5006`.
+- Contract check: `engine:test`, `core:test`, `core:smokeTest`, `lwjgl3:jar`,
+  `lost-memories-desktop:jar`, `detektMain`, `core:verifyRandomRule` pass on the branch. Review
+  before the play test: 1 Sonnet agent, 4 findings (music under the splash fixed; 3 to the item
+  follow-ups). Owner play test: passed. Diffity: 0 threads. `master` had no code commits since
+  the branch start.
+- Work: fan-out of 4 implementation agents in 2 waves (1 Opus, 3 Sonnet), builds in the main
+  thread once per wave. A branch commit took `desktop-common/build/` by mistake; a later branch
+  commit untracked it (the squash has no build files).
+- Follow-up on `master`: the old script names `run-game-*.sh` replaced with
+  `run-mega-man-maverick-*.sh` in the live docs (47 files: `docs/issues/`,
+  `docs/mega-refactor/CLAUDE.md`, the branch template, item files). Branch folders and process
+  logs keep the old names as history. Backlog candidates folded into the item `ITEM.md`
+  ("Follow-ups from `185a`") in place of new items, because each is a later step of `185`.

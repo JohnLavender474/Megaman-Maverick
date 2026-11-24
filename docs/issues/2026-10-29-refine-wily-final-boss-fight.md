@@ -162,7 +162,7 @@ Possible directions (not chosen; the fix branch decides with the owner):
 From the main checkout:
 
 ```
-./run-game-alpha.sh --level WILY_STAGE_3 --room room8 --weapons all --heartTanks all --healthTanks all
+./run-mega-man-maverick-alpha.sh --level WILY_STAGE_3 --room room8 --weapons all --heartTanks all --healthTanks all
 ```
 
 `room8` is the last room with a player spawn before the boss. Go down through `room9` into the boss room.

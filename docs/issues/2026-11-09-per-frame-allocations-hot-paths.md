@@ -141,25 +141,25 @@ Play checks, from `cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktree
 (rooms checked by the review before the play test, 2026-11-09; a `--level` start is `NORMAL` difficulty, so
 `hard_mode_only` objects do not spawn):
 
-- `./run-game-alpha.sh --level RODENT_MAN --room room7`: the `Bat` chases Megaman around the blocks as before.
-- `./run-game-alpha.sh --level TEST_1 --room room35`: 2 `Bat`s chase Megaman as before.
-- `./run-game-alpha.sh --level REFACTOR_TEST_029 --room enemy_chase`: the `Bat` chases Megaman as before.
-- `./run-game-alpha.sh --level WILY_STAGE_2 --room fork_room`: take the lower path into `path1_room1`; the 3
+- `./run-mega-man-maverick-alpha.sh --level RODENT_MAN --room room7`: the `Bat` chases Megaman around the blocks as before.
+- `./run-mega-man-maverick-alpha.sh --level TEST_1 --room room35`: 2 `Bat`s chase Megaman as before.
+- `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_029 --room enemy_chase`: the `Bat` chases Megaman as before.
+- `./run-mega-man-maverick-alpha.sh --level WILY_STAGE_2 --room fork_room`: take the lower path into `path1_room1`; the 3
   `SubmarineJoe`s follow Megaman as before.
-- `./run-game-alpha.sh --level GAUNTLET_1`: clear the `room2` wave; the `FloatingCan`s of the `room3` wave chase
+- `./run-mega-man-maverick-alpha.sh --level GAUNTLET_1`: clear the `room2` wave; the `FloatingCan`s of the `room3` wave chase
   Megaman as before.
-- `./run-game-alpha.sh --level WILY_STAGE_1 --room room8`: the `DarknessV2` room lights and darkens as before.
-- `./run-game-alpha.sh --level DESERT_MAN --room room2`: the `Jetto` animations and the `LampeonBandito` bullets look as
+- `./run-mega-man-maverick-alpha.sh --level WILY_STAGE_1 --room room8`: the `DarknessV2` room lights and darkens as before.
+- `./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room2`: the `Jetto` animations and the `LampeonBandito` bullets look as
   before.
-- `./run-game-alpha.sh --level GLACIER_MAN --room room1`: the `SpikeBot` animations look as before.
-- `./run-game-alpha.sh --level TIMBER_WOMAN --room room1`: the `NuttGlider` animations look as before.
-- `./run-game-alpha.sh --level MOON_MAN --room room5 --weapons all`: the 2 `AstroAssAssaulter`s stand, shoot, throw and
+- `./run-mega-man-maverick-alpha.sh --level GLACIER_MAN --room room1`: the `SpikeBot` animations look as before.
+- `./run-mega-man-maverick-alpha.sh --level TIMBER_WOMAN --room room1`: the `NuttGlider` animations look as before.
+- `./run-mega-man-maverick-alpha.sh --level MOON_MAN --room room5 --weapons all`: the 2 `AstroAssAssaulter`s stand, shoot, throw and
   freeze as before.
-- `./run-game-alpha.sh --level MOON_MAN --room room14`: the room before the boss. The `MoonMan` shoots and changes the
+- `./run-mega-man-maverick-alpha.sh --level MOON_MAN --room room14`: the room before the boss. The `MoonMan` shoots and changes the
   gravity as before.
-- `./run-game-alpha.sh --level PRECIOUS_WOMAN --room room7`: the room before the boss. Her stand, laugh and throw poses
+- `./run-mega-man-maverick-alpha.sh --level PRECIOUS_WOMAN --room room7`: the room before the boss. Her stand, laugh and throw poses
   look as before.
-- `./run-game-alpha.sh --level REFACTOR_TEST_134 --room open --weapons all`: switch weapons; Megaman's colors and
+- `./run-mega-man-maverick-alpha.sh --level REFACTOR_TEST_134 --room open --weapons all`: switch weapons; Megaman's colors and
   poses for each weapon are as before.
 - GC measure (Claude compares the young GC counts and pauses), with the other JVMs stopped. The game runs from the JAR,
   so that the GC log holds only the game JVM. Once in the main checkout (`master`) and once in the worktree:

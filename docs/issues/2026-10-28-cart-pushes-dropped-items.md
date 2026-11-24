@@ -33,7 +33,7 @@ An item that lies on top of a moving cart moves with the cart. That part is corr
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level DESERT_MAN --room room9`: get an enemy near the cart track to drop an item on the ground
+`./run-mega-man-maverick-alpha.sh --level DESERT_MAN --room room9`: get an enemy near the cart track to drop an item on the ground
 (or wait for a drop), then let a `CartV2` move toward it. Watch whether the cart pushes the item. Repeat in `room10`.
 Also put an item on top of a cart (an enemy dies above it) and check that the item rides with the cart.
 

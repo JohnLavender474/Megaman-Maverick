@@ -80,7 +80,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `092` | idea | [Remove old entity versions and the version suffixes](../items/092-old-entity-versions/ITEM.md) |
 | `101` | idea | [Typed Tiled fields and checks for camera sections and rooms](../items/101-map-object-schema/ITEM.md) (main) |
 | `149` | idea | [Tag changes at runtime, with an index that follows them](../items/149-runtime-tag-changes/ITEM.md) |
-| `185` | idea | [A second game title on the same engine and shared code](../items/185-second-title/ITEM.md) |
+| `185` | active | [A second game title on the same engine and shared code](../items/185-second-title/ITEM.md) |
 
 ## Gaps with no item
 

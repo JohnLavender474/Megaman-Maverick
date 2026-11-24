@@ -24,5 +24,5 @@ The owner decides: if the next spot must differ, filter out the current spot.
 
 ## How to reproduce
 
-`./run-game-alpha.sh --level PRECIOUS_WOMAN --room room4`, climb to `room5`, and watch `PreciousTron` for a move that
+`./run-mega-man-maverick-alpha.sh --level PRECIOUS_WOMAN --room room4`, climb to `room5`, and watch `PreciousTron` for a move that
 stays in place.
