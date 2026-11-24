@@ -127,6 +127,7 @@ Branch statuses:
 | `planned` | Agreed, but the branch does not exist yet. |
 | `blocked` | It waits for other items or branches. `process-log.md` names them. |
 | `active` | The branch exists and work is in progress. |
+| `tentative` | Implemented, but not merged. The owner holds it until a design decision; `process-log.md` gives the reason. The worktree stays. |
 | `merged` | The branch merged into `master`. |
 | `dropped` | The branch was abandoned. |
 
