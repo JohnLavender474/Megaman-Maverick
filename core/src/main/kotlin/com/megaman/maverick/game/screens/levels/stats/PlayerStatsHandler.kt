@@ -259,6 +259,7 @@ class PlayerStatsHandler(
                 healthToAddNow = value
                 addToTanks = false
             }
+
             else -> {
                 GameLogger.debug(TAG, "addHealth(): value greater than what Megaman needs, try to add to health tanks")
 
