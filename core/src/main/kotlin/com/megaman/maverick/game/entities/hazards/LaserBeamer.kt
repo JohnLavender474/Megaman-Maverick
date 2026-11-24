@@ -43,7 +43,6 @@ import com.maverick.game.engine.world.body.Fixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
-import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.difficulty.DifficultyMode
 import com.megaman.maverick.game.entities.EntityType
@@ -84,6 +83,8 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
         private const val MIN_DEGREES = 200f
         private const val MAX_DEGREES = 340f
         private const val INIT_DEGREES = 270f
+
+        private const val UP_SPRITE_OFFSET_Y = -10f / ConstVals.PPM
 
         private val regions = ObjectMap<SpriteSkin, TextureRegion>()
     }
@@ -127,6 +128,7 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
         super.onSpawn(spawnProps)
 
         services.events.addListener(this)
+        LaserBeamLoop.join(services)
 
         skin = SpriteSkin.of(TAG, spawnProps, SKINS)
 
@@ -179,6 +181,7 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
         super.onDestroy()
 
         services.events.removeListener(this)
+        LaserBeamLoop.leave(services)
 
         laser?.destroy()
         laser = null
@@ -244,7 +247,7 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
             sprite.setPosition(rotatingLine.getOrigin(), position)
 
             when (direction) {
-                Direction.UP -> sprite.translateY(-0.1f * ConstVals.PPM)
+                Direction.UP -> sprite.translateY(UP_SPRITE_OFFSET_Y * ConstVals.PPM)
                 else -> {}
             }
 
@@ -258,13 +261,14 @@ class LaserBeamer(services: MegaServices) : MegaGameEntity(services), ISpritesEn
             if (targetPlayer.existenceState.liveNow && targetPlayer.inPlay && overlapsGameCamera()) {
                 beaming = true
                 laser?.on = true
-                requestToPlaySound(SoundAsset.LASER_BEAM_SOUND, false)
             } else reset()
         }
 
         laser?.set(rotatingLine.line)
 
         if (!beaming) return@update
+
+        if (targetPlayer.existenceState.liveNow && targetPlayer.inPlay && overlapsGameCamera()) LaserBeamLoop.request()
 
         switchTimer.update(delta)
         if (!switchTimer.isFinished()) return@update

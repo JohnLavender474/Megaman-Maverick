@@ -87,6 +87,8 @@ enum class SoundAsset(
     DIG_SOUND("dig.ogg", 0.25f),
     JET_SOUND("jet.ogg", 1f),
     LASER_BEAM_SOUND("laser_beam.ogg", 1f),
+    LASER_LOOP_SOUND("laser_loop.ogg", 0.4f),
+    PINK_BLOCK_EXPLODE_SOUND("pink_block_explode.ogg", 0.75f),
     SMB3_BUMP_SOUND("smb3_bump.ogg", 0.2f),
     SMB3_KICK_SOUND("smb3_kick.ogg", 0.2f),
     SMB3_JUMP_SOUND("smb3_jump.ogg", 0.7f),

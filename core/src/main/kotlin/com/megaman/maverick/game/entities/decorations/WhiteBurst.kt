@@ -49,6 +49,7 @@ class WhiteBurst(services: MegaServices) : MegaGameEntity(services), IBodyEntity
     private val lifeTimer = Timer(0f)
     private var timed = false
     private var collides = true
+    private var spriteHidden = false
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
@@ -75,6 +76,7 @@ class WhiteBurst(services: MegaServices) : MegaGameEntity(services), IBodyEntity
 
         owner = spawnProps.get(ConstKeys.OWNER, MegaGameEntity::class)
         collides = spawnProps.getOrDefault(ConstKeys.COLLIDE, true, Boolean::class)
+        spriteHidden = spawnProps.getOrDefault(ConstKeys.HIDDEN, false, Boolean::class)
         val duration = spawnProps.get(ConstKeys.DURATION, Float::class)
         timed = duration != null
         if (duration != null) lifeTimer.resetDuration(duration)
@@ -103,7 +105,7 @@ class WhiteBurst(services: MegaServices) : MegaGameEntity(services), IBodyEntity
         )
         .preProcess { _, sprite ->
             sprite.setCenter(body.getCenter())
-            sprite.hidden = !on
+            sprite.hidden = !on || spriteHidden
         }
         .build()
 

@@ -1441,7 +1441,7 @@
     <property name="spawn_type" value="spawn_room"/>
    </properties>
   </object>
-  <object id="126" name="LaserBeamer" x="6464" y="2192" width="32" height="32">
+  <object id="126" name="LaserBeamer" x="6464" y="2200" width="32" height="32">
    <properties>
     <property name="color" value="wily"/>
     <property name="ignore1" type="object" value="127"/>
@@ -1477,7 +1477,7 @@
     <property name="sensor" type="object" value="178"/>
    </properties>
   </object>
-  <object id="179" name="LaserBeamer" x="7312" y="2336" width="32" height="32">
+  <object id="179" name="LaserBeamer" x="7312" y="2328" width="32" height="32">
    <properties>
     <property name="color" value="wily"/>
     <property name="ignore1" type="object" value="180"/>
@@ -1492,7 +1492,7 @@
     <property name="sensor" type="object" value="200"/>
    </properties>
   </object>
-  <object id="211" name="LaserBeamer" x="8160" y="1504" width="32" height="32">
+  <object id="211" name="LaserBeamer" x="8160" y="1496" width="32" height="32">
    <properties>
     <property name="color" value="wily"/>
     <property name="ignore1" type="object" value="212"/>
@@ -1519,7 +1519,7 @@
     <property name="sensor" type="object" value="318"/>
    </properties>
   </object>
-  <object id="381" name="LaserBeamer" x="15632" y="1504" width="32" height="32">
+  <object id="381" name="LaserBeamer" x="15632" y="1496" width="32" height="32">
    <properties>
     <property name="color" value="wily"/>
     <property name="ignore1" type="object" value="382"/>

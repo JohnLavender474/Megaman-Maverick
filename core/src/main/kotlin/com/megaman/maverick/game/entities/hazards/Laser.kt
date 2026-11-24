@@ -16,7 +16,6 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.enums.Facing
 import com.maverick.game.engine.common.extensions.*
 import com.maverick.game.engine.common.interfaces.IActivatable
-import com.maverick.game.engine.common.interfaces.Updatable
 import com.maverick.game.engine.common.objects.*
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.shapes.GameLine
@@ -30,7 +29,6 @@ import com.maverick.game.engine.drawables.sorting.DrawingPriority
 import com.maverick.game.engine.drawables.sorting.DrawingSection
 import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
-import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.entities.body
@@ -75,6 +73,9 @@ import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getEntity
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISpritesEntity, IHazard, IDamagerEntity,
     ILaserEntity, IAudioEntity, IActivatable, IOwnable<MegaGameEntity>, IChildEntity {
@@ -90,10 +91,16 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         private const val LIGHT_SOURCE_RADIUS = 1
         private const val LIGHT_SOURCE_RADIANCE = 1.5f
 
-        private const val LASER_SPRITE_SIZE = 4f / ConstVals.PPM
         private const val LASER_SPRITE_ON_DELAY = 0.025f
-        private const val LASER_SPRITE_UPDATERS_STEP = 2
-        private const val LASER_SPRITE_LOOP_DUR = 0.05f
+        private const val BEAM_FRAME_DUR = 0.05f
+        private const val BEAM_FRAME_WIDTH = 16
+        private const val BEAM_FRAME_HEIGHT = 9
+        private const val GLOW_FRAME_SIZE = 16
+        private const val ART_PIXEL = ConstVals.PPM.toFloat() / BEAM_FRAME_WIDTH
+        private const val GLOW_SIZE = 2f * GLOW_FRAME_SIZE / ConstVals.PPM
+        private const val BEAM_SPRITE_KEY = "beam"
+        private const val ORIGIN_SPRITE_KEY = "origin"
+        private const val END_SPRITE_KEY = "end"
 
         private const val LASER_PRECIOUS_SHARDS_DELAY = 0.25f
         private const val LASER_SHARDS_MIN_IMPULSE_X = -3f
@@ -107,7 +114,25 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         // Avoid spawning debris if the FPS dips below this guard
         private const val FPS_GUARD = 50
 
-        private var region: TextureRegion? = null
+        private val beamFrames = Array<TextureRegion>()
+        private val originFrames = Array<TextureRegion>()
+        private val endFrames = Array<TextureRegion>()
+
+        private val beamClock = Timer(BEAM_FRAME_DUR)
+        private var beamClockFrameId = -1L
+        private var beamFrameTick = 0
+
+        private fun advanceBeamClock(delta: Float) {
+            val frameId = Gdx.graphics.frameId
+            if (frameId == beamClockFrameId) return
+            beamClockFrameId = frameId
+            beamClock.update(delta)
+            if (!beamClock.isFinished()) return
+            beamFrameTick = (beamFrameTick + 1) % (beamFrames.size * originFrames.size * endFrames.size)
+            beamClock.reset()
+        }
+
+        private fun toArtPixels(value: Float) = (value / ART_PIXEL).roundToInt()
     }
 
     override var on: Boolean
@@ -161,24 +186,24 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
 
     private val laserShardsTimer = Timer(LASER_PRECIOUS_SHARDS_DELAY)
 
-    // Instead of using the built-in updater logic in SpritesComponent,
-    // use a custom update setup in order to optimize the rendering of
-    // many small "laser" sprites.
-    private val pieceKeys = Array<String>()
-    private val pieceSprites = Array<GameSprite>()
-    private val pieceUpdaters = Array<Updatable>()
-    private var pieceCount = 0
+    private val beamSprite = LaserBeamSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+    private val originSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 10))
+    private val endSprite = GameSprite(DrawingPriority(DrawingSection.PLAYGROUND, 11))
     private val spriteOnDelay = Timer(LASER_SPRITE_ON_DELAY)
-    private val spriteIndexLoop = Loop(0, 1)
-    private val spriteIndexLoopTimer = Timer(LASER_SPRITE_LOOP_DUR)
     private var spritesHidden = false
 
     private val hitPoints = Array<Vector2>().apply { repeat(4) { add(Vector2()) } }
 
     override fun init(vararg params: Any) {
         GameLogger.debug(TAG, "init()")
-        if (region == null) region =
-            services.assets.getTextureRegion(TextureAsset.COLORS.source, "${ConstKeys.BRIGHT}_${ConstKeys.RED}")
+        if (beamFrames.isEmpty) {
+            loadFrames(beamFrames, "beam", BEAM_FRAME_WIDTH, BEAM_FRAME_HEIGHT)
+            loadFrames(originFrames, "origin", GLOW_FRAME_SIZE, GLOW_FRAME_SIZE)
+            loadFrames(endFrames, "end", GLOW_FRAME_SIZE, GLOW_FRAME_SIZE)
+        }
+        beamSprite.setRegion(beamFrames[0])
+        originSprite.setSize(GLOW_SIZE * ConstVals.PPM)
+        endSprite.setSize(GLOW_SIZE * ConstVals.PPM)
         super.init()
         addComponent(AudioComponent())
         addComponent(SpritesComponent())
@@ -234,14 +259,11 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         on = spawnProps.getOrDefault(ConstKeys.ACTIVE, true, Boolean::class)
 
         burst = MegaEntityFactory.fetch(WhiteBurst::class)!!
-        burst!!.spawn(props(ConstKeys.OWNER pairTo this))
+        burst!!.spawn(props(ConstKeys.OWNER pairTo this, ConstKeys.HIDDEN pairTo true))
 
         reflectionIndex = spawnProps.getOrDefault(ConstKeys.INDEX, 0, Int::class)
 
         laserShardsTimer.reset()
-
-        spriteIndexLoop.reset()
-        spriteIndexLoopTimer.reset()
     }
 
     override fun onDestroy() {
@@ -251,7 +273,7 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         owner = null
         parent = null
 
-        pieceCount = 0
+        beamSprite.clearQuads()
         sprites.clear()
 
         contacts.clear()
@@ -460,22 +482,16 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
             spriteOnDelay.update(delta)
             if (spriteOnDelay.isFinished()) {
                 spritesHidden = false
-
-                renderLaserSprites(delta)
-
-                spriteIndexLoopTimer.update(delta)
-                if (spriteIndexLoopTimer.isFinished()) {
-                    spriteIndexLoop.next()
-                    spriteIndexLoopTimer.reset()
-                }
+                advanceBeamClock(delta)
+                renderLaserSprites()
             } else if (!spritesHidden) {
                 spritesHidden = true
-                pieceSprites.forEach { it.hidden = true }
+                hideLaserSprites()
             }
         } else {
             if (!spritesHidden) {
                 spritesHidden = true
-                pieceSprites.forEach { it.hidden = true }
+                hideLaserSprites()
             }
             spriteOnDelay.reset()
             return@update
@@ -617,64 +633,114 @@ class Laser(services: MegaServices) : MegaGameEntity(services), IBodyEntity, ISp
         }
     }
 
-    private fun buildLaserSprites(maxLength: Float) {
-        val count = (maxLength / (LASER_SPRITE_SIZE * ConstVals.PPM)).toInt()
-
-        // GameLogger.debug(TAG, "buildLaserSprites(): maxRadius=$maxLength, count=$count")
-
-        for (i in pieceSprites.size until count) {
-            pieceKeys.add("${ConstKeys.PIECE}_$i")
-
-            val sprite = GameSprite(region!!, DrawingPriority(DrawingSection.PLAYGROUND, 10))
-            sprite.setSize(LASER_SPRITE_SIZE * ConstVals.PPM)
-            pieceSprites.add(sprite)
-
-            pieceUpdaters.add(Updatable update@{ _ ->
-                val laser = damagerFixture.getShape() as GameLine
-
-                if (i * LASER_SPRITE_SIZE * ConstVals.PPM > laser.getLength()) {
-                    sprite.hidden = true
-                    return@update
-                }
-
-                sprite.hidden = !on || !spriteOnDelay.isFinished()
-
-                val p1 = GameObjectPools.fetch(Vector2::class)
-                val p2 = GameObjectPools.fetch(Vector2::class)
-                laser.calculateWorldPoints(p1, p2)
-
-                val distance = i * LASER_SPRITE_SIZE * ConstVals.PPM
-
-                val offset = GameObjectPools.fetch(Vector2::class)
-                    .set(p2)
-                    .sub(p1)
-                    .nor()
-                    .scl(distance)
-
-                val center = GameObjectPools.fetch(Vector2::class)
-                    .set(p1)
-                    .add(offset)
-
-                sprite.setCenter(center)
-            })
-        }
-
-        pieceCount = count
+    private fun loadFrames(out: Array<TextureRegion>, name: String, width: Int, height: Int) {
+        val region = services.assets.getTextureRegion(TextureAsset.HAZARDS_1.source, "$TAG/$name")
+        region.split(width, height).forEach { row -> out.add(row[0]) }
     }
 
-    private fun renderLaserSprites(delta: Float) {
+    private fun buildLaserSprites(maxLength: Float) {
+        beamSprite.ensureCapacity(ceil(maxLength / ART_PIXEL).toInt() + 1)
+    }
+
+    private fun hideLaserSprites() {
+        beamSprite.hidden = true
+        originSprite.hidden = true
+        endSprite.hidden = true
+    }
+
+    private fun renderLaserSprites() {
         sprites.clear()
 
-        val laser = damagerFixture.getShape() as GameLine
-        val laserLength = laser.getLength()
+        val start = GameObjectPools.fetch(Vector2::class)
+        val end = GameObjectPools.fetch(Vector2::class)
+        (damagerFixture.getShape() as GameLine).calculateWorldPoints(start, end)
+        val dx = end.x - start.x
+        val dy = end.y - start.y
+        if (dx == 0f && dy == 0f) return
 
-        var i = spriteIndexLoop.getCurrent()
-
-        while (i < pieceCount && i * LASER_SPRITE_SIZE * ConstVals.PPM <= laserLength) {
-            sprites.put(pieceKeys[i], pieceSprites[i])
-            pieceUpdaters[i].update(delta)
-            i += LASER_SPRITE_UPDATERS_STEP
+        val direction = when {
+            abs(dx) >= abs(dy) -> if (dx > 0f) Direction.RIGHT else Direction.LEFT
+            else -> if (dy > 0f) Direction.UP else Direction.DOWN
         }
+        renderBeamCells(start, dx, dy, direction)
+        beamSprite.hidden = false
+        sprites.put(BEAM_SPRITE_KEY, beamSprite)
+
+        if (parent == null) {
+            originSprite.setRegion(originFrames[beamFrameTick % originFrames.size])
+            setCenterOnArtGrid(originSprite, start)
+            originSprite.hidden = false
+            sprites.put(ORIGIN_SPRITE_KEY, originSprite)
+        }
+
+        endSprite.setRegion(endFrames[beamFrameTick % endFrames.size])
+        setCenterOnArtGrid(endSprite, end)
+        endSprite.hidden = false
+        sprites.put(END_SPRITE_KEY, endSprite)
+    }
+
+    private fun renderBeamCells(start: Vector2, dx: Float, dy: Float, direction: Direction) {
+        val horizontal = direction == Direction.LEFT || direction == Direction.RIGHT
+        val majorStart = if (horizontal) start.x else start.y
+        val minorStart = if (horizontal) start.y else start.x
+        val majorDelta = if (horizontal) dx else dy
+        val slope = (if (horizontal) dy else dx) / majorDelta
+        val step = if (majorDelta > 0f) 1 else -1
+        val majorOrigin = toArtPixels(majorStart)
+        val cellCount = toArtPixels(abs(majorDelta))
+
+        beamSprite.clearQuads()
+        var runStart = 0
+        var runMinor = 0
+        for (cell in 0 until cellCount) {
+            val cellCenter = (majorOrigin + step * (cell + 0.5f)) * ART_PIXEL
+            val minorCenter = minorStart + (cellCenter - majorStart) * slope
+            val minor = toArtPixels(minorCenter - BEAM_FRAME_HEIGHT * ART_PIXEL / 2f)
+            if (cell == runStart) {
+                runMinor = minor
+                continue
+            }
+            if (minor == runMinor && cell / BEAM_FRAME_WIDTH == runStart / BEAM_FRAME_WIDTH) continue
+            addBeamRun(runStart, cell, runMinor, majorOrigin, step, horizontal, direction)
+            runStart = cell
+            runMinor = minor
+        }
+        if (cellCount > 0) addBeamRun(runStart, cellCount, runMinor, majorOrigin, step, horizontal, direction)
+        beamSprite.applyQuadBounds()
+    }
+
+    private fun addBeamRun(
+        fromCell: Int,
+        toCell: Int,
+        minor: Int,
+        majorOrigin: Int,
+        step: Int,
+        horizontal: Boolean,
+        direction: Direction
+    ) {
+        val frame = beamFrames[Math.floorMod(beamFrameTick - fromCell / BEAM_FRAME_WIDTH, beamFrames.size)]
+        val texelWidth = (frame.u2 - frame.u) / BEAM_FRAME_WIDTH
+        val firstColumn = fromCell % BEAM_FRAME_WIDTH
+        val nearU = frame.u + firstColumn * texelWidth
+        val farU = frame.u + (firstColumn + toCell - fromCell) * texelWidth
+
+        val majorLow = (if (step > 0) majorOrigin + fromCell else majorOrigin - toCell) * ART_PIXEL
+        val majorHigh = majorLow + (toCell - fromCell) * ART_PIXEL
+        val minorLow = minor * ART_PIXEL
+        val minorHigh = minorLow + BEAM_FRAME_HEIGHT * ART_PIXEL
+
+        if (horizontal) beamSprite.addQuad(
+            majorLow, minorLow, majorHigh, minorHigh, nearU, farU, frame.v, frame.v2, direction
+        ) else beamSprite.addQuad(
+            minorLow, majorLow, minorHigh, majorHigh, nearU, farU, frame.v, frame.v2, direction
+        )
+    }
+
+    private fun setCenterOnArtGrid(sprite: GameSprite, center: Vector2) {
+        sprite.setPosition(
+            toArtPixels(center.x - sprite.width / 2f) * ART_PIXEL,
+            toArtPixels(center.y - sprite.height / 2f) * ART_PIXEL
+        )
     }
 
     override fun isLaserIgnoring(entity: IGameEntity): Boolean {

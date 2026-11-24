@@ -338,6 +338,12 @@ List of creators and the stages in which their artwork is used. Some stages cont
 - Reactor Man (backgrounds, toxic water and waterfall, laser tubes, steam vents and sparks)
   - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
   - Inspired by [Balloon Cart](https://balloon-cart.itch.io) ([Reactor Man](https://balloon-cart.itch.io/reactor-man-asset-pack)): the pipes, tanks and louvers of the area backgrounds
+- Precious Woman (tileset, backgrounds, the moving `PreciousBlock`, the breakable `PinkBlock` and its debris, `LaserBeamer` and the laser beam)
+  - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
+  - Made NES-conformant (pixel size and palette) by Claude Fable 5.2 and Claude Opus 5.5, AI models by [Anthropic](https://www.anthropic.com/claude), directed by the developer
+  - Tileset refined by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
+  - Inspired by [mrgranade](https://www.fiverr.com/mrgranade): the old stage tiles
+  - Inspired by Capcom: the old stage tiles
 
 ### Music
 
@@ -385,6 +391,7 @@ List of creators and the stages in which their artwork is used. Some stages cont
 - Megaman 6 sounds: https://www.sounds-resource.com/nes/megaman6/sound/3619/
 - Megaman 9 sounds: https://www.sounds-resource.com/xbox_360/megaman9/sound/33185/
 - Megaman 10 sounds: https://www.sounds-resource.com/xbox_360/megaman10/sound/33186/
+- `laser_loop.ogg` and `pink_block_explode.ogg`: synthesized NES-style by Claude Opus 5.5, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
 
 Sounds belong to Capcom (Megaman-ripped sound effects) and Nintendo (Mario-ripped sound effects)
 

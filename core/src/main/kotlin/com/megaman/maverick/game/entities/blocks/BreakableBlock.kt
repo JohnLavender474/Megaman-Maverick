@@ -34,6 +34,10 @@ import com.megaman.maverick.game.entities.enemies.Wanaan
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.projectiles.MoonScythe
 import com.megaman.maverick.game.players.asPlayer
+import com.maverick.game.engine.common.objects.props
+import com.megaman.maverick.game.entities.MegaEntityFactory
+import com.megaman.maverick.game.entities.explosions.Explosion
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getEntity
@@ -59,6 +63,12 @@ open class BreakableBlock(services: MegaServices) : Block(services), ISpritesEnt
         private val BRICK_PIECE_IMPULSES =
             gdxArrayOf(Vector2(-5f, 3f), Vector2(-3f, 5f), Vector2(3f, 5f), Vector2(5f, 3f))
 
+        private const val PRECIOUS_EXPLOSIONS = 2
+        private val PRECIOUS_EXPLOSION_OFFSETS = floatArrayOf(-0.5f, 0f, 0.5f)
+        private val PRECIOUS_DEBRIS = Array(6) { "$PRECIOUS_TYPE/debris${it + 1}" }
+        private val preciousDebrisOrder = IntArray(PRECIOUS_DEBRIS.size) { it }
+        private val preciousDebrisPicked = Array(3) { "" }
+
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
@@ -78,6 +88,7 @@ open class BreakableBlock(services: MegaServices) : Block(services), ISpritesEnt
             val smb3BlocksAtlas = services.assets.getTextureAtlas(TextureAsset.SMB3_BLOCKS.source)
             regions.put(SMB3_GOLD_TYPE, smb3BlocksAtlas.findRegion("GoldBreakableBlock/block"))
         }
+        FallingPiece.load(services, PRECIOUS_DEBRIS, TextureAsset.PLATFORMS_1)
         super.init()
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
@@ -108,8 +119,18 @@ open class BreakableBlock(services: MegaServices) : Block(services), ISpritesEnt
 
     fun explodeAndDie() {
         GameLogger.debug(TAG, "explodeAndDie()")
+        if (!existenceState.liveAfterUpdate) return
+        breakWithConnectedBlocks()
+
+        val sound = if (type == PRECIOUS_TYPE) SoundAsset.PINK_BLOCK_EXPLODE_SOUND else SoundAsset.THUMP_SOUND
+        if (services.audio.isSoundPlaying(sound)) services.audio.stopSound(sound)
+        services.audio.playSound(sound, loop = false)
+    }
+
+    private fun breakWithConnectedBlocks() {
+        if (!existenceState.liveAfterUpdate) return
         destroy()
-        breakApart(body.getCenter(), color)
+        if (type == PRECIOUS_TYPE) burstApart() else breakApart(body.getCenter(), color)
         connectedBlockIds.forEach { id ->
             val set = MegaGameEntities.getOfId(id)
             if (set.isEmpty) return@forEach
@@ -120,12 +141,32 @@ open class BreakableBlock(services: MegaServices) : Block(services), ISpritesEnt
             }
         }
         connectedBlockIds.clear()
-        connectedBlocks.forEach { block -> block.explodeAndDie() }
+        connectedBlocks.forEach { block -> block.breakWithConnectedBlocks() }
         connectedBlocks.clear()
-
-        if (services.audio.isSoundPlaying(SoundAsset.THUMP_SOUND)) services.audio.stopSound(SoundAsset.THUMP_SOUND)
-        services.audio.playSound(SoundAsset.THUMP_SOUND, false)
     }
+
+    private fun burstApart() {
+        val center = body.getCenter()
+        for (i in 0 until PRECIOUS_EXPLOSIONS) {
+            val position = GameObjectPools.fetch(Vector2::class)
+                .set(center.x + randomExplosionOffset(), center.y + randomExplosionOffset())
+            MegaEntityFactory.fetch(Explosion::class)!!.spawn(
+                props(ConstKeys.OWNER pairTo this, ConstKeys.POSITION pairTo position, ConstKeys.DAMAGER pairTo false)
+            )
+        }
+
+        for (i in preciousDebrisPicked.indices) {
+            val j = services.random.nextInt(i, preciousDebrisOrder.size - 1)
+            val swap = preciousDebrisOrder[i]
+            preciousDebrisOrder[i] = preciousDebrisOrder[j]
+            preciousDebrisOrder[j] = swap
+            preciousDebrisPicked[i] = PRECIOUS_DEBRIS[preciousDebrisOrder[i]]
+        }
+        FallingPiece.throwDebris(preciousDebrisPicked, center, services.random)
+    }
+
+    private fun randomExplosionOffset() =
+        PRECIOUS_EXPLOSION_OFFSETS[services.random.nextInt(0, PRECIOUS_EXPLOSION_OFFSETS.size - 1)] * ConstVals.PPM
 
     override fun hitByProjectile(projectileFixture: IFixture) {
         val entity = projectileFixture.getEntity()

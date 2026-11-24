@@ -1,68 +1,83 @@
 <!doctype html>
-<!--
-  Brief template for a mega-refactor branch. See "Planning", step 3, in docs/mega-refactor/CLAUDE.md.
-  - Copy this file to the branch docs/ folder as BRIEF.src.html. Replace every <placeholder>. Delete these comments.
-  - Keep the 7 sections in this order. Keep the page to about one screen of reading.
-  - No scan inventories, file:line references or objective tables. They stay in SCOPE.md.
-  - Diagrams: Mermaid in <pre class="mermaid"> inside <div class="frame">; the render draws it as SVG.
-  - Decisions: one <ve-ask> per question, with default on the recommended option.
-  - At approval: set the eyebrow chip to "approved <date>", and replace each <ve-ask> with
-    <p><span class="chip ok">Chosen</span> <answer></p>.
-  - On a scope change: mark what changed in the text, with the date, render, and publish to the same link.
--->
 <html lang="en" data-register="blueprint">
 <head>
-<title><id><letter> <Short Name></title>
+<title>078e Precious Woman Art</title>
 <link rel="stylesheet" href="kit.css" data-ve-kit>
 </head>
 <body>
 <main>
   <header>
-    <p class="eyebrow">Item <id> · Branch <id><letter> · Objectives <O-ids> · <span class="chip warn">draft</span></p>
-    <h1><Short name></h1>
-    <p class="lead"><One or two sentences: what the branch changes and why.></p>
-    <p class="meta"><b>In play:</b> <What the player sees change, or "Nothing changes."></p>
+    <p class="eyebrow">Item 078 · Branch 078e · Objectives O4, O9 · <span class="chip ok">approved 2026-11-20</span></p>
+    <h1>Precious Woman: a jewel mine in a crystal abyss</h1>
+    <p class="lead">The round-3 art goes into the game: one new original tileset in place of 5 old ones, no back-wall tiles, and a parallax abyss background lit by the lake below and daylight from above. The moving <code>PreciousBlock</code> gets new frames. No Kotlin change: backgrounds are map data.</p>
+    <p class="meta"><b>In play:</b> the whole stage looks new. Blocks, spikes, enemies and rooms play the same.</p>
   </header>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2><The change as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Before and after</p><h2>Two tile layers and one background become tiles, decor and 3 parallax layers</h2></div>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="Today: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="Today: 2 tile layers from 6 tilesets and 1 background">
 flowchart LR
-  A["<sender>"] -->|<EVENT>| B["<listener>"]
+  T["5 tilesets + Tileset1<br/>(MM5 and MM9 rips)"] --> L1["tiles1: rock, crystals, girders"]
+  B["precious_woman_background"] --> L2["tiles2: lattice back wall"]
+  C["CrystalBKG (Megaman Maker)"] --> BG["background, room1 row only"]
 </pre></div>
-      <figcaption><span class="fig-n">Today</span><The problem that the diagram shows.></figcaption>
+      <figcaption><span class="fig-n">Today</span>The back wall covers every room, so no background shows.</figcaption>
     </figure>
     <figure>
-      <div class="frame"><pre class="mermaid" aria-label="After: <what it shows>">
+      <div class="frame"><pre class="mermaid" aria-label="After: 1 tileset, 2 tile layers, 3 background layers">
 flowchart LR
-  A["<sender>"] --> B["<new owner>"]
+  N["precious_mine tileset<br/>(new, animated)"] --> L1["tiles1: rock, columns, scaffolds"]
+  N --> D["decor (new layer): crystals, lanterns, rails, towers"]
+  E["tiles2"] -. emptied .-> X(( ))
+  A["new background atlas"] --> F["far: 7 textures by height<br/>lake, daylight shafts, boss dim"]
+  A --> M["mid cliffs"]
+  A --> R["near cliffs"]
+  P["PreciousBlock frames"] --> PL["Platforms1 atlas"]
 </pre></div>
-      <figcaption><span class="fig-n">After</span><What stays the same for the other code.></figcaption>
+      <figcaption><span class="fig-n">After</span>Block objects, spawns and rooms are unchanged; a script check proves it.</figcaption>
     </figure>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2><The first caller, as a takeaway></h2></div>
-    <p>Today, <code><Caller></code>:</p>
-<pre><code><old code></code></pre>
-    <p>After:</p>
-<pre><code><new code></code></pre>
+    <div class="sec-head"><p class="ve-label caps">Code sketch</p><h2>Each background is a map object; the builder already reads atlas, region and parallax</h2></div>
+    <p>Today, <code>PreciousWoman_v2.tmx</code>, layer <code>backgrounds</code>:</p>
+<pre><code>&lt;object name="CrystalBKG" x="0" y="2752" width="512" height="448"&gt;
+  columns=50  rows=1</code></pre>
+    <p>After (one object per far band, plus mid and near):</p>
+<pre><code>&lt;object name="PreciousFarBand3" x="..." y="..." width="512" height="448"&gt;
+  atlas=Backgrounds12.txt  region=PreciousWoman/FarBand3
+  columns=..  rows=1  parallax_x=0.1  parallax_y=1  offset_x/y=world lock
+&lt;object name="PreciousMid" ...&gt;  parallax_x=0.25 parallax_y=0.25
+&lt;object name="PreciousNear" ...&gt; parallax_x=0.5  parallax_y=0.5</code></pre>
+    <p>The only code lines: <code>BACKGROUNDS_12</code> and <code>BACKGROUNDS_13</code> entries in <code>TextureAsset</code> for the 2 new atlases. <span class="chip warn">changed</span> <code>078d</code> took <code>Backgrounds11</code>; the haze grid does not fit in <code>Backgrounds12</code> with <code>Basic</code>, so it has its own atlas.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2><How many decisions, or "No decisions"></h2></div>
-    <p><The context that the question needs, in one or two sentences.></p>
-    <ve-ask id="d1" q="D1 · <Question?>">
-      <ve-opt value="a" default><Option. Why.></ve-opt>
-      <ve-opt value="b"><Option. Trade-off.></ve-opt>
-    </ve-ask>
+    <div class="sec-head"><p class="ve-label caps">Decisions</p><h2>2 decisions</h2></div>
+    <p>The README credits mrgranade for the Precious Woman boss sprite, not for the stage tiles. The old purple rock tileset and the old <code>PreciousBlock</code> sprite have no credit line, so their source is unknown to Claude.</p>
+    <p><span class="chip ok">Chosen</span> D1: a Made-by line for Claude Fable 5.2, and Inspired-by lines for mrgranade and Capcom (the old tileset mixes their art).</p>
+    <p>After the branch, the 3 old <code>precious_woman_*</code> tilesets are linked by no map.</p>
+    <p><span class="chip ok">Chosen</span> D2: keep the 3 old files.</p>
   </section>
 
   <section>
-    <div class="sec-head"><p class="ve-label caps">Risks</p><h2><The main risk as a takeaway></h2></div>
+    <div class="sec-head"><p class="ve-label caps">Changed after the play test</p><h2>Round 4: detailed jewels, an animated haze, new sparkles</h2></div>
+    <p><span class="chip warn">changed</span> Owner, play-test round 1: "Make the jeweled platforms more refined and detailed like in the original spritesheet. Let's make the hazy background animated. Update the sparkling sprites to be new."</p>
     <ul>
-      <li><span class="chip warn">risk</span> <b><Risk.></b> <What can go wrong, and how the branch checks it.></li>
+      <li><span class="chip ok">Chosen</span> All 4 jeweled pieces redrawn at 32 px per cell: <code>PreciousBlock</code>, pink slabs, blue gem block, crystal columns.</li>
+      <li><span class="chip ok">Chosen</span> One animated overlay of drifting motes and shaft shimmer (6 frames, 0.3 s) in front of the far bands; not in the boss room.</li>
+      <li><span class="chip ok">Chosen</span> Every glint becomes a 4-point star that grows and fades.</li>
+      <li><span class="chip ok">Chosen</span> Step 3: the boss room is one fixed picture; the pan from <code>room7</code> shows a seam (item <code>177</code> can replace it).</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="sec-head"><p class="ve-label caps">Risks</p><h2>The background must line up with the map at every start room</h2></div>
+    <ul>
+      <li><span class="chip warn">risk</span> <b>Far bands out of place.</b> The 7 far textures are fixed to map rows. A wrong offset shows the lake or a band seam in the wrong room. A script renders each room from the object data and compares it with the round-3 previews.</li>
+      <li><span class="chip warn">risk</span> <b>Air reads as solid, or rock as air.</b> The round-3 checks (contrast limits, block cells, no level edges) run again on the final files.</li>
+      <li><span class="chip warn">risk</span> <b>Platforms1 repack shifts colors</b> of other sprites (seen in 078b). The repack check compares every old region.</li>
     </ul>
   </section>
 
@@ -70,14 +85,19 @@ flowchart LR
     <div class="sec-head"><p class="ve-label caps">Play checks</p><h2>For the play test, not for now</h2></div>
 <pre><code>cd /home/johnlavender/IdeaProjects/Megaman-Maverick/.worktrees/mega-refactor-078e-precious-woman-art</code></pre>
     <ol>
-      <li><code>./run-game-alpha.sh --level <LEVEL> --room <room></code>: <what to do, and what to look at.></li>
+      <li><code>./run-game-alpha.sh --level PRECIOUS_WOMAN --room room1</code>: the lake and its light, 3 parallax layers when you move, star glints, lanterns and the drifting haze, no floor crystals.</li>
+      <li><code>./run-game-alpha.sh --level PRECIOUS_WOMAN --room room2</code>: climb the scaffold shaft; the far layer has no seam between bands.</li>
+      <li><code>./run-game-alpha.sh --level PRECIOUS_WOMAN --room room3</code>: the dying shaft, the dithered spire feet, the new <code>PreciousBlock</code> color cycle.</li>
+      <li><code>./run-game-alpha.sh --level PRECIOUS_WOMAN --room room4</code>: climb on into <code>room5</code>; gem blocks, spikes and <code>PreciousTron</code> read in front of the art.</li>
+      <li><code>./run-game-alpha.sh --level PRECIOUS_WOMAN --room room6</code>: 4 daylight shafts; they do not look like a laser or a platform.</li>
+      <li><code>./run-game-alpha.sh --level PRECIOUS_WOMAN --room room7 --heartTanks all --healthTanks all</code>: go on to the fight; the darker background keeps the boss in front.</li>
     </ol>
   </section>
 
   <section class="sources" aria-label="Details">
     <p class="ve-label caps">Details</p>
-    <p>The full scan (line numbers, call sites, objective table) and the full contract are in the branch folder:</p>
-    <p><code>docs/mega-refactor/items/<id>-<slug>/branches/mega-refactor-078e-precious-woman-art/docs/SCOPE.md</code></p>
+    <p>The full scan, the art decisions and the full contract are in the branch folder:</p>
+    <p><code>docs/mega-refactor/items/078-robot-master-alt-paths/branches/mega-refactor-078e-precious-woman-art/docs/SCOPE.md</code></p>
   </section>
 </main>
 </body>

@@ -1,0 +1,68 @@
+Backgrounds12.png
+size: 1540, 1348
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+PreciousWoman/BossRoom
+  rotate: false
+  xy: 0, 0
+  size: 512, 448
+  orig: 512, 448
+  offset: 0, 0
+  index: -1
+PreciousWoman/FarBand1
+  rotate: false
+  xy: 514, 0
+  size: 512, 448
+  orig: 512, 448
+  offset: 0, 0
+  index: -1
+PreciousWoman/FarBand2
+  rotate: false
+  xy: 1028, 0
+  size: 512, 448
+  orig: 512, 448
+  offset: 0, 0
+  index: -1
+PreciousWoman/FarBand3
+  rotate: false
+  xy: 0, 450
+  size: 512, 448
+  orig: 512, 448
+  offset: 0, 0
+  index: -1
+PreciousWoman/FarBand4
+  rotate: false
+  xy: 514, 450
+  size: 512, 448
+  orig: 512, 448
+  offset: 0, 0
+  index: -1
+PreciousWoman/FarBand5
+  rotate: false
+  xy: 1028, 450
+  size: 512, 448
+  orig: 512, 448
+  offset: 0, 0
+  index: -1
+PreciousWoman/FarLake
+  rotate: false
+  xy: 0, 900
+  size: 512, 448
+  orig: 512, 448
+  offset: 0, 0
+  index: -1
+PreciousWoman/MidCliffs
+  rotate: false
+  xy: 514, 900
+  size: 512, 448
+  orig: 512, 448
+  offset: 0, 0
+  index: -1
+PreciousWoman/NearCliffs
+  rotate: false
+  xy: 1028, 900
+  size: 512, 448
+  orig: 512, 448
+  offset: 0, 0
+  index: -1
