@@ -192,7 +192,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 182 | [Polygon ceilings: blocks that push bodies out by their polygon](items/182-polygon-ceilings/ITEM.md) | feature | `O4`, `O5` | active | none | 2026-11-23 | |
 | 183 | [NES-faithful rotation: no sprite drawn at an angle that is not a multiple of 90](items/183-nes-faithful-rotation/ITEM.md) | feature | `O9`, `O4` | active | none | 2026-11-23 | |
 | 184 | [Keep button taps that are shorter than one frame](items/184-sub-frame-taps/ITEM.md) | feature | `O9`, `O5` | dropped | none | 2026-11-23 | 2026-11-23 |
-| 185 | [A second game title on the same engine and shared code](items/185-second-title/ITEM.md) | refactor | `O1`, `O7`, `O8` | idea | none | | |
+| 185 | [A second game title on the same engine and shared code](items/185-second-title/ITEM.md) | refactor | `O1`, `O7`, `O8` | active | none | 2026-11-23 | |
 
 ## Branches
 
@@ -330,3 +330,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-182a-polygon-ceilings`](items/182-polygon-ceilings/branches/mega-refactor-182a-polygon-ceilings/process-log.md) | 182 | Polygon ceilings: `CeilingPolygonBlock` pushes bodies down by its polygon; no wall slide on it; laser fix; test map `REFACTOR_TEST_182` | merged | 2026-11-23 | 2026-11-23 |
 | [`mega-refactor-183b-charged-shot`](items/183-nes-faithful-rotation/branches/mega-refactor-183b-charged-shot/process-log.md) | 183 | `ChargedShot`, `ChargedShotExplosion` and `ChargedShotResidual` draw only at multiples of 90 degrees; trajectory in 45-degree steps; diagonal art; test map `REFACTOR_TEST_183` | merged | 2026-11-23 | 2026-11-23 |
 | [`mega-refactor-184a-sub-frame-taps`](items/184-sub-frame-taps/branches/mega-refactor-184a-sub-frame-taps/process-log.md) | 184 | Keep sub-frame taps and short releases: keyboard and gamepad latch each press and release between two frames | dropped | 2026-11-23 | 2026-11-23 |
+| [`mega-refactor-185a-lost-memories-launcher`](items/185-second-title/branches/mega-refactor-185a-lost-memories-launcher/process-log.md) | 185 | Second title "Mega Man X: Lost Memories" (splash screen into the X6 intro), `desktop-common` launcher module, run scripts take the game | active | 2026-11-23 | |

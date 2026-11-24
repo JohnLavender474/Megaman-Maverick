@@ -1,11 +1,11 @@
 # 185: A second game title on the same engine and shared code
 
-- Status: idea
+- Status: active
 - Type: refactor
 - Objectives: `O1`, `O7`, `O8`
 - Depends on: none
 - Related: `001` (`001b` host contract), `021`, `032`, `072`, `081`, `181`
-- Branches: none yet
+- Branches: `mega-refactor-185a-lost-memories-launcher`
 
 ## Goal
 
@@ -59,6 +59,13 @@ Order (option C in `NOTES.md`): no tree-wide move first. Add the new game as a m
   options. `lwjgl3` stays the Maverick launcher at first; the rename to
   `games/mega-man-maverick/desktop` comes with step 6. `build-game.sh` and the run scripts take the
   game as a parameter; the packr step, the JRE bundles and the zip step do not change.
+
+- 2026-11-23: the owner asked for a full first pass: two playable games, Maverick as today and
+  "Mega Man X: Lost Memories" (the final title; a splash screen that starts the X6 intro level),
+  run scripts that tell the two games apart, builds as a TODO. Sonnet agents for the small tasks.
+- 2026-11-23 (owner accepted the recommendation): merge target directly into `master`. Open
+  question 1: start now. Open question 2: the first pass runs from the root `assets/`, no re-pack.
+  Open question 3: `core` keeps its package name. Details in the `185a` branch `docs/NOTES.md`.
 
 ## Bugs folded in
 
