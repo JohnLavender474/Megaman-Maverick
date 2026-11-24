@@ -5,7 +5,7 @@
 - Objectives: `O9`, `O4`
 - Depends on: none
 - Related: `058`, `168`, GitHub issue #4
-- Branches: `mega-refactor-183b-charged-shot`
+- Branches: `mega-refactor-183b-charged-shot`, `mega-refactor-183c-needles`
 
 ## Goal
 
@@ -62,6 +62,7 @@ special cases like the gravity turn are done separately in isolation"
 - 2026-11-23 (owner): defer `183a` (the gravity turn). Start with small batches first; the first branch is
   `183b`, the charged shot only.
 - 2026-11-23 (owner accepted the recommendation): each `183` branch squash-merges directly into `master`.
+- 2026-11-24 (owner): `183c` is the needle (`Needle`), with many directions so that its arc still looks natural.
 
 ## Open questions
 
