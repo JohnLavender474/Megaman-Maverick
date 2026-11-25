@@ -5,7 +5,7 @@
 - Objectives: `O4`, `O9`
 - Depends on: none
 - Related: `077`, `079`, `089`, `051`, `067`
-- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`); `mega-refactor-078b-wily-stage-3-art` (merged, 2026-11-19, squash `e346c558d`); `mega-refactor-078c-wily-stage-3-enemy-skins` (merged, 2026-11-19, squash `464775afc`); `mega-refactor-078d-reactor-man-art` (merged, 2026-11-20, squash `e4f083bb6`); `mega-refactor-078e-precious-woman-art` (active, 2026-11-20); `mega-refactor-078f-timber-woman-art` (active, 2026-11-20); `mega-refactor-078g-timber-walker` (merged, 2026-11-23, squash `c17c1df88`)
+- Branches: `mega-refactor-078a-wily-stage-1-art` (merged, 2026-11-18, squash `d7cd4b9ae`); `mega-refactor-078b-wily-stage-3-art` (merged, 2026-11-19, squash `e346c558d`); `mega-refactor-078c-wily-stage-3-enemy-skins` (merged, 2026-11-19, squash `464775afc`); `mega-refactor-078d-reactor-man-art` (merged, 2026-11-20, squash `e4f083bb6`); `mega-refactor-078e-precious-woman-art` (active, 2026-11-20); `mega-refactor-078f-timber-woman-art` (active, 2026-11-20); `mega-refactor-078g-timber-walker` (merged, 2026-11-23, squash `c17c1df88`); `mega-refactor-078h-moon-man-art` (active, 2026-11-25)
 
 ## Goal
 
@@ -106,6 +106,12 @@ The owner calls it "Gravity Man's stage".
 2. **More `Starkner` sections** (from `074`). The stage introduces `Starkner` late, so the enemy gets little use. Add
    new sections with more `Starkner` encounters: introduce him earlier, in a safe room, and then use him in harder
    layouts, for example together with the gravity changes of the stage.
+3. **Art make-over: the tileset and a layered space background** (owner, 2026-11-25, verbatim: "There are some issues
+   with his tileset/background: overly repetitive rock textures, too much blue, an overly simplistic background lacking
+   moons, comets, etc. The background can be built in multiple layers for different effects."). Branch
+   `mega-refactor-078h-moon-man-art`. A new rock set with no repeating pattern and a lunar grey palette (blue only as
+   an accent), and a parallax background of several layers (stars, nebula, moons and a planet, comets and debris, a near
+   ridge). The block geometry and the gameplay do not change.
 
 ### Timber Woman (`TIMBER_WOMAN`, `TimberWoman_16x14_v4.tmx`) (from `080`)
 
