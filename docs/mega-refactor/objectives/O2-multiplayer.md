@@ -253,6 +253,7 @@ Not a redo, but new work that is larger than the table shows:
 | `175` | idea | [`LevelPlayers`: player spawns, deaths and slot respawn out of `MegaLevelScreen`](../items/175-level-players/ITEM.md) |
 | `178` | active | [NPCs and AI allies that fight next to the players](../items/178-npc-allies/ITEM.md) |
 | `179` | idea | [Named player slots (`PlayerSlot.PLAYER_1`, `PlayerSlot.PLAYER_2`)](../items/179-named-player-slots/ITEM.md) |
+| `186` | idea | [A remote bot connector: outside programs drive a player and read the world](../items/186-remote-bot-connector/ITEM.md) |
 
 ## Gaps with no item
 

@@ -193,6 +193,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 183 | [NES-faithful rotation: no sprite drawn at an angle that is not a multiple of 90](items/183-nes-faithful-rotation/ITEM.md) | feature | `O9`, `O4` | active | none | 2026-11-23 | |
 | 184 | [Keep button taps that are shorter than one frame](items/184-sub-frame-taps/ITEM.md) | feature | `O9`, `O5` | dropped | none | 2026-11-23 | 2026-11-23 |
 | 185 | [A second game title on the same engine and shared code](items/185-second-title/ITEM.md) | refactor | `O1`, `O7`, `O8` | active | none | 2026-11-23 | |
+| 186 | [A remote bot connector: outside programs drive a player and read the world](items/186-remote-bot-connector/ITEM.md) | feature | `O8`, `O6`, `O2` | idea | `178` | 2026-11-25 | |
 
 ## Branches
 
@@ -337,3 +338,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-185a-lost-memories-launcher`](items/185-second-title/branches/mega-refactor-185a-lost-memories-launcher/process-log.md) | 185 | Second title "Mega Man X: Lost Memories" (splash screen into the X6 intro), `desktop-common` launcher module, one run script set per game | merged | 2026-11-23 | 2026-11-23 |
 | [`mega-refactor-185b-game-builds`](items/185-second-title/branches/mega-refactor-185b-game-builds/process-log.md) | 185 | Platform builds for each game into `game-builds/<game>/`; `game-builds/` git-ignored | merged | 2026-11-23 | 2026-11-23 |
 | [`mega-refactor-185c-games-layout`](items/185-second-title/branches/mega-refactor-185c-games-layout/process-log.md) | 185 | Layout `games/mega-man-maverick` + `games/mega-man-x-lost-memories`; title seams (levels, screens, spawn names, fight plans, audio, test roots); playable Lost Memories mock game | active | 2026-11-24 | |
+| [`mega-refactor-186a-remote-brain-input`](items/186-remote-bot-connector/branches/mega-refactor-186a-remote-brain-input/process-log.md) | 186 | A `RemoteBrain` that a local client drives over a socket (held-button mask in, `hello` out), behind `--bot remote`; adds the `BotBrain` interface | planned | | |

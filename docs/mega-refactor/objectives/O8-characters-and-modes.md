@@ -134,6 +134,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01, with the `084h` changes (`d796e00b
 | `172` | idea | [Mega Man picks up and wears a `Met` helmet](../items/172-wear-met-helmet/ITEM.md) |
 | `178` | active | [NPCs and AI allies that fight next to the players](../items/178-npc-allies/ITEM.md) (main) |
 | `185` | active | [A second game title on the same engine and shared code](../items/185-second-title/ITEM.md) |
+| `186` | idea | [A remote bot connector: outside programs drive a player and read the world](../items/186-remote-bot-connector/ITEM.md) (main) |
 
 ## Gaps with no item
 
