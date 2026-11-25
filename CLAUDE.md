@@ -172,6 +172,7 @@ The ways of working (the owner's preferences for the approach to a task) are in 
 | Gameplay that the owner play-tests in rounds | `docs/ways-of-working/gameplay.md` |
 | Levels (TMX), entities that read places from their room | `docs/ways-of-working/levels.md` |
 | Plans of an item or branch, stopgap or real fix | `docs/ways-of-working/planning.md` |
+| Any session in Claude on the web or mobile (cloud, no laptop) | `docs/ways-of-working/claude-web.md` |
 
 `docs/ways-of-working/README.md` is the index and says how to add a rule.
 

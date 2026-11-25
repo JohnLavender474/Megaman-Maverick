@@ -14,6 +14,7 @@ to every task.
 | [`gameplay.md`](gameplay.md) | change gameplay that the owner play-tests in rounds |
 | [`levels.md`](levels.md) | draft or edit a level, or an entity that reads places from its room |
 | [`planning.md`](planning.md) | plan an item or branch, or choose between a stopgap and the real fix |
+| [`claude-web.md`](claude-web.md) | work in Claude on the web or mobile (no laptop): briefs, pull request review, tools missing in the cloud |
 
 Related, in other places:
 

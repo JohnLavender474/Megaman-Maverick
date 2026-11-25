@@ -9,7 +9,9 @@ A report holds only these 3 parts, and each part only when it has content:
 1. **Questions.** Each one with options and a recommendation (`AskUserQuestion`).
 2. **Decisions made without the owner.** One line each: the choice and the reason. A failure, a blocked step or a
    skipped step counts as a decision and stays in the report.
-3. **Where to look.** The Diffity link, an Artifact link, or the absolute path of an image.
+3. **Where to look.** The Diffity link, an Artifact link, or the absolute path of an image. In Claude on the web or
+   mobile: the pull request link, an Artifact or Docs link, or an image sent to the chat
+   (`claude-web.md`).
 
 Leave out:
 

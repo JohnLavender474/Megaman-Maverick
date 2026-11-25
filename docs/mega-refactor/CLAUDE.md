@@ -220,7 +220,8 @@ past the limit, write the brief and `PLAN.md` as usual.
    - Contract: the behavior that the branch changes on purpose, the behavior that it must not
      change, and how to check them, for example the levels to play through and what to look for.
      Only include what the scope can affect.
-3. **Brief.** Load the `visual-explainer` skill. Write `docs/BRIEF.src.html` from the template
+3. **Brief.** In Claude on the web or mobile, follow `docs/ways-of-working/claude-web.md` instead of the rest of
+   this step (no HTML page; the brief goes in the chat or a simple doc). Otherwise load the `visual-explainer` skill. Write `docs/BRIEF.src.html` from the template
    `_templates/branch/docs/BRIEF.src.html`. Render it into `temp/<branch>/`, not into the branch
    folder:
    `node <visual-explainer skill folder>/kit/render.mjs docs/BRIEF.src.html -o <repo>/temp/<branch>/BRIEF.html`.
@@ -346,6 +347,10 @@ makes sure that **every** manual check in the contract will compile, launch and 
    the owner the list of checks (see "Test maps"), and open the diff review (see "Diff review").
 
 ### Diff review
+
+In Claude on the web or mobile there is no Diffity: the review is a GitHub pull request, see
+`docs/ways-of-working/claude-web.md`. (TODO, owner 2026-11-25: Claude Code may use pull requests in place of
+Diffity too; then this section changes.)
 
 The owner reviews the branch diff in Diffity, at the same time as the play test (owner decision,
 2026-11-07). Diffity shows the diff in the browser with anchored comment threads. The global

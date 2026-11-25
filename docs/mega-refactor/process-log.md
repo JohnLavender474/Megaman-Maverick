@@ -3168,3 +3168,13 @@ newest entry at the bottom.
   the notification. The text match also hits such words inside a commit message or heredoc. The owner's global
   settings have the same hook. Direct change on `master` so that every session and every clone has it at once; no
   game code, so no build.
+
+## 2026-11-25 — Ways of working for Claude on the web or mobile (docs, direct change on `master`)
+
+- Summary: owner request from the phone, in the session of `078h`. The process had two laptop-only steps (the HTML brief
+  with `visual-explainer`, and the Diffity review). New `docs/ways-of-working/claude-web.md`: in Claude on the web or
+  mobile, the brief goes in the chat or a simple doc, the review is a GitHub pull request, there is no play test in the
+  cloud, the Gradle checks may not run (the CI of the PR is the check), and TexturePacker is missing (a script makes the
+  atlas). Links added in the root `CLAUDE.md` table, `ways-of-working/README.md`, `reports.md` ("Where to look") and the
+  "Brief" and "Diff review" parts of `mega-refactor/CLAUDE.md`. TODO in the new file: Claude Code may replace Diffity
+  with pull requests too. No game code, so no build.
