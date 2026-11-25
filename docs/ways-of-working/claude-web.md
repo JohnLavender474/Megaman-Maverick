@@ -24,11 +24,12 @@ owner reads in the Claude app. When in doubt, ask once.
    `localhost` URL.
 4. **Code review is a GitHub pull request**, in place of Diffity:
    - Commit all branch work, push the branch (`git -c push.negotiate=true push -u origin <branch>`) and open a pull
-     request to the merge target (`gh pr create`). The body holds the goal, the contract checks and their result,
+     request to the merge target (REST API: `gh api repos/<owner>/<repo>/pulls -f title=... -f head=<branch> -f base=<target> -F body=@file`;
+     `gh pr create` fails because GitHub GraphQL is blocked in these sessions; add `-F draft=true` for a draft). The body holds the goal, the contract checks and their result,
      the decisions made without the owner, and a link to `SCOPE.md`.
    - Give the PR link with the list of play checks.
-   - The owner comments on the PR. Read the comments (`gh pr view --comments` and the review comments of the PR
-     API), fix them in new commits on the branch (not uncommitted: the PR keeps the history), push, and reply to
+   - The owner comments on the PR. Read the comments with the REST API (`gh api repos/<owner>/<repo>/pulls/<n>/comments`,
+     `.../issues/<n>/comments`, `.../pulls/<n>/reviews`; review threads: `GET .../pulls/<n>/ccr/review_threads`), fix them in new commits on the branch (not uncommitted: the PR keeps the history), push, and reply to
      each thread with what was done. Do not resolve a thread that the owner has not answered; the owner resolves
      it.
    - Write each round in the branch process log as for Diffity: the number of threads and what was done.
@@ -40,7 +41,7 @@ owner reads in the Claude app. When in doubt, ask once.
 6. **Automated checks.** The Gradle checks may not run in the cloud: on 2026-11-25 the proxy blocked
    `services.gradle.org`, so the wrapper could not download Gradle. Say so in the PR and in the process log, and
    treat the CI run of the PR (`.github/workflows/ci.yml`, on a push to any branch) as the automated check. Read the
-   result with `gh pr checks`; do not write a polling loop (`git.md`). A check that did not run is listed as not
+   result with `gh api repos/<owner>/<repo>/commits/<sha>/check-runs`; do not write a polling loop (`git.md`). A check that did not run is listed as not
    run, never as passed.
 7. **Repo setup.** `add_repo` with `access: "push"`, then a shallow clone (`git clone --depth 1`) into
    `/home/claude/megaman-maverick`, then `register_repo_root`. The rules of the root `CLAUDE.md` hold: the main
