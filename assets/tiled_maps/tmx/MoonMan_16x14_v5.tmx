@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="567">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="600" height="125" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="571">
  <tileset firstgid="1" source="../tsx/MoonManTiles.tsx"/>
  <layer id="1" name="tiles1" width="600" height="125">
   <data encoding="csv">
@@ -132,6 +132,10 @@
  </layer>
  <objectgroup id="9" name="backgrounds">
   <object id="48" name="Space" x="0" y="3968" width="32" height="32"/>
+  <object id="567" name="MoonNebula" x="0" y="3968" width="32" height="32"/>
+  <object id="568" name="MoonSky" x="0" y="3968" width="32" height="32"/>
+  <object id="569" name="MoonComets" x="0" y="3968" width="32" height="32"/>
+  <object id="570" name="MoonRidge" x="0" y="3968" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="game_rooms">
   <object id="45" name="room1" x="32" y="3424" width="2816" height="448"/>

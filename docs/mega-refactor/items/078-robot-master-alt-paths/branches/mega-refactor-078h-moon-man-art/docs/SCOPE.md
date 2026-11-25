@@ -80,10 +80,9 @@ can be built in multiple layers for different effects."
 
 1. ~~Who made the original `MoonManTiles` tileset?~~ Answered by the owner, 2026-11-25: SamuelX4. The original
    background is by Capcom; no Capcom credit is needed, because the new background is original.
-2. Fill the 2 px transparent bottom rows of tiles 10, 11 and 12 (`MoonManTiles_gaps_filled_ALT.png`)? Agent and
-   Claude recommend yes.
-3. Scatter the rock variants in the map? Recommended: yes.
-4. Keep the near ridge layer? Recommended: try it in play, drop it if it reads wrong.
+2. ~~Fill the 2 px bottom rows of tiles 10-12?~~ Yes (owner took the recommendation, 2026-11-25).
+3. ~~Scatter the rock variants in the map?~~ Yes, done (owner took the recommendation, 2026-11-25).
+4. Keep the near ridge layer? Kept for the play test; drop it if it reads wrong in the tall shafts.
 
 ## Steps
 
