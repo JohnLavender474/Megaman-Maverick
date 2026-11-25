@@ -1,0 +1,33 @@
+Backgrounds14.png
+size: 512, 758
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+MoonComets
+  rotate: false
+  xy: 0, 226
+  size: 512, 224
+  orig: 512, 224
+  offset: 0, 0
+  index: -1
+MoonNebula
+  rotate: false
+  xy: 0, 452
+  size: 256, 224
+  orig: 256, 224
+  offset: 0, 0
+  index: -1
+MoonRidge
+  rotate: false
+  xy: 0, 678
+  size: 512, 80
+  orig: 512, 80
+  offset: 0, 0
+  index: -1
+MoonSky
+  rotate: false
+  xy: 0, 0
+  size: 512, 224
+  orig: 512, 224
+  offset: 0, 0
+  index: -1

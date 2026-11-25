@@ -325,6 +325,10 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Desert Man
     - Original by [Super Icon Ltd](https://assetstore.unity.com/publishers/5990) ([Mega 8-Bit Pixel Pack](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158))
     - Updated by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
+- [SamuelX4](https://www.deviantart.com/samuelx4)
+  - Moon Man
+    - Original by [SamuelX4](https://www.deviantart.com/samuelx4)
+    - Updated by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer: the rock tiles and the NES palette
 - [Gektorne](https://gektorne.itch.io/)
   - [Wily Stage 2](https://gektorne.itch.io/8bit-tileset-for-action-platformer)
 - [Anokolisa](https://anokolisa.itch.io)
@@ -347,6 +351,8 @@ List of creators and the stages in which their artwork is used. Some stages cont
   - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
   - Inspired by [Super Icon Ltd](https://assetstore.unity.com/publishers/5990) ([Mega 8-Bit Pixel Pack](https://assetstore.unity.com/packages/2d/environments/mega-8-bit-pixel-pack-60158)): the hills
   - Inspired by Capcom: the sunset
+- Moon Man Backgrounds (`Space`, `MoonNebula`, `MoonSky`, `MoonComets`, `MoonRidge`)
+  - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
 - Wily Stage 1 (tileset, backgrounds and the generator)
   - Made by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer
   - Inspired by AxeW1eld3r ([Megaman 10 - Endless Attack](https://www.spriters-resource.com/wii/mm10/sheet/166546/)): the tile layout of the cliffside, the pit, the sand and the corridors

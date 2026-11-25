@@ -19,8 +19,8 @@ class Space(game: MegamanMaverickGame, it: RectangleMapObject) : AnimatedBackgro
     modelHeight = MODEL_HEIGHT * ConstVals.PPM,
     rows = ROWS,
     columns = COLS,
-    parallaxX = 0.1f,
-    parallaxY = 0.1f,
+    parallaxX = 0.02f,
+    parallaxY = 0.02f,
     animRows = ANIM_ROWS,
     animColumns = ANIM_COLS,
     duration = ANIM_DUR,
@@ -35,7 +35,7 @@ class Space(game: MegamanMaverickGame, it: RectangleMapObject) : AnimatedBackgro
         private const val COLS = 100
         private const val ANIM_ROWS = 2
         private const val ANIM_COLS = 1
-        private const val ANIM_DUR = 0.25f
+        private const val ANIM_DUR = 0.5f
         private const val MODEL_WIDTH = 16f
         private const val MODEL_HEIGHT = 14f
     }
