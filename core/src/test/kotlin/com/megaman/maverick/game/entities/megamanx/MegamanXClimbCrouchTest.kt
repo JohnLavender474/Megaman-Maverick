@@ -131,7 +131,7 @@ class MegamanXClimbCrouchTest : DescribeSpec({
         x.addComponent(x.damageRecovery)
         x.addComponent(x.defineStunComponent())
         x.addComponent(x.defineFreezeComponent())
-        x.addComponent(x.defineWeaponChargeComponent())
+        x.addComponent(WeaponWindupComponent())
         x.addComponent(PostActionMomentumComponent(0f, 0f, { 0f }, { overGround }, { false }, { false }))
         x.addComponent(AudioComponent())
         x.addComponent(PointsComponent(ConstKeys.HEALTH pairTo Points(0, ConstVals.MAX_HEALTH, ConstVals.MAX_HEALTH)))

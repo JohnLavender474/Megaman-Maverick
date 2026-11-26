@@ -54,6 +54,7 @@ import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.events.EventType
 import com.megaman.maverick.game.players.*
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
+import com.megaman.maverick.game.weapons.BusterCharge
 import com.megaman.maverick.game.world.body.*
 
 class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IDamagerEntity {
@@ -78,6 +79,20 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
     internal val buster = PlayerBuster(this, MEGAMAN_X_BUSTER)
     internal val sabre = PlayerSabre(this, megamanXSabreParams(this))
 
+    // TODO: a teleporter does not stop X's charge, lock damage or stop the smooth follow, as it does for Megaman;
+    //  no X level has a teleporter yet (item 081)
+    private val busterCharge = BusterCharge(
+        fullTime = MegamanXValues.TIME_TO_FULL_CHARGE,
+        halfTime = MegamanXValues.TIME_TO_HALF_CHARGE,
+        speedScalar = { 1f },
+        onHalfCharged = { requestToPlaySound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND, loop = false) },
+        onFullyCharged = {},
+        onCleared = { stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND) }
+    )
+
+    internal val chargeStatus: MegaChargeStatus
+        get() = if (windups.active === busterCharge) busterCharge.status() else MegaChargeStatus.NOT_CHARGED
+
     internal var airDashUsed = false
     internal var dashSpeedInAir = false
     internal var airborne = false
@@ -96,14 +111,6 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
     internal val wallDelayTimer = Timer(MegamanXValues.WALL_DELAY_AFTER_JUMP).setToEnd()
 
     override val cameraFocusHeight = MegamanXValues.BODY_HEIGHT
-
-    // TODO: a teleporter does not stop X's charge, lock damage or stop the smooth follow, as it does for Megaman;
-    //  no X level has a teleporter yet (item 081)
-    override fun init(vararg params: Any) {
-        super.init()
-
-        addComponent(defineWeaponChargeComponent())
-    }
 
     override fun onPlayerSpawn(spawnProps: Properties) {
         buster.reset()
@@ -130,16 +137,16 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
     override fun onPlayerEvent(event: Event) {
         when (event.key) {
             EventType.BEGIN_ROOM_TRANS, EventType.CONTINUE_ROOM_TRANS -> {
-                stopCharging()
+                stopWindup()
                 sabre.end()
             }
-            EventType.GATE_INIT_OPENING -> stopCharging()
+            EventType.GATE_INIT_OPENING -> stopWindup()
         }
     }
 
     override fun afterPlayerDamage(damager: IDamagerEntity) {
         dashSpeedInAir = false
-        stopCharging()
+        stopWindup()
         sabre.end()
     }
 
@@ -149,7 +156,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             killPlayerIfOutsideLevel()
 
             require(StunComponent::class).update(delta, body.isSensing(BodySense.FEET_ON_GROUND))
-            if (stunned || damaged) stopCharging()
+            if (stunned || damaged) stopWindup()
 
             damageRecovery.update(delta, damaged, damageTimer.isJustFinished())
 
@@ -373,7 +380,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
         val attack = ButtonActuator(
             onJustPressed = {
                 if (input.isPressed(MegaControllerButton.UP) && sabre.canStart()) {
-                    stopCharging()
+                    stopWindup()
                     sabre.start()
                 }
                 when {
@@ -382,14 +389,14 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
                 }
             },
             onPressContinued = { delta ->
-                if (playerCanAttack && !sabre.pressHeld) require(WeaponChargeComponent::class).update(delta)
-                else stopCharging()
+                if (playerCanAttack && !sabre.pressHeld) windups.hold(busterCharge, delta)
+                else stopWindup()
             },
             onJustReleased = {
-                val status = playerChargeStatus
+                val status = chargeStatus
                 if (playerCanAttack && status != MegaChargeStatus.NOT_CHARGED) shoot(status)
                 sabre.pressHeld = false
-                stopCharging()
+                stopWindup()
             },
             onReleaseContinued = { sabre.pressHeld = false }
         )
@@ -415,7 +422,7 @@ class MegamanX(services: MegaServices) : MegaPlayer(services), ISpritesEntity, I
             player.setPosition(body.getPositionPoint(position), position)
 
             // TODO: the charge shows as a tint flash in code, because the 1LMX sheet has no charge frames (item 081)
-            val tint = when (playerChargeStatus) {
+            val tint = when (chargeStatus) {
                 MegaChargeStatus.FULLY_CHARGED -> FULL_CHARGE_TINT
                 MegaChargeStatus.HALF_CHARGED -> HALF_CHARGE_TINT
                 MegaChargeStatus.NOT_CHARGED -> null

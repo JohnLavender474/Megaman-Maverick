@@ -14,7 +14,6 @@ import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.explosions.IceShard
 import com.megaman.maverick.game.entities.state.*
 import com.megaman.maverick.game.players.bodyOverGround
-import com.megaman.maverick.game.players.playerChargeComponent
 import com.megaman.maverick.game.players.playerCanMove
 import com.megaman.maverick.game.world.body.BodySense
 import com.megaman.maverick.game.world.body.getCenter
@@ -67,7 +66,3 @@ internal fun MegamanX.stopRunning() {
 
 internal val MegamanX.walkStarting: Boolean
     get() = running && require(RunComponent::class).runTime < MegamanXValues.WALK_START_TIME
-
-internal fun MegamanX.defineWeaponChargeComponent() =
-    playerChargeComponent(this, MegamanXValues.TIME_TO_HALF_CHARGE, MegamanXValues.TIME_TO_FULL_CHARGE)
-

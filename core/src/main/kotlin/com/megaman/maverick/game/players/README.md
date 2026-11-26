@@ -43,7 +43,7 @@ flowchart LR
     Class -- "defineBodyComponent" --> Body["PlayerBody.kt<br/>shared fixtures and pre-step,<br/>with PlayerBodyParams and hooks"]
     Body -- "reads" --> Gravity["PlayerGravityComponent<br/>gravity table, signed by direction"]
     Class -- "its B button calls" --> Buster["PlayerBuster.kt<br/>one BusterShot per charge level:<br/>speed, wait, pose, cap, sound, fetch"]
-    Class -- "charges with" --> Charge["PlayerCharge.kt<br/>charge component, status, stop"]
+    Class -- "charges with" --> Charge["its own BusterCharge (weapons/),<br/>held by WeaponWindupComponent;<br/>PlayerWindup.kt: windups, stopWindup"]
     Buster -- "reads" --> Charge
     Moves --> Input["PlayerInput.kt, the air dash input reads<br/>the run side, A or SELECT"]
     Game["the game, at level start"] -- "putInSlot0" --> Roster["PlayerRoster<br/>one entity per PlayerCharacter;<br/>slot 0 gets the level's character"]
@@ -140,8 +140,10 @@ class Dasher(services: MegaServices) : MegaPlayer(services) {
   offset from the muzzle point of its shot art, relative to the body center of that pose (Proto Man:
   `ProtomanValues`). The fire rule
   (on the press or on the release)
-  stays in each class's `B` actuator, because X's actuator also drives the sabre. A class reads the charge with
-  `playerChargeStatus` and stops it with `stopCharging()`; Megaman adds his weapon gate on top. Megaman's own shots
+  stays in each class's `B` actuator, because X's actuator also drives the sabre. A class builds its own
+  `BusterCharge` (its times and sound), holds it through its `WeaponWindupComponent` (`windups.hold`), reads the
+  level with `status()` only while it is the active windup, and stops it with `stopWindup()`; Megaman adds his
+  weapon gate on top (`windupOf`). Megaman's own shots
   still go through his weapon handler (item `024`). Research and decisions: `docs/mega-refactor/items/060-proto-man/`.
 - **The sabre is data; the class gives the button.** `PlayerSabre` runs a slash from its `SabreParams`: one move
   list for each `SabreState` (floor, air, wall), the atlas, the start rule and the state rule. The state rule

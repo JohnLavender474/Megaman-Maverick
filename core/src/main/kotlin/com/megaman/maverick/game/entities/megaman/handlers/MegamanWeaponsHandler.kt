@@ -21,6 +21,7 @@ import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.running
 import com.megaman.maverick.game.utils.GameObjectPools
+import com.megaman.maverick.game.weapons.BusterCharge
 import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.weapons.WeaponState
 import com.megaman.maverick.game.world.body.BodySense
@@ -201,8 +202,6 @@ class MegamanWeaponsHandler(private val megaman: Megaman) : Updatable, Resettabl
         if (previous != null) previous.onDeselect(megaman, states[previous])
     }
 
-    fun isChargeable(weapon: WeaponDef<Megaman>) = hasWeapon(weapon) && weapon.chargeable
-
     fun translateAmmo(weapon: WeaponDef<Megaman>, delta: Int): Int {
         if (!hasWeapon(weapon)) return delta
 
@@ -278,8 +277,8 @@ class MegamanWeaponsHandler(private val megaman: Megaman) : Updatable, Resettabl
             return false
         }
 
-        if (!isChargeable(weapon)) {
-            GameLogger.debug(TAG, "fireWeapon(): weapon not chargeable")
+        if (megaman.windupOf(weapon) !is BusterCharge) {
+            GameLogger.debug(TAG, "fireWeapon(): weapon has no buster charge")
             stat = MegaChargeStatus.NOT_CHARGED
         }
 

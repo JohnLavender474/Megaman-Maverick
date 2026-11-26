@@ -26,7 +26,6 @@ object MegamanWeapons {
         id = "mega_buster",
         cooldown = 0.1f,
         fire = ::fireMegaBuster,
-        chargeable = true,
         alwaysOwned = true,
         infiniteAmmo = true
     )
