@@ -140,13 +140,16 @@ class MegamanWeaponsTest : DescribeSpec({
             MegaChargeStatus.entries.forEach { handler.canFireWeapon(MegamanWeapons.MEGA_BUSTER, it) shouldBe true }
         }
 
-        it("gives a buster charge only to the buster, and a windup to no other weapon") {
+        it("gives a buster charge only to the buster, an axe windup only to the axe, and a windup to no other weapon") {
             val services = testServices()
             services.levelState.currentLevel = LevelDefinition.DESERT_MAN
             val megaman = Megaman(services)
             MEGAMAN_LOADOUT.weapons.filter { megaman.windupOf(it) is BusterCharge } shouldBe
                 listOf(MegamanWeapons.MEGA_BUSTER)
-            MEGAMAN_LOADOUT.weapons.filter { megaman.windupOf(it) != null } shouldBe listOf(MegamanWeapons.MEGA_BUSTER)
+            MEGAMAN_LOADOUT.weapons.filter { megaman.windupOf(it) is AxeThrowWindup } shouldBe
+                listOf(MegamanWeapons.AXE_SWINGER)
+            MEGAMAN_LOADOUT.weapons.filter { megaman.windupOf(it) != null } shouldBe
+                listOf(MegamanWeapons.MEGA_BUSTER, MegamanWeapons.AXE_SWINGER)
         }
     }
 

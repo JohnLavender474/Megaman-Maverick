@@ -12,6 +12,9 @@ internal val Megaman.chargeStatus: MegaChargeStatus
         else -> MegaChargeStatus.NOT_CHARGED
     }
 
+internal val Megaman.holdingAxe: Boolean
+    get() = windups.active === axeWindup
+
 internal val Megaman.charging: Boolean
     get() = chargeStatus != MegaChargeStatus.NOT_CHARGED
 

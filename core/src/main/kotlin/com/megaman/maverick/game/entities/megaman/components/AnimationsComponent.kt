@@ -1,12 +1,18 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.utils.OrderedMap
+import com.maverick.game.engine.animations.AnimationsComponent
+import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
+import com.maverick.game.engine.components.require
 import com.maverick.game.engine.entities.input
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
+import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.currentLook
+
+private const val AXE_THROW_KEY = "axe_throw"
 
 internal fun Megaman.onChangeAnimationKey(
     currentKey: String?, nextKey: String?, animations: OrderedMap<String, IAnimation>
@@ -16,11 +22,23 @@ internal fun Megaman.onChangeAnimationKey(
     // the current animation is at.
     if (currentLook.keepsAnimTimeAcrossKeys &&
         currentKey != null && nextKey != null &&
-        currentKey.contains("axe_throw")
+        currentKey.contains(AXE_THROW_KEY)
     ) {
-        val time = animations[currentKey]?.getCurrentTime()
+        val time = if (holdingAxe) 0f else animations[currentKey]?.getCurrentTime()
         time?.let { t -> animations[nextKey]?.setCurrentTime(t) }
     }
+}
+
+internal fun Megaman.shouldUpdateAnimation(key: String, animation: IAnimation): Boolean {
+    if (!holdingAxe || !key.contains(AXE_THROW_KEY)) return true
+    animation.setCurrentTime(0f)
+    return false
+}
+
+internal fun Megaman.setAxeThrowAnimationToThrowFrame() {
+    val animator = require(AnimationsComponent::class).getAnimator(MEGAMAN_SPRITE_KEY) as Animator
+    val key = animator.currentKey ?: return
+    if (key.contains(AXE_THROW_KEY)) animator.currentAnimation?.setCurrentTime(MegamanValues.AXE_WINDUP_TIME)
 }
 
 internal fun Megaman.shouldEqualAnimKeysTriggerChange(key: String?): Boolean {

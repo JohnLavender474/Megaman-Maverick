@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.megaman.weapons.AxeThrowWindup
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.weapons.BusterCharge
 import com.megaman.maverick.game.weapons.WeaponDef
@@ -159,6 +160,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         onFullyCharged = {},
         onCleared = { stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND) }
     )
+    internal val axeWindup = AxeThrowWindup(MegamanValues.AXE_HOLD_TIME)
 
     internal var jumpVel = 0f
     internal var wallJumpVel = 0f
@@ -466,15 +468,18 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
 
         val attack = ButtonActuator(
             onPressContinued = { delta ->
+                val windup = windupOf(currentWeapon)
+                if (windup === axeWindup && (services.levelState.roomTransition || services.gameCamera.rotating))
+                    return@ButtonActuator
+
                 if (!inPlay || stunned || damaged || teleporting || currentWeapon.stopsChargeOnHold ||
-                    (!charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)) ||
-                    (charging && !weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED))
+                    !canFireAfterWindupOf(windup)
                 ) {
                     stopWindup()
                     return@ButtonActuator
                 }
 
-                val windup = windupOf(currentWeapon) ?: return@ButtonActuator
+                if (windup == null) return@ButtonActuator
                 windups.hold(windup, delta)
             },
             onJustReleased = {
@@ -568,6 +573,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
             keySupplier = megamanAnimKeySupplier,
             animations = animations,
             onChangeKey = { _, currentKey, nextKey -> onChangeAnimationKey(currentKey, nextKey, animations) },
+            shouldUpdateAnimationPredicate = { key, animation, _ -> shouldUpdateAnimation(key, animation) },
             postProcessKey = { _, currentKey, nextKey -> postProcessAnimationKey(currentKey, nextKey) },
             shouldEqualKeysTriggerChange = this::shouldEqualAnimKeysTriggerChange
         )
@@ -593,7 +599,14 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
 
     internal fun windupOf(weapon: WeaponDef<Megaman>): WeaponWindup? = when (weapon) {
         MegamanWeapons.MEGA_BUSTER -> busterCharge
+        MegamanWeapons.AXE_SWINGER -> axeWindup
         else -> null
+    }
+
+    private fun canFireAfterWindupOf(windup: WeaponWindup?) = when {
+        windup === axeWindup -> weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.NOT_CHARGED)
+        !charging -> weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.HALF_CHARGED)
+        else -> weaponsHandler.canFireWeapon(currentWeapon, MegaChargeStatus.FULLY_CHARGED)
     }
 
     fun translateAmmo(ammo: Int, weapon: WeaponDef<Megaman> = currentWeapon): Int {
