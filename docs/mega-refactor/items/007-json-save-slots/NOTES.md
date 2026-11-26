@@ -1,4 +1,6 @@
-# Notes: 007 Versioned JSON save slots with legacy import
+# Notes: 007 JSON save slots
+
+> 2026-11-26: the owner dropped backwards compatibility and set 5 slots. The review below is kept as written. Its legacy import, `LegacySaveV0`, migration chain and compatibility tests no longer apply; see `ITEM.md`.
 
 Item numbers in the review text are the numbers of the review list from 2026-10-22. The new ID is the review number plus 1, except review item 45, which is part of `026`. Line numbers refer to `master` at `9f3917b6a`. Check them again before the work starts.
 

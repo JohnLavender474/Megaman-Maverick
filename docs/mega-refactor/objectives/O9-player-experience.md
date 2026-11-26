@@ -71,7 +71,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 
 | Item | Status | Note |
 |------|--------|------|
-| `007` | planned | [Versioned JSON save slots with legacy import](../items/007-json-save-slots/ITEM.md) (main) |
+| `007` | planned | [JSON save slots](../items/007-json-save-slots/ITEM.md) (main) |
 | `034` | planned | [Persisted settings file](../items/034-persisted-settings/ITEM.md) (main) |
 | `070` | idea | [More flexible controller settings](../items/070-flexible-controls/ITEM.md) (main) |
 | `076` | done | [Better tileset art for every level](../items/076-final-stage-tileset/ITEM.md) (main) |

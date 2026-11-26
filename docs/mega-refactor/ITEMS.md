@@ -14,7 +14,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 004 | [Entity build-and-init smoke test](items/004-entity-smoke-test/ITEM.md) | test | `O6` | done | `002` | 2026-11-01 | 2026-11-01 |
 | 005 | [Golden damage-table test](items/005-golden-damage-test/ITEM.md) | test | `O6` | planned | `004`, `002` | | |
 | 006 | [Headless boot-and-run per level (stage A)](items/006-headless-boot-run/ITEM.md) | test | `O6` | idea | `002`, `004`, `010a`, `181` | | |
-| 007 | [Versioned JSON save slots with legacy import](items/007-json-save-slots/ITEM.md) | feature | `O9` | planned | none | | |
+| 007 | [JSON save slots](items/007-json-save-slots/ITEM.md) | feature | `O9` | active | none | 2026-11-26 | |
 | 008 | [Dev launch options and level staging](items/008-dev-launch-options/ITEM.md) | tooling | `O6` | active | none | 2026-10-22 | |
 | 009 | [Allocation and GC baseline per branch](items/009-gc-baseline/ITEM.md) | tooling | `O5`, `O6` | planned | none | | |
 | 010 | [One simulation clock: fixed tick for gameplay, separate present phase](items/010-fixed-tick/ITEM.md) | refactor | `O2`, `O6`, `O5` | idea | `011`, `017` | | |
@@ -339,3 +339,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-185b-game-builds`](items/185-second-title/branches/mega-refactor-185b-game-builds/process-log.md) | 185 | Platform builds for each game into `game-builds/<game>/`; `game-builds/` git-ignored | merged | 2026-11-23 | 2026-11-23 |
 | [`mega-refactor-185c-games-layout`](items/185-second-title/branches/mega-refactor-185c-games-layout/process-log.md) | 185 | Layout `games/mega-man-maverick` + `games/mega-man-x-lost-memories`; title seams (levels, screens, spawn names, fight plans, audio, test roots); playable Lost Memories mock game | active | 2026-11-24 | |
 | [`mega-refactor-187a-intro-story-art`](items/187-intro-story-and-menu/branches/mega-refactor-187a-intro-story-art/process-log.md) | 187 | First round of NES-style art for the intro story slides: the city by day, dusk and night, and the exploding city with two screens, as exported layers (art only) | active | 2026-11-26 | |
+| [`mega-refactor-007a-json-save-slots`](items/007-json-save-slots/branches/mega-refactor-007a-json-save-slots/process-log.md) | 007 | First pass: `SaveStorage`, 5 JSON save slots, a slot picker; no legacy import | active | 2026-11-26 | |
