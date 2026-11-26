@@ -66,9 +66,7 @@ pattern, the `PHASE_START` pending-flag rule, `SHAKE_CAM`. New: the state set, t
    the water room (death pit in the middle).
 5. **Fallout Pool** (P2). The enraged ball's last bounce leaves a bubbling green puddle (2 tiles wide, 2 s) instead
    of only the explosion. It shrinks the safe floor for the next throws. Not in the water room.
-6. **Hot Potato** (P1 + P2, a player verb). A full charged shot knocks a falling ball back up; if it lands on him,
-   it hurts him (big hit). Today the ball is a `SHIELD` that eats shots, so this changes a contact rule. Owner taste
-   call.
+6. **Hot Potato** (P1 + P2, a player verb). Owner 2026-11-26: yes, a charged shot can knock his ball back, and the monkey responds appropriately. Proposal (not decided): if the returned ball hits him he is knocked back and dazed (`ball_hit`), with a short stun in which he takes a big hit. Today the ball is a `SHIELD` that eats shots, so this changes a contact rule for this owner only (`ReactorMonkeyBall`). To decide in the `077i` plan: charge level needed, damage of the returned ball, stun length, whether it works on every throw type.
 7. **Reactor Shake** (P2, alternative to 2). Ground pound; 4 chunks of rubble fall with mixed aims
    (LEAD/CURRENT/NEAR/WIDE), dust marks on the floor 0.5 s before. Close to Glacier Man's Icicle Rain, so rank low.
 8. **Knuckle Charge** (P2). On all fours (the `throw` frame 2 pose) he charges the far wall and back. Only fair if
@@ -118,6 +116,7 @@ Chest-Beat Shockwave, tuning rows, `PlayerDamageNegotiator` entries, test rooms 
 | Death | `dying`, `collapse`, `dead` | 160 × 160 | yes |
 | Mad Beat | `chest_beat`, `mad_stand`, `mad_throw` (+ `_damaged`), `steam`, `steam_jet` | 160 × 160; steam per the drafts | yes |
 | Enraged ball | red-symbol ball | 64 × 64 (as `ReactorMonkeyBall`) | yes (optional draft) |
+| Hot Potato hit reaction | `ball_hit`, `mad_ball_hit` (+ `_damaged`) | 160 × 160, ~5 frames | round 2 draft |
 | Bank throw | `throw_up` (+ `_damaged`, `mad_` and `mad_..._damaged`) | 160 × 160, ~3 frames | **no** |
 | Skip / Fake | reuse `throw` / `mad_throw` | - | yes (existing) |
 | Shockwave | `chest_beat` + new `RadWave` entity strip | ~32 × 24 art px, 3-4 frames | **no** (beat yes) |
@@ -134,5 +133,4 @@ Chest-Beat Shockwave, tuning rows, `PlayerDamageNegotiator` entries, test rooms 
    `mad_` + `mad_..._damaged` strips; only `stand` and `throw`/`throw_up` need all 4.
 3. **Should he move?** Leap and Charge break "he never moves" and need a new body. *Rec:* not in `077i`; try Leap
    in a 2nd branch once the static fight feels good.
-4. **Hot Potato** changes a shield rule that other balls may share. *Rec:* a yes/no from the owner before any design
-   work; if no, drop it.
+4. ~~Hot Potato~~ decided yes (2026-11-26).

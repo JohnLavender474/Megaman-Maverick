@@ -30,8 +30,8 @@ ID or letter: `077h` is the next free letter of item `077`.
 ## In scope
 
 - Draft strips (in `docs/drafts/`, from `temp/077h-reactor-monkey-art/`): `intro_drop`, `intro_land`, `intro_roar`,
-  `dying`, `collapse`, `dead`, `chest_beat`, `mad_stand`, `mad_throw` (+ `_damaged`), `steam`, `steam_jet`, and an
-  optional enraged ball. Final list and timings: `docs/NOTES.md`.
+  `dying`, `collapse`, `dead`, `chest_beat`, `mad_stand`, `mad_throw` (+ `_damaged`), `steam`, `steam_jet`, `ball_hit`, `mad_ball_hit` (round 2, Hot Potato reaction) and an
+  optional enraged ball. Round 2 (`docs/drafts/round-2/`) replaces the round-1 strips. Final list and timings: `docs/NOTES.md`.
 - Design ideas for the fight: `docs/IDEAS.md`.
 
 ## Out of scope

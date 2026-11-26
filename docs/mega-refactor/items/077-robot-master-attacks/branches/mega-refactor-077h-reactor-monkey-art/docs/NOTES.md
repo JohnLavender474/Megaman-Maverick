@@ -8,5 +8,7 @@ Reactor Monkey artist is unknown (ask the owner before any credit line).
 
 - Drafts live here (not in `temp/`, which is never committed) so the owner can open them from the pull request.
 - Art agents: the whole head is red in the mad face; `ball_mad` is a red orb; no reactor on the body, so the intro flash is visor-only.
-- Open: death plays `collapse` + `dead`, or only `dying` under today's alpha fade (the design note advises the former, no fade).
+- 2026-11-26 (owner): death plays the full sequence (`dying`, `collapse`, `dead`), no alpha fade.
+- 2026-11-26 (owner): Hot Potato is in: a charged shot can knock his ball back; if it hits him he reacts (new `ball_hit` and `mad_ball_hit` strips). Design details in `IDEAS.md` move 6.
+- 2026-11-26 (owner): round-1 art has oddities: details of the head, torso and waist of the original are missing, and the shoulders are misplaced in some frames. Round 2 rebuilds the strips from the original parts (fresh Fable agent).
 - Known: the strict 3 colors per 8x8 rule fails in about a third of areas, as in today's frames (about 31 to 41 percent).
