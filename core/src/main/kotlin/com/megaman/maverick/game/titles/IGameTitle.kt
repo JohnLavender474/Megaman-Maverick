@@ -4,7 +4,7 @@ import com.megaman.maverick.game.MegamanMaverickGame
 
 interface IGameTitle {
 
-    val saveFileName: String
+    val saveFolderName: String
 
     val playerSettingsFileName: String
 

@@ -3,7 +3,6 @@ package com.megaman.maverick.game
 import com.badlogic.gdx.math.Vector3
 
 object PreferenceFiles {
-    const val MEGAMAN_MAVERICK_SAVE_FILE = "Megaman Maverick - Save File"
     const val MEGAMAN_MAVERICK_PLAYER_SETTINGS = "Megaman Maverick - Player Settings"
 }
 

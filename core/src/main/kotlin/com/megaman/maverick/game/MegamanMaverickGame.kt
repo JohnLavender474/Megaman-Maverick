@@ -1,5 +1,6 @@
 package com.megaman.maverick.game
 
+import com.badlogic.gdx.Application.ApplicationType
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
@@ -122,6 +123,12 @@ import com.megaman.maverick.game.state.GameClock
 import com.megaman.maverick.game.state.GameSettings
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.state.Performance
+import com.megaman.maverick.game.state.saves.FileSaveStorage
+import com.megaman.maverick.game.state.saves.PreferencesSaveStorage
+import com.megaman.maverick.game.state.saves.SaveFile
+import com.megaman.maverick.game.state.saves.SaveSlotContent
+import com.megaman.maverick.game.state.saves.SaveSlots
+import com.megaman.maverick.game.state.saves.SaveStorage
 import com.megaman.maverick.game.titles.IGameTitle
 import com.megaman.maverick.game.titles.MaverickTitle
 import com.megaman.maverick.game.utils.AsyncFileWriter
@@ -138,6 +145,7 @@ import com.megaman.maverick.game.world.contacts.MegaContactFilter
 import com.megaman.maverick.game.world.contacts.megaContactRules
 import com.megaman.maverick.game.world.wrap.WrapPolicy
 import com.megaman.maverick.game.world.wrap.wrapRegion
+import java.time.Instant
 import java.time.LocalDateTime
 import java.util.zip.Deflater
 import kotlin.reflect.KClass
@@ -184,6 +192,7 @@ class MegamanMaverickGame(
         private const val LOADING = "LOADING"
         private const val LOG_FILE_NAME = "logs.txt"
         private const val NOTIFICATION_DUR = 5f
+        private const val SAVES_FOLDER = "saves"
         val TAGS_TO_LOG: ObjectSet<String> = objectSetOf()
         val CONTACT_LISTENER_DEBUG_FILTER: (IFixture, IFixture) -> Boolean = { fixture1, fixture2 ->
             ((fixture1.getType() == FixtureType.WATER && fixture2.getType() == FixtureType.WATER_LISTENER) ||
@@ -280,7 +289,9 @@ class MegamanMaverickGame(
         private set
 
     private lateinit var launch: ResolvedLaunch
-    private lateinit var saveFileName: String
+    lateinit var saveSlots: SaveSlots
+        private set
+    var activeSaveSlot: Int? = null
     private var launchRoom: String? = null
     private var launchRoomLevel: LevelDefinition? = null
 
@@ -293,8 +304,9 @@ class MegamanMaverickGame(
             throw IllegalArgumentException("Invalid launch options: ${launchResult.errors.joinToString("; ")}")
         launch = launchResult.resolved!!
         launchRoom = launch.room
-        saveFileName = launch.saveFile ?: params.title.saveFileName
-        if (saveFileName != params.title.saveFileName) GameLogger.log(TAG, "create(): save file: $saveFileName")
+        val saveFolder = savesFolderOf(params.title.saveFolderName, launch.saveFile)
+        if (launch.saveFile != null) GameLogger.log(TAG, "create(): save folder: $saveFolder")
+        saveSlots = SaveSlots(createSaveStorage(saveFolder))
         launchRoomLevel = when (val start = launch.start) {
             is LaunchStart.StartLevel -> start.level
             is LaunchStart.OpenScreen -> start.stagedLevel
@@ -505,6 +517,8 @@ class MegamanMaverickGame(
         screens.put(ScreenEnum.OPENING_SCREEN.name, OpeningScreen(this))
         screens.put(ScreenEnum.MAIN_MENU_SCREEN.name, MainMenuScreen(this))
         screens.put(ScreenEnum.SAVE_GAME_SCREEN.name, SaveGameScreen(this))
+        screens.put(ScreenEnum.SAVE_SLOT_SCREEN.name, SaveSlotScreen(this, SaveSlotScreenMode.SAVE))
+        screens.put(ScreenEnum.LOAD_SLOT_SCREEN.name, SaveSlotScreen(this, SaveSlotScreenMode.LOAD))
         screens.put(ScreenEnum.GAME_OVER_SCREEN.name, GameOverScreen(this))
         screens.put(ScreenEnum.KEYBOARD_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, players.settings(PlayerSlot(0)), settingsStore, true))
         screens.put(ScreenEnum.CONTROLLER_SETTINGS_SCREEN.name, ControllerSettingsScreen(this, players.settings(PlayerSlot(0)), settingsStore, false))
@@ -877,51 +891,41 @@ class MegamanMaverickGame(
         startLevel(level)
     }
 
-    fun saveState() {
+    fun saveState(slot: Int): Boolean {
         if (!launch.savesAllowed) {
             GameLogger.error(TAG, "saveState(): not saved, because --heartTanks, --healthTanks or --difficulty was given")
-            return
+            return false
         }
 
-        val state = this.gameState.toString()
-        GameLogger.debug(TAG, "saveState(): state=$state")
-
-        val saveFile = Gdx.app.getPreferences(saveFileName)
-        saveFile.putString(ConstKeys.STATE, state)
-        saveFile.flush()
+        val saved = saveSlots.write(slot, SaveFile.of(gameState, savedAt = Instant.now().toString()))
+        GameLogger.debug(TAG, "saveState(): slot=$slot, saved=$saved")
+        if (saved) activeSaveSlot = slot
+        return saved
     }
 
-    fun hasSavedState(): Boolean {
-        val saveFile = Gdx.app.getPreferences(saveFileName)
-        return saveFile.contains(ConstKeys.STATE)
-    }
-
-    fun loadSavedState(): Boolean {
-        val saveFile = Gdx.app.getPreferences(saveFileName)
-
-        if (saveFile.contains(ConstKeys.STATE)) {
-            val state = saveFile.getString(ConstKeys.STATE)
-
-            if (state == null) {
-                GameLogger.error(TAG, "loadSavedState(): state is null")
-
-                return false
-            } else {
-                GameLogger.debug(TAG, "loadSavedState(): loading state: state=$state")
-
-                this.gameState.reset()
-                this.gameState.fromString(state)
-                this.gameState.resetLives()
-
-                return true
-            }
+    fun loadSavedState(slot: Int): Boolean {
+        val content = saveSlots.read(slot)
+        if (content !is SaveSlotContent.Used) {
+            GameLogger.error(TAG, "loadSavedState(): slot $slot cannot be loaded: ${content::class.simpleName}")
+            return false
         }
 
-        GameLogger.debug(TAG, "loadSavedState(): no state to load")
-
-        return false
+        GameLogger.debug(TAG, "loadSavedState(): slot=$slot")
+        content.save.applyTo(gameState)
+        gameState.resetLives()
+        levelState.weaponsAttained = null
+        activeSaveSlot = slot
+        return true
     }
 
+    private fun savesFolderOf(titleFolder: String, saveFileOption: String?) =
+        if (saveFileOption == null) "$titleFolder/$SAVES_FOLDER" else "$titleFolder/$SAVES_FOLDER/$saveFileOption"
+
+    private fun createSaveStorage(folder: String): SaveStorage = when (Gdx.app.type) {
+        ApplicationType.Desktop, ApplicationType.HeadlessDesktop -> FileSaveStorage(Gdx.files.external(folder))
+        ApplicationType.Android, ApplicationType.iOS -> FileSaveStorage(Gdx.files.local(folder))
+        else -> PreferencesSaveStorage(Gdx.app.getPreferences(folder))
+    }
 
     private fun queueAssets() {
         val queuedAssets = Array<IAsset>()
