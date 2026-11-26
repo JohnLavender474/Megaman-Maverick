@@ -18,6 +18,8 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameCircle
 import com.maverick.game.engine.common.shapes.GameRectangle
+import com.maverick.game.engine.common.shapes.IGameShape2D
+import com.maverick.game.engine.damage.IDamageableEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.shapes.IDrawableShape
 import com.maverick.game.engine.drawables.sorting.DrawingPriority
@@ -28,10 +30,12 @@ import com.maverick.game.engine.drawables.sprites.setCenter
 import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.entities.GameEntity
 import com.maverick.game.engine.entities.IGameEntity
+import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
 import com.maverick.game.engine.world.body.Fixture
+import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.MegaServices
@@ -41,6 +45,8 @@ import com.megaman.maverick.game.entities.EntityType
 import com.megaman.maverick.game.entities.contracts.AbstractProjectile
 import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
+import com.megaman.maverick.game.players.asPlayer
+import com.megaman.maverick.game.utils.GameObjectPools
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
 import kotlin.math.sqrt
@@ -58,6 +64,9 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
         private const val SKIP_MAX_SPEED_X = 8f
         private const val BOUNCE_VEL_SCALAR = 0.75f
         private const val EXPLODING_ALPHA = 0.5f
+        private const val RETURN_TARGET_HEIGHT_RATIO = 0.7f
+        private const val RETURN_MIN_SPEED = 8f
+        private const val RETURN_SPEED_SCALAR = 1.25f
         private val INIT_IMPULSE = Vector2(0f, -3f * ConstVals.PPM)
         private val ANIM_DURS = gdxArrayOf(0.1f, 0.075f, 0.05f)
         private val CALM_KEYS = Array<String>().apply { for (i in 0..BOUNCE_STRIPS) add(i.toString()) }
@@ -69,7 +78,11 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
 
     var hidden = false
     var collide = false
+    var returned = false
+        private set
 
+    private var thrown = false
+    private var thrower: IGameEntity? = null
     private var exploding = false
     private var bounces = 0
     private var maxBounces = MAX_BOUNCES
@@ -106,6 +119,9 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
 
         exploding = false
         hidden = false
+        thrown = false
+        returned = false
+        thrower = null
         bounces = 0
         maxBounces = MAX_BOUNCES
         skipping = false
@@ -116,6 +132,50 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
     override fun onDestroy() {
         super.onDestroy()
         exploding = false
+        returned = false
+        thrower = null
+    }
+
+    override fun canDamage(damageable: IDamageableEntity) =
+        if (returned) damageable === thrower else damageable != owner
+
+    override fun onDamageInflictedTo(damageable: IDamageableEntity) {
+        super.onDamageInflictedTo(damageable)
+        if (returned) explodeAndDie()
+    }
+
+    override fun hitProjectile(projectileFixture: IFixture, thisShape: IGameShape2D, otherShape: IGameShape2D) {
+        val shot = projectileFixture.getEntity()
+        if (shot !is ChargedShot || !shot.fullyCharged || !canBeReturned()) return
+        val shooter = shot.owner
+        if (shooter.asPlayer == null) return
+        returnToThrower(shooter!!)
+        shot.explodeAndDie()
+    }
+
+    private fun canBeReturned() = thrown && collide && !exploding && !returned && owner is IBodyEntity
+
+    private fun returnToThrower(shooter: IGameEntity) {
+        val throwerBody = (owner as IBodyEntity).body
+        thrower = owner
+        owner = shooter
+        returned = true
+        skipping = false
+        body.physics.gravityOn = false
+        val center = body.getCenter()
+        val target = GameObjectPools.fetch(Vector2::class).set(
+            throwerBody.getCenter().x, throwerBody.getY() + throwerBody.getHeight() * RETURN_TARGET_HEIGHT_RATIO
+        )
+        val speed = maxOf(body.physics.velocity.len(), RETURN_MIN_SPEED * ConstVals.PPM) * RETURN_SPEED_SCALAR
+        body.physics.velocity.set(target.x - center.x, target.y - center.y).nor().scl(speed)
+        requestToPlaySound(SoundAsset.DINK_SOUND, false)
+    }
+
+    private fun endReturn() {
+        owner = thrower
+        thrower = null
+        returned = false
+        body.physics.gravityOn = true
     }
 
     fun lob(velocity: Vector2) {
@@ -149,10 +209,12 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
         body.physics.gravityOn = true
         hidden = false
         collide = true
+        thrown = true
     }
 
     // TODO: the Fallout Pool leaves a puddle at the enraged ball's last bounce here (item 077, branch 077i later)
     override fun explodeAndDie(vararg params: Any?) {
+        if (exploding) return
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_FIELD)!!
         val props = props(
             ConstKeys.BOUNDS pairTo GameRectangle(body),
@@ -167,6 +229,8 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
 
     private fun bounce(direction: Direction, add: Boolean = true) {
         if (!collide) return
+
+        if (returned) endReturn()
 
         if (add) bounces++
 

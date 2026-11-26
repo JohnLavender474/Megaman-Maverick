@@ -49,26 +49,36 @@ scripted `GameRandom`). The code agent fills in the numbers it chooses and marks
   beat cell, then jet + puff every 0.8 s); the steam is hidden in strips without ear points and when he is defeated.
 - [x] Phase-2 balls use the `mad_` regions (balls spawned after the pose starts).
 - [x] He can be hurt during the pose.
-- [ ] Two-Ball Juggle (phase 2 only): 2 balls (3 on hard) drop 0.4 s apart; the throws aim `LEAD`, `CURRENT` (,
+- [x] Two-Ball Juggle (phase 2 only): 2 balls (3 on hard) drop 0.4 s apart; the throws aim `LEAD`, `CURRENT` (,
   `NEAR`).
+- [x] The juggle throws are Lobs; they do not change the throw deck or the aim cycle of the single throws.
+- [x] In phase 2 the move is never the same twice in a row (throw, juggle); in phase 1 every move is a single throw.
+- [x] At most 3 balls fall in at once; a 4th spawn throws.
+- [x] A juggle ball that leaves the engine before the catch does not stop the fight (the juggle ends when no ball
+  is left to drop or to catch).
 
 ### Hot Potato
 
-- [ ] A fully charged shot that hits a ball in flight sends it back toward the monkey; a weaker shot does not.
-- [ ] A ball that is held, falling in or exploding cannot be sent back.
-- [ ] A returned ball does not hurt the player.
-- [ ] A returned ball that touches him hurts him, explodes, and starts the stun (`ball_hit` in phase 1,
-  `mad_ball_hit` in phase 2) for the row's stun time.
-- [ ] A hit during the stun does the row's bonus damage.
+- [x] A fully charged shot of a player that hits a ball in flight sends it back toward the monkey (at 0.7 of his
+  body height, speed max(current, 8 tiles/s) × 1.25) and the shot explodes; a weaker shot does not.
+- [x] A ball that is held, falling in, exploding or already returned cannot be sent back.
+- [x] A returned ball does not hurt the player (it can damage only its thrower).
+- [x] A returned ball that touches him does 4 damage, explodes, and starts the stun (`ball_hit` in phase 1,
+  `mad_ball_hit` in phase 2) of 1.2 s (1.14 s from a throw pose, which starts at cell 2); the balls in his hands and
+  falling in explode.
+- [x] No throw during the stun; no stun in the Mad Beat or in a stun (the damage counts).
+- [x] A hit during the stun does 1.5 × the damage, rounded up.
+- [x] A returned ball that misses him bounces on the next block as a normal ball (it can hurt the player again) and
+  explodes at its bounce limit.
 
 ### Death
 
-- [ ] At the defeat every live ball explodes (thrown, falling, juggled).
-- [ ] The death plays `dying`, then `collapse` once, then `dead` until the defeat time ends; no alpha fade, no defeat
-  explosions.
-- [ ] `defeatDur` = the death sequence + the hold.
-- [ ] The Heart Tank of a `heart_tank` spawn appears at `onDestroy` when the save does not hold it.
-- [ ] No ball is left in the engine after `onDestroy`.
+- [x] At the defeat every live ball explodes (thrown, falling, juggled, returned).
+- [x] The death plays `dying` (4 loops, 1.28 s), then `collapse` once (0.72 s, a shake and a thud at cell 5), then
+  `dead` until the defeat time ends; no alpha fade, no blink, no defeat explosions.
+- [x] `defeatDur` = the death sequence + the 1 s hold (3.0 s).
+- [x] The Heart Tank of a `heart_tank` spawn appears at `onDestroy` when the save does not hold it.
+- [x] No ball is left in the engine after `onDestroy`.
 
 ## Existing tests broken by a round
 

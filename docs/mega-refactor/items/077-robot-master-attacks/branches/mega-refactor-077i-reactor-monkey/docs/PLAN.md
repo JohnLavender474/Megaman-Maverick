@@ -97,6 +97,14 @@ same 3 files: `ReactorMonkey.kt`, `ReactorMonkeyBall.kt`, the new tuning file); 
 - Changes: the ball reference becomes an owned list (size from the row: 2 normal, 3 hard); the juggle drops the balls
   0.4 s apart and throws them at LEAD, CURRENT (, NEAR). It is a phase-2 move in the deck choice.
 - Check: CI; owner play checks 1 and 5.
+- Done: yes (2026-11-26, not compiled). The single `monkeyBall` became 3 owned lists made once: `incomingBalls`
+  (falling in, caught in order, at most `MAX_BALLS = 3`), `heldBall` and `liveBalls` (every ball he spawned that is
+  still in the engine, pruned each fight frame, for the death cleanup and `onDestroy`). Move choice in `updateStand`
+  (`ReactorMonkeyMove { THROW, JUGGLE }`, never the last move; phase 1 is only `THROW`; phase 2 starts after the Mad
+  Beat, so the first phase-2 move is the juggle). Juggle: `juggleBalls` row value (normal phase 2: 2, hard phase 2:
+  3, phase 1 rows 0), the first ball at once and the rest `JUGGLE_DROP_INTERVAL = 0.4` s apart, each caught and
+  thrown as a Lob at `LEAD`, `CURRENT`, `NEAR` in order (no Skip, no Fake, the throw deck and the aim cycle do not
+  move); a `steam_jet` plays at the juggle start (the steam cycle restarts). A caught ball is put on the catch point.
 
 ### 8. Hot Potato
 
@@ -106,12 +114,30 @@ same 3 files: `ReactorMonkey.kt`, `ReactorMonkeyBall.kt`, the new tuning file); 
   `mad_ball_hit` with a stun (cells 3 and 4 loop); a hit while stunned does more damage (row value). A returned ball
   does not hurt the player.
 - Check: CI; owner play check 1.
+- Done: yes (2026-11-26, not compiled). `ReactorMonkeyBall.hitProjectile`: a `ChargedShot` with `fullyCharged`
+  whose owner is a player, on a ball that was thrown (not held, not falling in, not exploding, not already
+  returned), returns it: the owner flips to the shooter (the old owner is kept as `thrower`), gravity off, a straight
+  line at the thrower's body at 0.7 of its height, speed max(current, 8 tiles/s) × 1.25, `DINK_SOUND`; the shot
+  explodes. A returned ball damages only its thrower (`canDamage`), so never a player; it explodes when it hits.
+  Missed: the first block bounce ends the return (owner back to the monkey, gravity on) and the ball bounces and
+  explodes as a normal ball. Monkey: `DAMAGE` entry `ReactorMonkeyBall` = `RETURNED_BALL_DAMAGE` (4) when returned,
+  else 0; a hit in `STAND`, `HOLD` or `THROW` starts `BALL_HIT` (no stun in the Mad Beat or in a stun, the damage
+  still counts): the balls in his hands and falling in explode, the juggle stops, `ball_hit` / `mad_ball_hit`
+  (`_damaged` while the damage timer runs) play cells 1, 2, then 3-4 `BALL_HIT_DAZE_PASSES = 2` times, then 5, and
+  hold `BALL_HIT_HOLD = 0.3` s: stun 1.2 s (from a throw pose the strip starts at cell 2, 1.14 s). No throw in the
+  stun; then `STAND` and a new throw wait. Hits in the stun do `STUNNED_DAMAGE_SCALAR = 1.5` × (rounded up).
 
 ### 9. Death and ball cleanup
 
 - Changes: `triggerDefeat` explodes every live ball; the death plays `dying` (a set time), `collapse` (thud at cell
   5), `dead`; `defeatDur` = sequence + hold; no `explodeOnDefeat`, no alpha fade. `onDestroy` destroys any ball left.
 - Check: CI; owner play checks 1 and 2.
+- Done: yes (2026-11-26, not compiled). `triggerDefeat` explodes every live ball (`liveBalls`; a ball not yet in the
+  engine is destroyed), stops the juggle, the pending Mad Beat and the steam. The sprite plays `dying` 4 loops
+  (1.28 s), `collapse` once (0.72 s; `SHAKE_CAM` 0.25 s + `QUAKE_SOUND` at cell 5, 1.68 s after the defeat), `dead`
+  for `DEAD_HOLD_DUR = 1` s: `defeatDur` 3.0 s (by chance the old default). No alpha fade, no damage blink, no
+  `explodeOnDefeat` explosions, no final blast. `onDestroy` destroys any ball left; the Heart Tank code is unchanged.
+  Step 4 check: `canBeDamagedBy` is false in `ENTRANCE` (done).
 
 ### 10. Draft PR
 

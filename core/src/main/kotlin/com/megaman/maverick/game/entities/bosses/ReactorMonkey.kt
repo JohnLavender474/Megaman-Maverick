@@ -17,6 +17,7 @@ import com.maverick.game.engine.common.enums.Size
 import com.maverick.game.engine.common.extensions.gdxArrayOf
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.objectMapOf
+import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.interfaces.IFaceable
 import com.maverick.game.engine.common.objects.Properties
 import com.maverick.game.engine.common.objects.pairTo
@@ -83,6 +84,7 @@ import com.megaman.maverick.game.utils.MegaUtilMethods
 import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.utils.extensions.getPositionPoint
 import com.megaman.maverick.game.world.body.*
+import kotlin.math.ceil
 import kotlin.reflect.KClass
 import com.badlogic.gdx.utils.FloatArray as GdxFloatArray
 import com.badlogic.gdx.utils.IntArray as GdxIntArray
@@ -90,7 +92,9 @@ import com.badlogic.gdx.utils.IntArray as GdxIntArray
 private class ReactorMonkeyEarPoints(val leftX: Float, val leftY: Float, val rightX: Float, val rightY: Float)
 
 class ReactorMonkey(services: MegaServices) :
-    AbstractBoss(services, dmgDuration = DEFAULT_MINI_BOSS_DMG_DURATION, size = Size.LARGE), IAnimatedEntity, IFaceable {
+    AbstractBoss(
+        services, dmgDuration = DEFAULT_MINI_BOSS_DMG_DURATION, defeatDur = DEFEAT_DUR, size = Size.LARGE
+    ), IAnimatedEntity, IFaceable {
 
     companion object {
         const val TAG = "ReactorMonkey"
@@ -110,6 +114,31 @@ class ReactorMonkey(services: MegaServices) :
         private const val DEFAULT_BALL_SPAWN_Y = 8f
 
         private const val SKIP_FLOOR_AHEAD = 2f
+
+        private const val MAX_BALLS = 3
+        private const val JUGGLE_DROP_INTERVAL = 0.4f
+        private val JUGGLE_AIMS = gdxArrayOf(OrbAim.LEAD, OrbAim.CURRENT, OrbAim.NEAR)
+
+        private const val RETURNED_BALL_DAMAGE = 4
+        private const val STUNNED_DAMAGE_SCALAR = 1.5f
+        private val BALL_HIT_DURS = gdxArrayOf(0.06f, 0.14f, 0.14f, 0.14f, 0.14f)
+        private const val BALL_HIT_LOOP_START = 2
+        private const val BALL_HIT_LOOP_END = 3
+        private const val BALL_HIT_DAZE_PASSES = 2
+        private const val BALL_HIT_HOLD = 0.3f
+        private const val BALL_HIT_THROW_START_CELL = 1
+        private val BALL_HIT_KEYS = objectSetOf("ball_hit", "ball_hit_damaged", "mad_ball_hit", "mad_ball_hit_damaged")
+
+        private const val DYING_FRAMES = 4
+        private const val DYING_FRAME_DUR = 0.08f
+        private const val DYING_LOOPS = 4
+        private const val DYING_DUR = DYING_LOOPS * DYING_FRAMES * DYING_FRAME_DUR
+        private val COLLAPSE_DURS = gdxArrayOf(0.1f, 0.1f, 0.12f, 0.08f, 0.08f, 0.1f, 0.14f)
+        private val COLLAPSE_DUR = COLLAPSE_DURS.sum()
+        private const val COLLAPSE_THUD_CELL = 4
+        private const val COLLAPSE_SHAKE_DUR = 0.25f
+        private const val DEAD_HOLD_DUR = 1f
+        private val DEFEAT_DUR = DYING_DUR + COLLAPSE_DUR + DEAD_HOLD_DUR
 
         private const val INTRO_DROP_SPEED = 10f
         private const val INTRO_DROP_GRAVITY = -22.5f
@@ -180,7 +209,9 @@ class ReactorMonkey(services: MegaServices) :
             "chest_beat" pairTo "chest_beat_damaged",
             "mad_stand" pairTo "mad_stand_damaged",
             "mad_throw" pairTo "mad_throw_damaged",
-            "mad_throw_hold" pairTo "mad_throw_hold_damaged"
+            "mad_throw_hold" pairTo "mad_throw_hold_damaged",
+            "ball_hit" pairTo "ball_hit_damaged",
+            "mad_ball_hit" pairTo "mad_ball_hit_damaged"
         )
         private val TIME_SYNCED_KEYS = objectMapOf(
             "throw" pairTo "throw_damaged",
@@ -188,7 +219,11 @@ class ReactorMonkey(services: MegaServices) :
             "mad_throw" pairTo "mad_throw_damaged",
             "mad_throw_damaged" pairTo "mad_throw",
             "chest_beat" pairTo "chest_beat_damaged",
-            "chest_beat_damaged" pairTo "chest_beat"
+            "chest_beat_damaged" pairTo "chest_beat",
+            "ball_hit" pairTo "ball_hit_damaged",
+            "ball_hit_damaged" pairTo "ball_hit",
+            "mad_ball_hit" pairTo "mad_ball_hit_damaged",
+            "mad_ball_hit_damaged" pairTo "mad_ball_hit"
         )
 
         private val DAMAGE = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
@@ -217,13 +252,21 @@ class ReactorMonkey(services: MegaServices) :
             PreciousGem::class pairTo dmgNeg(2),
             ReactorManProjectile::class pairTo dmgNeg(2),
             IceBombExplosion::class pairTo dmgNeg(2),
-            ReactorExplosion::class pairTo dmgNeg(2)
+            ReactorExplosion::class pairTo dmgNeg(2),
+            ReactorMonkeyBall::class pairTo dmgNeg {
+                it as ReactorMonkeyBall
+                if (it.returned) RETURNED_BALL_DAMAGE else 0
+            }
         )
 
         private val regions = ObjectMap<String, TextureRegion>()
     }
 
-    private enum class ReactorMonkeyState { INTRO_DROP, INTRO_LAND, INTRO_ROAR, STAND, HOLD, THROW, MAD_BEAT }
+    private enum class ReactorMonkeyState {
+        INTRO_DROP, INTRO_LAND, INTRO_ROAR, STAND, HOLD, THROW, MAD_BEAT, BALL_HIT
+    }
+
+    private enum class ReactorMonkeyMove { THROW, JUGGLE }
 
     // TODO: the Bank throw (needs the `throw_up` strips) joins the deck here (item 077, branch 077i later)
     private enum class ReactorMonkeyThrowType { LOB, SKIP, FAKE }
@@ -242,7 +285,23 @@ class ReactorMonkey(services: MegaServices) :
     private val tuning: ReactorMonkeyTuning
         get() = ReactorMonkeyTuning.of(services.gameState.hardMode, healthPhase)
 
-    private var monkeyBall: ReactorMonkeyBall? = null
+    private val incomingBalls = Array<ReactorMonkeyBall>()
+    private val liveBalls = Array<ReactorMonkeyBall>()
+    private var heldBall: ReactorMonkeyBall? = null
+
+    private var lastMove: ReactorMonkeyMove? = null
+    private var juggling = false
+    private var juggleBallCount = 0
+    private var juggleBallsToDrop = 0
+    private var juggleThrowIndex = 0
+    private val juggleDropTimer = Timer(JUGGLE_DROP_INTERVAL)
+
+    private val ballHitTimer = Timer()
+    private var ballHitDur = 0f
+    private var ballHitFromThrow = false
+
+    private var collapseThudTime = 0f
+    private var collapseThudDone = false
 
     private val throwTimer = Timer(THROW_DUR)
     private val throwDelayTimer = Timer()
@@ -297,6 +356,13 @@ class ReactorMonkey(services: MegaServices) :
                 "mad_stand_damaged",
                 "mad_throw",
                 "mad_throw_damaged",
+                "ball_hit",
+                "ball_hit_damaged",
+                "mad_ball_hit",
+                "mad_ball_hit_damaged",
+                "dying",
+                "collapse",
+                "dead",
                 STEAM_KEY,
                 STEAM_JET_KEY
             ).forEach { key ->
@@ -307,6 +373,8 @@ class ReactorMonkey(services: MegaServices) :
         super.init()
         OrbAim.entries.forEach { aimCycle.add(it) }
         defineChestBeatTimes()
+        defineBallHitTime()
+        defineCollapseThudTime()
         addComponent(defineAnimationsComponent())
     }
 
@@ -323,6 +391,19 @@ class ReactorMonkey(services: MegaServices) :
         throwTimer.reset()
         holdTimer.reset()
         madBeatTimer.reset()
+        ballHitTimer.resetDuration(ballHitDur)
+        ballHitFromThrow = false
+        collapseThudDone = false
+
+        incomingBalls.clear()
+        liveBalls.clear()
+        heldBall = null
+        lastMove = null
+        juggling = false
+        juggleBallCount = 0
+        juggleBallsToDrop = 0
+        juggleThrowIndex = 0
+        juggleDropTimer.reset()
 
         state = ReactorMonkeyState.INTRO_DROP
         services.gameCamera.toGameRectangle(arena)
@@ -401,12 +482,83 @@ class ReactorMonkey(services: MegaServices) :
         madBeatPending = true
     }
 
+    override fun editDamageFrom(damager: IDamagerEntity, baseDamage: Int): Int {
+        val damage = super.editDamageFrom(damager, baseDamage)
+        if (state != ReactorMonkeyState.BALL_HIT || damager is ReactorMonkeyBall) return damage
+        return ceil(damage * STUNNED_DAMAGE_SCALAR).toInt()
+    }
+
+    override fun takeDamageFrom(damager: IDamagerEntity): Boolean {
+        val damaged = super.takeDamageFrom(damager)
+        if (damaged && damager is ReactorMonkeyBall && canBeStunned()) startBallHit()
+        return damaged
+    }
+
+    private fun canBeStunned() = !defeated && (state == ReactorMonkeyState.STAND ||
+        state == ReactorMonkeyState.HOLD || state == ReactorMonkeyState.THROW)
+
+    override fun triggerDefeat() {
+        super.triggerDefeat()
+        explodeAllBalls()
+        juggling = false
+        juggleBallsToDrop = 0
+        madBeatPending = false
+        steamOn = false
+        collapseThudDone = false
+    }
+
+    private fun explodeAllBalls() {
+        for (i in 0 until liveBalls.size) {
+            val ball = liveBalls[i]
+            if (ball.existenceState.liveNow) ball.explodeAndDie()
+            else if (ball.existenceState.liveAfterUpdate) ball.destroy()
+        }
+        clearBalls()
+    }
+
+    private fun explodeBallsInHand() {
+        for (i in 0 until incomingBalls.size) {
+            val ball = incomingBalls[i]
+            if (ball.existenceState.liveNow) ball.explodeAndDie()
+            else if (ball.existenceState.liveAfterUpdate) ball.destroy()
+        }
+        incomingBalls.clear()
+        val held = heldBall
+        if (held != null && held.existenceState.liveNow) held.explodeAndDie()
+        else if (held != null && held.existenceState.liveAfterUpdate) held.destroy()
+        heldBall = null
+    }
+
+    private fun clearBalls() {
+        incomingBalls.clear()
+        liveBalls.clear()
+        heldBall = null
+    }
+
+    private fun removeDeadBalls(balls: Array<ReactorMonkeyBall>) {
+        var i = balls.size - 1
+        while (i >= 0) {
+            if (!balls[i].existenceState.liveAfterUpdate) balls.removeIndex(i)
+            i--
+        }
+    }
+
+    private fun pruneBalls() {
+        removeDeadBalls(incomingBalls)
+        removeDeadBalls(liveBalls)
+        val held = heldBall
+        if (held != null && !held.existenceState.liveAfterUpdate) heldBall = null
+    }
+
     override fun onDestroy() {
         GameLogger.debug(TAG, "onDestroy()")
         super.onDestroy()
 
-        monkeyBall?.let { ball -> if (ball.existenceState.liveAfterUpdate) ball.destroy() }
-        monkeyBall = null
+        for (i in 0 until liveBalls.size) {
+            val ball = liveBalls[i]
+            if (ball.existenceState.liveAfterUpdate) ball.destroy()
+        }
+        clearBalls()
 
         if (megaHeartTank != null && !services.gameState.containsHeartTank(megaHeartTank!!)) {
             val heartTank = MegaEntityFactory.fetch(HeartTank::class)!!
@@ -415,7 +567,9 @@ class ReactorMonkey(services: MegaServices) :
     }
 
     private fun spawnNewMonkeyBall() {
-        if (this.monkeyBall != null) throw IllegalStateException("Monkey ball should be null when a new one is spawned")
+        if (incomingBalls.size >= MAX_BALLS) throw IllegalStateException(
+            "$TAG: ${incomingBalls.size} balls already fall in; the most is $MAX_BALLS"
+        )
 
         val spawn = body.getPositionPoint(Position.TOP_CENTER).add(0f, ballSpawnY * ConstVals.PPM)
 
@@ -429,10 +583,12 @@ class ReactorMonkey(services: MegaServices) :
             )
         )
 
-        this.monkeyBall = monkeyBall
+        incomingBalls.add(monkeyBall)
+        liveBalls.add(monkeyBall)
     }
 
     private fun catchMonkeyBall(ball: ReactorMonkeyBall) {
+        ball.body.setCenter(ballCatchArea.getCenter())
         ball.body.physics.velocity.setZero()
         ball.body.physics.gravityOn = false
         ball.hidden = true
@@ -496,10 +652,51 @@ class ReactorMonkey(services: MegaServices) :
         throwDelayTimer.resetDuration(UtilMethods.interpolate(row.throwDelayMin, row.throwDelayMax, phaseHealthRatio))
     }
 
+    private fun nextMove(): ReactorMonkeyMove {
+        if (!enraged) return ReactorMonkeyMove.THROW
+        val moves = ReactorMonkeyMove.entries
+        val last = lastMove
+        if (last == null) return moves[services.random.nextInt(0, moves.size - 1)]
+        var index = services.random.nextInt(0, moves.size - 2)
+        if (index >= last.ordinal) index++
+        return moves[index]
+    }
+
+    private fun startJuggle() {
+        val count = tuning.juggleBalls
+        if (count < 1 || count > JUGGLE_AIMS.size || count > MAX_BALLS) throw IllegalStateException(
+            "$TAG: the juggle needs 1 to ${minOf(JUGGLE_AIMS.size, MAX_BALLS)} balls, the tuning row has $count"
+        )
+        GameLogger.debug(TAG, "startJuggle(): balls=$count")
+        juggling = true
+        juggleBallCount = count
+        juggleThrowIndex = 0
+        juggleBallsToDrop = count - 1
+        juggleDropTimer.reset()
+        steamTime = 0f
+        spawnNewMonkeyBall()
+    }
+
+    private fun updateJuggleDrops(delta: Float) {
+        if (juggleBallsToDrop <= 0) return
+        juggleDropTimer.update(delta)
+        if (!juggleDropTimer.isFinished()) return
+        juggleBallsToDrop--
+        juggleDropTimer.reset()
+        spawnNewMonkeyBall()
+    }
+
     private fun startThrow() {
-        throwType = nextThrowType()
-        lastThrowType = throwType
-        throwAim = nextAim()
+        if (juggling) {
+            throwType = ReactorMonkeyThrowType.LOB
+            throwAim = JUGGLE_AIMS[juggleThrowIndex]
+            juggleThrowIndex++
+            if (juggleThrowIndex >= juggleBallCount) juggling = false
+        } else {
+            throwType = nextThrowType()
+            lastThrowType = throwType
+            throwAim = nextAim()
+        }
         resetThrowDelay()
         throwTimer.reset()
         if (throwType == ReactorMonkeyThrowType.FAKE) {
@@ -522,7 +719,20 @@ class ReactorMonkey(services: MegaServices) :
     }
 
     private fun updateStand(delta: Float) {
-        if (madBeatPending && monkeyBall == null) {
+        if (incomingBalls.size > 0) {
+            val ball = incomingBalls.first()
+            if (ballCatchArea.contains(ball.body.getCenter()) || ball.body.getY() < ballCatchArea.getY()) {
+                incomingBalls.removeIndex(0)
+                catchMonkeyBall(ball)
+                heldBall = ball
+                startThrow()
+            }
+            return
+        }
+        if (juggleBallsToDrop > 0) return
+        juggling = false
+
+        if (madBeatPending) {
             startMadBeat()
             return
         }
@@ -530,16 +740,12 @@ class ReactorMonkey(services: MegaServices) :
         throwDelayTimer.update(delta)
         if (!throwDelayTimer.isFinished()) return
 
-        val ball = monkeyBall
-        if (ball == null) {
-            // TODO: phase-2 moves (Chest-Beat Shockwave, Gorilla Leap, Reactor Shake, Knuckle Charge) plug in here (item 077, branch 077i later)
-            spawnNewMonkeyBall()
-            return
-        }
-
-        if (ballCatchArea.contains(ball.body.getCenter()) || ball.body.getY() < ballCatchArea.getY()) {
-            catchMonkeyBall(ball)
-            startThrow()
+        // TODO: the phase-2 moves without art (Chest-Beat Shockwave, Gorilla Leap, Reactor Shake, Knuckle Charge) plug in at nextMove (item 077, branch 077i later)
+        val move = nextMove()
+        lastMove = move
+        when (move) {
+            ReactorMonkeyMove.THROW -> spawnNewMonkeyBall()
+            ReactorMonkeyMove.JUGGLE -> startJuggle()
         }
     }
 
@@ -550,10 +756,10 @@ class ReactorMonkey(services: MegaServices) :
 
     private fun updateThrow(delta: Float) {
         throwTimer.update(delta)
-        val ball = monkeyBall
+        val ball = heldBall
         if (throwTimer.time >= THROW_RELEASE_TIME && ball != null) {
             hurlMonkeyBall(ball)
-            monkeyBall = null
+            heldBall = null
         }
         if (throwTimer.isFinished()) {
             state = ReactorMonkeyState.STAND
@@ -588,6 +794,33 @@ class ReactorMonkey(services: MegaServices) :
         }
     }
 
+    private fun startBallHit() {
+        GameLogger.debug(TAG, "startBallHit(): state=$state")
+        ballHitFromThrow = state == ReactorMonkeyState.HOLD || state == ReactorMonkeyState.THROW
+        explodeBallsInHand()
+        juggling = false
+        juggleBallsToDrop = 0
+        throwTimer.reset()
+        holdTimer.reset()
+        val skipped = if (ballHitFromThrow) cellsTime(BALL_HIT_DURS, BALL_HIT_THROW_START_CELL) else 0f
+        ballHitTimer.resetDuration(ballHitDur - skipped)
+        state = ReactorMonkeyState.BALL_HIT
+    }
+
+    private fun updateBallHit(delta: Float) {
+        ballHitTimer.update(delta)
+        if (!ballHitTimer.isFinished()) return
+        state = ReactorMonkeyState.STAND
+        resetThrowDelay()
+    }
+
+    private fun updateDefeat() {
+        if (collapseThudDone || defeatTimer.time < collapseThudTime) return
+        collapseThudDone = true
+        shakeCamera(COLLAPSE_SHAKE_DUR, SHAKE_INTERVAL)
+        requestToPlaySound(SoundAsset.QUAKE_SOUND, false)
+    }
+
     private fun shakeCamera(duration: Float, interval: Float) {
         services.events.submitEvent(
             Event(
@@ -608,11 +841,13 @@ class ReactorMonkey(services: MegaServices) :
         super.defineUpdatablesComponent(updatablesComponent)
         updatablesComponent.add { delta ->
             if (defeated) {
-                explodeOnDefeat(delta)
+                updateDefeat()
                 return@add
             }
 
             if (bossComponent.phase != BossPhase.FIGHT) return@add
+
+            pruneBalls()
 
             ballCatchArea.setCenter(body.getPositionPoint(Position.TOP_CENTER).add(0f, 1.75f * ConstVals.PPM))
             facing = if (targetPlayer.body.getX() >= body.getX()) Facing.RIGHT else Facing.LEFT
@@ -622,11 +857,14 @@ class ReactorMonkey(services: MegaServices) :
                 if (steamTime >= STEAM_CYCLE) steamTime -= STEAM_CYCLE
             }
 
+            if (state != ReactorMonkeyState.BALL_HIT) updateJuggleDrops(delta)
+
             when (state) {
                 ReactorMonkeyState.STAND -> updateStand(delta)
                 ReactorMonkeyState.HOLD -> updateHold(delta)
                 ReactorMonkeyState.THROW -> updateThrow(delta)
                 ReactorMonkeyState.MAD_BEAT -> updateMadBeat(delta)
+                ReactorMonkeyState.BALL_HIT -> updateBallHit(delta)
                 else -> throw IllegalStateException("$TAG: the intro state $state cannot run in the fight")
             }
         }
@@ -677,9 +915,8 @@ class ReactorMonkey(services: MegaServices) :
 
             sprite.setFlip(isFacing(Facing.RIGHT), false)
 
-            sprite.hidden = damageBlink
+            sprite.hidden = !defeated && damageBlink
             sprite.color = if (isMadFlashOn()) MAD_FLASH_COLOR else Color.WHITE
-            sprite.setAlpha(if (defeated) 1f - defeatTimer.getRatio() else 1f)
         }
         component.putPreProcess(STEAM_LEFT_SPRITE) { _, steam -> updateSteamSprite(steam, leftEar = true) }
         component.putPreProcess(STEAM_RIGHT_SPRITE) { _, steam -> updateSteamSprite(steam, leftEar = false) }
@@ -747,13 +984,43 @@ class ReactorMonkey(services: MegaServices) :
         ReactorMonkeyState.HOLD -> if (enraged) "mad_throw_hold" else "throw_hold"
         ReactorMonkeyState.THROW -> if (enraged) "mad_throw" else "throw"
         ReactorMonkeyState.MAD_BEAT -> "chest_beat"
+        ReactorMonkeyState.BALL_HIT -> if (enraged) "mad_ball_hit" else "ball_hit"
     }
 
-    private fun chestBeatCells(out: GdxIntArray): GdxIntArray {
-        for (i in 0 until CHEST_BEAT_LOOP_START) out.add(i)
-        for (pass in 0 until CHEST_BEAT_PASSES) for (i in CHEST_BEAT_LOOP_START..CHEST_BEAT_LOOP_END) out.add(i)
-        for (i in CHEST_BEAT_LOOP_END + 1 until CHEST_BEAT_DURS.size) out.add(i)
+    private fun defeatKey() = when {
+        defeatTimer.time < DYING_DUR -> "dying"
+        defeatTimer.time < DYING_DUR + COLLAPSE_DUR -> "collapse"
+        else -> "dead"
+    }
+
+    private fun loopedCells(cellCount: Int, loopStart: Int, loopEnd: Int, passes: Int, out: GdxIntArray): GdxIntArray {
+        for (i in 0 until loopStart) out.add(i)
+        for (pass in 0 until passes) for (i in loopStart..loopEnd) out.add(i)
+        for (i in loopEnd + 1 until cellCount) out.add(i)
         return out
+    }
+
+    private fun chestBeatCells(out: GdxIntArray) =
+        loopedCells(CHEST_BEAT_DURS.size, CHEST_BEAT_LOOP_START, CHEST_BEAT_LOOP_END, CHEST_BEAT_PASSES, out)
+
+    private fun ballHitCells(out: GdxIntArray) =
+        loopedCells(BALL_HIT_DURS.size, BALL_HIT_LOOP_START, BALL_HIT_LOOP_END, BALL_HIT_DAZE_PASSES, out)
+
+    private fun cellsTime(durations: Array<Float>, count: Int): Float {
+        var time = 0f
+        for (i in 0 until count) time += durations[i]
+        return time
+    }
+
+    private fun defineBallHitTime() {
+        val cells = ballHitCells(GdxIntArray())
+        var time = 0f
+        for (i in 0 until cells.size) time += BALL_HIT_DURS[cells[i]]
+        ballHitDur = time + BALL_HIT_HOLD
+    }
+
+    private fun defineCollapseThudTime() {
+        collapseThudTime = DYING_DUR + cellsTime(COLLAPSE_DURS, COLLAPSE_THUD_CELL)
     }
 
     private fun defineChestBeatTimes() {
@@ -768,20 +1035,26 @@ class ReactorMonkey(services: MegaServices) :
         madBeatTimer.resetDuration(time)
     }
 
-    private fun chestBeatAnimation(region: TextureRegion): Animation {
-        val split = region.splitAndFlatten(CHEST_BEAT_DURS.size, 1, Array())
-        val cells = chestBeatCells(GdxIntArray())
+    private fun loopedAnimation(region: TextureRegion, cellDurations: Array<Float>, cells: GdxIntArray): Animation {
+        val split = region.splitAndFlatten(cellDurations.size, 1, Array())
         val frames = Array<TextureRegion>()
         val durations = Array<Float>()
         for (i in 0 until cells.size) {
             frames.add(split[cells[i]])
-            durations.add(CHEST_BEAT_DURS[cells[i]])
+            durations.add(cellDurations[cells[i]])
         }
         return Animation(frames, durations, loop = false)
     }
 
+    private fun chestBeatAnimation(region: TextureRegion) =
+        loopedAnimation(region, CHEST_BEAT_DURS, chestBeatCells(GdxIntArray()))
+
+    private fun ballHitAnimation(region: TextureRegion) =
+        loopedAnimation(region, BALL_HIT_DURS, ballHitCells(GdxIntArray()))
+
     private fun defineAnimationsComponent(): AnimationsComponent {
         val keySupplier: (String?) -> String? = key@{
+            if (defeated) return@key defeatKey()
             val key = stateKey()
             if (!damageTimer.isFinished()) return@key DAMAGED_KEYS[key] ?: key
             return@key key
@@ -803,13 +1076,22 @@ class ReactorMonkey(services: MegaServices) :
             "mad_throw" pairTo Animation(regions["mad_throw"], 3, 1, 0.1f, false),
             "mad_throw_damaged" pairTo Animation(regions["mad_throw_damaged"], 3, 1, 0.1f, false),
             "mad_throw_hold" pairTo Animation(regions["mad_throw"], 3, 1, 0.1f, false).slice(0, 1),
-            "mad_throw_hold_damaged" pairTo Animation(regions["mad_throw_damaged"], 3, 1, 0.1f, false).slice(0, 1)
+            "mad_throw_hold_damaged" pairTo Animation(regions["mad_throw_damaged"], 3, 1, 0.1f, false).slice(0, 1),
+            "ball_hit" pairTo ballHitAnimation(regions["ball_hit"]),
+            "ball_hit_damaged" pairTo ballHitAnimation(regions["ball_hit_damaged"]),
+            "mad_ball_hit" pairTo ballHitAnimation(regions["mad_ball_hit"]),
+            "mad_ball_hit_damaged" pairTo ballHitAnimation(regions["mad_ball_hit_damaged"]),
+            "dying" pairTo Animation(regions["dying"], DYING_FRAMES, 1, DYING_FRAME_DUR, true),
+            "collapse" pairTo Animation(regions["collapse"], COLLAPSE_DURS.size, 1, COLLAPSE_DURS, false),
+            "dead" pairTo Animation(regions["dead"])
         )
         val onChangeKey: (Animator, String?, String?) -> Unit = { _, previous, current ->
             if (previous != null && current != null && TIME_SYNCED_KEYS[previous] == current) {
                 val time = animations[previous].getCurrentTime()
                 animations[current].setCurrentTime(time)
                 GameLogger.debug(TAG, "onChangeKey(): set current to time=$time")
+            } else if (current != null && BALL_HIT_KEYS.contains(current) && ballHitFromThrow) {
+                animations[current].setIndex(BALL_HIT_THROW_START_CELL)
             }
         }
         animator = Animator(keySupplier, animations, onChangeKey = onChangeKey)
