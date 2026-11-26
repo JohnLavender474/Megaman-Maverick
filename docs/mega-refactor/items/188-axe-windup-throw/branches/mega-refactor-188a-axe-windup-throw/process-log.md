@@ -6,7 +6,7 @@
 - Goal: hold-to-aim axe throw with a dotted arc, on a generic per-player weapon windup
 - Brief: in chat (2026-11-26)
 - Done: planning; implementation groups A to D; CI green at `32bc4d1`
-- Next: review before the play test, draft PR, owner play test
+- Next: owner play test and review on draft PR https://github.com/JohnLavender474/Megaman-Maverick/pull/31
 - Blocked:
 
 ## Entries
@@ -27,3 +27,4 @@
   asked for damage in a map with no hazard. Not changed: a one-frame stale arc after a respawn (the updatables run before
   the sprites in a frame, so it cannot show); on release while running, the frozen run frame 0 shows for one more tick
   (0.125 s frames; cosmetic); the buster's release still stops the global charging sound (old behavior).
+- Draft PR #31 opened; play scripts in `temp/play/`.
