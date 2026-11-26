@@ -184,18 +184,21 @@ pushed branch is the automated check (`claude-web.md`, rule 6).
 
 ## Manual playthrough
 
-The test map is `REFACTOR_TEST_188` (`RefactorTest188.tmx`). Experimental checks first.
+The test map is `REFACTOR_TEST_188` (`RefactorTest188.tmx`). Experimental checks first. Press SELECT to equip the
+axe.
 
 1. `--level REFACTOR_TEST_188 --room throw_range --weapons AXE_SWINGER`: tap gives a short throw; a hold keeps the
    overhead frame and shows the dots after a moment; the dots match where the axe flies; a full hold lands about 10
    tiles away and stays on screen vertically; a medium hold feels like the old throw.
 2. Same room: hold while running, jumping, sliding and on the ladder (Mega Man stays still on it); the pose stays on
    the overhead frame; release throws at once with the throw frame.
-3. Same room: hold, then take damage, switch weapon, or walk through the room transition: the hold clears (or pauses
-   in the transition) and the dots hide.
+3. Same room: hold, then switch weapon (the hold clears and the dots hide), or walk right through the room transition
+   into `water` (the hold pauses and the dots hide; release after it still throws). The map has no hazard: the clear on
+   damage and stun is covered by the unit tests.
 4. `--level REFACTOR_TEST_188 --room water --weapons AXE_SWINGER`: the arc in water is slower and the dots still match.
-5. `--level MOON_MAN --weapons AXE_SWINGER` (room in the play scripts): low gravity, the dots match.
-6. Control: `--level REFACTOR_TEST_188 --room throw_range`: buster charge half and full, the sound, the flash, the
+5. `--level MOON_MAN --room rest_room_1 --weapons AXE_SWINGER`: low gravity, the dots match (the axe flies through
+   the ceiling, as today: it ignores blocks).
+6. Control: `--level REFACTOR_TEST_188 --room throw_range --weapons AXE_SWINGER`: buster charge half and full, the sound, the flash, the
    shots; switch to the axe mid-charge: the sound stops.
 7. Control: `./run-mega-man-x-lost-memories-alpha.sh`: X's charge, tint and shots as before.
 8. Control: `./run-mega-man-maverick-test-coop.sh --weapons AXE_SWINGER`: each player holds its own axe and dots.
