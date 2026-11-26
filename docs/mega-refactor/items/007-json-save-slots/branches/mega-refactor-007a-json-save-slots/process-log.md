@@ -40,3 +40,19 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 ## 2026-11-26 (confirm dialog)
 
 - Owner decision: every save asks for confirmation, also for an empty slot. `SaveSlotScreen` has a YES/NO confirm state in SAVE mode; BACK cancels. Not compiled (no Gradle here); CI is the check.
+
+## 2026-11-26 (test coverage review)
+
+- Review of the save tests against `SCOPE.md` and `NOTES.md`. The first tests covered the main rules; gaps were: the
+  round trip of every level, tank, enhancement and difficulty; unknown health tanks and enhancements; duplicate names;
+  a missing `version` and more wrongly typed fields; slot independence when another slot holds a save; `write(0)`;
+  a newer version in one slot not blocking another slot; the `.bak` and corrupt-file rules through `SaveSlots` on
+  `FileSaveStorage` (unreadable overwrite keeps the bad text as `.bak`, a corrupt file does not fall back, a newer
+  version leaves the folder unchanged, a crash between the moves keeps the `.bak`); `applyTo` clearing tanks and
+  enhancements; and `PreferencesSaveStorage` (no test at all).
+- Added cases to `SaveFileJsonTest`, `SaveSlotsTest` and `FileSaveStorageTest`, and the new
+  `PreferencesSaveStorageTest` (uses the test `FakePreferences` of `players/`).
+- Not unit tested: `SaveSlotScreen` and its confirm dialog (GL and menu input), and `MegamanMaverickGame.saveState`,
+  `loadSavedState` and the save folder choice (they need the whole game object). The manual checks of `SCOPE.md` cover
+  them.
+- Gradle not run (blocked, see the entry above). The tests were reviewed by reading only; CI is the first run.

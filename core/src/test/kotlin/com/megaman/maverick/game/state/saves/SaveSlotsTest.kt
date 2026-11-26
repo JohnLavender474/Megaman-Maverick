@@ -46,6 +46,7 @@ class SaveSlotsTest : DescribeSpec({
         it("throws for a slot outside 1 to 5") {
             shouldThrow<IllegalArgumentException> { slots.read(0) }
             shouldThrow<IllegalArgumentException> { slots.read(6) }
+            shouldThrow<IllegalArgumentException> { slots.write(0, SaveFile.of(GameState(), savedAt = "t")) }
             shouldThrow<IllegalArgumentException> { slots.write(6, SaveFile.of(GameState(), savedAt = "t")) }
             storage.files.size shouldBe 0
         }
@@ -80,13 +81,44 @@ class SaveSlotsTest : DescribeSpec({
             for (slot in listOf(1, 2, 4, 5)) slots.read(slot) shouldBe SaveSlotContent.Empty
         }
 
+        it("names the file of each slot slot-N.json") {
+            for (slot in 1..5) slots.write(slot, SaveFile.of(GameState(), savedAt = "t"))
+
+            storage.files.keys().toList().sorted() shouldBe (1..5).map { "slot-$it.json" }
+        }
+
+        it("leaves the other slots as they were when it writes a slot") {
+            slots.write(1, SaveFile.of(filledState(), savedAt = "first"))
+            val slot1Text = storage.files.get("slot-1.json")
+
+            slots.write(2, SaveFile.of(GameState(), savedAt = "second"))
+
+            storage.files.get("slot-1.json") shouldBe slot1Text
+            (slots.read(1) as SaveSlotContent.Used).save.savedAt shouldBe "first"
+            (slots.read(2) as SaveSlotContent.Used).save.savedAt shouldBe "second"
+        }
+
+        it("replaces the saved text when a used slot is written again") {
+            slots.write(1, SaveFile.of(filledState(), savedAt = "first"))
+            slots.write(1, SaveFile.of(GameState(), savedAt = "second"))
+
+            val save = (slots.read(1) as SaveSlotContent.Used).save
+            save.savedAt shouldBe "second"
+            save.levelsCompleted.size shouldBe 0
+        }
+
         it("replaces the progress that the game state had before") {
-            slots.write(1, SaveFile.of(GameState(), savedAt = "t"))
+            slots.write(1, SaveFile.of(GameState().apply { addHeartTank(MegaHeartTank.A) }, savedAt = "t"))
             val loaded = filledState()
 
             (slots.read(1) as SaveSlotContent.Used).save.applyTo(loaded)
 
             loaded.isLevelCompleted(LevelDefinition.MOON_MAN) shouldBe false
+            loaded.isLevelCompleted(LevelDefinition.INTRO_STAGE) shouldBe false
+            loaded.containsHeartTank(MegaHeartTank.A) shouldBe true
+            loaded.containsHeartTank(MegaHeartTank.C) shouldBe false
+            loaded.containsHealthTank(MegaHealthTank.B) shouldBe false
+            loaded.containsEnhancement(MegaEnhancement.JUMP_BOOST) shouldBe false
             loaded.getCurrency() shouldBe 0
             loaded.getDifficultyMode() shouldBe DifficultyMode.NORMAL
         }
@@ -102,6 +134,16 @@ class SaveSlotsTest : DescribeSpec({
 
             slots.write(2, SaveFile.of(filledState(), savedAt = "t")) shouldBe false
             storage.files.get("slot-2.json") shouldBe newerVersionText(2)
+            storage.files.size shouldBe 1
+        }
+
+        it("does not stop a write to another slot") {
+            storage.files.put("slot-2.json", newerVersionText(9))
+
+            slots.write(1, SaveFile.of(filledState(), savedAt = "t")) shouldBe true
+
+            slots.read(1).shouldBeInstanceOf<SaveSlotContent.Used>()
+            storage.files.get("slot-2.json") shouldBe newerVersionText(9)
         }
     }
 
