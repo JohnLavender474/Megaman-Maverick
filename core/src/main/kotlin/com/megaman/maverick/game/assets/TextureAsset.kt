@@ -76,6 +76,7 @@ enum class TextureAsset(src: String) : IAsset {
     FREEZER_MAN("FreezerMan.txt"),
     PRECIOUS_MAN("PreciousMan.txt"),
     MICROWAVE_MAN("MicrowaveMan.txt"),
+    REACTOR_MONKEY("ReactorMonkey.txt"),
     TEST("Test.txt"),
     BITS("Bits.txt"),
     SMB3_ENEMIES("SMB3_Enemies.txt"),

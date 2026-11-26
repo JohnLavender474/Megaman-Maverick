@@ -1,0 +1,187 @@
+ReactorMonkey.png
+size: 1136, 2042
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+ReactorMonkey/ball_hit
+  rotate: false
+  xy: 326, 1124
+  size: 160, 800
+  orig: 160, 800
+  offset: 0, 0
+  index: -1
+ReactorMonkey/ball_hit_damaged
+  rotate: false
+  xy: 488, 964
+  size: 160, 800
+  orig: 160, 800
+  offset: 0, 0
+  index: -1
+ReactorMonkey/chest_beat
+  rotate: false
+  xy: 2, 2
+  size: 160, 1600
+  orig: 160, 1600
+  offset: 0, 0
+  index: -1
+ReactorMonkey/chest_beat_damaged
+  rotate: false
+  xy: 164, 2
+  size: 160, 1600
+  orig: 160, 1600
+  offset: 0, 0
+  index: -1
+ReactorMonkey/collapse
+  rotate: false
+  xy: 326, 2
+  size: 160, 1120
+  orig: 160, 1120
+  offset: 0, 0
+  index: -1
+ReactorMonkey/dead
+  rotate: false
+  xy: 488, 1766
+  size: 160, 160
+  orig: 160, 160
+  offset: 0, 0
+  index: -1
+ReactorMonkey/dying
+  rotate: false
+  xy: 812, 2
+  size: 160, 640
+  orig: 160, 640
+  offset: 0, 0
+  index: -1
+ReactorMonkey/intro_drop
+  rotate: false
+  xy: 812, 1608
+  size: 160, 160
+  orig: 160, 160
+  offset: 0, 0
+  index: -1
+ReactorMonkey/intro_land
+  rotate: false
+  xy: 812, 644
+  size: 160, 480
+  orig: 160, 480
+  offset: 0, 0
+  index: -1
+ReactorMonkey/intro_roar
+  rotate: false
+  xy: 488, 2
+  size: 160, 960
+  orig: 160, 960
+  offset: 0, 0
+  index: -1
+ReactorMonkey/mad_ball_hit
+  rotate: false
+  xy: 650, 2
+  size: 160, 800
+  orig: 160, 800
+  offset: 0, 0
+  index: -1
+ReactorMonkey/mad_ball_hit_damaged
+  rotate: false
+  xy: 650, 804
+  size: 160, 800
+  orig: 160, 800
+  offset: 0, 0
+  index: -1
+ReactorMonkey/mad_stand
+  rotate: false
+  xy: 2, 1604
+  size: 160, 320
+  orig: 160, 320
+  offset: 0, 0
+  index: -1
+ReactorMonkey/mad_stand_damaged
+  rotate: false
+  xy: 164, 1604
+  size: 160, 320
+  orig: 160, 320
+  offset: 0, 0
+  index: -1
+ReactorMonkey/mad_throw
+  rotate: false
+  xy: 812, 1126
+  size: 160, 480
+  orig: 160, 480
+  offset: 0, 0
+  index: -1
+ReactorMonkey/mad_throw_damaged
+  rotate: false
+  xy: 974, 2
+  size: 160, 480
+  orig: 160, 480
+  offset: 0, 0
+  index: -1
+ReactorMonkey/stand
+  rotate: false
+  xy: 650, 1606
+  size: 160, 320
+  orig: 160, 320
+  offset: 0, 0
+  index: -1
+ReactorMonkey/stand_damaged
+  rotate: false
+  xy: 812, 1770
+  size: 160, 160
+  orig: 160, 160
+  offset: 0, 0
+  index: -1
+ReactorMonkey/steam
+  rotate: false
+  xy: 974, 1448
+  size: 32, 160
+  orig: 32, 160
+  offset: 0, 0
+  index: -1
+ReactorMonkey/steam_jet
+  rotate: false
+  xy: 2, 1992
+  size: 16, 48
+  orig: 16, 48
+  offset: 0, 0
+  index: -1
+ReactorMonkey/throw
+  rotate: false
+  xy: 974, 484
+  size: 160, 480
+  orig: 160, 480
+  offset: 0, 0
+  index: -1
+ReactorMonkey/throw_damaged
+  rotate: false
+  xy: 974, 966
+  size: 160, 480
+  orig: 160, 480
+  offset: 0, 0
+  index: -1
+ReactorMonkeyBall/mad_0
+  rotate: false
+  xy: 2, 1926
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ReactorMonkeyBall/mad_1
+  rotate: false
+  xy: 974, 1610
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+ReactorMonkeyBall/mad_2
+  rotate: false
+  xy: 974, 1740
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+ReactorMonkeyBall/mad_3
+  rotate: false
+  xy: 974, 1870
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
