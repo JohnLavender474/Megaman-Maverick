@@ -12,8 +12,6 @@ import com.maverick.game.engine.common.enums.Direction
 import com.maverick.game.engine.common.extensions.getTextureAtlas
 import com.maverick.game.engine.common.extensions.toGdxArray
 import com.maverick.game.engine.common.interfaces.Initializable
-import com.maverick.game.engine.drawables.sprites.GameSprite
-import com.maverick.game.engine.drawables.sprites.setSize
 import com.maverick.game.engine.screens.menus.IMenuButton
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
@@ -21,9 +19,11 @@ import com.megaman.maverick.game.MegamanMaverickGame
 import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
+import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
+import com.megaman.maverick.game.screens.menus.title.TitleAnimation
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.screens.utils.GameSettingsPanel
 import com.megaman.maverick.game.screens.utils.ScreenSlide
@@ -48,9 +48,16 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         private const val DEBUG_SHAPES = false
         private const val MAIN_MENU_TEXT_START_ROW = 6f
         private val MAIN_MENU_MUSIC = MusicAsset.VINNYZ_MAIN_MENU_MUSIC
+        private val SKIP_BUTTONS = arrayOf(
+            MegaControllerButton.START,
+            MegaControllerButton.A,
+            MegaControllerButton.B,
+            MegaControllerButton.SELECT
+        )
     }
 
-    private lateinit var background: GameSprite
+    private lateinit var titleAnimation: TitleAnimation
+    private var selectionBlockedUntilRelease = false
 
     private val screenSlide = ScreenSlide(
         game.getUiCamera(),
@@ -125,10 +132,10 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         settingsPanel.buttons.forEach { buttons.put(it.key, it.value) }
 
         val atlas = game.assets.getTextureAtlas(TextureAsset.UI_2.source)
-        background = GameSprite(atlas.findRegion("TitleScreenBackgroundv4"))
-        // Permanently setting both width and height to the 'view width' size
-        background.setSize(ConstVals.VIEW_WIDTH * ConstVals.PPM)
-        background.setCenter(ConstVals.VIEW_WIDTH * ConstVals.PPM / 2f, ConstVals.VIEW_HEIGHT * ConstVals.PPM / 2f)
+        titleAnimation = TitleAnimation(
+            game.assets.getTextureAtlas(TextureAsset.TITLE_LETTERS.source),
+            atlas.findRegion("TitleScreenBackgroundv4")
+        )
 
         buttons.put(MainScreenButton.START_NEW_GAME.text, object : IMenuButton {
             override fun onSelect(delta: Float): Boolean {
@@ -236,6 +243,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         super.show()
 
         screenSlide.reset()
+        titleAnimation.reset()
+        selectionBlockedUntilRelease = false
 
         game.getUiCamera().setToDefaultPosition()
         game.audio.playMusic(MAIN_MENU_MUSIC, false)
@@ -245,9 +254,17 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
     }
 
     override fun render(delta: Float) {
+        if (!titleAnimation.formed && skipRequested()) {
+            titleAnimation.skipToEnd()
+            selectionBlockedUntilRelease = true
+        }
+
         super.render(delta)
 
+        if (selectionBlockedUntilRelease && !selectionButtonHeld()) selectionBlockedUntilRelease = false
+
         if (!game.clock.paused) {
+            titleAnimation.update(delta)
             screenSlide.update(delta)
             if (screenSlide.justFinished) screenSlide.reverse()
 
@@ -262,9 +279,12 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         drawer.begin()
 
-        background.draw(drawer)
-        fontHandles.forEach { it.draw(drawer) }
-        blinkArrows.get(buttonKey)?.draw(drawer)
+        titleAnimation.draw(drawer)
+
+        if (titleAnimation.formed) {
+            fontHandles.forEach { it.draw(drawer) }
+            blinkArrows.get(buttonKey)?.draw(drawer)
+        }
 
         settingsPanel.draw(drawer)
 
@@ -284,12 +304,21 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         }
     }
 
+    private fun skipRequested() = game.players.menuInput.let { input -> SKIP_BUTTONS.any { input.isJustPressed(it) } }
+
+    private fun selectionButtonHeld() = game.players.menuInput.let {
+        it.isPressed(MegaControllerButton.START) || it.isPressed(MegaControllerButton.A)
+    }
+
+    private fun interactionAllowed() = titleAnimation.formed && screenSlide.finished
+
     override fun getNavigationDirection() =
-        if (screenSlide.finished) super.getNavigationDirection() else null
+        if (interactionAllowed()) super.getNavigationDirection() else null
 
-    override fun selectionRequested() = screenSlide.finished && super.selectionRequested()
+    override fun selectionRequested() =
+        interactionAllowed() && !selectionBlockedUntilRelease && super.selectionRequested()
 
-    override fun backRequested() = screenSlide.finished && super.backRequested()
+    override fun backRequested() = interactionAllowed() && super.backRequested()
 
     override fun onBack(delta: Float) {
         if (!GameSettingsPanel.ALL_KEYS.contains(buttonKey)) return

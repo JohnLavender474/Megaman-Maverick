@@ -35,6 +35,7 @@ enum class TextureAsset(src: String) : IAsset {
     BACKGROUNDS_13("Backgrounds13.txt"),
     UI_1("Ui1.txt"),
     UI_2("Ui2.txt"),
+    TITLE_LETTERS("TitleLetters.txt"),
     FACES_1("Faces1.txt"),
     LEVEL_SELECT_SCREEN("LevelSelectScreen.txt"),
     LEVEL_SELECT_SCREEN_V2("LevelSelectScreenV2.txt"),

@@ -1,6 +1,6 @@
 # Scope: mega-refactor-187a-intro-story-art
 
-First-round art for the intro story slides of item `187`. Art only: the game code does not load any of it yet.
+First-round art for the intro story slides of item `187` (art only: the game code does not load it yet), and the main menu title entrance (the owner asked for it in this branch on 2026-11-26: it has code).
 
 - Status: draft
 - Approved: no
@@ -27,16 +27,22 @@ Item `187` (`ITEMS.md`). This branch takes the "art only" part of its proposed s
 - `docs/previews/`: the GIF of the exploding city, a frame strip, the sprite preview of the screens and a contact sheet, for the review of this PR.
 - `docs/STYLE_GUIDE.md`: the reference analysis.
 
+- The main menu title entrance (the "beam-in", option D of `docs/TITLE_OPTIONS.md`):
+  - `assets/sprites/frames/TitleLetters/` (the title cut into a plate, a swoosh and 15 letters, with white copies), the atlas `assets/sprites/sprite_sheets/TitleLetters.png` and `.txt`, and `assets/sprites/texture_packer/TitleLetters.tps`.
+  - `core/.../screens/menus/title/` (`TitleAnimation`, `TitleLetter`, `README.md`), the `TextureAsset.TITLE_LETTERS` entry and the wiring in `MainMenuScreen`.
+  - Owner decisions (2026-11-26): the entrance plays on every `show()`; the menu is locked until it ends; the cut of the current image is the source (no redraw).
+  - A press of START, A, B or SELECT during the entrance skips to the formed title (my choice, not the owner's: the owner said only that the menu is locked until the entrance ends).
+
 ## Out of scope
 
-- Code: no screen, no `TextureAsset`, no atlas, no loading of the art.
+- Code for the story art: no story screen, no loading of the story art (`187b`).
 - Slides 2, 3, 4, 6 and 7 (the workshop, the blueprints, the alarm beat, the hero close-up, the rooftop).
-- The main menu art.
+- Other main menu changes (parallax, hero idle, cursor, attract mode, transition).
 - The README credits (they are due when the art goes into the game; the draft lines are below).
 
 ## Affected areas and risks
 
-- `assets/` grows by the new folder. Both platform bundles hold the whole `assets/`, so the bundles grow by the size of the files. Nothing reads the folder. `generateAssetList` writes `assets/assets.txt` on each build and may list the files.
+- `assets/` grows by the new folder. Both platform bundles hold the whole `assets/`, so the bundles grow by the size of the files. Nothing reads the story art folders; the menu reads `TitleLetters` (about 40 KB). `generateAssetList` writes `assets/assets.txt` on each build and may list the files.
 - The art does not meet every rule of `art.md` yet (see the contract).
 
 ## Overlap with other branches
@@ -49,7 +55,7 @@ Item `187` (`ITEMS.md`). This branch takes the "art only" part of its proposed s
 | Rule | Effect | Note |
 |------|--------|------|
 | `O1-R5` Code only with a production caller | no effect | No code. |
-| `O6-R1` CI passes | no effect | Assets and docs only; CI runs on the push. |
+| `O6-R1` CI passes | no effect | CI runs on the push. |
 | `O6-R2` Named checks | helps | The contract lists the art checks. |
 | `O9-R1` Fully playable with an NES-style pad | no effect | |
 
@@ -82,15 +88,23 @@ Due in the branch that wires the art into the game (`art.md`, "Credit the origin
 - [ ] CI of the push passes (`engine:test`, `core:test`, `core:smokeTest`, jars, `detektMain`). The Gradle wrapper may not run in the cloud (`claude-web.md`): if so, this is not run here.
 - [ ] Art script: every PNG has its stated size; the 2x copies are exact; no anti-aliasing.
 - [ ] Art script: the colors against the NES master palette (`art.md`). The result is in the PR. A color that is not in the palette is a finding for the next round.
+- [ ] Title entrance: a script that re-implements `TitleAnimation.draw` from the packed atlas equals the option D GIF on every step, and the formed title equals `TitleScreenBackgroundv4` (done in the session; result in the process log).
 
 ## Manual playthrough
 
-None: nothing loads the art. Review the pictures in the PR and in the previews.
+Run `./run-mega-man-maverick-debug.sh`. The art branch's story art is not loaded; check the menu:
+
+1. The title entrance plays when the main menu opens: the swoosh scans in, the 7 MEGAMAN letters then the 8 MAVERICK letters beam in one after another (a beam falls, the letter opens from its center), then the title flashes white twice and is formed. The menu text and the arrow appear only after it.
+2. The formed title looks like before (compare with `master`).
+3. Pressing up, down, A or START during the entrance does not move or select; a press of START, A, B or SELECT skips to the formed title, and the menu does not select on the release of that press.
+4. After the title is formed, the menu works as before (select, back, settings slide, extras, credits).
+5. Open Credits or Extras and go back: the entrance plays again (every `show()`).
+6. The entrance has the same speed at 30, 60 and 144 FPS (steps of 50 ms).
 
 ## Behaviors to check
 
-The game builds and starts as before (nothing reads the new folder).
+Everything else in the main menu behaves as on `master`. The story art is not read.
 
 ## Intended changes
 
-New files only: the art and the docs.
+New art and docs (the story art, the title frames and atlas); the main menu plays the title entrance, hides its text until the title is formed and locks its input until then.
