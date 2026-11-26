@@ -31,6 +31,8 @@ class SaveSlotScreen(game: MegamanMaverickGame, private val mode: SaveSlotScreen
     companion object {
         const val TAG = "SaveSlotScreen"
         private const val BACK = "BACK"
+        private const val YES = "YES"
+        private const val NO = "NO"
         private const val BKG_REG_KEY = "menu_screen_bkg_v2"
         private const val TITLE_ROW = 11f
         private const val TEXT_ROW_START = 9f
@@ -44,6 +46,9 @@ class SaveSlotScreen(game: MegamanMaverickGame, private val mode: SaveSlotScreen
     private val arrows = OrderedMap<String, BlinkingArrow>()
     private val backgroundSprite = GameSprite()
     private lateinit var titleHandle: MegaFontHandle
+
+    private lateinit var promptHandle: MegaFontHandle
+    private var pendingSaveSlot: Int? = null
 
     private var initialized = false
 
@@ -92,12 +97,64 @@ class SaveSlotScreen(game: MegamanMaverickGame, private val mode: SaveSlotScreen
             row -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
         }
 
+        promptHandle = MegaFontHandle(
+            textSupplier = { "SAVE TO SLOT ${pendingSaveSlot ?: ""}?" },
+            positionX = TEXT_X * ConstVals.PPM,
+            positionY = TEXT_ROW_START * ConstVals.PPM,
+            centerX = false,
+            centerY = false
+        )
+
+        var confirmRow = TEXT_ROW_START - 2f * ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
+        for (key in arrayOf(YES, NO)) {
+            fontHandles.put(
+                key,
+                MegaFontHandle(
+                    text = key,
+                    positionX = TEXT_X * ConstVals.PPM,
+                    positionY = confirmRow * ConstVals.PPM,
+                    centerX = false,
+                    centerY = false
+                )
+            )
+
+            val arrow = BlinkingArrow(game.assets)
+            arrow.centerX = (TEXT_X + ARROW_OFFSET_X) * ConstVals.PPM
+            arrow.centerY = (confirmRow - ConstVals.ARROW_CENTER_ROW_DECREMENT) * ConstVals.PPM
+            arrows.put(key, arrow)
+
+            confirmRow -= ConstVals.TEXT_ROW_DECREMENT * ConstVals.PPM
+        }
+
+        buttons.put(YES, object : IMenuButton {
+
+            override fun onNavigate(direction: Direction, delta: Float) = navigateConfirm(YES, direction)
+
+            override fun onSelect(delta: Float): Boolean {
+                val slot = pendingSaveSlot!!
+                pendingSaveSlot = null
+                save(slot)
+                setCurrentButtonKey(slotKey(slot))
+                return false
+            }
+        })
+
+        buttons.put(NO, object : IMenuButton {
+
+            override fun onNavigate(direction: Direction, delta: Float) = navigateConfirm(NO, direction)
+
+            override fun onSelect(delta: Float): Boolean {
+                cancelConfirm()
+                return false
+            }
+        })
+
         for (slot in 1..SaveSlots.SLOT_COUNT) buttons.put(slotKey(slot), object : IMenuButton {
 
             override fun onNavigate(direction: Direction, delta: Float) = navigate(slotKey(slot), direction)
 
             override fun onSelect(delta: Float) = when (mode) {
-                SaveSlotScreenMode.SAVE -> save(slot)
+                SaveSlotScreenMode.SAVE -> askToSave(slot)
                 SaveSlotScreenMode.LOAD -> load(slot)
             }
         })
@@ -115,6 +172,24 @@ class SaveSlotScreen(game: MegamanMaverickGame, private val mode: SaveSlotScreen
     }
 
     private fun slotKey(slot: Int) = "SLOT $slot"
+
+    private fun askToSave(slot: Int): Boolean {
+        game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
+        pendingSaveSlot = slot
+        setCurrentButtonKey(NO)
+        return false
+    }
+
+    private fun cancelConfirm() {
+        val slot = pendingSaveSlot!!
+        pendingSaveSlot = null
+        setCurrentButtonKey(slotKey(slot))
+    }
+
+    private fun navigateConfirm(key: String, direction: Direction): String? = when (direction) {
+        Direction.UP, Direction.DOWN -> if (key == YES) NO else YES
+        else -> getCurrentButtonKey()
+    }
 
     private fun save(slot: Int): Boolean {
         if (game.saveState(slot)) {
@@ -167,6 +242,7 @@ class SaveSlotScreen(game: MegamanMaverickGame, private val mode: SaveSlotScreen
         if (!initialized) init()
         GameLogger.debug(TAG, "show(): mode=$mode, activeSaveSlot=${game.activeSaveSlot}")
 
+        pendingSaveSlot = null
         for (slot in 1..SaveSlots.SLOT_COUNT) refreshRow(slot)
         firstButtonKey = slotKey(game.activeSaveSlot ?: 1)
 
@@ -186,13 +262,23 @@ class SaveSlotScreen(game: MegamanMaverickGame, private val mode: SaveSlotScreen
 
         backgroundSprite.draw(batch)
         titleHandle.draw(batch)
-        keys.forEach { fontHandles[it].draw(batch) }
+        if (pendingSaveSlot != null) {
+            promptHandle.draw(batch)
+            fontHandles[YES].draw(batch)
+            fontHandles[NO].draw(batch)
+        } else keys.forEach { fontHandles[it].draw(batch) }
         arrow.draw(batch)
 
         batch.end()
     }
 
     override fun onBack(delta: Float) {
+        if (pendingSaveSlot != null) {
+            game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
+            cancelConfirm()
+            return
+        }
+
         selectionMade = buttons[BACK].onSelect(delta)
         if (selectionMade) onAnySelection()
     }

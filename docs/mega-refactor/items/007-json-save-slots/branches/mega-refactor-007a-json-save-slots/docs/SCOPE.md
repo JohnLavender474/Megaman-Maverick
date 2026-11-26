@@ -57,10 +57,14 @@ Scan of `master` at `2ebb704`.
 - Remove `GameState.fromString()`, `GameStateSaveStringTest` and `PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE`.
 - Unit tests for the slots, the JSON and the file safe write.
 
+## Owner decision (2026-11-26, after the first PR)
+
+Every save asks first, also for an empty slot: choosing a slot on the save screen opens `SAVE TO SLOT N?` with `YES` and `NO` (the cursor starts on `NO`; BACK cancels). The load screen has no confirmation.
+
 ## Out of scope
 
 - Legacy import of the XML prefs save (owner, 2026-11-26).
-- Copy and delete of slots in the UI, an overwrite confirmation, the health tank fill, lives and weapons in the save
+- Copy and delete of slots in the UI, the health tank fill, lives and weapons in the save
   (open questions of the item).
 - `settings.json` and the last used slot across restarts (item `034`).
 - A web or Android launcher (none exists).

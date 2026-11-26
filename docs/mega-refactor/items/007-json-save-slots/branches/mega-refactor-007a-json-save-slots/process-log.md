@@ -36,3 +36,7 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - `GameStateWeaponsTest` ("weapons are not in the save") now goes through `SaveFileJson` in place of `fromString`.
 - Package docs: new `state/saves/README.md`; `titles/README.md` updated for `saveFolderName`. Root `CLAUDE.md` changes
   wait for the merge (`NOTES.md`, "Docs outside the branch folder").
+
+## 2026-11-26 (confirm dialog)
+
+- Owner decision: every save asks for confirmation, also for an empty slot. `SaveSlotScreen` has a YES/NO confirm state in SAVE mode; BACK cancels. Not compiled (no Gradle here); CI is the check.

@@ -46,8 +46,8 @@ Made without the owner (2026-11-26, implementation agent):
 - **`SaveStorage` has `read` and `write` only.** No production code lists or deletes slots (the UI reads the 5 fixed
   names, and slot delete is an open question), so `list` and `delete` are not added (rule `O1-R5`).
 - **Active slot.** `MegamanMaverickGame.activeSaveSlot` is the slot loaded or saved last in this run; `null` at boot and
-  after START NEW GAME. The save list opens with the cursor on the active slot (slot 1 when none). Saving to a used
-  slot overwrites it with no confirmation. Not kept across restarts (item `034`).
+  after START NEW GAME. The save list opens with the cursor on the active slot (slot 1 when none). Every save asks
+  `SAVE TO SLOT N?` first (YES/NO, cursor on NO), also for an empty slot (owner, 2026-11-26). Not kept across restarts (item `034`).
 - **One screen class, two screens.** `SaveSlotScreen(game, mode)` is registered as `SAVE_SLOT_SCREEN` and
   `LOAD_SLOT_SCREEN`. It reuses the `SaveGameScreen` rows (font handles with a text supplier, blinking arrows,
   `menu_screen_bkg_v2`). It does not change the music. Rows: `SLOT N  EMPTY`, `SLOT N  <DIFFICULTY>  <k> LEVELS`,
