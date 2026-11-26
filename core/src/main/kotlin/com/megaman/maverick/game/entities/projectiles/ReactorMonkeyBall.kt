@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.projectiles
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
@@ -42,6 +43,7 @@ import com.megaman.maverick.game.entities.factories.EntityFactories
 import com.megaman.maverick.game.entities.factories.impl.ExplosionsFactory
 import com.megaman.maverick.game.world.body.*
 import kotlin.math.abs
+import kotlin.math.sqrt
 
 class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
 
@@ -49,11 +51,18 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
         const val TAG = "ReactorMonkeyBall"
         private const val GRAVITY = -22.5f
         private const val MAX_BOUNCES = 3
+        private const val BOUNCE_STRIPS = 3
+        private const val SKIP_SPIKE_TIME = 0.3f
+        private const val SKIP_HOP_HEIGHT = 1.5f
+        private const val SKIP_MIN_SPEED_X = 3f
+        private const val SKIP_MAX_SPEED_X = 8f
         private const val BOUNCE_VEL_SCALAR = 0.75f
         private const val EXPLODING_ALPHA = 0.5f
         private val INIT_IMPULSE = Vector2(0f, -3f * ConstVals.PPM)
         private val ANIM_DURS = gdxArrayOf(0.1f, 0.075f, 0.05f)
-        private val regions = ObjectMap<Int, TextureRegion>()
+        private val CALM_KEYS = Array<String>().apply { for (i in 0..BOUNCE_STRIPS) add(i.toString()) }
+        private val MAD_KEYS = Array<String>().apply { for (i in 0..BOUNCE_STRIPS) add("mad_$i") }
+        private val regions = ObjectMap<String, TextureRegion>()
     }
 
     override var owner: IGameEntity? = null
@@ -63,13 +72,20 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
 
     private var exploding = false
     private var bounces = 0
+    private var maxBounces = MAX_BOUNCES
+    private var enraged = false
+
+    private var skipping = false
+    private var skipHopStarted = false
+    private val skipHopVelocity = Vector2()
 
     override fun init(vararg params: Any) {
         if (regions.isEmpty) {
-            val atlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
-            for (i in 0..MAX_BOUNCES) {
-                val region = atlas.findRegion("$TAG/$i")
-                regions.put(i, region)
+            val calmAtlas = services.assets.getTextureAtlas(TextureAsset.PROJECTILES_1.source)
+            val madAtlas = services.assets.getTextureAtlas(TextureAsset.REACTOR_MONKEY.source)
+            for (i in 0..BOUNCE_STRIPS) {
+                regions.put(CALM_KEYS[i], calmAtlas.findRegion("$TAG/${CALM_KEYS[i]}"))
+                regions.put(MAD_KEYS[i], madAtlas.findRegion("$TAG/${MAD_KEYS[i]}"))
             }
         }
         super.init()
@@ -81,6 +97,7 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
 
         owner = spawnProps.get(ConstKeys.OWNER, GameEntity::class)
         collide = spawnProps.getOrDefault(ConstKeys.COLLIDE, false, Boolean::class)
+        enraged = spawnProps.getOrDefault(ConstKeys.RED, false, Boolean::class)
 
         val spawn = spawnProps.get(ConstKeys.POSITION, Vector2::class)!!
         body.setCenter(spawn)
@@ -90,6 +107,10 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
         exploding = false
         hidden = false
         bounces = 0
+        maxBounces = MAX_BOUNCES
+        skipping = false
+        skipHopStarted = false
+        skipHopVelocity.setZero()
     }
 
     override fun onDestroy() {
@@ -97,6 +118,40 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
         exploding = false
     }
 
+    fun lob(velocity: Vector2) {
+        body.physics.velocity.set(velocity)
+        release()
+    }
+
+    fun skip(floorTarget: Vector2, hopTargetX: Float, maxBounces: Int) {
+        val ppm = ConstVals.PPM
+        val gravity = GRAVITY * ppm
+        val center = body.getCenter()
+        val direction = if (floorTarget.x >= center.x) 1f else -1f
+        val dx = floorTarget.x - center.x
+        val dy = floorTarget.y + body.getHeight() / 2f - center.y
+        val spikeTime = SKIP_SPIKE_TIME
+        body.physics.velocity.set(dx / spikeTime, (dy - 0.5f * gravity * spikeTime * spikeTime) / spikeTime)
+
+        val hopSpeedY = sqrt(2f * abs(gravity) * SKIP_HOP_HEIGHT * ppm)
+        val hopTime = 2f * hopSpeedY / abs(gravity)
+        val hopSpeedX = MathUtils.clamp(
+            (hopTargetX - floorTarget.x) * direction / hopTime, SKIP_MIN_SPEED_X * ppm, SKIP_MAX_SPEED_X * ppm
+        )
+        skipHopVelocity.set(direction * hopSpeedX, hopSpeedY)
+        this.maxBounces = maxBounces
+        skipping = true
+        skipHopStarted = false
+        release()
+    }
+
+    private fun release() {
+        body.physics.gravityOn = true
+        hidden = false
+        collide = true
+    }
+
+    // TODO: the Fallout Pool leaves a puddle at the enraged ball's last bounce here (item 077, branch 077i later)
     override fun explodeAndDie(vararg params: Any?) {
         val explosion = EntityFactories.fetch(EntityType.EXPLOSION, ExplosionsFactory.EXPLOSION_FIELD)!!
         val props = props(
@@ -116,10 +171,14 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
         if (add) bounces++
 
         when {
-            bounces >= MAX_BOUNCES -> explodeAndDie()
+            bounces >= maxBounces -> explodeAndDie()
             else -> {
                 when (direction) {
-                    Direction.UP -> body.physics.velocity.y = abs(body.physics.velocity.y) * BOUNCE_VEL_SCALAR
+                    Direction.UP -> {
+                        if (skipping) skipHop()
+                        else body.physics.velocity.y = abs(body.physics.velocity.y) * BOUNCE_VEL_SCALAR
+                    }
+
                     Direction.DOWN -> body.physics.velocity.y = -abs(body.physics.velocity.y) * BOUNCE_VEL_SCALAR
                     Direction.LEFT -> body.physics.velocity.x = -abs(body.physics.velocity.x) * BOUNCE_VEL_SCALAR
                     Direction.RIGHT -> body.physics.velocity.x = abs(body.physics.velocity.x) * BOUNCE_VEL_SCALAR
@@ -127,6 +186,14 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
                 requestToPlaySound(SoundAsset.BLOOPITY_SOUND, false)
             }
         }
+    }
+
+    private fun skipHop() {
+        if (!skipHopStarted) {
+            body.physics.velocity.x = skipHopVelocity.x
+            skipHopStarted = true
+        }
+        body.physics.velocity.y = skipHopVelocity.y
     }
 
     override fun defineBodyComponent(): BodyComponent {
@@ -196,13 +263,18 @@ class ReactorMonkeyBall(services: MegaServices) : AbstractProjectile(services) {
     }
 
     private fun defineAnimationsComponent(): AnimationsComponent {
-        val keySupplier: (String?) -> String? = { (bounces.coerceIn(0, MAX_BOUNCES)).toString() }
+        val keySupplier: (String?) -> String? = {
+            val index = bounces.coerceIn(0, BOUNCE_STRIPS)
+            if (enraged) MAD_KEYS[index] else CALM_KEYS[index]
+        }
 
         val animations = ObjectMap<String, IAnimation>()
-        for (i in 0..MAX_BOUNCES) {
-            val region = regions[i]!!
-            val animation = if (i == 0) Animation(region) else Animation(region, 2, 1, ANIM_DURS[i - 1], true)
-            animations.put(i.toString(), animation)
+        for (i in 0..BOUNCE_STRIPS) {
+            for (key in gdxArrayOf(CALM_KEYS[i], MAD_KEYS[i])) {
+                val region = regions[key]!!
+                val animation = if (i == 0) Animation(region) else Animation(region, 2, 1, ANIM_DURS[i - 1], true)
+                animations.put(key, animation)
+            }
         }
 
         val animator = Animator(keySupplier, animations)

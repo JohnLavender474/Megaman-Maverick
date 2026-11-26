@@ -13,38 +13,42 @@ scripted `GameRandom`). The code agent fills in the numbers it chooses and marks
 
 ### Phases and damage
 
-- [ ] The monkey has 2 health phases; health rolls over at 0 in phase 1; defeat only at 0 in phase 2.
-- [ ] Damage on the monkey: each value is 2 × the `master` value (`BOSS_DMG_NEG` × 2, `Fireball`, `MagmaWave`,
+- [x] The monkey has 2 health phases; health rolls over at 0 in phase 1; defeat only at 0 in phase 2.
+- [x] Damage on the monkey: each value is 2 × the `master` value (`BOSS_DMG_NEG` × 2, `Fireball`, `MagmaWave`,
   `MagmaFlame` 8, `MoonScythe` 4), so each weapon takes the same number of hits as on `master` over the 2 phases.
-- [ ] Damage to the player: `ReactorMonkey` and `ReactorMonkeyBall` (owner `ReactorMonkey`) keep the `master` values;
+- [x] Damage to the player: `ReactorMonkey` (4) and `ReactorMonkeyBall` (owner `ReactorMonkey`, 3) keep the `master` values;
   a ball of another owner keeps the fallback value.
-- [ ] The tuning row follows the difficulty and the phase.
+- [x] The tuning row follows the difficulty and the phase (`ReactorMonkeyTuning.of`): waits normal 2.0-2.5 /
+  1.3-1.8 s, hard 1.2-1.5 / 0.8-1.1 s, longest at full health of the phase.
 
 ### Intro
 
-- [ ] The sprite shows in `ENTRANCE`; the strips run `intro_drop` (in the air), `intro_land`, `intro_roar`, then
+- [x] The sprite shows in `ENTRANCE`; the strips run `intro_drop` (in the air), `intro_land`, `intro_roar`, then
   `stand`.
-- [ ] `isReady` is false until `intro_roar` ends, then true.
-- [ ] No damage to him in `ENTRANCE`.
-- [ ] No throw and no ball before `FIGHT`.
-- [ ] The land submits `SHAKE_CAM` once.
+- [x] `isReady` is false until `intro_roar` ends, then true.
+- [x] No damage to him in `ENTRANCE`.
+- [x] No throw and no ball before `FIGHT`.
+- [x] The land submits `SHAKE_CAM` once.
+- [x] The drop starts with the sprite bottom at the view top and ends with his feet on the spawn point.
 
 ### Throw deck
 
-- [ ] Each throw is Lob, Skip or Fake; never the same type twice in a row.
-- [ ] The aims follow a shuffled cycle of `LEAD`, `CURRENT`, `NEAR`, `WIDE`: each aim once per 4 throws.
-- [ ] Skip: the ball's first contact is the floor ahead of him; it hops low with its own bounce limit.
-- [ ] Fake: he holds the throw pose for a time in the row's range before the release.
-- [ ] The ball still drops in from `ball_spawn_y` over his head.
+- [x] Each throw is Lob, Skip or Fake; never the same type twice in a row.
+- [x] The aims follow a shuffled cycle of `LEAD`, `CURRENT`, `NEAR`, `WIDE`: each aim once per 4 throws.
+- [x] Skip: the ball's first contact is the floor 2 tiles ahead of his front edge; it hops 1.5 tiles high, the first
+  hop lands at the aim x (speed 3 to 8 tiles/s); its bounce limit is the row's (4, phase 2: 5).
+- [x] Fake: he holds the throw pose for a time in the row's range before the release.
+- [x] The ball still drops in from `ball_spawn_y` over his head.
 
 ### Mad Beat and phase 2
 
-- [ ] The phase-2 start waits for the throw in progress; no new ball spawns in the pose.
-- [ ] The pose plays `chest_beat` with `CHEST_BEAT_PASSES` passes of cells 4 to 9 and submits `SHAKE_CAM` on cells 4
+- [x] The phase-2 start waits for the throw in progress (a ball held or falling in); no new ball spawns in the pose.
+- [x] The pose plays `chest_beat` with `CHEST_BEAT_PASSES` (3) passes of cells 4 to 9 and submits `SHAKE_CAM` on cells 4
   and 7 of each pass (2 × passes shakes).
-- [ ] After the pose the strips are the `mad_` strips, and the steam shows at the ear points.
-- [ ] Phase-2 balls use the `mad_` regions.
-- [ ] He can be hurt during the pose.
+- [x] After the pose the strips are the `mad_` strips, and the steam shows at the ear points (a jet at the last
+  beat cell, then jet + puff every 0.8 s); the steam is hidden in strips without ear points and when he is defeated.
+- [x] Phase-2 balls use the `mad_` regions (balls spawned after the pose starts).
+- [x] He can be hurt during the pose.
 - [ ] Two-Ball Juggle (phase 2 only): 2 balls (3 on hard) drop 0.4 s apart; the throws aim `LEAD`, `CURRENT` (,
   `NEAR`).
 

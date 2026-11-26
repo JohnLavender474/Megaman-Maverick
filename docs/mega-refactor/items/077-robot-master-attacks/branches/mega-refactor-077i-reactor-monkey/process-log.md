@@ -6,8 +6,9 @@
 - Goal: a richer Reactor Monkey mini boss: 2 phases with the Mad Beat, intro, full death, throw deck, Two-Ball
   Juggle, enraged ball and face, Hot Potato
 - Brief: in the PR text (`claude-web.md`)
-- Done: `PLAN.md` steps 1 (docs) and 2 (atlas `ReactorMonkey`, `TextureAsset.REACTOR_MONKEY`, README credit)
-- Next: `PLAN.md` steps 3 to 9 (fight code, one agent), then step 10 (draft PR)
+- Done: `PLAN.md` steps 1 (docs), 2 (atlas `ReactorMonkey`, `TextureAsset.REACTOR_MONKEY`, README credit) and 3 to 6
+  (phases, damage, tuning rows, intro, throw deck, Mad Beat, enraged face, steam; not compiled)
+- Next: `PLAN.md` steps 7 to 9 (Juggle, Hot Potato, death), then step 10 (draft PR)
 - Blocked:
 
 ## Entries
@@ -30,3 +31,18 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 - Play-check rooms from `ReactorMan_v3.tmx`: `room5` (spawn 199) before `mini_boss_room_1` (via `room6`, no spawn)
   and `alt_path_1_mini_boss_room_1` (via `alt_path_1_room_1`, no spawn); `room12` (spawn 566) before
   `mini_boss_room_2`.
+
+## 2026-11-26 (steps 3 to 6, fight code first pass)
+
+- Code agent, cloud session: nothing compiled (Gradle blocked); the CI of the PR is the check.
+- `ReactorMonkey.kt` rewritten around 7 states (`INTRO_DROP`, `INTRO_LAND`, `INTRO_ROAR`, `STAND`, `HOLD`, `THROW`,
+  `MAD_BEAT`); new `bosses/reactormonkey/ReactorMonkeyTuning.kt`; `ReactorMonkeyBall` gets `lob`, `skip`, a per-ball
+  bounce limit and the enraged regions (spawn prop `ConstKeys.RED`); `PlayerDamageNegotiator` entries (4 and 3, the
+  `master` fallback values). Details and numbers in `PLAN.md` steps 3 to 6.
+- Plan change: `CHEST_BEAT_PASSES = 3`, not the art default 4 (main-session order; the owner decides at the play test).
+- Choices: the intro drop is a draw offset (the body stays pinned); sounds are existing assets (`QUAKE_SOUND` land,
+  `MM2_MECHA_DRAGON_SOUND` roar, `POUND_SOUND` beats; no steam sound); the mad face flash is a red tint blink for
+  0.5 s over the strip's own red-eye cells; the throw delay interpolates by the health of the current phase.
+- Test resources: `spawn-allocation-baseline.txt` line `bosses/ReactorMonkey.kt 1` removed (`throwDelayTimer` is a
+  field now); `entity-tags.txt` unchanged (no new entity class).
+- Defeat still uses the `master` explosions and alpha fade (step 9 changes it).

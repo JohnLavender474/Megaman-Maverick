@@ -15,7 +15,6 @@ bosses/GlacierMan.kt 1
 bosses/GutsTank.kt 2
 bosses/InfernoMan.kt 1
 bosses/MechaDragon.kt 2
-bosses/ReactorMonkey.kt 1
 bosses/RodentMan.kt 5
 bosses/SigmaRatClaw.kt 2
 bosses/TimberWoman.kt 1
