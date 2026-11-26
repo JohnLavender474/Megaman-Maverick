@@ -193,6 +193,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 183 | [NES-faithful rotation: no sprite drawn at an angle that is not a multiple of 90](items/183-nes-faithful-rotation/ITEM.md) | feature | `O9`, `O4` | active | none | 2026-11-23 | |
 | 184 | [Keep button taps that are shorter than one frame](items/184-sub-frame-taps/ITEM.md) | feature | `O9`, `O5` | dropped | none | 2026-11-23 | 2026-11-23 |
 | 185 | [A second game title on the same engine and shared code](items/185-second-title/ITEM.md) | refactor | `O1`, `O7`, `O8` | active | none | 2026-11-23 | |
+| 187 | [Intro story screen and main menu overhaul](items/187-intro-story-and-menu/ITEM.md) | feature | `O9` | active | none | 2026-11-26 | |
 
 ## Branches
 
@@ -337,3 +338,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-185a-lost-memories-launcher`](items/185-second-title/branches/mega-refactor-185a-lost-memories-launcher/process-log.md) | 185 | Second title "Mega Man X: Lost Memories" (splash screen into the X6 intro), `desktop-common` launcher module, one run script set per game | merged | 2026-11-23 | 2026-11-23 |
 | [`mega-refactor-185b-game-builds`](items/185-second-title/branches/mega-refactor-185b-game-builds/process-log.md) | 185 | Platform builds for each game into `game-builds/<game>/`; `game-builds/` git-ignored | merged | 2026-11-23 | 2026-11-23 |
 | [`mega-refactor-185c-games-layout`](items/185-second-title/branches/mega-refactor-185c-games-layout/process-log.md) | 185 | Layout `games/mega-man-maverick` + `games/mega-man-x-lost-memories`; title seams (levels, screens, spawn names, fight plans, audio, test roots); playable Lost Memories mock game | active | 2026-11-24 | |
+| [`mega-refactor-187a-intro-story-art`](items/187-intro-story-and-menu/branches/mega-refactor-187a-intro-story-art/process-log.md) | 187 | First round of NES-style art for the intro story slides: the city by day, dusk and night, and the exploding city with two screens, as exported layers (art only) | active | 2026-11-26 | |
