@@ -46,7 +46,6 @@ class Axe(services: MegaServices) : AbstractProjectile(services), IAnimatedEntit
     companion object {
         const val TAG = "Axe"
         private const val CULL_TIME = 1f
-        private const val GRAVITY = 56.25f
         private const val MAX_BOUNCES = 2
         private const val SLOW_DOWN_SCALAR = 0.75f
         private var region: TextureRegion? = null
@@ -150,12 +149,7 @@ class Axe(services: MegaServices) : AbstractProjectile(services), IAnimatedEntit
         debugShapes.add { body.getBounds() }
 
         body.preProcess.put(ConstKeys.DEFAULT) {
-            when (direction) {
-                Direction.UP -> body.physics.gravity.set(0f, -GRAVITY * gravityScalar * ConstVals.PPM)
-                Direction.DOWN -> body.physics.gravity.set(0f, GRAVITY * gravityScalar * ConstVals.PPM)
-                Direction.LEFT -> body.physics.gravity.set(GRAVITY * gravityScalar * ConstVals.PPM, 0f)
-                Direction.RIGHT -> body.physics.gravity.set(GRAVITY * gravityScalar * ConstVals.PPM, 0f)
-            }
+            AxeTrajectory.gravity(direction, gravityScalar, body.physics.gravity)
         }
 
         addComponent(DrawableShapesComponent(debugShapeSuppliers = debugShapes, debug = true))
