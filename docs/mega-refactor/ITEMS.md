@@ -194,6 +194,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 184 | [Keep button taps that are shorter than one frame](items/184-sub-frame-taps/ITEM.md) | feature | `O9`, `O5` | dropped | none | 2026-11-23 | 2026-11-23 |
 | 185 | [A second game title on the same engine and shared code](items/185-second-title/ITEM.md) | refactor | `O1`, `O7`, `O8` | active | none | 2026-11-23 | |
 | 187 | [Intro story screen and main menu overhaul](items/187-intro-story-and-menu/ITEM.md) | feature | `O9` | active | none | 2026-11-26 | |
+| 188 | [Dragon mini-boss upgrade (legs and new attacks)](items/188-dragon-mini-boss-upgrade/ITEM.md) | feature | `O4` | active | none | 2026-11-26 | |
 
 ## Branches
 
@@ -340,3 +341,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-185c-games-layout`](items/185-second-title/branches/mega-refactor-185c-games-layout/process-log.md) | 185 | Layout `games/mega-man-maverick` + `games/mega-man-x-lost-memories`; title seams (levels, screens, spawn names, fight plans, audio, test roots); playable Lost Memories mock game | active | 2026-11-24 | |
 | [`mega-refactor-187a-intro-story-art`](items/187-intro-story-and-menu/branches/mega-refactor-187a-intro-story-art/process-log.md) | 187 | First round of NES-style art for the intro story slides: the city by day, dusk and night, and the exploding city with two screens, as exported layers (art only) | active | 2026-11-26 | |
 | [`mega-refactor-007a-json-save-slots`](items/007-json-save-slots/branches/mega-refactor-007a-json-save-slots/process-log.md) | 007 | First pass: `SaveStorage`, 5 JSON save slots, a slot picker; no legacy import | active | 2026-11-26 | |
+| [`mega-refactor-188a-dragon-moves-art`](items/188-dragon-mini-boss-upgrade/branches/mega-refactor-188a-dragon-moves-art/process-log.md) | 188 | Opus ideation of new `MechaDragon` moves; Fable art with legs and new attack frames (design and art only) | active | 2026-11-26 | |
