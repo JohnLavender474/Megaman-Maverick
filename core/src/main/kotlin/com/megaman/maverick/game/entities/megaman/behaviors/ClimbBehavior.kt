@@ -3,6 +3,7 @@ package com.megaman.maverick.game.entities.megaman.behaviors
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.maverick.game.engine.behaviors.IBehavior
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.components.holdingAxe
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.currentWeaponPrevents
 import com.megaman.maverick.game.players.ClimbParams
@@ -16,7 +17,7 @@ internal fun Megaman.climbBehavior(): IBehavior = playerClimbBehavior(
         speed = { MegamanValues.CLIMB_VEL * movementScalar },
         blocked = { currentWeaponPrevents(BehaviorType.CLIMBING) },
         feetGrabAllowed = { true },
-        holdStill = { shooting },
+        holdStill = { shooting || holdingAxe },
         leavesOnFloor = false,
         onStart = {
             aButtonTask = offGroundAButtonTask()

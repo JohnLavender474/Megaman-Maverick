@@ -18,20 +18,21 @@ import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.components.chargeStatus
 import com.megaman.maverick.game.entities.megaman.components.charging
 import com.megaman.maverick.game.entities.megaman.components.clearChargeWhenHurt
-import com.megaman.maverick.game.entities.megaman.components.defineWeaponChargeComponent
 import com.megaman.maverick.game.entities.megaman.components.fullyCharged
 import com.megaman.maverick.game.entities.megaman.components.halfCharged
+import com.megaman.maverick.game.entities.megaman.components.stopWindupNotOfCurrentWeapon
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
+import com.megaman.maverick.game.entities.megaman.sprites.amendKey
 import com.megaman.maverick.game.entities.state.PlayPhase
 import com.megaman.maverick.game.entities.state.PlayPhaseComponent
 import com.megaman.maverick.game.entities.state.RunComponent
 import com.megaman.maverick.game.entities.state.StunComponent
 import com.megaman.maverick.game.entities.state.TeleportableComponent
-import com.megaman.maverick.game.entities.state.WeaponChargeComponent
+import com.megaman.maverick.game.entities.state.WeaponWindupComponent
 import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.locks.MegaLockGroup
 import com.megaman.maverick.game.testServices
@@ -41,7 +42,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import io.mockk.verify
-import com.megaman.maverick.game.players.stopCharging
+import com.megaman.maverick.game.players.stopWindup
+import com.megaman.maverick.game.players.windups
 
 private const val HALF = MegamanValues.TIME_TO_HALFWAY_CHARGED
 private const val FULL = MegamanValues.TIME_TO_FULLY_CHARGED
@@ -76,7 +78,6 @@ class MegamanWeaponChargeTest : DescribeSpec({
         services.levelState.currentLevel = LevelDefinition.DESERT_MAN
 
         weapons = mockk(relaxed = true)
-        every { weapons.isChargeable(any()) } returns true
         every { weapons.canFireWeapon(any(), any()) } returns true
 
         megaman = Megaman(services)
@@ -93,7 +94,7 @@ class MegamanWeaponChargeTest : DescribeSpec({
         megaman.addComponent(PlayPhaseComponent(PlayPhase.IN_PLAY))
         megaman.addComponent(TeleportableComponent())
         megaman.addComponent(RunComponent())
-        megaman.addComponent(megaman.defineWeaponChargeComponent())
+        megaman.addComponent(WeaponWindupComponent())
         megaman.addComponent(BehaviorsComponent())
         megaman.addComponent(megaman.defineStunComponent())
 
@@ -112,7 +113,7 @@ class MegamanWeaponChargeTest : DescribeSpec({
         it("is not charged after the component reset of a destroy") {
             hold(FULL)
 
-            megaman.getComponent(WeaponChargeComponent::class)!!.reset()
+            megaman.getComponent(WeaponWindupComponent::class)!!.reset()
 
             megaman.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
             megaman.charging shouldBe false
@@ -147,7 +148,7 @@ class MegamanWeaponChargeTest : DescribeSpec({
 
         it("is not charged with a weapon that does not charge") {
             hold(FULL)
-            every { weapons.isChargeable(any()) } returns false
+            megaman.currentWeapon = MegamanWeapons.FRIGID_SHOT
 
             megaman.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
             megaman.charging shouldBe false
@@ -183,6 +184,48 @@ class MegamanWeaponChargeTest : DescribeSpec({
 
             megaman.chargeStatus shouldBe MegaChargeStatus.HALF_CHARGED
         }
+
+        it("is not half charged just before the half time over the enhancement scalar") {
+            services.gameState.addEnhancement(MegaEnhancement.FASTER_BUSTER_CHARGING)
+
+            hold(HALF / MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR - 0.01f)
+
+            megaman.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
+        }
+
+        it("is fully charged at the full time over the enhancement scalar") {
+            services.gameState.addEnhancement(MegaEnhancement.FASTER_BUSTER_CHARGING)
+
+            hold(FULL / MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR)
+
+            megaman.chargeStatus shouldBe MegaChargeStatus.FULLY_CHARGED
+        }
+
+        it("charges at the normal speed with no enhancement") {
+            hold(HALF / MegaEnhancement.FASTER_BUSTER_CHARGING_SCALAR)
+
+            megaman.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
+        }
+    }
+
+    describe("the animation key of a charge") {
+        it("has no charge suffix below the half time") {
+            hold(HALF - 0.01f)
+
+            megaman.amendKey("stand") shouldBe "stand"
+        }
+
+        it("has the half suffix from the half time") {
+            hold(HALF)
+
+            megaman.amendKey("stand") shouldBe "stand_charge_half"
+        }
+
+        it("has the full suffix at the full time") {
+            hold(FULL)
+
+            megaman.amendKey("stand") shouldBe "stand_charge_full"
+        }
     }
 
     describe("the charge sound") {
@@ -198,7 +241,34 @@ class MegamanWeaponChargeTest : DescribeSpec({
 
         it("plays again on the next charge") {
             hold(HALF)
-            megaman.stopCharging()
+            megaman.stopWindup()
+
+            hold(HALF)
+
+            chargeSounds() shouldBe 2
+        }
+
+        it("plays once when one step passes both the half and the full time") {
+            hold(FULL + 1f)
+            chargeSounds() shouldBe 1
+
+            hold(0.5f)
+
+            chargeSounds() shouldBe 1
+        }
+
+        it("does not play when the charge clears before the half time") {
+            hold(HALF - 0.01f)
+            megaman.stopWindup()
+
+            hold(HALF - 0.01f)
+
+            chargeSounds() shouldBe 0
+        }
+
+        it("plays again after a release and a new charge") {
+            hold(HALF)
+            release()
 
             hold(HALF)
 
@@ -206,14 +276,57 @@ class MegamanWeaponChargeTest : DescribeSpec({
         }
     }
 
-    describe("stopCharging") {
+    describe("stopWindup") {
         it("clears the charge and stops the sound") {
             hold(FULL)
 
-            megaman.stopCharging()
+            megaman.stopWindup()
 
             megaman.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
             chargeSoundStops() shouldBe 1
+        }
+    }
+
+    describe("a weapon with no windup") {
+        it("does not charge or play the sound while held") {
+            megaman.currentWeapon = MegamanWeapons.FRIGID_SHOT
+
+            hold(FULL)
+
+            megaman.windups.active shouldBe null
+            megaman.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
+            chargeSounds() shouldBe 0
+        }
+    }
+
+    describe("stopWindupNotOfCurrentWeapon") {
+        it("keeps the charge of the current weapon") {
+            hold(HALF)
+
+            megaman.stopWindupNotOfCurrentWeapon()
+
+            megaman.chargeStatus shouldBe MegaChargeStatus.HALF_CHARGED
+            chargeSoundStops() shouldBe 0
+        }
+
+        it("clears the charge and stops the sound after a switch to another weapon (item 188a, intended change 5)") {
+            hold(HALF)
+            megaman.currentWeapon = MegamanWeapons.FRIGID_SHOT
+
+            megaman.stopWindupNotOfCurrentWeapon()
+
+            megaman.windups.active shouldBe null
+            chargeSoundStops() shouldBe 1
+            megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
+            megaman.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
+        }
+
+        it("sends no sound stop each frame with no windup active (item 188a, intended change 4)") {
+            megaman.currentWeapon = MegamanWeapons.FRIGID_SHOT
+
+            repeat(3) { megaman.stopWindupNotOfCurrentWeapon() }
+
+            chargeSoundStops() shouldBe 0
         }
     }
 
@@ -226,14 +339,14 @@ class MegamanWeaponChargeTest : DescribeSpec({
             megaman.chargeStatus shouldBe MegaChargeStatus.HALF_CHARGED
         }
 
-        it("clears the charge during a stun, with no sound stop") {
+        it("clears the charge during a stun, and stops the sound (item 188a, intended change 3)") {
             hold(HALF)
             megaman.getComponent(StunComponent::class)!!.start()
 
             megaman.clearChargeWhenHurt()
 
             megaman.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
-            chargeSoundStops() shouldBe 0
+            chargeSoundStops() shouldBe 1
         }
     }
 })

@@ -10,6 +10,7 @@ import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.entities.megaman.components.fullyCharged
 import com.megaman.maverick.game.entities.megaman.components.halfCharged
+import com.megaman.maverick.game.entities.megaman.components.holdingAxe
 import com.megaman.maverick.game.entities.special.PipePortal
 import com.megaman.maverick.game.entities.state.frozen
 import com.megaman.maverick.game.entities.state.roomTransitionPaused
@@ -65,7 +66,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
         val inLadder = ladder != null && ladder.body.getBounds().contains(body.getCenter())
 
         when {
-            !inLadder && !shooting -> amendKey("climb_finish")
+            !inLadder && !shooting && !holdingAxe -> amendKey("climb_finish")
             else -> {
                 val movement = if (direction.isHorizontal()) body.physics.velocity.x else body.physics.velocity.y
                 val key = if (movement != 0f) "climb" else "climb_still"
@@ -94,7 +95,7 @@ fun Megaman.getAnimationKey(priorAnimKey: String?) = when {
 }
 
 fun Megaman.amendKey(baseKey: String) = when {
-    shooting -> currentLook.shootKey?.invoke(this, baseKey)
+    shooting || holdingAxe -> currentLook.shootKey?.invoke(this, baseKey)
         ?: if (baseKey == "jump" && isProperty("${ConstKeys.SHOOT}_${ConstKeys.DOWN}", true)) "jump_shoot_down"
         else "${baseKey}_shoot"
 

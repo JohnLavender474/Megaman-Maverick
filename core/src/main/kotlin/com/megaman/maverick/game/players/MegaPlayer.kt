@@ -148,6 +148,7 @@ abstract class MegaPlayer(services: MegaServices) : AbstractHealthEntity(service
         addComponent(defineBehaviorsComponent())
         addComponent(defineControllerComponent())
         addComponent(defineSpritesComponent())
+        addComponent(WeaponWindupComponent())
         addComponent(AudioComponent())
         addComponent(defineAnimationsComponent())
     }

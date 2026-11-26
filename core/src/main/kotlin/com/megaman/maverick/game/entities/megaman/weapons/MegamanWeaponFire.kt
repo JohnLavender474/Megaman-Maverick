@@ -30,6 +30,7 @@ import com.megaman.maverick.game.entities.explosions.MagmaExplosion
 import com.megaman.maverick.game.entities.explosions.SmokePuff
 import com.megaman.maverick.game.entities.hazards.SmallIceCube
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.components.setAxeThrowAnimationToThrowFrame
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
@@ -378,45 +379,13 @@ internal fun destroyPreciousGuardGems(state: WeaponState) {
     }
 }
 
-private fun throwAxe(megaman: Megaman, state: WeaponState) {
-    GameLogger.debug(TAG, "throwAxe()")
+private fun throwAxe(megaman: Megaman, state: WeaponState, holdTime: Float) {
+    GameLogger.debug(TAG, "throwAxe(): holdTime=$holdTime")
     if (!megaman.existenceState.liveAfterUpdate) return
 
+    val spawn = GameObjectPools.fetch(Vector2::class)
     val impulse = GameObjectPools.fetch(Vector2::class)
-    when (megaman.direction) {
-        Direction.UP -> impulse.set(
-            MegamanValues.AXE_IMPULSE_X * megaman.facing.value,
-            MegamanValues.AXE_IMPULSE_Y
-        )
-
-        Direction.DOWN -> impulse.set(
-            MegamanValues.AXE_IMPULSE_X * -megaman.facing.value,
-            -MegamanValues.AXE_IMPULSE_Y
-        )
-
-        Direction.LEFT -> impulse.set(
-            -MegamanValues.AXE_IMPULSE_Y,
-            MegamanValues.AXE_IMPULSE_X * megaman.facing.value
-        )
-
-        Direction.RIGHT -> impulse.set(
-            MegamanValues.AXE_IMPULSE_Y,
-            MegamanValues.AXE_IMPULSE_X * -megaman.facing.value,
-        )
-    }
-    impulse.scl(ConstVals.PPM.toFloat())
-
-    if (megaman.services.levelState.currentLevel!! == LevelDefinition.MOON_MAN ||
-        megaman.body.isSensing(BodySense.IN_WATER)
-    ) impulse.scl(MegamanValues.AXE_SLOW_SCALAR)
-
-    val spawn = megaman.body.getCenter()
-    when (megaman.direction) {
-        Direction.UP -> spawn.add(-0.1f * ConstVals.PPM * megaman.facing.value, 0.75f * ConstVals.PPM)
-        Direction.DOWN -> spawn.add(0.1f * ConstVals.PPM * megaman.facing.value, -0.75f * ConstVals.PPM)
-        Direction.LEFT -> spawn.add(-0.75f * ConstVals.PPM, 0.1f * ConstVals.PPM * megaman.facing.value)
-        Direction.RIGHT -> spawn.add(0.75f * ConstVals.PPM, -0.1f * ConstVals.PPM * megaman.facing.value)
-    }
+    AxeThrow.launch(megaman, holdTime, spawn, impulse)
 
     val axe = MegaEntityFactory.fetch(Axe::class)!!
     axe.spawn(
@@ -434,7 +403,16 @@ private fun throwAxe(megaman: Megaman, state: WeaponState) {
 }
 
 internal fun fireAxeSwinger(megaman: Megaman, state: WeaponState, stat: MegaChargeStatus) {
-    MegaUtilMethods.delayRun(megaman.services, 0.1f) { throwAxe(megaman, state) }
+    val holdTime = megaman.axeWindup.time
+    if (holdTime >= MegamanValues.AXE_WINDUP_TIME) {
+        megaman.setAxeThrowAnimationToThrowFrame()
+        throwAxe(megaman, state, holdTime)
+        return
+    }
+
+    MegaUtilMethods.delayRun(megaman.services, MegamanValues.AXE_WINDUP_TIME - holdTime) {
+        throwAxe(megaman, state, holdTime)
+    }
 }
 
 internal fun fireNeedleSpin(megaman: Megaman, state: WeaponState, stat: MegaChargeStatus) {

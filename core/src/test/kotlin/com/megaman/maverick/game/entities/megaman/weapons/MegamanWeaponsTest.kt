@@ -8,8 +8,10 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
+import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.state.GameState
 import com.megaman.maverick.game.testServices
+import com.megaman.maverick.game.weapons.BusterCharge
 import com.megaman.maverick.game.weapons.TrailWhileFiring
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -138,8 +140,16 @@ class MegamanWeaponsTest : DescribeSpec({
             MegaChargeStatus.entries.forEach { handler.canFireWeapon(MegamanWeapons.MEGA_BUSTER, it) shouldBe true }
         }
 
-        it("makes only the buster chargeable") {
-            MEGAMAN_LOADOUT.weapons.filter { handler.isChargeable(it) } shouldBe listOf(MegamanWeapons.MEGA_BUSTER)
+        it("gives a buster charge only to the buster, an axe windup only to the axe, and a windup to no other weapon") {
+            val services = testServices()
+            services.levelState.currentLevel = LevelDefinition.DESERT_MAN
+            val megaman = Megaman(services)
+            MEGAMAN_LOADOUT.weapons.filter { megaman.windupOf(it) is BusterCharge } shouldBe
+                listOf(MegamanWeapons.MEGA_BUSTER)
+            MEGAMAN_LOADOUT.weapons.filter { megaman.windupOf(it) is AxeThrowWindup } shouldBe
+                listOf(MegamanWeapons.AXE_SWINGER)
+            MEGAMAN_LOADOUT.weapons.filter { megaman.windupOf(it) != null } shouldBe
+                listOf(MegamanWeapons.MEGA_BUSTER, MegamanWeapons.AXE_SWINGER)
         }
     }
 

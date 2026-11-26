@@ -2,6 +2,7 @@ package com.megaman.maverick.game.entities.megamanx
 
 import com.maverick.game.engine.GameEngine
 import com.maverick.game.engine.audio.AudioComponent
+import com.megaman.maverick.game.assets.SoundAsset
 import com.maverick.game.engine.behaviors.BehaviorsComponent
 import com.maverick.game.engine.behaviors.IBehavior
 import com.maverick.game.engine.common.enums.Facing
@@ -58,7 +59,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import com.maverick.game.engine.common.enums.Direction
-import com.megaman.maverick.game.players.playerChargeStatus
 
 private const val DELTA = 0.05f
 private const val TOLERANCE = 0.001f
@@ -138,7 +138,7 @@ class MegamanXTest : DescribeSpec({
         x.addComponent(x.damageRecovery)
         x.addComponent(x.defineStunComponent())
         x.addComponent(x.defineFreezeComponent())
-        x.addComponent(x.defineWeaponChargeComponent())
+        x.addComponent(WeaponWindupComponent())
         x.addComponent(PostActionMomentumComponent(0f, 0f, { 0f }, { true }, { false }, { false }))
         x.addComponent(BehaviorsComponent())
         x.addComponent(AudioComponent())
@@ -362,12 +362,24 @@ class MegamanXTest : DescribeSpec({
 
         it("shoots a half charged shot on the release after the half charge time") {
             hold(MegaControllerButton.B, MegamanXValues.TIME_TO_HALF_CHARGE + DELTA)
-            x.playerChargeStatus shouldBe MegaChargeStatus.HALF_CHARGED
+            x.chargeStatus shouldBe MegaChargeStatus.HALF_CHARGED
             step(MegaControllerButton.B to ButtonStatus.JUST_RELEASED)
 
             spawned.size shouldBe 2
             spawned[1].first.shouldBeInstanceOf<ChargedShot>()
             spawned[1].second.get(ConstKeys.BOOLEAN) shouldBe false
+        }
+
+        it("plays the charge sound once, at the half charge time") {
+            fun chargeSounds() = x.require(AudioComponent::class).playSoundRequests
+                .count { it.source == SoundAsset.MEGA_BUSTER_CHARGING_SOUND }
+
+            hold(MegaControllerButton.B, MegamanXValues.TIME_TO_HALF_CHARGE - DELTA)
+            chargeSounds() shouldBe 0
+
+            repeat(30) { step(MegaControllerButton.B to ButtonStatus.PRESSED) }
+
+            chargeSounds() shouldBe 1
         }
 
         it("shoots a full charged shot on the release after the full charge time") {
@@ -391,7 +403,7 @@ class MegamanXTest : DescribeSpec({
             hold(MegaControllerButton.B, 1f)
             hurt()
             step(MegaControllerButton.B to ButtonStatus.PRESSED)
-            x.playerChargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
+            x.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
         }
     }
 

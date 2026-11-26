@@ -35,6 +35,12 @@ flowchart LR
 - `WeaponLook` is the art of a weapon for one character. Two characters that share a def can have different looks.
 - A player with weapons has a `PlayerWeaponsComponent`. Screens read it with `player.weapons`, which is `null` for a
   player with no weapons.
+- A weapon that winds up while its button is held, such as the buster charge, has a `WeaponWindup`: `hold(delta)` and
+  `clear()`. `BusterCharge` is the windup with a half and a full level and hooks for its sounds. Each player class
+  builds its own windups (its times, sounds and speed) and maps its weapons to them (`Megaman.windupOf`); the
+  windup is not a field of the def, so that two players can wind up the same def with different values. The
+  player's `WeaponWindupComponent` holds the active windup: a hold of another windup clears the old one first, and
+  a stop clears it. Research and decisions: `docs/mega-refactor/items/188-axe-windup-throw/`.
 - Owned weapons are not stored. A character owns a weapon of its loadout when the weapon is `alwaysOwned`, when a
   completed level gives it to that character, or when a launch option or a level override gives it. Completed levels
   are shared by all characters, so the save file holds no weapons.

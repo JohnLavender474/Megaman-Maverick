@@ -59,7 +59,6 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import java.io.File
 import javax.imageio.ImageIO
-import com.megaman.maverick.game.players.playerChargeStatus
 import com.megaman.maverick.game.players.SabreState
 import com.megaman.maverick.game.entities.players.PlayerSabreSlash
 
@@ -175,7 +174,7 @@ class MegamanXSabreTest : DescribeSpec({
         x.addComponent(x.damageRecovery)
         x.addComponent(x.defineStunComponent())
         x.addComponent(x.defineFreezeComponent())
-        x.addComponent(x.defineWeaponChargeComponent())
+        x.addComponent(WeaponWindupComponent())
         x.addComponent(PostActionMomentumComponent(0f, 0f, { 0f }, { overGround }, { false }, { false }))
         x.addComponent(AudioComponent())
         x.addComponent(PointsComponent(ConstKeys.HEALTH pairTo Points(0, ConstVals.MAX_HEALTH, ConstVals.MAX_HEALTH)))
@@ -215,7 +214,7 @@ class MegamanXSabreTest : DescribeSpec({
         it("does not charge while the slash press is held, and its release fires nothing") {
             slashUp()
             ticks(MegamanXValues.TIME_TO_FULL_CHARGE + DELTA, MegaControllerButton.B to ButtonStatus.PRESSED)
-            x.playerChargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
+            x.chargeStatus shouldBe MegaChargeStatus.NOT_CHARGED
 
             hold(MegaControllerButton.B to ButtonStatus.JUST_RELEASED)
             tick()
@@ -233,7 +232,7 @@ class MegamanXSabreTest : DescribeSpec({
             tick()
             ticks(MegamanXValues.TIME_TO_FULL_CHARGE + DELTA, MegaControllerButton.B to ButtonStatus.PRESSED)
 
-            x.playerChargeStatus shouldBe MegaChargeStatus.FULLY_CHARGED
+            x.chargeStatus shouldBe MegaChargeStatus.FULLY_CHARGED
         }
 
         it("forgets the slash press when B is up, also with no release frame") {

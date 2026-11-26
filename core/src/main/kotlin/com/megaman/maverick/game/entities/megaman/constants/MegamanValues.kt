@@ -64,9 +64,20 @@ object MegamanValues {
     const val SHIELD_GEM_MAX_DIST = 10f
     const val SHIELD_GEM_LERP = 10f
 
-    const val AXE_IMPULSE_X = 8f
-    const val AXE_IMPULSE_Y = 20f
+    const val AXE_HOLD_TIME = 0.7f
+    const val AXE_WINDUP_TIME = 0.1f
+    const val AXE_IMPULSE_X_MIN = 4f
+    const val AXE_IMPULSE_X_MAX = 12f
+    const val AXE_IMPULSE_Y_MIN = 17f
+    const val AXE_IMPULSE_Y_MAX = 23f
     const val AXE_SLOW_SCALAR = 0.5f
+    const val AXE_PREVIEW_DELAY = 0.15f
+    const val AXE_PREVIEW_MAX_DOTS = 32
+    const val AXE_PREVIEW_DOT_SPACING = 0.5f
+    const val AXE_PREVIEW_MAX_TIME = 2f
+    const val AXE_PREVIEW_DOT_SIZE = 0.125f
+    const val AXE_PREVIEW_FIRST_DOT_ALPHA = 1f
+    const val AXE_PREVIEW_LAST_DOT_ALPHA = 0.35f
 
     const val GROUND_SLIDE_COOLDOWN = 0.075f
     const val GROUND_SLIDE_MIN_TIME = 0.2f

@@ -13,6 +13,7 @@ import com.maverick.game.engine.players.PlayerSlot
 import com.maverick.game.engine.world.body.Body
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.BodyType
+import com.megaman.maverick.game.entities.state.WeaponWindupComponent
 import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.MegaServices
 import com.megaman.maverick.game.behaviors.BehaviorType
@@ -55,6 +56,7 @@ class MegamanMovesRig {
         body.putProperty(ConstKeys.BODY_OVER_GROUND, { overGround })
         megaman.addComponent(BodyComponent(body))
         megaman.addComponent(TeleportableComponent())
+        megaman.addComponent(WeaponWindupComponent())
         megaman.addComponent(RunComponent())
         megaman.addComponent(PostActionMomentumComponent(1f, 1f, { 1f }, { overGround }, { false }, { false }))
         megaman.addComponent(behaviors)
