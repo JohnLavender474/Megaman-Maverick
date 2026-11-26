@@ -9,10 +9,10 @@ import com.megaman.maverick.game.titles.IGameTitle
 object LostMemoriesTitle : IGameTitle {
 
     const val LOST_MEMORIES_SPLASH = "LOST_MEMORIES_SPLASH"
-    const val SAVE_FILE_NAME = "Mega Man X Lost Memories - Save File"
+    const val SAVE_FOLDER_NAME = ".mega-man-x-lost-memories"
     const val PLAYER_SETTINGS_FILE_NAME = "Mega Man X Lost Memories - Player Settings"
 
-    override val saveFileName = SAVE_FILE_NAME
+    override val saveFolderName = SAVE_FOLDER_NAME
 
     override val playerSettingsFileName = PLAYER_SETTINGS_FILE_NAME
 

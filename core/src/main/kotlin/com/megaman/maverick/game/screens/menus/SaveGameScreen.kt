@@ -72,9 +72,9 @@ class SaveGameScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, SAVE), In
             override fun onNavigate(direction: Direction, delta: Float) = navigate(SAVE, direction)
 
             override fun onSelect(delta: Float): Boolean {
-                game.saveState()
                 game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
-                return false
+                game.setCurrentScreen(ScreenEnum.SAVE_SLOT_SCREEN.name)
+                return true
             }
         })
 

@@ -476,8 +476,9 @@ object DesktopRunner {
 
         @Parameter(
             names = ["--saveFile"],
-            description = "Dev option: the name of the preferences file that holds the save, in place of the game's " +
-                "own save file, for example test-save (a file under ~/.prefs/). A new name starts with no save."
+            description = "Dev option: the name of a subfolder of the saves folder that holds the 5 save slots, in " +
+                "place of the game's own slots, for example test-save (~/.megaman-maverick/saves/test-save/). A new " +
+                "name starts with 5 empty slots."
         )
         var saveFile: String? = null
 

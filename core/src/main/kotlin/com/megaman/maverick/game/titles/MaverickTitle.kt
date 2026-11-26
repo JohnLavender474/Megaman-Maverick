@@ -8,7 +8,7 @@ import com.megaman.maverick.game.screens.ScreenEnum
 
 object MaverickTitle : IGameTitle {
 
-    override val saveFileName = PreferenceFiles.MEGAMAN_MAVERICK_SAVE_FILE
+    override val saveFolderName = ".megaman-maverick"
 
     override val playerSettingsFileName = PreferenceFiles.MEGAMAN_MAVERICK_PLAYER_SETTINGS
 

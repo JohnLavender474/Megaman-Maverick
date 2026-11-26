@@ -22,7 +22,6 @@ import com.megaman.maverick.game.assets.MusicAsset
 import com.megaman.maverick.game.assets.SoundAsset
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.drawables.fonts.MegaFontHandle
-import com.megaman.maverick.game.levels.LevelDefinition
 import com.megaman.maverick.game.screens.ScreenEnum
 import com.megaman.maverick.game.screens.utils.BlinkingArrow
 import com.megaman.maverick.game.screens.utils.GameSettingsPanel
@@ -134,6 +133,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
             override fun onSelect(delta: Float): Boolean {
                 game.gameState.reset()
                 game.gameState.resetLives()
+                game.activeSaveSlot = null
                 game.setCurrentScreen(ScreenEnum.SELECT_DIFFICULTY_SCREEN.name)
                 return true
             }
@@ -147,26 +147,8 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         buttons.put(MainScreenButton.LOAD_SAVE_FILE.text, object : IMenuButton {
             override fun onSelect(delta: Float): Boolean {
-                if (game.hasSavedState() && game.loadSavedState()) {
-                    GameLogger.debug(TAG, "Loaded saved state")
-                    when {
-                        game.gameState.isLevelCompleted(LevelDefinition.INTRO_STAGE) ->
-                            game.setCurrentScreen(ScreenEnum.LEVEL_SELECT_SCREEN.name)
-
-                        else -> {
-                            game.levelState.currentLevel = LevelDefinition.INTRO_STAGE
-                            game.startLevel()
-                        }
-                    }
-                    game.audio.playSound(SoundAsset.SELECT_PING_SOUND, false)
-                    game.levelState.weaponsAttained = null
-                    return true
-                } else {
-                    GameLogger.error(TAG, "Failed to load saved state")
-                    game.audio.playSound(SoundAsset.ERROR_SOUND, false)
-                    doNotPlayPing = true
-                    return false
-                }
+                game.setCurrentScreen(ScreenEnum.LOAD_SLOT_SCREEN.name)
+                return true
             }
 
             override fun onNavigate(direction: Direction, delta: Float) = when (direction) {

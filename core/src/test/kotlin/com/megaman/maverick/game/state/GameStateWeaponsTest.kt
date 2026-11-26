@@ -5,6 +5,10 @@ import com.megaman.maverick.game.levels.LevelDefinition
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldNotContain
+import com.megaman.maverick.game.state.saves.SaveFile
+import com.megaman.maverick.game.state.saves.SaveFileJson
+import com.megaman.maverick.game.state.saves.SaveSlotContent
 import com.megaman.maverick.game.entities.megaman.weapons.MEGAMAN_LOADOUT
 import com.megaman.maverick.game.players.PlayerCharacter
 
@@ -89,14 +93,14 @@ class GameStateWeaponsTest : DescribeSpec({
             state.ownsWeapon(PlayerCharacter.PROTOMAN, MegamanWeapons.AXE_SWINGER) shouldBe false
         }
 
-        it("come back from the save string through the levels completed, and are not in it") {
+        it("come back from the save file through the levels completed, and are not in it") {
             state.addLevelCompleted(LevelDefinition.GLACIER_MAN)
             state.addWeapon(PlayerCharacter.MEGAMAN, MegamanWeapons.AXE_SWINGER)
-            val saved = state.toString()
-            saved shouldBe "GLACIER_MAN;;;;0;NORMAL"
+            val saved = SaveFileJson.write(SaveFile.of(state, savedAt = "2026-11-26T00:00:00Z"))
+            saved shouldNotContain "AXE_SWINGER"
 
             val loaded = GameState()
-            loaded.fromString(saved)
+            (SaveFileJson.read(saved) as SaveSlotContent.Used).save.applyTo(loaded)
 
             MEGAMAN_LOADOUT.weapons.filter { loaded.ownsWeapon(PlayerCharacter.MEGAMAN, it) }.toSet() shouldBe
                 setOf(MegamanWeapons.MEGA_BUSTER, MegamanWeapons.FRIGID_SHOT)
