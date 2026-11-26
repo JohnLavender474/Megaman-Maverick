@@ -563,3 +563,10 @@ DesertMan/intro
   orig: 448, 64
   offset: 0, 0
   index: -1
+DesertMan/tornado_spin
+  rotate: false
+  xy: 68, 869
+  size: 256, 64
+  orig: 256, 64
+  offset: 0, 0
+  index: -1
