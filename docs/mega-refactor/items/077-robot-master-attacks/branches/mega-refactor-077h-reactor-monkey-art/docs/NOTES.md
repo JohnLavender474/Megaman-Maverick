@@ -13,3 +13,4 @@ Reactor Monkey artist is unknown (ask the owner before any credit line).
 - 2026-11-26 (owner): round-1 art has oddities: details of the head, torso and waist of the original are missing, and the shoulders are misplaced in some frames. Round 2 rebuilds the strips from the original parts (fresh Fable agent).
 - Known: the strict 3 colors per 8x8 rule fails in about a third of areas, as in today's frames (about 31 to 41 percent).
 - 2026-11-26 (owner): round 3 (arm fixes, extra frames) and round 4 (a "cool green mohawk"). Current drafts: `drafts/round-4/` (everything for the fight, incl. `stand`/`throw` with the mohawk). Older rounds stay for comparison.
+- 2026-11-26 (owner): the body must heave during the chest beat. Current drafts: `drafts/round-5/` (chest_beat with heave; everything else as round 4).
