@@ -210,7 +210,9 @@ comprehensive listing of the credits for the artwork used in this game.
 - Maverick Robot (Intro Boss) - [Ansimuz](https://ansimuz.itch.io/mega-bot)
 - Inferno Dragon - [Ansimuz](https://ansimuz.itch.io/mega-bot)
 - Moon Head - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
-- Reactor Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
+- Reactor Monkey
+  - Original by [Balloon Cart](https://balloon-cart.itch.io) ([Reactor Man](https://balloon-cart.itch.io/reactor-man-asset-pack))
+  - Updated by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer: the mohawk, the intro, death, chest beat, mad face, ball hit and steam frames, and the enraged ball
 - Elec Devil
   - Original by [boberatu](https://www.deviantart.com/boberatu/art/Elec-Devil-276493565)
   - Updated by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer: NES palette, body polish, eye, claw, transitions, defeat, orbs and Live Wire arc
