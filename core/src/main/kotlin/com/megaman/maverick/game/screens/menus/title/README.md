@@ -8,7 +8,7 @@ motion looks the same at any frame rate.
 
 ```mermaid
 flowchart LR
-    MainMenuScreen -->|update, draw, skipToEnd, reset| TitleAnimation
+    MainMenuScreen -->|update, draw, reset| TitleAnimation
     TitleAnimation --> TitleLetter
     TitleAnimation -->|pieces| Atlas[TitleLetters atlas]
     TitleAnimation -->|formed title| Ui2[TitleScreenBackgroundv4 in the Ui2 atlas]
@@ -30,11 +30,10 @@ stateDiagram-v2
     Lead --> Entrance: 6 steps, plate only
     Entrance --> Flash: swoosh scan, then beams and reveals
     Flash --> Formed: white, normal, white
-    Entrance --> Formed: skipToEnd()
     Formed --> [*]
 ```
 
-`formed` turns true at the end. The menu draws its text and accepts input only then.
+`formed` turns true at the end. The menu draws its text and arrow, updates the arrow and accepts input only then. Nothing skips the entrance.
 
 ## Rules a change must keep
 

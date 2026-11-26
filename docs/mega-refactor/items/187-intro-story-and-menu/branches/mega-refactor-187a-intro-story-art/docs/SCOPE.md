@@ -30,8 +30,7 @@ Item `187` (`ITEMS.md`). This branch takes the "art only" part of its proposed s
 - The main menu title entrance (the "beam-in", option D of `docs/TITLE_OPTIONS.md`):
   - `assets/sprites/frames/TitleLetters/` (the title cut into a plate, a swoosh and 15 letters, with white copies), the atlas `assets/sprites/sprite_sheets/TitleLetters.png` and `.txt`, and `assets/sprites/texture_packer/TitleLetters.tps`.
   - `core/.../screens/menus/title/` (`TitleAnimation`, `TitleLetter`, `README.md`), the `TextureAsset.TITLE_LETTERS` entry and the wiring in `MainMenuScreen`.
-  - Owner decisions (2026-11-26): the entrance plays on every `show()`; the menu is locked until it ends; the cut of the current image is the source (no redraw).
-  - A press of START, A, B or SELECT during the entrance skips to the formed title (my choice, not the owner's: the owner said only that the menu is locked until the entrance ends).
+  - Owner decisions (2026-11-26): the entrance plays on every `show()`; the menu is 100% locked until it ends (no skip, and the menu text and the arrow are neither drawn nor present until then); the cut of the current image is the source (no redraw).
 
 ## Out of scope
 
@@ -96,7 +95,7 @@ Run `./run-mega-man-maverick-debug.sh`. The art branch's story art is not loaded
 
 1. The title entrance plays when the main menu opens: the swoosh scans in, the 7 MEGAMAN letters then the 8 MAVERICK letters beam in one after another (a beam falls, the letter opens from its center), then the title flashes white twice and is formed. The menu text and the arrow appear only after it.
 2. The formed title looks like before (compare with `master`).
-3. Pressing up, down, A or START during the entrance does not move or select; a press of START, A, B or SELECT skips to the formed title, and the menu does not select on the release of that press.
+3. No button does anything during the entrance (no skip, no move, no select), and a press held through the end does not select by accident.
 4. After the title is formed, the menu works as before (select, back, settings slide, extras, credits).
 5. Open Credits or Extras and go back: the entrance plays again (every `show()`).
 6. The entrance has the same speed at 30, 60 and 144 FPS (steps of 50 ms).
@@ -107,4 +106,4 @@ Everything else in the main menu behaves as on `master`. The story art is not re
 
 ## Intended changes
 
-New art and docs (the story art, the title frames and atlas); the main menu plays the title entrance, hides its text until the title is formed and locks its input until then.
+New art and docs (the story art, the title frames and atlas); the main menu plays the title entrance, hides its text until the title is formed and locks its input until then (no skip).

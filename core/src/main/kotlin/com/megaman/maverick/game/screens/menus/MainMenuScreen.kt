@@ -48,16 +48,10 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         private const val DEBUG_SHAPES = false
         private const val MAIN_MENU_TEXT_START_ROW = 6f
         private val MAIN_MENU_MUSIC = MusicAsset.VINNYZ_MAIN_MENU_MUSIC
-        private val SKIP_BUTTONS = arrayOf(
-            MegaControllerButton.START,
-            MegaControllerButton.A,
-            MegaControllerButton.B,
-            MegaControllerButton.SELECT
-        )
     }
 
     private lateinit var titleAnimation: TitleAnimation
-    private var selectionBlockedUntilRelease = false
+    private var selectionPressedAfterTitleFormed = false
 
     private val screenSlide = ScreenSlide(
         game.getUiCamera(),
@@ -244,7 +238,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
 
         screenSlide.reset()
         titleAnimation.reset()
-        selectionBlockedUntilRelease = false
+        selectionPressedAfterTitleFormed = false
 
         game.getUiCamera().setToDefaultPosition()
         game.audio.playMusic(MAIN_MENU_MUSIC, false)
@@ -254,22 +248,21 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
     }
 
     override fun render(delta: Float) {
-        if (!titleAnimation.formed && skipRequested()) {
-            titleAnimation.skipToEnd()
-            selectionBlockedUntilRelease = true
-        }
+        if (titleAnimation.formed && selectionPressedNow()) selectionPressedAfterTitleFormed = true
 
         super.render(delta)
 
-        if (selectionBlockedUntilRelease && !selectionButtonHeld()) selectionBlockedUntilRelease = false
+        if (!selectionHeld()) selectionPressedAfterTitleFormed = false
 
         if (!game.clock.paused) {
             titleAnimation.update(delta)
             screenSlide.update(delta)
             if (screenSlide.justFinished) screenSlide.reverse()
 
-            if (GameSettingsPanel.ALL_KEYS.contains(buttonKey)) settingsPanel.update(delta)
-            else blinkArrows.get(buttonKey)?.update(delta)
+            if (titleAnimation.formed) {
+                if (GameSettingsPanel.ALL_KEYS.contains(buttonKey)) settingsPanel.update(delta)
+                else blinkArrows.get(buttonKey)?.update(delta)
+            }
         }
     }
 
@@ -304,9 +297,11 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         }
     }
 
-    private fun skipRequested() = game.players.menuInput.let { input -> SKIP_BUTTONS.any { input.isJustPressed(it) } }
+    private fun selectionPressedNow() = game.players.menuInput.let {
+        it.isJustPressed(MegaControllerButton.START) || it.isJustPressed(MegaControllerButton.A)
+    }
 
-    private fun selectionButtonHeld() = game.players.menuInput.let {
+    private fun selectionHeld() = game.players.menuInput.let {
         it.isPressed(MegaControllerButton.START) || it.isPressed(MegaControllerButton.A)
     }
 
@@ -316,7 +311,7 @@ class MainMenuScreen(game: MegamanMaverickGame) : MegaMenuScreen(game, MainScree
         if (interactionAllowed()) super.getNavigationDirection() else null
 
     override fun selectionRequested() =
-        interactionAllowed() && !selectionBlockedUntilRelease && super.selectionRequested()
+        interactionAllowed() && selectionPressedAfterTitleFormed && super.selectionRequested()
 
     override fun backRequested() = interactionAllowed() && super.backRequested()
 

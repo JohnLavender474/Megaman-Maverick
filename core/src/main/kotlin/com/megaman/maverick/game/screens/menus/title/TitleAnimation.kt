@@ -115,7 +115,7 @@ class TitleAnimation(titleLettersAtlas: TextureAtlas, private val formedTitle: T
         formed = false
     }
 
-    fun skipToEnd() {
+    private fun finish() {
         step = FORMED_STEP
         accumulator = 0f
         formed = true
@@ -130,7 +130,7 @@ class TitleAnimation(titleLettersAtlas: TextureAtlas, private val formedTitle: T
             steps++
             step++
             if (step >= FORMED_STEP) {
-                skipToEnd()
+                finish()
                 return
             }
         }
