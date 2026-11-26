@@ -51,6 +51,7 @@ import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
+import com.megaman.maverick.game.entities.megaman.weapons.AxeThrowPreview
 import com.megaman.maverick.game.entities.megaman.weapons.AxeThrowWindup
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
 import com.megaman.maverick.game.weapons.BusterCharge
@@ -161,6 +162,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         onCleared = { stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND) }
     )
     internal val axeWindup = AxeThrowWindup(MegamanValues.AXE_HOLD_TIME)
+    internal val axeThrowPreview = AxeThrowPreview()
 
     internal var jumpVel = 0f
     internal var wallJumpVel = 0f
@@ -301,6 +303,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
 
             require(StunComponent::class).update(delta, body.isSensing(BodySense.FEET_ON_GROUND))
             clearChargeWhenHurt()
+            axeThrowPreview.update(this)
 
             damageRecovery.update(delta, damaged, damageTimer.isJustFinished())
 
@@ -545,6 +548,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
         defineJetpackFlameSprite(component)
         defineDamagedBurstSprite(component)
         defineDesertTornatoSprite(component)
+        defineAxeThrowPreviewSprites(component)
         return component
     }
 

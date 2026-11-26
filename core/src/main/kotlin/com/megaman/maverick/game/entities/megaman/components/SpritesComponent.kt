@@ -1,6 +1,7 @@
 package com.megaman.maverick.game.entities.megaman.components
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.maverick.game.engine.animations.AnimationsComponent
 import com.maverick.game.engine.animations.Animator
@@ -15,10 +16,12 @@ import com.maverick.game.engine.drawables.sprites.*
 import com.maverick.game.engine.entities.isAnyBehaviorActive
 import com.maverick.game.engine.entities.isBehaviorActive
 import com.maverick.game.engine.players.playerSlot
+import com.megaman.maverick.game.ConstKeys
 import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.assets.TextureAsset
 import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
+import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.players.applyHideAndFlash
 import com.megaman.maverick.game.players.bodyOverGround
 import com.megaman.maverick.game.utils.GameObjectPools
@@ -42,6 +45,8 @@ const val DESERT_TORNADO_SPRITE_SIZE = 3f
 const val DESERT_TORNADO_OFFSET = -0.1f
 
 const val GROUND_SLIDE_SPRITE_OFFSET_Y = 0.1f
+
+const val AXE_THROW_PREVIEW_SPRITE_KEY_PREFIX = "axe_preview_"
 
 private val SECOND_PLAYER_TINT = Color.ORANGE
 
@@ -89,6 +94,11 @@ fun Megaman.getSpriteYTranslation() = when (getSpriteDirection()) {
         isAnyBehaviorActive(BehaviorType.GROUND_SLIDING, BehaviorType.CROUCHING) -> 0f
         else -> 0f
     }
+}
+
+private fun Megaman.slotTint(): Color = when {
+    (playerSlot?.index ?: 0) > 0 -> SECOND_PLAYER_TINT
+    else -> Color.WHITE
 }
 
 fun getMegamanSpritePriority(out: DrawingPriority): DrawingPriority {
@@ -221,3 +231,26 @@ internal fun Megaman.defineDesertTornatoSprite(component: SpritesComponent) {
     }
 }
 
+internal fun Megaman.defineAxeThrowPreviewSprites(component: SpritesComponent) {
+    val region = services.assets.getTextureRegion(TextureAsset.COLORS.source, ConstKeys.WHITE)
+    for (i in 0 until MegamanValues.AXE_PREVIEW_MAX_DOTS) {
+        val key = "$AXE_THROW_PREVIEW_SPRITE_KEY_PREFIX$i"
+        val sprite = GameSprite(region, DrawingPriority(DrawingSection.FOREGROUND, 0), hidden = true)
+        sprite.setSize(MegamanValues.AXE_PREVIEW_DOT_SIZE * ConstVals.PPM)
+        component.putSprite(key, sprite)
+        component.putPreProcess(key) { _, dot ->
+            val count = axeThrowPreview.count
+            dot.hidden = i >= count
+            if (dot.hidden) return@putPreProcess
+
+            dot.setCenter(axeThrowPreview.points[i])
+            val alpha = MathUtils.lerp(
+                MegamanValues.AXE_PREVIEW_FIRST_DOT_ALPHA,
+                MegamanValues.AXE_PREVIEW_LAST_DOT_ALPHA,
+                i / maxOf(count - 1, 1).toFloat()
+            )
+            val tint = slotTint()
+            dot.setColor(tint.r, tint.g, tint.b, alpha)
+        }
+    }
+}
