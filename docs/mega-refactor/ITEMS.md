@@ -194,6 +194,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 184 | [Keep button taps that are shorter than one frame](items/184-sub-frame-taps/ITEM.md) | feature | `O9`, `O5` | dropped | none | 2026-11-23 | 2026-11-23 |
 | 185 | [A second game title on the same engine and shared code](items/185-second-title/ITEM.md) | refactor | `O1`, `O7`, `O8` | active | none | 2026-11-23 | |
 | 187 | [Intro story screen and main menu overhaul](items/187-intro-story-and-menu/ITEM.md) | feature | `O9` | active | none | 2026-11-26 | |
+| 188 | [Hold-to-aim axe throw on a generic weapon windup](items/188-axe-windup-throw/ITEM.md) | feature | `O9`, `O1` | active | none | 2026-11-26 | |
 
 ## Branches
 
@@ -339,3 +340,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-185b-game-builds`](items/185-second-title/branches/mega-refactor-185b-game-builds/process-log.md) | 185 | Platform builds for each game into `game-builds/<game>/`; `game-builds/` git-ignored | merged | 2026-11-23 | 2026-11-23 |
 | [`mega-refactor-185c-games-layout`](items/185-second-title/branches/mega-refactor-185c-games-layout/process-log.md) | 185 | Layout `games/mega-man-maverick` + `games/mega-man-x-lost-memories`; title seams (levels, screens, spawn names, fight plans, audio, test roots); playable Lost Memories mock game | active | 2026-11-24 | |
 | [`mega-refactor-187a-intro-story-art`](items/187-intro-story-and-menu/branches/mega-refactor-187a-intro-story-art/process-log.md) | 187 | First round of NES-style art for the intro story slides: the city by day, dusk and night, and the exploding city with two screens, as exported layers (art only) | active | 2026-11-26 | |
+| [`mega-refactor-188a-axe-windup-throw`](items/188-axe-windup-throw/branches/mega-refactor-188a-axe-windup-throw/process-log.md) | 188 | Hold-to-aim axe throw (tap is weak, hold aims with a dotted arc); the weapon charge becomes a per-player `WeaponWindup` | active | 2026-11-26 | |

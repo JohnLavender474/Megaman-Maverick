@@ -98,6 +98,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `183` | active | [NES-faithful rotation: no sprite drawn at an angle that is not a multiple of 90](../items/183-nes-faithful-rotation/ITEM.md) (main) |
 | `184` | dropped | [Keep button taps that are shorter than one frame](../items/184-sub-frame-taps/ITEM.md) (main) |
 | `187` | active | [Intro story screen and main menu overhaul](../items/187-intro-story-and-menu/ITEM.md) (main) |
+| `188` | active | [Hold-to-aim axe throw on a generic weapon windup](../items/188-axe-windup-throw/ITEM.md) (main) |
 
 ## Gaps with no item
 

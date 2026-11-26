@@ -184,6 +184,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. `084h` (`d796e00ba`) changes no co
 | `179` | idea | [Named player slots (`PlayerSlot.PLAYER_1`, `PlayerSlot.PLAYER_2`)](../items/179-named-player-slots/ITEM.md) (main) |
 | `181` | idea | [Entity pools and factories owned by the session](../items/181-session-owned-pools/ITEM.md) (main) |
 | `185` | active | [A second game title on the same engine and shared code](../items/185-second-title/ITEM.md) (main) |
+| `188` | active | [Hold-to-aim axe throw on a generic weapon windup](../items/188-axe-windup-throw/ITEM.md) |
 
 ## Gaps with no item
 
