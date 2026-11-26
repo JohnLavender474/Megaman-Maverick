@@ -16,3 +16,8 @@ Add one dated entry for each work session. Put the newest entry at the bottom.
 ## 2026-11-26
 
 - Branch started from the phone. Owner decision: no backwards compatibility, 5 slots in total. Draft PR, no HTML brief.
+
+## 2026-11-26 (implementation agent)
+
+- Scan of `master` at `2ebb704`; `SCOPE.md` (approved by owner decision 2026-11-26), `PLAN.md`, `NOTES.md` and
+  `TODO.md` written. Decisions made without the owner are in `NOTES.md`.
