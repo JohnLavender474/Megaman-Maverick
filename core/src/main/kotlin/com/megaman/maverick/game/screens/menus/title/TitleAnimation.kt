@@ -10,7 +10,7 @@ import com.maverick.game.engine.common.interfaces.Updatable
 import com.megaman.maverick.game.ConstVals
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.rint
+import kotlin.math.round
 
 class TitleAnimation(titleLettersAtlas: TextureAtlas, private val formedTitle: TextureRegion) : Updatable, Resettable {
 
@@ -159,7 +159,7 @@ class TitleAnimation(titleLettersAtlas: TextureAtlas, private val formedTitle: T
             drawPiece(batch, swoosh, swooshScratch, SWOOSH_X, SWOOSH_Y, 0, width)
             return
         }
-        val edge = rint(width * (t + 1) / SWOOSH_SCAN_STEPS.toDouble()).toInt()
+        val edge = round(width * (t + 1) / SWOOSH_SCAN_STEPS.toDouble()).toInt()
         val solid = max(0, edge - SWOOSH_EDGE_COLUMNS)
         drawPiece(batch, swoosh, swooshScratch, SWOOSH_X, SWOOSH_Y, 0, solid)
         drawPiece(batch, swooshWhite, swooshScratch, SWOOSH_X, SWOOSH_Y, solid, edge - solid)
@@ -185,7 +185,7 @@ class TitleAnimation(titleLettersAtlas: TextureAtlas, private val formedTitle: T
     }
 
     private fun drawBeam(batch: Batch, letter: TitleLetter, k: Int) {
-        val rows = rint((letter.bottomRow - IMAGE_TOP_CROP) * (k + 1) / BEAM_STEPS.toDouble()).toInt()
+        val rows = round((letter.bottomRow - IMAGE_TOP_CROP) * (k + 1) / BEAM_STEPS.toDouble()).toInt()
         val x = letter.homeX + letter.centerColumn - 1
         setComponents(letter.beamColor, beamColors, 0)
         System.arraycopy(whiteComponents, 0, beamColors, 3, 3)
