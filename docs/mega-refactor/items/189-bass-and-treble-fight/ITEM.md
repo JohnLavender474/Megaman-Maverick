@@ -28,16 +28,14 @@ Not approved. Each branch `SCOPE.md` decides its final scope.
 - **Art: new sprites drawn by Fable.** A Claude Fable 5.2 art agent draws new Bass and Treble sprites for the fight,
   under the rules of `art.md` (including the Fable confirmation). The frames go into fixed-size strips in
   `assets/sprites/frames/` and a new atlas (`BASS`, or a place in an existing boss atlas; `assets.md` decides).
-- **Reference sheet.** The owner supplied the reference sheet, from The Spriters Resource (ripper: Random Talking
-  Bush; copyright Capcom). It is a reference for the look of Bass, Treble and Treble Boost, not the source of the
-  game frames. The moves are not limited to the poses on the sheet: where a move needs a frame that the sheet does
-  not have (see the table below), Fable draws it.
+- **Reference sheet.** The owner supplied the reference sheet. It is a reference for the look of Bass, Treble and Treble
+  Boost, not the source of the game frames. The moves are not limited to the poses on the sheet: where a move needs a
+  frame that the sheet does not have (see the table below), Fable draws it.
 - **Moves.** An Opus agent ideates the attacks of both phases, the coordination between the two bodies, and the
   phase change, with the table below as a guide to the poses that the reference shows. The result goes in the
   branch `NOTES.md` and the decisions of the owner in `SCOPE.md`.
 - **Credit** in the root `README.md` `CREDITS`, as `art.md` says for AI art: the new sprites as made by Claude Fable
-  5.2, with the design of Bass and Treble by Capcom; and the reference sheet, its ripper and its source if the
-  owner wants it named.
+  5.2, with the design of Bass and Treble by Capcom; and the reference sheet if the owner wants it named.
 
 Poses on the reference sheet (2026-11-26, from the owner's upload):
 

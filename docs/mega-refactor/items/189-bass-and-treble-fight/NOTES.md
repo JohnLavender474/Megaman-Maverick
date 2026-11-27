@@ -4,10 +4,9 @@ Research for this item. Based on `master` `328de51` (2026-11-26).
 
 ## The reference sheet (2026-11-26)
 
-The owner's upload, the reference sheet: The Spriters Resource, ripper Random Talking Bush, copyright Capcom.
-525x922, indexed color. A copy is in `temp/bass-treble-sheet/` (not committed). The sheet is a reference for the
-Fable art agent, not the source of the game frames: Claude Fable 5.2 draws new Bass and Treble sprites for the fight
-(owner, 2026-11-26).
+The owner's upload, the reference sheet: 525x922, indexed color. A copy is in `temp/bass-treble-sheet/` (not committed).
+The sheet is a reference for the Fable art agent, not the source of the game frames: Claude Fable 5.2 draws new Bass and
+Treble sprites for the fight (owner, 2026-11-26).
 
 The sheet holds more than the fight needs: Reggae (Bass's bird), the weapon-get portraits, the
 stage-select faces and the weapon palettes. The weapon palettes may guide a palette swap when Bass uses a copied
