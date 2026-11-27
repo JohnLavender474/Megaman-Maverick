@@ -35,7 +35,7 @@ Not approved. Each branch `SCOPE.md` decides its final scope.
   phase change, with the table below as a guide to the poses that the reference shows. The result goes in the
   branch `NOTES.md` and the decisions of the owner in `SCOPE.md`.
 - **Credit** in the root `README.md` `CREDITS`, as `art.md` says for AI art: the new sprites as made by Claude Fable
-  5.2, with the design of Bass and Treble by Capcom; and the reference sheet if the owner wants it named.
+  5.2.
 
 Poses on the reference sheet (2026-11-26, from the owner's upload):
 
