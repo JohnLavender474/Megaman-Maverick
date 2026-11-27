@@ -24,6 +24,7 @@ Not approved. Each branch `SCOPE.md` decides its final scope.
 | `mega-refactor-190a-rush-jet-summon` | The wiring of the Rush flow for Rush Jet, with temporary "dog" sprites | active |
 | `190b` (not prepared) | Rush's sprites from the owner's first-draft sheet: frames, atlas, credit | idea |
 | `190c` (not prepared) | Rush Spring, a second Rush ability | idea |
+| `190d` (not prepared) | Rush Jet refills its own energy, only while Mega Man is not airborne | idea |
 
 ### The Rush flow (from the owner, 2026-11-27)
 
@@ -34,6 +35,21 @@ Not approved. Each branch `SCOPE.md` decides its final scope.
    Mega Man's back). The game pauses while the animation plays.
 5. Mega Man can use the ability as long as it stays equipped. When Mega Man unequips it, Rush beams out, and no Rush
    ability can beam Rush down again until his beam up ends.
+
+### `190d`: Rush Jet refills on its own
+
+Explore a Rush Jet whose energy refills by itself, in the way Rodent Claws refills, but only while Mega Man is in a
+"non-airborne" position: on the ground, wall sliding, or a similar state that the branch decides.
+
+- Today (scan of 2026-11-27, `master` at `7fec07b`): Rush Jet already refills. `MegamanJetpackHandler` adds 1 bit
+  every `JETPACK_BIT_RECOVERY_DUR` (0.1 s) after `JETPACK_BIT_RECOVERY_DELAY` (0.5 s) without the jetpack or the jet
+  air dash, wherever Mega Man is, also in the air. Rodent Claws refills in its own weapon state (`RodentClawsState`:
+  1 bit every 0.125 s after 0.3 s with no slash).
+- To explore: which positions count as "not airborne" (ground, wall slide, ladder, water); whether the refill moves
+  into a Rush Jet weapon state like `RodentClawsState`, so that the def owns it and the jetpack handler only drains;
+  the rates and the delay; whether the refill runs while Rush is not joined (after `190a`).
+- The owner tried this before (a refill only on the ground or in a wall slide). The branch revisits that attempt
+  and asks the owner what did not work then.
 
 ### Later abilities
 
@@ -52,6 +68,9 @@ Not approved. Each branch `SCOPE.md` decides its final scope.
 - 2026-11-27: "A first-draft sheet of sprites will be provided soon." Until then, temporary "dog" sprites.
 - 2026-11-27: push the item docs to `master`; open a draft PR when the feature branch reaches the end of its first
   pass.
+- 2026-11-27: "We should look into making the Rush Jet self-refilling sort of like the Rodent Claws attack. In the
+  past, I attempted to do this by making it so that its energy would refill on its own but only when Mega was on the
+  ground or wall sliding (or some other similiar "non-airborne" position). We should revisit that in this same item."
 
 ## Decisions
 
@@ -68,6 +87,7 @@ Not approved. Each branch `SCOPE.md` decides its final scope.
   a turned room?
 - Co-op: each Megaman has his own Rush. Can player 2 join player 1's Rush? (`190a`: no.)
 - Rush Spring: does Rush stay a spring until Mega Man unequips, or does he leave after one bounce or a time?
+- `190d`: what went wrong with the earlier ground-only refill, and should the refill depend on `190a` (Rush joined)?
 
 ## Sources
 
