@@ -38,7 +38,7 @@ class MegamanRushHandler(
     private var rush: RushHandle? = null
 
     fun summon(weapon: WeaponDef<Megaman>): Boolean {
-        if (!weapon.summonsRush || phase != RushPhase.ABSENT) return false
+        if (!weapon.summonsRush) return false
         if (megaman.weaponsHandler.isDepleted(weapon)) {
             GameLogger.debug(TAG, "summon(): do not summon: $weapon is depleted")
             return false
@@ -94,7 +94,6 @@ class MegamanRushHandler(
     }
 
     fun onRushGone(rush: RushHandle) {
-        if (rush !== this.rush) return
         GameLogger.debug(TAG, "onRushGone(): phase=$phase")
         this.rush = null
         phase = RushPhase.ABSENT

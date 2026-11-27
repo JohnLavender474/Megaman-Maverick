@@ -9,7 +9,7 @@ internal fun Megaman.currentWeaponPrevents(move: BehaviorType) =
     currentWeapon.preventsWhileFiring(move) && shooting
 
 internal val Megaman.weaponMovesReady: Boolean
-    get() = !currentWeapon.summonsRush || rushHandler.joined
+    get() = true
 
 internal val Megaman.drawnWeapon: WeaponDef<Megaman>
     get() = if (weaponMovesReady) currentWeapon else MegamanWeapons.MEGA_BUSTER
