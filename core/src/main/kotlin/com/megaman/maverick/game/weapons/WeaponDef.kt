@@ -25,6 +25,7 @@ class WeaponDef<in O : MegaPlayer>(
     movesBlockedWhileFiring: ObjectSet<BehaviorType> = ObjectSet(),
     val airDash: WeaponAirDash<O>? = null,
     val enablesJetpack: Boolean = false,
+    val summonsRush: Boolean = false,
     val stopsChargeOnHold: Boolean = false,
     val stopsRunWhileFiring: Boolean = false,
     val gripsWall: Boolean = false,

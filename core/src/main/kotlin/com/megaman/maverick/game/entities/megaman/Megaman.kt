@@ -52,8 +52,10 @@ import com.megaman.maverick.game.entities.megaman.constants.MegaChargeStatus
 import com.megaman.maverick.game.entities.megaman.constants.MegaEnhancement
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.entities.megaman.weapons.drawnWeapon
 import com.megaman.maverick.game.weapons.WeaponDef
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanJetpackHandler
+import com.megaman.maverick.game.entities.megaman.handlers.MegamanRushHandler
 import com.megaman.maverick.game.entities.megaman.handlers.MegamanWeaponsHandler
 import com.megaman.maverick.game.entities.megaman.sprites.MegamanAnimations
 import com.megaman.maverick.game.entities.megaman.sprites.getAnimationKey
@@ -95,6 +97,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
 
     internal lateinit var weaponsHandler: MegamanWeaponsHandler
     internal lateinit var jetpackHandler: MegamanJetpackHandler
+    internal var rushHandler = MegamanRushHandler(this)
 
     override val character = PlayerCharacter.MEGAMAN
 
@@ -244,6 +247,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
 
     override fun onPlayerDestroy() {
         weaponsHandler.reset()
+        rushHandler.reset()
 
         services.audio.stopSound(SoundAsset.MEGA_BUSTER_CHARGING_SOUND)
     }
@@ -548,7 +552,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
             return@supplier when {
                 key != null -> {
                     currentAnimKey = key
-                    MegamanAnimations.buildFullKey(key, currentWeapon)
+                    MegamanAnimations.buildFullKey(key, drawnWeapon)
                 }
                 else -> null
             }
@@ -587,6 +591,7 @@ class Megaman(services: MegaServices) : MegaPlayer(services), ISpritesEntity, IS
     }
 
     fun shoot(): Boolean {
+        if (rushHandler.summon(currentWeapon)) return true
         val shot = weaponsHandler.fireWeapon(currentWeapon, chargeStatus)
         if (shot) shootAnimTimer.reset()
         return shot

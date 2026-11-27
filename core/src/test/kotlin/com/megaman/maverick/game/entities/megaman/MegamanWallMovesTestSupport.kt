@@ -45,6 +45,8 @@ class MegamanMovesRig {
         megaman.existenceState = EntityExistenceState.LIVE
         megaman.weaponsHandler = mockk(relaxed = true)
         megaman.jetpackHandler = mockk(relaxed = true)
+        megaman.rushHandler = mockk(relaxed = true)
+        every { megaman.rushHandler.joined } returns true
         megaman.currentWeapon = MegamanWeapons.MEGA_BUSTER
         megaman.facing = Facing.RIGHT
         megaman.jumpVel = MegamanValues.JUMP_VEL

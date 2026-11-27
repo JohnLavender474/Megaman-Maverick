@@ -22,6 +22,7 @@ import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.components.*
 import com.megaman.maverick.game.entities.megaman.weapons.MEGAMAN_LOADOUT
+import com.megaman.maverick.game.entities.megaman.weapons.drawnWeapon
 import com.megaman.maverick.game.entities.state.TagsComponent
 import com.megaman.maverick.game.utils.misc.DirectionPositionMapper
 import com.megaman.maverick.game.world.body.getPositionPoint
@@ -57,7 +58,7 @@ class MegamanTrailSpriteV2(services: MegaServices) : MegaGameEntity(services), I
             destroy()
             return
         }
-        this.animKey = "${owner.currentWeapon.id}/$rawAnimKey"
+        this.animKey = "${owner.drawnWeapon.id}/$rawAnimKey"
 
         super.onSpawn(spawnProps)
 

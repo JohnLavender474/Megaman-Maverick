@@ -118,4 +118,4 @@ val MEGAMAN_LOADOUT: CharacterLoadout<Megaman> = CharacterLoadout(
 )
 
 internal val Megaman.currentLook: WeaponLook<Megaman>
-    get() = MEGAMAN_LOADOUT.lookOf(currentWeapon)
+    get() = MEGAMAN_LOADOUT.lookOf(drawnWeapon)
