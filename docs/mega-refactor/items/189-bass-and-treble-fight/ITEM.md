@@ -28,10 +28,10 @@ Not approved. Each branch `SCOPE.md` decides its final scope.
 - **Art: new sprites drawn by Fable.** A Claude Fable 5.2 art agent draws new Bass and Treble sprites for the fight,
   under the rules of `art.md` (including the Fable confirmation). The frames go into fixed-size strips in
   `assets/sprites/frames/` and a new atlas (`BASS`, or a place in an existing boss atlas; `assets.md` decides).
-- **Reference sheet.** The owner supplied the Spriters Resource sheet "Mega Man 10: Bass, Treble and Reggae"
-  (ripper: Random Talking Bush; copyright Capcom). It is a reference for the look of Bass, Treble and Treble Boost,
-  not the source of the game frames. The moves are not limited to the poses on the sheet: where a move needs a
-  frame that the sheet does not have (see the table below), Fable draws it.
+- **Reference sheet.** The owner supplied the reference sheet, from The Spriters Resource (ripper: Random Talking
+  Bush; copyright Capcom). It is a reference for the look of Bass, Treble and Treble Boost, not the source of the
+  game frames. The moves are not limited to the poses on the sheet: where a move needs a frame that the sheet does
+  not have (see the table below), Fable draws it.
 - **Moves.** An Opus agent ideates the attacks of both phases, the coordination between the two bodies, and the
   phase change, with the table below as a guide to the poses that the reference shows. The result goes in the
   branch `NOTES.md` and the decisions of the owner in `SCOPE.md`.
@@ -75,10 +75,10 @@ possible.
 ## Owner's input
 
 - 2026-11-26: "A fan of Mega Man Maverick is requesting that we have a fight against Bass. A sprite sheet of Bass
-  from MM10 is attached here. The sheet contains not only Bass but also his dog Treble. I think it would be cool to
-  have a boss fight where the player must fight against Bass and his dog. In the first phase of the fight, Bass and
-  Treble coordinate their attacks against Mega Man. In the second phase, they combine into one entity (depicted in
-  the attached sheet)."
+  [the reference sheet] is attached here. The sheet contains not only Bass but also his dog Treble. I think it would
+  be cool to have a boss fight where the player must fight against Bass and his dog. In the first phase of the fight,
+  Bass and Treble coordinate their attacks against Mega Man. In the second phase, they combine into one entity
+  (depicted in the attached sheet)."
 - 2026-11-26: the split: "Branch A creates the new sprites and decides on the attacks and animations. Branch B
   implements the boss fight as a test level. Branch C sets up the fight in the main game, deciding where and how the
   fight is triggered, and what happens after the fight is over."
@@ -87,7 +87,7 @@ possible.
 
 - 2026-11-26 (Claude, from the owner's split): three branches `189a`, `189b`, `189c`, in this order.
 - 2026-11-26 (owner, replaces Claude's earlier "frames only from the sheet" decision): Claude Fable 5.2 draws new
-  Bass and Treble sprites for the fight; the MM10 sheet is a reference only.
+  Bass and Treble sprites for the fight; the reference sheet only guides their look.
 
 ## Open questions
 
