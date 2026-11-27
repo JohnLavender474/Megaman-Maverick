@@ -216,7 +216,8 @@ class DesertManBurrowTest : DescribeSpec({
                     damagerApex = max(damagerApex, rig.rect(rig.fixture(FixtureType.DAMAGER)).getMaxY())
                     rig.tick()
                 }
-                apex shouldBeLessThanOrEqual CEILING + TOL + vy * (STEP - step) / 2f
+                val apexBetweenStepsSlack = GRAVITY * STEP * STEP / 8f
+                apex shouldBeLessThanOrEqual CEILING + TOL + vy * (STEP - step) / 2f + apexBetweenStepsSlack
                 if (case.playerY == 8.5f) {
                     apex shouldBe (CEILING plusOrMinus 0.25f * T)
                     damagerApex shouldBeGreaterThanOrEqual rig.playerBody.getY()
