@@ -79,6 +79,7 @@ import com.megaman.maverick.game.fights.FightDirector
 import com.megaman.maverick.game.fights.FightPlans
 import com.megaman.maverick.game.input.SystemButton
 import com.megaman.maverick.game.events.PlayerEventKeys
+import com.megaman.maverick.game.levels.LevelFreezeRoutine
 import com.megaman.maverick.game.levels.LevelState
 import com.megaman.maverick.game.levels.LevelType
 import com.megaman.maverick.game.screens.ScreenEnum
@@ -153,6 +154,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         EventType.ATTAIN_HEART_TANK,
         EventType.ATTAIN_HEALTH_TANK,
 
+        EventType.START_FREEZE_ROUTINE,
+
         EventType.NEXT_ROOM_REQ,
         EventType.GATE_INIT_OPENING,
         EventType.GATE_INIT_CLOSING,
@@ -198,6 +201,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
     private lateinit var playerCheckpointMan: PlayerCheckpointManager
 
     private lateinit var playerStatsHandler: PlayerStatsHandler
+    private var freezeRoutine: LevelFreezeRoutine? = null
     private lateinit var bossHealthHandler: BossHealthHandler
 
     private lateinit var levelStateHandler: LevelStateHandler
@@ -610,6 +614,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         return if (slot == PlayerSlot(0)) spawnProps else slotSpawnProps(slot, spawnProps)
     }
 
+    private fun updateFreezeRoutine(delta: Float) {
+        val routine = freezeRoutine ?: return
+        if (!routine.update(delta)) return
+        GameLogger.debug(TAG, "updateFreezeRoutine(): freeze routine finished: $routine")
+        freezeRoutine = null
+        levelStateHandler.turnOnAllSystems()
+    }
+
     private fun resetLevelForRespawn() {
         GameLogger.debug(TAG, "resetLevelForRespawn(): reset the room bounds and spawn the players")
 
@@ -697,6 +709,14 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
             EventType.ATTAIN_HEALTH_TANK -> {
                 val healthTank = event.getProperty(ConstKeys.VALUE, MegaHealthTank::class)!!
                 playerStatsHandler.attain(healthTank)
+            }
+
+            EventType.START_FREEZE_ROUTINE -> {
+                val routine = event.getProperty(ConstKeys.VALUE, LevelFreezeRoutine::class)!!
+                GameLogger.debug(MEGA_LEVEL_SCREEN_EVENT_LISTENER_TAG, "onEvent(): start freeze routine: $routine")
+                // TODO: one home for freezes that can overlap (a gate, a heart tank, this routine) (item 012)
+                freezeRoutine = routine
+                levelStateHandler.turnOffAllSystemsButSprites()
             }
 
             EventType.NEXT_ROOM_REQ -> {
@@ -882,6 +902,8 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         playerStatsHandler.update(delta)
 
         if (!game.clock.paused) {
+            updateFreezeRoutine(delta)
+
             if (endLevelEventHandler.finished) {
                 respawn.update(delta)
                 slotRespawn?.update(delta)
@@ -1079,6 +1101,7 @@ class MegaLevelScreen(private val game: MegamanMaverickGame) :
         fights.cancel()
         engine.reset()
         levelStateHandler.clear()
+        freezeRoutine = null
 
         spawnsMan.reset()
         playerCheckpointMan.reset()

@@ -9,6 +9,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
+import com.megaman.maverick.game.entities.megaman.weapons.jetpackEnabled
 
 class MegamanJetpackHandler(private val megaman: Megaman) : Updatable, Resettable {
 
@@ -22,9 +23,7 @@ class MegamanJetpackHandler(private val megaman: Megaman) : Updatable, Resettabl
 
         if (megaman.isBehaviorActive(BehaviorType.JETPACKING)) return true
 
-        if (megaman.isBehaviorActive(BehaviorType.AIR_DASHING) &&
-            megaman.currentWeapon.enablesJetpack
-        ) return true
+        if (megaman.isBehaviorActive(BehaviorType.AIR_DASHING) && megaman.jetpackEnabled) return true
 
         return false
     }

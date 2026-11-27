@@ -118,6 +118,7 @@ object MegamanWeapons {
             onEnd = { it.jetpackHandler.reset() }
         ),
         enablesJetpack = true,
+        summonsRush = true,
         stopsChargeOnHold = true
     )
 }

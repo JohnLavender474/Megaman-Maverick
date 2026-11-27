@@ -80,6 +80,14 @@ class MegamanAirDashTest : DescribeSpec({
             dash.evaluate(0f) shouldBe true
         }
 
+        it("does not start over the ground with the Rush Jet before Rush joins") {
+            every { rig.megaman.rushHandler.joined } returns false
+            rig.overGround = true
+            rig.megaman.currentWeapon = MegamanWeapons.RUSH_JET
+            pressA()
+            dash.evaluate(0f) shouldBe false
+        }
+
         it("does not start with the Rush Jet empty or with UP held") {
             rig.megaman.currentWeapon = MegamanWeapons.RUSH_JET
             every { rig.megaman.weaponsHandler.isDepleted(MegamanWeapons.RUSH_JET) } returns true

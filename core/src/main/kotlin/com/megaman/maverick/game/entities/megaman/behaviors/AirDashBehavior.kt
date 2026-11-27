@@ -5,6 +5,7 @@ import com.maverick.game.engine.behaviors.IBehavior
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.MegamanValues
 import com.megaman.maverick.game.entities.megaman.weapons.currentWeaponPrevents
+import com.megaman.maverick.game.entities.megaman.weapons.weaponAirDash
 import com.megaman.maverick.game.players.AButtonTask
 import com.megaman.maverick.game.players.AirDashParams
 import com.megaman.maverick.game.players.aButtonTask
@@ -21,20 +22,20 @@ internal fun Megaman.airDashBehavior(): IBehavior = playerAirDashBehavior(
     AirDashParams(
         blocked = {
             currentWeaponPrevents(BehaviorType.AIR_DASHING) ||
-                (currentWeapon.airDash == null && bodyOverGround) ||
-                currentWeapon.airDash?.endsWhen?.invoke(this) == true
+                (weaponAirDash == null && bodyOverGround) ||
+                weaponAirDash?.endsWhen?.invoke(this) == true
         },
         canStart = { aButtonTask == AButtonTask.AIR_DASH && airDashInputJustPressed(this) },
         held = { airDashInputPressed(this) },
         startDelay = 0f,
         minTime = MegamanValues.AIR_DASH_MIN_TIME,
         maxTime = {
-            currentWeapon.airDash?.maxTime ?: MegamanValues.AIR_DASH_MAX_TIME
+            weaponAirDash?.maxTime ?: MegamanValues.AIR_DASH_MAX_TIME
         },
         speed = {
             var speed = movementScalar *
                 if (body.isSensing(BodySense.IN_WATER)) MegamanValues.WATER_AIR_DASH_VEL else MegamanValues.AIR_DASH_VEL
-            currentWeapon.airDash?.let { speed *= it.speedScalar }
+            weaponAirDash?.let { speed *= it.speedScalar }
             speed
         },
         decel = { 0f },
@@ -47,6 +48,6 @@ internal fun Megaman.airDashBehavior(): IBehavior = playerAirDashBehavior(
             aButtonTaskOnAirDashStart()
             airDashDirection = direction
         },
-        onEnd = { currentWeapon.airDash?.onEnd?.invoke(this) }
+        onEnd = { weaponAirDash?.onEnd?.invoke(this) }
     )
 )

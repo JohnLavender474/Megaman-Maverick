@@ -447,6 +447,7 @@ special.RailTrackPlatform: RailTrackPlatform,Block
 special.RailTrack: RailTrack
 special.RoomShaker: RoomShaker
 special.RotationAnchor: RotationAnchor
+special.Rush: Rush
 special.SpringBouncer: SpringBouncer
 special.SwimBooster: SwimBooster
 special.TestChargedShooter: TestChargedShooter

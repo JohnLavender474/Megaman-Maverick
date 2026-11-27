@@ -59,3 +59,32 @@ val SOME_LOADOUT = CharacterLoadout<SomePlayer>(
 - A rule that only some weapons have goes in a field or a hook of the def, or in the look, with a default that means
   "no change". Do not add a check for one weapon, or for one player class, in the code that reads it.
 - A reward of a loadout must be a weapon of that loadout; the loadout fails fast otherwise.
+
+## Rush abilities
+
+A def with `summonsRush` is a Rush ability. Its moves (`enablesJetpack`, `airDash`) and its look work only while Rush is
+joined with the player; until then the player moves and looks as with the buster. `SHOOT` with no Rush out calls Rush;
+with Rush out it fires the weapon.
+
+- `MegamanRushHandler` (one per Megaman) holds the phase and the current Rush. It is the only code that calls Rush down
+  or sends him away.
+- `Rush` (`entities/special/`) is the dog: he beams down, lands, sits, joins, and beams out. He tells the handler when a
+  join starts, when it ends and when he is gone.
+- The join pauses play: Rush sends himself to the level screen as a `LevelFreezeRoutine`, and the screen updates him
+  with the other systems off until he is done.
+
+```mermaid
+stateDiagram-v2
+  [*] --> ABSENT
+  ABSENT --> ARRIVING: SHOOT (summon)
+  ARRIVING --> JOINING: contact with the player
+  ARRIVING --> ABSENT: Rush leaves the view
+  JOINING --> JOINED: join pause ends
+  ARRIVING --> LEAVING: unequip
+  JOINING --> LEAVING: unequip
+  JOINED --> LEAVING: unequip (Rush beams out from the back)
+  LEAVING --> ABSENT: beam up ends
+```
+
+A player death resets the handler to `ABSENT`. A new Rush ability that does not join (for example a spring) needs its
+own path after the landing; the research and the decisions are in `docs/mega-refactor/items/190-rush/`.

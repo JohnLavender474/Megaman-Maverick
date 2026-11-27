@@ -199,6 +199,7 @@ class MegamanWeaponsHandler(private val megaman: Megaman) : Updatable, Resettabl
         megaman.shooting = false
 
         if (previous != null) previous.onDeselect(megaman, states[previous])
+        if (previous != null && previous !== current && previous.summonsRush) megaman.rushHandler.dismiss()
     }
 
     fun isChargeable(weapon: WeaponDef<Megaman>) = hasWeapon(weapon) && weapon.chargeable

@@ -12,6 +12,7 @@ import com.megaman.maverick.game.behaviors.BehaviorType
 import com.megaman.maverick.game.controllers.MegaControllerButton
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.constants.*
+import com.megaman.maverick.game.entities.megaman.weapons.jetpackEnabled
 import com.megaman.maverick.game.entities.state.inPlay
 import com.megaman.maverick.game.entities.state.teleporting
 
@@ -19,7 +20,7 @@ internal fun Megaman.jetpackBehavior(): IBehavior {
     return object : AbstractBehaviorImpl() {
 
         override fun evaluate(delta: Float): Boolean {
-            if (!existenceState.liveAfterUpdate || !inPlay || !canMove || damaged || teleporting || !currentWeapon.enablesJetpack ||
+            if (!existenceState.liveAfterUpdate || !inPlay || !canMove || damaged || teleporting || !jetpackEnabled ||
                 !input.isPressed(MegaControllerButton.A) || !input.isPressed(MegaControllerButton.UP) ||
                 isAnyBehaviorActive(BehaviorType.WALL_SLIDING, BehaviorType.AIR_DASHING, BehaviorType.GROUND_SLIDING) ||
                 weaponsHandler.isDepleted(currentWeapon) ||
