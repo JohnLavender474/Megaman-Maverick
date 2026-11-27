@@ -133,6 +133,8 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
         private const val ERUPT_FRAMES = 3
         private const val ERUPT_OVERSHOOT_Y = 1f
         private const val ERUPT_MAX_SPEED_X = 12f
+        private const val ERUPT_SPIN_FRAMES = 4
+        private const val ERUPT_SPIN_FRAME_DUR = 0.06f
         private const val BURROW_TELL_SPREAD = 0.25f
         private const val BURROW_LIGHT_Y_OFFSET = 0.5f
 
@@ -226,7 +228,7 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
         private val REGION_KEYS = gdxArrayOf(
             "stand", "jump", "wall_slide", "dance", "dance_flash", "punch_body", "punch_arm", "punch_fist",
             "punch_speed", "tornado", "tornado_start", "tornado_punch", "burrow", "erupt", "defeated", "needle_spin",
-            "throw_windup", "throw", "throw_burst", "needle_spin_tell", "needle_spin_tuck", "intro"
+            "throw_windup", "throw", "throw_burst", "needle_spin_tell", "needle_spin_tuck", "intro", "tornado_spin"
         )
 
         private val DAMAGE = objectMapOf<KClass<out IDamagerEntity>, DamageNegotiation>(
@@ -376,6 +378,7 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
 
         body.physics.gravityOn = true
         body.physics.applyFrictionX = true
+        body.physics.applyFrictionY = true
         body.physics.velocity.setZero()
         body.physics.defaultFrictionOnSelf.y = DEFAULT_FRICTION_Y
 
@@ -831,7 +834,7 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
                 DesertManState.BURROW, DesertManState.BURROW_TRAVEL, DesertManState.BURROW_TELL -> "burrow"
                 DesertManState.ERUPT -> when {
                     !timers["erupt_rise"].isFinished() -> "erupt"
-                    body.physics.velocity.y > 0f -> "tornado_punch"
+                    body.physics.velocity.y > 0f -> "tornado_spin"
                     else -> "jump"
                 }
 
@@ -852,6 +855,7 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
                 regions["burrow"], 1, BURROW_FRAMES, DesertManTuning.BURROW_SINK_DUR / BURROW_FRAMES, false
             ),
             "erupt" pairTo Animation(regions["erupt"], 1, ERUPT_FRAMES, ERUPT_RISE_DUR / ERUPT_FRAMES, false),
+            "tornado_spin" pairTo Animation(regions["tornado_spin"], 1, ERUPT_SPIN_FRAMES, ERUPT_SPIN_FRAME_DUR, true),
             "punch" pairTo Animation(regions["punch_body"]),
             "needle_spin_tell" pairTo Animation(regions["needle_spin_tell"], 2, 1, NEEDLE_SPIN_TELL_FLASH_DUR, true),
             "needle_spin_tuck" pairTo Animation(regions["needle_spin_tuck"]),
@@ -935,7 +939,10 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
                 )
             }
 
-            DesertManState.ERUPT -> body.physics.applyFrictionX = true
+            DesertManState.ERUPT -> {
+                body.physics.applyFrictionX = true
+                body.physics.applyFrictionY = true
+            }
 
             DesertManState.WALL_SLIDE -> {
                 body.physics.defaultFrictionOnSelf.y = DEFAULT_FRICTION_Y
@@ -1251,11 +1258,14 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
         val center = body.getCenter()
         val target = targetPlayer.body.getCenter()
         val gravity = -GRAVITY * ConstVals.PPM
-        val rise = max(0f, target.y + ERUPT_OVERSHOOT_Y * ConstVals.PPM - center.y)
+        val ceilingY = min(leftWallBounds.getMaxY(), rightWallBounds.getMaxY())
+        val maxRise = max(0f, ceilingY - BODY_HEIGHT * ConstVals.PPM / 2f - center.y)
+        val rise = (target.y + ERUPT_OVERSHOOT_Y * ConstVals.PPM - center.y).coerceIn(0f, maxRise)
         val velocityY = max(attackTuning.eruptImpulseY * ConstVals.PPM, sqrt(2f * gravity * rise))
         val maxSpeedX = ERUPT_MAX_SPEED_X * ConstVals.PPM
         val velocityX = ((clampToArena(target.x) - center.x) / (velocityY / gravity)).coerceIn(-maxSpeedX, maxSpeedX)
         body.physics.applyFrictionX = false
+        body.physics.applyFrictionY = false
         body.physics.velocity.set(velocityX, velocityY)
         spawnSandSplash(burrowX, burrowY)
         requestToPlaySound(SoundAsset.WIND_1_SOUND, loop = false)

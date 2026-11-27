@@ -11,6 +11,7 @@ import com.megaman.maverick.game.world.body.FixtureType
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.floats.plusOrMinus
+import io.kotest.matchers.floats.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.floats.shouldBeLessThanOrEqual
 import io.kotest.matchers.shouldBe
 import kotlin.math.abs
@@ -20,6 +21,8 @@ import kotlin.math.sqrt
 private const val TOL = 0.01f
 private const val GRAVITY = 22.5f * T
 private const val HALF_BODY = 0.75f * T
+private const val BODY_HEIGHT = 1.75f * T
+private const val CEILING = FLOOR + 10f * T
 private const val BURROW_STATES = "BURROW BURROW_TRAVEL BURROW_TELL"
 
 class DesertManBurrowTest : DescribeSpec({
@@ -181,9 +184,10 @@ class DesertManBurrowTest : DescribeSpec({
         listOf(
             Case("the target is straight above", 18f, 0f),
             Case("the target is high and to the right", 21f, 7f),
-            Case("the target is far to the left", 3f, 0f)
+            Case("the target is far to the left", 3f, 0f),
+            Case("the target hugs the right wall at the top", 21.5f, 8.5f)
         ).forEach { case ->
-            it("jumps to the target at the top of the jump when ${case.name}; no air friction until the erupt ends") {
+            it("jumps to the target, under the wall tops, when ${case.name}; no air friction until the erupt ends") {
                 start()
                 burrow()
                 runTo(DesertManState.ERUPT)
@@ -191,22 +195,55 @@ class DesertManBurrowTest : DescribeSpec({
                 rig.ticksUntil(1f) { rig.bossBody.physics.velocity.y > 0f } shouldBe true
                 val center = rig.bossCenter()
                 val target = rig.playerBody.getCenter(Vector2())
+                val maxRise = CEILING - BODY_HEIGHT / 2f - center.y
                 val rise = max(0f, target.y + T - center.y)
+                val capped = rise > maxRise
                 val vy = max(15f * T, sqrt(2f * GRAVITY * rise))
                 val vx = ((target.x.coerceIn(LEFT_WALL + HALF_BODY, RIGHT_WALL - HALF_BODY) - center.x) / (vy / GRAVITY))
                     .coerceIn(-12f * T, 12f * T)
-                rig.bossBody.physics.velocity.y shouldBe (vy plusOrMinus 0.1f)
-                rig.bossBody.physics.velocity.x shouldBe (vx plusOrMinus 0.1f)
+                if (!capped) {
+                    rig.bossBody.physics.velocity.y shouldBe (vy plusOrMinus 0.1f)
+                    rig.bossBody.physics.velocity.x shouldBe (vx plusOrMinus 0.1f)
+                }
                 if (case.playerX == 18f) abs(rig.bossBody.physics.velocity.x) shouldBe (0f plusOrMinus TOL)
                 if (case.playerX == 3f) rig.bossBody.physics.velocity.x shouldBe -12f * T
+                var apex = 0f
+                var damagerApex = 0f
                 while (rig.state == DesertManState.ERUPT) {
                     rig.bossBody.physics.applyFrictionX shouldBe false
+                    rig.bossBody.physics.applyFrictionY shouldBe false
+                    apex = max(apex, rig.bossBody.getMaxY())
+                    damagerApex = max(damagerApex, rig.rect(rig.fixture(FixtureType.DAMAGER)).getMaxY())
                     rig.tick()
+                }
+                apex shouldBeLessThanOrEqual CEILING + 0.25f * T
+                if (capped) {
+                    apex shouldBeGreaterThanOrEqual CEILING - 0.5f * T
+                    damagerApex shouldBeGreaterThanOrEqual rig.playerBody.getY()
                 }
                 rig.state shouldBe DesertManState.STAND
                 rig.bossBody.getY() shouldBe (FLOOR plusOrMinus TOL)
                 rig.bossBody.physics.applyFrictionX shouldBe true
+                rig.bossBody.physics.applyFrictionY shouldBe true
             }
+        }
+
+        it("shows the tornado spin frames while rising and the jump frame while falling") {
+            start()
+            burrow()
+            runTo(DesertManState.ERUPT)
+            rig.ticksUntil(1f) { rig.bossBody.physics.velocity.y > 0f } shouldBe true
+            val indices = mutableListOf<Int>()
+            while (rig.bossBody.physics.velocity.y > 0f) {
+                rig.tick()
+                if (rig.bossBody.physics.velocity.y > 0f) {
+                    rig.animKey shouldBe "tornado_spin"
+                    indices.add(rig.animIndex)
+                }
+            }
+            indices.toSet() shouldBe setOf(0, 1, 2, 3)
+            rig.tick()
+            rig.animKey shouldBe "jump"
         }
 
         it("keeps the short-punch size of 0.75 x 0.5 tile while rising, after a long punch") {

@@ -202,7 +202,9 @@ comprehensive listing of the credits for the artwork used in this game.
 - Glacier Man
   - Original by [Balloon Cart](https://balloon-cart.itch.io/glacier-man-asset-pack)
   - New frames (throws, ground pound, forming icicles, freeze-and-shatter death) by Claude Fable 5.2, an AI model by Anthropic, directed by the developer
-- Desert Man - [rcrdcat](https://www.deviantart.com/rcrdcat/art/Desert-Man-Spritesheet-Mugshot-332165249)
+- Desert Man
+  - Original by [rcrdcat](https://www.deviantart.com/rcrdcat/art/Desert-Man-Spritesheet-Mugshot-332165249)
+  - New frames (tornado spin) by Claude Fable 5.2, an AI model by Anthropic, directed by the developer
 
 #### Other Bosses
 
