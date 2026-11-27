@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="500" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="943">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="500" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="945">
  <tileset firstgid="1" source="../tsx/InfernoManTileset.tsx"/>
  <tileset firstgid="46" source="../tsx/Tileset1.tsx"/>
  <tileset firstgid="1070" source="../tsx/MagmaMan.tsx"/>
@@ -136,6 +136,7 @@
     <property name="left_hover_target_1" type="object" value="444"/>
     <property name="left_hover_target_2" type="object" value="445"/>
     <property name="left_hover_target_3" type="object" value="448"/>
+    <property name="left_land_target" type="object" value="943"/>
     <property name="max" type="object" value="443"/>
     <property name="min" type="object" value="442"/>
     <property name="mini" type="bool" value="true"/>
@@ -144,6 +145,7 @@
     <property name="right_hover_target_1" type="object" value="446"/>
     <property name="right_hover_target_2" type="object" value="447"/>
     <property name="right_hover_target_3" type="object" value="449"/>
+    <property name="right_land_target" type="object" value="944"/>
     <property name="room_center" type="object" value="441"/>
    </properties>
   </object>
@@ -161,6 +163,8 @@
   <object id="451" name="LeftChargeTarget2" x="11760" y="1504" width="32" height="32"/>
   <object id="452" name="RightChargeTarget1" x="12080" y="1344" width="32" height="32"/>
   <object id="453" name="RightChargeTarget2" x="12080" y="1504" width="32" height="32"/>
+  <object id="943" name="LeftLandTarget" x="11760" y="1568" width="32" height="32"/>
+  <object id="944" name="RightLandTarget" x="12080" y="1568" width="32" height="32"/>
   <object id="484" name="BlockOnSpawn" x="11872" y="1224" width="128" height="24">
    <properties>
     <property name="body_labels" value="collide_up_only"/>

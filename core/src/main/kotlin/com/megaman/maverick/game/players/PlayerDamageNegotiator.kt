@@ -21,6 +21,7 @@ import com.megaman.maverick.game.entities.bosses.ElecDevilBodyPiece
 import com.megaman.maverick.game.entities.bosses.ElecDevilBodyPieces
 import com.megaman.maverick.game.entities.bosses.ElecDevilClaw
 import com.megaman.maverick.game.entities.bosses.GlacierMan
+import com.megaman.maverick.game.entities.bosses.MechaDragon
 import com.megaman.maverick.game.entities.bosses.TimberWalker
 import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.IOwnable
@@ -39,6 +40,7 @@ import com.megaman.maverick.game.entities.projectiles.D1000Bomb
 import com.megaman.maverick.game.entities.projectiles.ElecBall
 import com.megaman.maverick.game.entities.projectiles.EnemyShot
 import com.megaman.maverick.game.entities.projectiles.FallingIcicle
+import com.megaman.maverick.game.entities.projectiles.MechaDragonFlame
 import com.megaman.maverick.game.entities.projectiles.Needle
 import com.megaman.maverick.game.entities.projectiles.Snowhead
 import com.megaman.maverick.game.entities.projectiles.TimberWalkerChipWave
@@ -70,6 +72,8 @@ class PlayerDamageNegotiator(private val player: MegaGameEntity) : IDamageNegoti
         ElecBall.TAG pairTo dmgNeg(3),
         ElecExplosion.TAG pairTo dmgNeg(3),
         GlacierMan.TAG pairTo dmgNeg(3),
+        MechaDragon.TAG pairTo dmgNeg(3),
+        MechaDragonFlame.TAG pairTo dmgNeg(3),
         Snowhead.TAG pairTo dmgNeg { if ((it as Snowhead).owner is GlacierMan) 3 else fallbackDamage(it) },
         SmallIceCube.TAG pairTo dmgNeg { if ((it as SmallIceCube).owner is GlacierMan) 3 else fallbackDamage(it) },
         FallingIcicle.TAG pairTo dmgNeg { if ((it as FallingIcicle).owner is GlacierMan) 3 else fallbackDamage(it) },

@@ -374,6 +374,7 @@ projectiles.MagmaMeteor: MagmaMeteor
 projectiles.MagmaOrb: MagmaOrb
 projectiles.MagmaPellet: MagmaPellet
 projectiles.MagmaWave: MagmaWave
+projectiles.MechaDragonFlame: MechaDragonFlame
 projectiles.MockingByteEgg: MockingByteEgg
 projectiles.MockingByteEggShatter: MockingByteEggShatter
 projectiles.MoonScythe: MoonScythe

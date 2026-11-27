@@ -57,6 +57,7 @@ object ConstVals {
 object ConstKeys {
     const val DO_UPDATE = "do_update"
     const val GROUND = "ground"
+    const val LAND = "land"
     const val CEILING = "ceiling"
     const val MODE = "mode"
     const val CONTACT = "contact"
