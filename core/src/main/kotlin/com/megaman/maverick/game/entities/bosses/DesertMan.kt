@@ -1260,8 +1260,11 @@ class DesertMan(services: MegaServices) : AbstractBoss(services), IAnimatedEntit
         val gravity = -GRAVITY * ConstVals.PPM
         val ceilingY = min(leftWallBounds.getMaxY(), rightWallBounds.getMaxY())
         val maxRise = max(0f, ceilingY - BODY_HEIGHT * ConstVals.PPM / 2f - center.y)
-        val rise = (target.y + ERUPT_OVERSHOOT_Y * ConstVals.PPM - center.y).coerceIn(0f, maxRise)
-        val velocityY = max(attackTuning.eruptImpulseY * ConstVals.PPM, sqrt(2f * gravity * rise))
+        val rise = max(0f, target.y + ERUPT_OVERSHOOT_Y * ConstVals.PPM - center.y)
+        val step = services.settings.performance.fixedStep
+        // the first step is gravity-free (feet still on the sand), so a discrete rise is v^2 / 2g + v * step / 2
+        val ceilingSpeed = gravity * (sqrt(step * step / 4f + 2f * maxRise / gravity) - step / 2f)
+        val velocityY = max(attackTuning.eruptImpulseY * ConstVals.PPM, min(sqrt(2f * gravity * rise), ceilingSpeed))
         val maxSpeedX = ERUPT_MAX_SPEED_X * ConstVals.PPM
         val velocityX = ((clampToArena(target.x) - center.x) / (velocityY / gravity)).coerceIn(-maxSpeedX, maxSpeedX)
         body.physics.applyFrictionX = false

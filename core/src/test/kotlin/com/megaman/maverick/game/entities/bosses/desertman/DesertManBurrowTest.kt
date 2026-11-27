@@ -16,6 +16,7 @@ import io.kotest.matchers.floats.shouldBeLessThanOrEqual
 import io.kotest.matchers.shouldBe
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 private const val TOL = 0.01f
@@ -196,8 +197,10 @@ class DesertManBurrowTest : DescribeSpec({
                 val center = rig.bossCenter()
                 val target = rig.playerBody.getCenter(Vector2())
                 val maxRise = CEILING - BODY_HEIGHT / 2f - center.y
-                val rise = (target.y + T - center.y).coerceIn(0f, maxRise)
-                val vy = max(15f * T, sqrt(2f * GRAVITY * rise))
+                val rise = max(0f, target.y + T - center.y)
+                val step = rig.services.settings.performance.fixedStep
+                val ceilingSpeed = GRAVITY * (sqrt(step * step / 4f + 2f * maxRise / GRAVITY) - step / 2f)
+                val vy = max(15f * T, min(sqrt(2f * GRAVITY * rise), ceilingSpeed))
                 val vx = ((target.x.coerceIn(LEFT_WALL + HALF_BODY, RIGHT_WALL - HALF_BODY) - center.x) / (vy / GRAVITY))
                     .coerceIn(-12f * T, 12f * T)
                 rig.bossBody.physics.velocity.y shouldBe (vy plusOrMinus 0.1f)
@@ -213,7 +216,7 @@ class DesertManBurrowTest : DescribeSpec({
                     damagerApex = max(damagerApex, rig.rect(rig.fixture(FixtureType.DAMAGER)).getMaxY())
                     rig.tick()
                 }
-                apex shouldBeLessThanOrEqual CEILING + TOL
+                apex shouldBeLessThanOrEqual CEILING + TOL + vy * (STEP - step) / 2f
                 if (case.playerY == 8.5f) {
                     apex shouldBe (CEILING plusOrMinus 0.25f * T)
                     damagerApex shouldBeGreaterThanOrEqual rig.playerBody.getY()
