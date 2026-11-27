@@ -208,7 +208,9 @@ comprehensive listing of the credits for the artwork used in this game.
 
 - Final Boss (Wily) - [kwad_rat](https://www.fiverr.com/kwad_rat)
 - Maverick Robot (Intro Boss) - [Ansimuz](https://ansimuz.itch.io/mega-bot)
-- Inferno Dragon - [Ansimuz](https://ansimuz.itch.io/mega-bot)
+- Inferno Dragon
+  - Original by [Ansimuz](https://ansimuz.itch.io/mega-bot)
+  - Updated by Claude Fable 5.2, an AI model by [Anthropic](https://www.anthropic.com/claude), directed by the developer: hind legs, the grounded animations (land, stand, flame breath, chomp) and the flame puff
 - Moon Head - [oldlavygenes](https://www.deviantart.com/oldlavygenes474/art/MoonHead-Miniboss-Megaman-Maverick-1090151707)
 - Reactor Monkey - [Balloon Cart](https://balloon-cart.itch.io/reactor-man-asset-pack)
 - Elec Devil

@@ -1,0 +1,110 @@
+MechaDragon.png
+size: 1934, 998
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+MechaDragon/breath_end
+  rotate: false
+  xy: 131, 723
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+MechaDragon/breath_sweep
+  rotate: false
+  xy: 389, 723
+  size: 768, 128
+  orig: 768, 128
+  offset: 0, 0
+  index: -1
+MechaDragon/breath_windup
+  rotate: false
+  xy: 1159, 723
+  size: 384, 128
+  orig: 384, 128
+  offset: 0, 0
+  index: -1
+MechaDragon/charging
+  rotate: false
+  xy: 131, 1
+  size: 256, 432
+  orig: 256, 432
+  offset: 0, 0
+  index: -1
+MechaDragon/chomp
+  rotate: false
+  xy: 1, 869
+  size: 512, 128
+  orig: 512, 128
+  offset: 0, 0
+  index: -1
+MechaDragon/defeated
+  rotate: false
+  xy: 905, 1
+  size: 256, 288
+  orig: 256, 288
+  offset: 0, 0
+  index: -1
+MechaDragon/fire1
+  rotate: false
+  xy: 1163, 1
+  size: 640, 288
+  orig: 640, 288
+  offset: 0, 0
+  index: -1
+MechaDragon/fire2
+  rotate: false
+  xy: 389, 1
+  size: 256, 432
+  orig: 256, 432
+  offset: 0, 0
+  index: -1
+MechaDragon/fly
+  rotate: false
+  xy: 647, 1
+  size: 256, 432
+  orig: 256, 432
+  offset: 0, 0
+  index: -1
+MechaDragon/frozen
+  rotate: false
+  xy: 1805, 1
+  size: 128, 144
+  orig: 128, 144
+  offset: 0, 0
+  index: -1
+MechaDragon/init
+  rotate: false
+  xy: 1, 723
+  size: 128, 144
+  orig: 128, 144
+  offset: 0, 0
+  index: -1
+MechaDragon/land
+  rotate: false
+  xy: 515, 869
+  size: 512, 128
+  orig: 512, 128
+  offset: 0, 0
+  index: -1
+MechaDragon/stand
+  rotate: false
+  xy: 1029, 869
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+MechaDragon/turning
+  rotate: false
+  xy: 1, 1
+  size: 128, 720
+  orig: 128, 720
+  offset: 0, 0
+  index: -1
+MechaDragonFlame
+  rotate: false
+  xy: 1287, 869
+  size: 64, 16
+  orig: 64, 16
+  offset: 0, 0
+  index: -1
