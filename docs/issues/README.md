@@ -198,6 +198,7 @@ related-items: [<mega-refactor item IDs>]
 | [One freeze of about 1.5 s can make auto-perf drop the tier for the rest of the session](2026-11-23-auto-perf-drops-tier-after-freeze.md) | yes | core | closed |
 | [`--room` can start in another room when a spawn is near the world origin](2026-11-23-launch-room-spawn-taken-by-camera-origin.md) | yes | core | open |
 | [Each repack of `Platforms1` moves the colors of old regions](2026-11-23-platforms1-png8-color-shift.md) | yes | content | open |
+| [`LavaDrop` has no cull, so a drop that falls into a pit falls forever](2026-11-26-lava-drop-no-cull.md) | no | core | open |
 
 ## Folded into items
 
