@@ -1,0 +1,257 @@
+{
+ "_about": "MechaDragon art anchors (branch mega-refactor-188a-dragon-moves-art). All values are art px inside a 128x128 cell, origin top-left, y down, sprite facing RIGHT (mirror x -> 127-x when the code flips). head_box = [x,y,w,h] of skull+jaw (crest fins, horn included in skull; mouth flame excluded). mouth = [x,y]: the center of the drawn mouth flame (breath_sweep) or the front of the snout at the floor (chomp). foot_line = lowest opaque art row of the feet. 1 art px = 2 game px. Cells are 0-based, left to right.",
+ "strips": {
+  "land": {
+   "file": "land.png",
+   "cols": 4,
+   "rows": 1
+  },
+  "stand": {
+   "file": "stand.png",
+   "cols": 2,
+   "rows": 1
+  },
+  "breath_windup": {
+   "file": "breath_windup.png",
+   "cols": 3,
+   "rows": 1
+  },
+  "breath_sweep": {
+   "file": "breath_sweep.png",
+   "cols": 6,
+   "rows": 1
+  },
+  "breath_end": {
+   "file": "breath_end.png",
+   "cols": 2,
+   "rows": 1
+  },
+  "chomp": {
+   "file": "chomp.png",
+   "cols": 4,
+   "rows": 1
+  },
+  "flame_puff": {
+   "file": "flame_puff.png",
+   "cols": 4,
+   "rows": 1,
+   "cell": 16
+  },
+  "fire1": {
+   "file": "fire1.png",
+   "cols": 5,
+   "rows": 2,
+   "note": "trimmed from 16 (4x4) to the 10 cells that play"
+  }
+ },
+ "breath_sweep": [
+  {
+   "cell": 0,
+   "angle_deg": 30,
+   "mouth": [
+    115,
+    30
+   ],
+   "head_box": [
+    86,
+    9,
+    42,
+    34
+   ]
+  },
+  {
+   "cell": 1,
+   "angle_deg": 15,
+   "mouth": [
+    116,
+    36
+   ],
+   "head_box": [
+    89,
+    9,
+    38,
+    39
+   ]
+  },
+  {
+   "cell": 2,
+   "angle_deg": 0,
+   "mouth": [
+    115,
+    42
+   ],
+   "head_box": [
+    91,
+    11,
+    33,
+    44
+   ]
+  },
+  {
+   "cell": 3,
+   "angle_deg": -15,
+   "mouth": [
+    113,
+    47
+   ],
+   "head_box": [
+    94,
+    15,
+    29,
+    46
+   ]
+  },
+  {
+   "cell": 4,
+   "angle_deg": -30,
+   "mouth": [
+    109,
+    52
+   ],
+   "head_box": [
+    92,
+    20,
+    29,
+    46
+   ]
+  },
+  {
+   "cell": 5,
+   "angle_deg": -45,
+   "mouth": [
+    104,
+    55
+   ],
+   "head_box": [
+    89,
+    26,
+    30,
+    43
+   ]
+  }
+ ],
+ "chomp": [
+  {
+   "cell": 1,
+   "mouth": [
+    125,
+    112
+   ],
+   "head_box": [
+    98,
+    82,
+    29,
+    41
+   ]
+  },
+  {
+   "cell": 2,
+   "mouth": [
+    125,
+    115
+   ],
+   "head_box": [
+    98,
+    84,
+    28,
+    41
+   ]
+  }
+ ],
+ "chomp_head_boxes_all_cells": [
+  [
+   86,
+   4,
+   39,
+   43
+  ],
+  [
+   98,
+   82,
+   29,
+   41
+  ],
+  [
+   98,
+   84,
+   28,
+   41
+  ],
+  [
+   90,
+   20,
+   28,
+   44
+  ]
+ ],
+ "breath_windup_head_boxes": [
+  [
+   88,
+   9,
+   37,
+   44
+  ],
+  [
+   86,
+   9,
+   39,
+   42
+  ],
+  [
+   84,
+   10,
+   43,
+   30
+  ]
+ ],
+ "breath_end_head_boxes": [
+  [
+   90,
+   24,
+   28,
+   40
+  ],
+  [
+   93,
+   19,
+   28,
+   41
+  ]
+ ],
+ "foot_line": {
+  "land": [
+   127,
+   127,
+   127,
+   127
+  ],
+  "stand": [
+   127,
+   127
+  ],
+  "breath_windup": [
+   127,
+   127,
+   127
+  ],
+  "breath_sweep": [
+   127,
+   127,
+   127,
+   127,
+   127,
+   127
+  ],
+  "breath_end": [
+   127,
+   127
+  ],
+  "chomp": [
+   127,
+   127,
+   127,
+   127
+  ]
+ },
+ "note_land_cell_0": "land cell 0 is the airborne tell (legs out); its feet are also drawn on row 127 so the strip does not jump at touchdown."
+}
