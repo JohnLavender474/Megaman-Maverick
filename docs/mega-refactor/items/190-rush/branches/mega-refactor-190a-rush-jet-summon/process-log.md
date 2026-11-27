@@ -5,6 +5,7 @@
 - State: active
 - Goal: Rush Jet goes through Rush: `SHOOT` beams Rush down, he sits, a join pause on contact, beam out on unequip
 - Brief: in chat (Claude on the web; the owner gave the flow and asked for a first pass with a draft PR)
+- PR: https://github.com/JohnLavender474/Megaman-Maverick/pull/39 (draft)
 - Done: first pass implemented, reviewed and fixed; draft PR open
 - Next: the owner's answers to D1 to D12 in the PR, the play test, then `190b` (the owner's sprites)
 - Blocked:
