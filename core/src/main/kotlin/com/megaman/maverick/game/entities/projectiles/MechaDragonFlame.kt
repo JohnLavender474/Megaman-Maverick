@@ -42,6 +42,7 @@ import com.megaman.maverick.game.utils.extensions.getCenter
 import com.megaman.maverick.game.world.body.BodyComponentCreator
 import com.megaman.maverick.game.world.body.FixtureType
 import com.megaman.maverick.game.world.body.getBounds
+import com.megaman.maverick.game.world.body.getEntity
 
 class MechaDragonFlame(services: MegaServices) : AbstractProjectile(services), IFireEntity, IAnimatedEntity {
 
