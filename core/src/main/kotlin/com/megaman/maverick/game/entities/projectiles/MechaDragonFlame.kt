@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
 import com.maverick.game.engine.animations.Animation
 import com.maverick.game.engine.animations.AnimationsComponent
+import com.maverick.game.engine.animations.AnimationsComponentBuilder
 import com.maverick.game.engine.animations.Animator
 import com.maverick.game.engine.animations.IAnimation
 import com.maverick.game.engine.common.GameLogger
@@ -142,6 +143,6 @@ class MechaDragonFlame(services: MegaServices) : AbstractProjectile(services), I
             "burn" pairTo strip.slice(1, 3).also { it.setLooping(true) },
             "fade" pairTo strip.slice(3, 4)
         )
-        return AnimationsComponent(this, Animator(keySupplier, animations))
+        return AnimationsComponentBuilder(this).key(TAG).animator(Animator(keySupplier, animations)).build()
     }
 }
