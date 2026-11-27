@@ -5,7 +5,6 @@ import com.maverick.game.engine.common.extensions.objectSetOf
 import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.IGameShape2D
-import com.maverick.game.engine.entities.IGameEntity
 import com.maverick.game.engine.world.body.BodyComponent
 import com.maverick.game.engine.world.body.IFixture
 import com.megaman.maverick.game.ConstKeys
@@ -13,6 +12,7 @@ import com.megaman.maverick.game.ConstVals
 import com.megaman.maverick.game.entities.MegaEntityFactory
 import com.megaman.maverick.game.entities.bosses.BossRig
 import com.megaman.maverick.game.entities.bosses.MechaDragon
+import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.state.MapObjectComponent
 import com.megaman.maverick.game.players.PlayerDamageNegotiator
 import com.megaman.maverick.game.utils.extensions.getCenter
@@ -47,10 +47,10 @@ class MechaDragonFlameTest : DescribeSpec({
     }
 
     fun blockFixture(id: Int?): IFixture {
-        val block = mockk<IGameEntity>(relaxed = true)
+        val block = mockk<MegaGameEntity>(relaxed = true)
         every { block.getComponent(MapObjectComponent::class) } returns id?.let { MapObjectComponent(it) }
         val fixture = mockk<IFixture>()
-        every { fixture.getEntity() } returns block
+        every { fixture.properties } returns props(ConstKeys.ENTITY pairTo block)
         return fixture
     }
 
