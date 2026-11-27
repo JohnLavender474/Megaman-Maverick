@@ -16,6 +16,7 @@ import com.maverick.game.engine.common.objects.pairTo
 import com.maverick.game.engine.common.objects.props
 import com.maverick.game.engine.common.shapes.GameRectangle
 import com.maverick.game.engine.common.time.Timer
+import com.maverick.game.engine.cullables.CullablesComponent
 import com.maverick.game.engine.damage.IDamagerEntity
 import com.maverick.game.engine.drawables.shapes.DrawableShapesComponent
 import com.maverick.game.engine.drawables.sprites.GameSprite
@@ -42,6 +43,8 @@ import com.megaman.maverick.game.entities.contracts.IHazard
 import com.megaman.maverick.game.entities.contracts.MegaGameEntity
 import com.megaman.maverick.game.entities.contracts.overlapsGameCamera
 import com.megaman.maverick.game.entities.explosions.SmokePuff
+import com.megaman.maverick.game.entities.utils.getGameCameraCullingLogic
+import com.megaman.maverick.game.entities.utils.getStandardEventCullingLogic
 import com.megaman.maverick.game.world.body.*
 
 class LavaDrop(services: MegaServices) : MegaGameEntity(services), IDamagerEntity, IHazard, ISpritesEntity, IAnimatedEntity,
@@ -51,12 +54,16 @@ class LavaDrop(services: MegaServices) : MegaGameEntity(services), IDamagerEntit
         const val TAG = "LavaDrop"
         private const val GRAVITY = -22.5f
         private const val DISSIPATE_DUR = 0.125f
+        private const val CULL_DUR = 1f
         private var fallingRegion: TextureRegion? = null
         private var splatRegion: TextureRegion? = null
     }
 
     private val dissipateTimer = Timer(DISSIPATE_DUR)
     private var dissipating = false
+
+    // Only a falling drop is culled for leaving the camera: a drop that hangs under its supplier stays.
+    private val cullOutOfBounds = getGameCameraCullingLogic(this, CULL_DUR)
 
     override fun getType() = EntityType.HAZARD
 
@@ -71,6 +78,7 @@ class LavaDrop(services: MegaServices) : MegaGameEntity(services), IDamagerEntit
         addComponent(defineBodyComponent())
         addComponent(defineSpritesComponent())
         addComponent(defineAnimationsComponent())
+        addComponent(defineCullablesComponent())
     }
 
     override fun onSpawn(spawnProps: Properties) {
@@ -83,10 +91,14 @@ class LavaDrop(services: MegaServices) : MegaGameEntity(services), IDamagerEntit
 
         dissipateTimer.reset()
         dissipating = false
+
+        removeCullable(ConstKeys.CULL_OUT_OF_BOUNDS)
     }
 
     fun setToFall() {
         body.physics.gravityOn = true
+        cullOutOfBounds.reset()
+        putCullable(ConstKeys.CULL_OUT_OF_BOUNDS, cullOutOfBounds)
     }
 
     private fun defineUpdatablesComponent() = UpdatablesComponent({ delta ->
@@ -145,4 +157,8 @@ class LavaDrop(services: MegaServices) : MegaGameEntity(services), IDamagerEntit
         val animator = Animator(keySupplier, animations)
         return AnimationsComponent(this, animator)
     }
+
+    private fun defineCullablesComponent() = CullablesComponent(
+        objectMapOf(ConstKeys.CULL_EVENTS pairTo getStandardEventCullingLogic(this))
+    )
 }
