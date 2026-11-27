@@ -99,6 +99,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `184` | dropped | [Keep button taps that are shorter than one frame](../items/184-sub-frame-taps/ITEM.md) (main) |
 | `187` | active | [Intro story screen and main menu overhaul](../items/187-intro-story-and-menu/ITEM.md) (main) |
 | `189` | planned | [Villain and dog boss fight (two phases)](../items/189-villain-and-dog-fight/ITEM.md) |
+| `190` | active | [Rush in the game: Rush abilities call Rush down to join Mega Man](../items/190-rush/ITEM.md) |
 
 ## Gaps with no item
 

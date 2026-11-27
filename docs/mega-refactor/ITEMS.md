@@ -196,6 +196,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 187 | [Intro story screen and main menu overhaul](items/187-intro-story-and-menu/ITEM.md) | feature | `O9` | active | none | 2026-11-26 | |
 | 188 | [Dragon mini-boss upgrade (legs and new attacks)](items/188-dragon-mini-boss-upgrade/ITEM.md) | feature | `O4` | active | none | 2026-11-26 | |
 | 189 | [Villain and dog boss fight (two phases)](items/189-villain-and-dog-fight/ITEM.md) | feature | `O4`, `O9` | active | none | 2026-11-26 | |
+| 190 | [Rush in the game: Rush abilities call Rush down to join Mega Man](items/190-rush/ITEM.md) | feature | `O4`, `O9` | active | none | 2026-11-27 | |
 
 ## Branches
 
@@ -346,3 +347,4 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-189a-duo-sprites-moves`](items/189-villain-and-dog-fight/branches/mega-refactor-189a-duo-sprites-moves/process-log.md) | 189 | Claude Fable 5.2 designs and draws the villain and the dog (strips and an atlas); decide the attacks and animations of both phases | active | 2026-11-26 | |
 | [`mega-refactor-189b-duo-test-fight`](items/189-villain-and-dog-fight/branches/mega-refactor-189b-duo-test-fight/process-log.md) | 189 | The two-phase villain and dog fight in the test map `REFACTOR_TEST_189` | blocked | | |
 | [`mega-refactor-189c-duo-in-game`](items/189-villain-and-dog-fight/branches/mega-refactor-189c-duo-in-game/process-log.md) | 189 | The fight in the main game: place, trigger and what follows the win | blocked | | |
+| [`mega-refactor-190a-rush-jet-summon`](items/190-rush/branches/mega-refactor-190a-rush-jet-summon/process-log.md) | 190 | Rush Jet goes through Rush: `SHOOT` beams Rush down, he sits, a join pause on contact, beam out on unequip; temporary dog sprites | active | 2026-11-27 | |

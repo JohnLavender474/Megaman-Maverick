@@ -106,6 +106,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `183` | active | [NES-faithful rotation: no sprite drawn at an angle that is not a multiple of 90](../items/183-nes-faithful-rotation/ITEM.md) |
 | `188` | active | [Dragon mini-boss upgrade (legs and new attacks)](../items/188-dragon-mini-boss-upgrade/ITEM.md) (main) |
 | `189` | planned | [Villain and dog boss fight (two phases)](../items/189-villain-and-dog-fight/ITEM.md) (main) |
+| `190` | active | [Rush in the game: Rush abilities call Rush down to join Mega Man](../items/190-rush/ITEM.md) (main) |
 
 ## Gaps with no item
 
