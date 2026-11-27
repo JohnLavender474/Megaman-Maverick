@@ -29,3 +29,24 @@ Found by reading the code. Place a `LavaDropSupplier` over a gap in a room (the 
 
 - `LavaDropSupplier` spawns and holds a `lavaDrop`; a culled drop must not break its `lavaDrop = null` logic (it sets it to null on `dropLavaDrop`, and on its own `onDestroy`).
 - The cull must keep the drop alive while it hangs at the spawn point under the supplier (gravity off), and on screen.
+
+## Fix
+
+Branch `fix/lava-drop-cull`. `LavaDrop` gets a `CullablesComponent`:
+
+- the standard event cull (`getStandardEventCullingLogic`: room transition, gate opening, level reset), the same as `LavaDropSupplier`, so a hanging drop and its supplier go away together;
+- a camera cull (`getGameCameraCullingLogic`, 1 s out of the view), put by `setToFall()` and removed in `onSpawn`, so only a falling drop is culled for leaving the camera.
+
+What changes: a drop that falls into a pit or out of the room is destroyed after it has been outside the camera for 1 s.
+
+What must not change:
+
+- the hanging drop (gravity off, never culled by the camera), the fall, and the dissipate and splat on `FEET_ON_GROUND` (updatables, sound and smoke puff);
+- the timing of `LavaDropSupplier` (no change to the supplier: it drops the reference when it calls `setToFall()`, and a hanging drop is culled only together with the supplier);
+- the clean-up of the dragon's own drops on branch `188b`.
+
+Checks:
+
+- Automated (CI): `./gradlew core:test core:smokeTest`. `LavaDropCullTest` fails if the drop has no camera cull after `setToFall()`, if a hanging drop is culled off camera, or if the cull stays after a respawn. `EntityConstructorsTest`, `SpawnAllocationGuardTest` and the `entity-tags.txt` check must stay green.
+- Manual: no live or test map has a `LavaDropSupplier` (only the old `InfernoMan*.tmx` maps do, and none is a `LevelDefinition` map), so there is no play check; the unit test and CI are the check.
+
