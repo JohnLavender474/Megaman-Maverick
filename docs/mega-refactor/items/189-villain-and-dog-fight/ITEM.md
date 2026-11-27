@@ -1,11 +1,11 @@
 # 189: Villain and dog boss fight (two phases)
 
-- Status: planned
+- Status: active
 - Type: feature
 - Objectives: `O4`, `O9`
 - Depends on: none
 - Related: `118` (fight flow), `077` (boss attacks), `188` (boss upgrade in parallel)
-- Branches: none yet (3 folders prepared: `189a`, `189b`, `189c`)
+- Branches: `mega-refactor-189a-duo-sprites-moves` (active); `189b`, `189c` prepared
 
 ## Goal
 
@@ -69,6 +69,9 @@ Not approved. Each branch `SCOPE.md` decides its final scope.
   implements the boss fight as a test level. Branch C sets up the fight in the main game, deciding where and how the
   fight is triggered, and what happens after the fight is over."
 - 2026-11-26: the two characters are new and original: one is a villain and the other is a dog.
+- 2026-11-26: the owner gave rough draft sheets of the villain (orange) and the dog (purple), with a row of the two
+  combined. Fable redraws them fresh, then refines the villain's physique to match Mega Man and Proto Man (buffer
+  arms, about the same height). The dog draft is not faithful to the NES and needs a complete redraw.
 
 ## Decisions
 
@@ -76,11 +79,13 @@ Not approved. Each branch `SCOPE.md` decides its final scope.
 - 2026-11-26 (owner): Claude Fable 5.2 draws new sprites for the fight.
 - 2026-11-26 (owner): the fight uses two new original characters, a villain and a dog, designed for this game. No
   existing character or existing sprite sheet is a source or a reference for them.
+- 2026-11-26 (owner): merge target: each branch squash-merges directly into `master`.
+- 2026-11-26 (owner): the owner's own rough draft sheets are the input of `189a` (frame list, poses, colors, scale,
+  merge idea). They lean on Capcom designs, so Fable draws original silhouettes from them, not Bass or Treble.
 
 ## Open questions
 
-1. **Merge target.** Recommendation: directly into `master`. Each branch is safe to ship alone: `189a` adds frames
-   with no caller in play, `189b` adds a test map, and only `189c` puts the fight in front of players.
+1. ~~Merge target~~: decided, directly into `master`.
 2. **Names and look** (`189a`): the names of the villain and the dog (also the class names and atlas prefixes), and
    the look of each and of the combined form.
 3. **Health in phase 1.** One health bar for the pair (the dog can be hit but takes no health of its own, or adds to
