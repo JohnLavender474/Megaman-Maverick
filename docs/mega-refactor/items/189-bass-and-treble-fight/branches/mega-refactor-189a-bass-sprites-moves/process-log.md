@@ -3,7 +3,7 @@
 ## Status
 
 - State: planned
-- Goal: Slice the MM10 Bass and Treble sheet into strips and an atlas; decide the attacks and animations of both phases from the frames that exist.
+- Goal: Claude Fable 5.2 draws new Bass and Treble sprites for the fight (strips and an atlas); decide the attacks and animations of both phases.
 - Done: folder prepared on `master` with item `189`.
 - Next: branch start (after the merge-target answer of `ITEM.md`).
 - Blocked: none

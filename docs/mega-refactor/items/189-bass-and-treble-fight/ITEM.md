@@ -19,28 +19,27 @@ Not approved. Each branch `SCOPE.md` decides its final scope.
 
 | Branch | Goal | Status |
 |---|---|---|
-| `mega-refactor-189a-bass-sprites-moves` | Slice the MM10 sheet into frame strips and an atlas; decide the attacks and animations of both phases from the frames that exist | planned |
+| `mega-refactor-189a-bass-sprites-moves` | Claude Fable 5.2 draws new Bass and Treble sprites for the fight (frame strips and an atlas); decide the attacks and animations of both phases | planned |
 | `mega-refactor-189b-bass-test-fight` | Implement the fight (`Bass`, `Treble`, their projectiles, the fight plan) and a test map `REFACTOR_TEST_189` | blocked by `189a` |
 | `mega-refactor-189c-bass-in-game` | Put the fight into the main game: where and how it starts, and what happens after the win | blocked by `189b` |
 
 ### `189a`: sprites and moves (design and assets, no gameplay code)
 
-- **Sheet.** The owner supplied the Spriters Resource sheet "Mega Man 10: Bass, Treble and Reggae" (ripper: Random
-  Talking Bush; copyright Capcom). It goes into `utils/sprite_slicer/sheets/` with a slicer data file, and the
-  `sprite-slicer` skill cuts it into fixed-size strips in `assets/sprites/frames/` and a new atlas (`BASS`, or a
-  place in an existing boss atlas; `assets.md` decides).
-- **Art source: the sheet only.** All Bass and Treble frames come from the supplied sheet. No art agent (Fable or
-  other) draws or redraws Bass or Treble frames. Where a planned move needs a frame the sheet does not have, the
-  branch either designs the move around frames that exist (a reused pose, a flip, a tint, an effect sprite) or
-  lists the frame as an art gap for the owner or a human artist. Original effect art that is not Bass or Treble (a
-  muzzle flash, a merge flash, a shockwave) may go to an art agent under the rules of `art.md`.
+- **Art: new sprites drawn by Fable.** A Claude Fable 5.2 art agent draws new Bass and Treble sprites for the fight,
+  under the rules of `art.md` (including the Fable confirmation). The frames go into fixed-size strips in
+  `assets/sprites/frames/` and a new atlas (`BASS`, or a place in an existing boss atlas; `assets.md` decides).
+- **Reference sheet.** The owner supplied the Spriters Resource sheet "Mega Man 10: Bass, Treble and Reggae"
+  (ripper: Random Talking Bush; copyright Capcom). It is a reference for the look of Bass, Treble and Treble Boost,
+  not the source of the game frames. The moves are not limited to the poses on the sheet: where a move needs a
+  frame that the sheet does not have (see the table below), Fable draws it.
 - **Moves.** An Opus agent ideates the attacks of both phases, the coordination between the two bodies, and the
-  phase change, under the frame budget below. The result goes in the branch `NOTES.md` and the decisions of the
-  owner in `SCOPE.md`.
-- **Credit** in the root `README.md` `CREDITS`, in the pattern of the other rips: the sheet, the ripper and the
-  source.
+  phase change, with the table below as a guide to the poses that the reference shows. The result goes in the
+  branch `NOTES.md` and the decisions of the owner in `SCOPE.md`.
+- **Credit** in the root `README.md` `CREDITS`, as `art.md` says for AI art: the new sprites as made by Claude Fable
+  5.2, with the design of Bass and Treble by Capcom; and the reference sheet, its ripper and its source if the
+  owner wants it named.
 
-Frame budget of the sheet (2026-11-26, from the owner's upload):
+Poses on the reference sheet (2026-11-26, from the owner's upload):
 
 | Body | Frames on the sheet | Missing for a full move set |
 |---|---|---|
@@ -48,10 +47,9 @@ Frame budget of the sheet (2026-11-26, from the owner's upload):
 | Treble (alone) | teleport, idle, toss, an arrow effect, 2 unused frames | run, jump or pounce, bite, own shot, hurt |
 | Treble Boost (combined) | intro (merge), idle, shoot, prototype shoot, revert, wing parts | fly or dive pose, hurt |
 
-So Treble alone has the smallest budget. The ideation should first consider moves that need no new Treble frames:
-for example Treble as a support body that teleports in and out to new positions, holds and launches (the toss
-frames), or Bass riding or jumping off Treble. A move that needs a new Treble frame is an art gap, named as a
-decision for the owner.
+The right column lists poses that the reference does not show; Fable draws them if the chosen moves need them. So
+Treble's moves are not limited to support roles (teleport, toss); a run, a pounce, a bite or a shot of its own is
+possible.
 
 ### `189b`: the fight in a test map
 
@@ -88,8 +86,8 @@ decision for the owner.
 ## Decisions
 
 - 2026-11-26 (Claude, from the owner's split): three branches `189a`, `189b`, `189c`, in this order.
-- 2026-11-26 (Claude): Bass and Treble frames come only from the supplied sheet; no AI-drawn Bass or Treble frames.
-  Art gaps go to the owner.
+- 2026-11-26 (owner, replaces Claude's earlier "frames only from the sheet" decision): Claude Fable 5.2 draws new
+  Bass and Treble sprites for the fight; the MM10 sheet is a reference only.
 
 ## Open questions
 
@@ -104,7 +102,6 @@ decision for the owner.
    (`LevelType.EXTRA_LEVEL`) that opens after a set of bosses, or a mid-stage encounter. `189c` scans and recommends.
 6. **Reward** (`189c`): none, a weapon, an item, or only progress.
 7. **Music:** which track the fight uses (a `MusicAsset` entry).
-8. **The new Treble frames** (if the chosen moves need them): who makes them.
 
 ## Sources
 
