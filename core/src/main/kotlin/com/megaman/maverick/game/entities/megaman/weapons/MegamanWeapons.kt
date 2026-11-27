@@ -119,7 +119,6 @@ object MegamanWeapons {
         ),
         enablesJetpack = true,
         summonsRush = true,
-        onDeselect = { megaman, _ -> megaman.rushHandler.dismiss() },
         stopsChargeOnHold = true
     )
 }

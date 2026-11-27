@@ -29,6 +29,7 @@ import com.maverick.game.engine.drawables.sprites.GameSprite
 import com.maverick.game.engine.drawables.sprites.SpritesComponent
 import com.maverick.game.engine.drawables.sprites.setPosition
 import com.maverick.game.engine.drawables.sprites.setSize
+import com.maverick.game.engine.entities.EntityExistenceState
 import com.maverick.game.engine.entities.contracts.IAnimatedEntity
 import com.maverick.game.engine.entities.contracts.IBodyEntity
 import com.maverick.game.engine.entities.contracts.ISpritesEntity
@@ -65,6 +66,7 @@ import com.megaman.maverick.game.world.body.getBounds
 import com.megaman.maverick.game.world.body.getCenter
 import com.megaman.maverick.game.world.body.getPositionPoint
 import com.megaman.maverick.game.world.body.isSensing
+import com.megaman.maverick.game.world.body.setBodySense
 import com.megaman.maverick.game.world.body.setReceiver
 
 enum class RushState { BEAMING_DOWN, LANDING, SITTING, JOINING, BEAMING_OUT, BEAMING_UP }
@@ -100,11 +102,11 @@ class Rush(services: MegaServices) : MegaGameEntity(services), RushHandle, IBody
         private const val JOIN_KEY_PREFIX = "join_"
 
         private val animDefs = orderedMapOf(
-            BEAM_KEY pairTo AnimationDef(1, 1, 1f, true),
-            LAND_KEY pairTo AnimationDef(1, 3, LAND_DUR / 3f, false),
-            SIT_KEY pairTo AnimationDef(1, 2, 0.25f, true),
-            "${JOIN_KEY_PREFIX}rush_jet" pairTo AnimationDef(1, 4, JOIN_DUR / 4f, false),
-            BEAM_OUT_KEY pairTo AnimationDef(1, 3, BEAM_OUT_DUR / 3f, false)
+            BEAM_KEY pairTo AnimationDef(1, 1, 1f, loop = true),
+            LAND_KEY pairTo AnimationDef(1, 3, LAND_DUR / 3f, loop = false),
+            SIT_KEY pairTo AnimationDef(1, 2, 0.25f, loop = true),
+            "${JOIN_KEY_PREFIX}rush_jet" pairTo AnimationDef(1, 4, JOIN_DUR / 4f, loop = false),
+            BEAM_OUT_KEY pairTo AnimationDef(1, 3, BEAM_OUT_DUR / 3f, loop = false)
         )
         private val regions = ObjectMap<String, TextureRegion>()
 
@@ -118,6 +120,7 @@ class Rush(services: MegaServices) : MegaGameEntity(services), RushHandle, IBody
 
     private lateinit var owner: Megaman
     private var joinAnimKey = ""
+    private var leaveOnSpawn = false
     private val stateTimer = Timer(LAND_DUR)
     private val joinStart = Vector2()
 
@@ -125,7 +128,7 @@ class Rush(services: MegaServices) : MegaGameEntity(services), RushHandle, IBody
         GameLogger.debug(TAG, "init()")
         if (regions.isEmpty) {
             val atlas = services.assets.getTextureAtlas(TextureAsset.RUSH.source)
-            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion(key)) }
+            animDefs.keys().forEach { key -> regions.put(key, atlas.findRegion("$TAG/$key")) }
         }
         super.init()
         addComponent(defineBodyComponent())
@@ -134,11 +137,11 @@ class Rush(services: MegaServices) : MegaGameEntity(services), RushHandle, IBody
         addComponent(UpdatablesComponent({ delta -> updateState(delta) }))
     }
 
-    override fun arrive(owner: Megaman, weapon: WeaponDef<Megaman>) {
+    override fun arrive(owner: Megaman, weapon: WeaponDef<Megaman>): Boolean {
         val view = services.gameCamera.getRotatedBounds()
         val x = owner.body.getCenter().x + SPAWN_OFFSET_X * ConstVals.PPM * owner.facing.value
         val position = GameObjectPools.fetch(Vector2::class).set(x, view.getMaxY() - BODY_HEIGHT * ConstVals.PPM)
-        spawn(
+        return spawn(
             props(
                 ConstKeys.OWNER pairTo owner,
                 ConstKeys.POSITION pairTo position,
@@ -149,14 +152,14 @@ class Rush(services: MegaServices) : MegaGameEntity(services), RushHandle, IBody
     }
 
     override fun leave() {
-        GameLogger.debug(TAG, "leave(): state=$state")
-        startBeamOut()
+        GameLogger.debug(TAG, "leave(): state=$state, existenceState=$existenceState")
+        if (existenceState == EntityExistenceState.SPAWN_QUEUED) leaveOnSpawn = true else startBeamOut()
     }
 
-    override fun leaveFromBack(owner: Megaman) {
+    override fun leaveFromBack(owner: Megaman): Boolean {
         val position = backPosition(owner, GameObjectPools.fetch(Vector2::class))
         position.y -= BODY_HEIGHT * ConstVals.PPM / 2f
-        spawn(
+        return spawn(
             props(
                 ConstKeys.OWNER pairTo owner,
                 ConstKeys.POSITION pairTo position,
@@ -183,11 +186,13 @@ class Rush(services: MegaServices) : MegaGameEntity(services), RushHandle, IBody
         body.setBottomCenterToPoint(spawnProps.get(ConstKeys.POSITION, Vector2::class)!!)
         body.physics.gravityOn = false
         body.physics.velocity.setZero()
-        when (state) {
-            RushState.BEAMING_DOWN -> body.physics.velocity.y = -BEAM_SPEED * ConstVals.PPM
-            RushState.BEAMING_OUT -> startBeamOut()
+        body.setBodySense(BodySense.FEET_ON_GROUND, false)
+        when {
+            state == RushState.BEAMING_OUT || leaveOnSpawn -> startBeamOut()
+            state == RushState.BEAMING_DOWN -> body.physics.velocity.y = -BEAM_SPEED * ConstVals.PPM
             else -> throw IllegalStateException("$TAG cannot spawn in state $state")
         }
+        leaveOnSpawn = false
     }
 
     override fun onDestroy() {
@@ -248,7 +253,7 @@ class Rush(services: MegaServices) : MegaGameEntity(services), RushHandle, IBody
         state = RushState.LANDING
         stateTimer.resetDuration(LAND_DUR)
         body.physics.velocity.setZero()
-        services.audio.playSound(SoundAsset.BEAM_SOUND, false)
+        services.audio.playSound(SoundAsset.BEAM_SOUND, loop = false)
     }
 
     private fun startBeamOut() {
@@ -256,7 +261,7 @@ class Rush(services: MegaServices) : MegaGameEntity(services), RushHandle, IBody
         stateTimer.resetDuration(BEAM_OUT_DUR)
         body.physics.gravityOn = false
         body.physics.velocity.setZero()
-        services.audio.playSound(SoundAsset.BEAM_OUT_SOUND, false)
+        services.audio.playSound(SoundAsset.BEAM_OUT_SOUND, loop = false)
     }
 
     private fun canJoin(): Boolean {
@@ -273,7 +278,7 @@ class Rush(services: MegaServices) : MegaGameEntity(services), RushHandle, IBody
         joinStart.set(body.getCenter())
         body.physics.gravityOn = false
         body.physics.velocity.setZero()
-        services.audio.playSound(SoundAsset.BEAM_SOUND, false)
+        services.audio.playSound(SoundAsset.BEAM_SOUND, loop = false)
         services.events.submitEvent(Event(EventType.START_FREEZE_ROUTINE, props(ConstKeys.VALUE pairTo this)))
     }
 

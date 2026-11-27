@@ -12,11 +12,11 @@ enum class RushPhase { ABSENT, ARRIVING, JOINING, JOINED, LEAVING }
 
 interface RushHandle {
 
-    fun arrive(owner: Megaman, weapon: WeaponDef<Megaman>)
+    fun arrive(owner: Megaman, weapon: WeaponDef<Megaman>): Boolean
 
     fun leave()
 
-    fun leaveFromBack(owner: Megaman)
+    fun leaveFromBack(owner: Megaman): Boolean
 
     fun vanish()
 }
@@ -51,7 +51,12 @@ class MegamanRushHandler(
         val rush = newRush()
         this.rush = rush
         phase = RushPhase.ARRIVING
-        rush.arrive(megaman, weapon)
+        if (!rush.arrive(megaman, weapon)) {
+            GameLogger.error(TAG, "summon(): Rush did not spawn")
+            this.rush = null
+            phase = RushPhase.ABSENT
+            return false
+        }
         GameLogger.debug(TAG, "summon(): weapon=$weapon")
         return true
     }
@@ -68,7 +73,11 @@ class MegamanRushHandler(
                 val rush = newRush()
                 this.rush = rush
                 phase = RushPhase.LEAVING
-                rush.leaveFromBack(megaman)
+                if (!rush.leaveFromBack(megaman)) {
+                    GameLogger.error(TAG, "dismiss(): Rush did not spawn on the back")
+                    this.rush = null
+                    phase = RushPhase.ABSENT
+                }
             }
 
             RushPhase.ABSENT, RushPhase.LEAVING -> {}

@@ -3,35 +3,35 @@ size: 256, 100
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-beam
+Rush/beam
   rotate: false
   xy: 0, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-beam_out
+Rush/beam_out
   rotate: false
   xy: 34, 0
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
-join_rush_jet
+Rush/join_rush_jet
   rotate: false
   xy: 0, 34
   size: 128, 32
   orig: 128, 32
   offset: 0, 0
   index: -1
-land
+Rush/land
   rotate: false
   xy: 130, 34
   size: 96, 32
   orig: 96, 32
   offset: 0, 0
   index: -1
-sit
+Rush/sit
   rotate: false
   xy: 0, 68
   size: 64, 32

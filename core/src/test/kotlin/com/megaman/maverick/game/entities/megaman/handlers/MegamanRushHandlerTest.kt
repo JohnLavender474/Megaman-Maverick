@@ -1,5 +1,6 @@
 package com.megaman.maverick.game.entities.megaman.handlers
 
+import com.badlogic.gdx.utils.Array
 import com.maverick.game.engine.common.enums.Direction
 import com.megaman.maverick.game.entities.megaman.Megaman
 import com.megaman.maverick.game.entities.megaman.weapons.MegamanWeapons
@@ -9,20 +10,22 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-private class FakeRush : RushHandle {
+private class FakeRush(private val spawns: Boolean = true) : RushHandle {
 
-    val calls = ArrayList<String>()
+    val calls = Array<String>()
 
-    override fun arrive(owner: Megaman, weapon: WeaponDef<Megaman>) {
+    override fun arrive(owner: Megaman, weapon: WeaponDef<Megaman>): Boolean {
         calls.add("arrive:${weapon.id}")
+        return spawns
     }
 
     override fun leave() {
         calls.add("leave")
     }
 
-    override fun leaveFromBack(owner: Megaman) {
+    override fun leaveFromBack(owner: Megaman): Boolean {
         calls.add("leaveFromBack")
+        return spawns
     }
 
     override fun vanish() {
@@ -34,7 +37,8 @@ class MegamanRushHandlerTest : DescribeSpec({
 
     lateinit var megaman: Megaman
     lateinit var weaponsHandler: MegamanWeaponsHandler
-    lateinit var rushes: ArrayList<FakeRush>
+    lateinit var rushes: Array<FakeRush>
+    var rushesSpawn = true
     lateinit var handler: MegamanRushHandler
 
     beforeEach {
@@ -43,8 +47,9 @@ class MegamanRushHandlerTest : DescribeSpec({
         megaman = mockk(relaxed = true)
         every { megaman.weaponsHandler } returns weaponsHandler
         every { megaman.direction } returns Direction.UP
-        rushes = ArrayList()
-        handler = MegamanRushHandler(megaman) { FakeRush().also { rushes.add(it) } }
+        rushes = Array()
+        rushesSpawn = true
+        handler = MegamanRushHandler(megaman) { FakeRush(rushesSpawn).also { rushes.add(it) } }
     }
 
     fun joinFirstRush() {
@@ -57,7 +62,7 @@ class MegamanRushHandlerTest : DescribeSpec({
         it("calls Rush for a Rush ability when he is absent") {
             handler.summon(MegamanWeapons.RUSH_JET) shouldBe true
             handler.phase shouldBe RushPhase.ARRIVING
-            rushes.single().calls shouldBe listOf("arrive:rush_jet")
+            rushes.single().calls.toList() shouldBe listOf("arrive:rush_jet")
         }
 
         it("does not call Rush for a weapon that is not a Rush ability") {
@@ -76,6 +81,12 @@ class MegamanRushHandlerTest : DescribeSpec({
             every { megaman.direction } returns Direction.LEFT
             handler.summon(MegamanWeapons.RUSH_JET) shouldBe false
             rushes.size shouldBe 0
+        }
+
+        it("goes back to absent when Rush does not spawn") {
+            rushesSpawn = false
+            handler.summon(MegamanWeapons.RUSH_JET) shouldBe false
+            handler.phase shouldBe RushPhase.ABSENT
         }
 
         it("does not call a second Rush while one is out, joined or leaving") {
@@ -120,7 +131,7 @@ class MegamanRushHandlerTest : DescribeSpec({
             handler.summon(MegamanWeapons.RUSH_JET)
             handler.dismiss()
             handler.phase shouldBe RushPhase.LEAVING
-            rushes.single().calls shouldBe listOf("arrive:rush_jet", "leave")
+            rushes.single().calls.toList() shouldBe listOf("arrive:rush_jet", "leave")
         }
 
         it("sends a joining Rush away") {
@@ -128,7 +139,7 @@ class MegamanRushHandlerTest : DescribeSpec({
             handler.onJoinStarted(rushes[0])
             handler.dismiss()
             handler.phase shouldBe RushPhase.LEAVING
-            rushes.single().calls shouldBe listOf("arrive:rush_jet", "leave")
+            rushes.single().calls.toList() shouldBe listOf("arrive:rush_jet", "leave")
         }
 
         it("beams a joined Rush out from Megaman's back") {
@@ -136,7 +147,14 @@ class MegamanRushHandlerTest : DescribeSpec({
             handler.dismiss()
             handler.phase shouldBe RushPhase.LEAVING
             handler.joined shouldBe false
-            rushes[1].calls shouldBe listOf("leaveFromBack")
+            rushes[1].calls.toList() shouldBe listOf("leaveFromBack")
+        }
+
+        it("goes back to absent when the Rush on the back does not spawn") {
+            joinFirstRush()
+            rushesSpawn = false
+            handler.dismiss()
+            handler.phase shouldBe RushPhase.ABSENT
         }
 
         it("lets Megaman call Rush again only after the leaving Rush is gone") {
@@ -166,7 +184,7 @@ class MegamanRushHandlerTest : DescribeSpec({
             handler.summon(MegamanWeapons.RUSH_JET)
             handler.reset()
             handler.phase shouldBe RushPhase.ABSENT
-            rushes[0].calls shouldBe listOf("arrive:rush_jet", "vanish")
+            rushes[0].calls.toList() shouldBe listOf("arrive:rush_jet", "vanish")
             handler.summon(MegamanWeapons.RUSH_JET) shouldBe true
             handler.onRushGone(rushes[0])
             handler.phase shouldBe RushPhase.ARRIVING

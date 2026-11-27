@@ -13,14 +13,14 @@ is the build and test check of each step.
   `pit`, `ledge`, painted tiles, and `LevelDefinition.REFACTOR_TEST_190`.
 - Check: a script reads the atlas back and checks the region names and sizes; a script checks that each room holds a
   spawn and that only spawn `0` is near the origin.
-- Done: no
+- Done: yes
 
 ### 2. The freeze routine
 
 - Changes: `levels/LevelFreezeRoutine.kt`; `EventType.START_FREEZE_ROUTINE`; `MegaLevelScreen` runs it (systems off
   but sprites, update when not paused, systems on at the end).
 - Check: CI build.
-- Done: no
+- Done: yes
 
 ### 3. The handler and the def field
 
@@ -29,21 +29,21 @@ is the build and test check of each step.
 - Check: `MegamanRushHandlerTest` (phases, summon rules, dismiss in each phase) through a small interface to Rush
   (`RushHandle`: arrive, leave, gone), so the test needs no entity. (One implementation: it narrows the handler's need
   of `Rush` to the calls it makes, the case the process allows.)
-- Done: no
+- Done: yes
 
 ### 4. The gated moves and look
 
 - Changes: `Megaman.weaponMovesReady` and `Megaman.drawnWeapon`; `JetpackBehavior`, `AirDashBehavior`,
   `MegamanJetpackHandler`, `currentLook`, the Megaman animation key and `MegamanTrailSpriteV2` read them.
 - Check: CI build; `MegamanWeaponsTest` and `MegamanAirDashTest` still pass.
-- Done: no
+- Done: yes
 
 ### 5. The Rush entity
 
 - Changes: `entities/special/Rush.kt` (body with a feet fixture, block filter, sprites and animations, the states, the
   join routine); `entity-tags.txt`.
 - Check: `core:smokeTest` (CI).
-- Done: no
+- Done: yes
 
 ### 6. Review and PR
 

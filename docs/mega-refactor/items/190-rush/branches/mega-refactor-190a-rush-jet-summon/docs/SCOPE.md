@@ -62,12 +62,12 @@ See the item `NOTES.md` ("Rush Jet today", "Pause while an animation plays"). In
   handler is `JOINED`. `TODO` at the code: item `012`.
 - **`Megaman.shoot()`**: with a Rush ability and Rush `ABSENT`, `SHOOT` calls Rush (no shot, no shoot pose). In any
   other phase it fires the weapon as today (the buster for Rush Jet).
-- **Unequip:** `RUSH_JET.onDeselect` dismisses Rush: a waiting Rush beams out where he sits; a joined Rush is spawned
+- **Unequip:** a change from a Rush ability to another weapon (`MegamanWeaponsHandler.onChangeWeapon`; the same weapon chosen again is no change) dismisses Rush: a waiting Rush beams out where he sits; a joined Rush is spawned
   on Mega Man's back and beams out. While Rush is `LEAVING`, no Rush ability can call him.
 - **Temporary art:** a "dog" placeholder atlas `Rush.txt` (new `TextureAsset.RUSH`, frames in
   `assets/sprites/frames/Rush/`, a `.tps` project with `Basic`), made by a script in `temp/`. No Fable agent: these are
   programmer placeholders that `190b` replaces with the owner's sheet.
-- **Test map** `REFACTOR_TEST_190` (`RefactorTest190.tmx`): rooms `flat`, `pit`, `ledge`.
+- **Test map** `REFACTOR_TEST_190` (`RefactorTest190.tmx`): rooms `flat`, `pit`, `ledge` (one view each) and `wide` (two views).
 - **Tests** (Kotest): the handler phases and the summon rules, with a fake Rush (see `PLAN.md`).
 
 ## Out of scope
@@ -149,8 +149,10 @@ Experimental checks (all with `--weapons RUSH_JET`; select Rush Jet with `SELECT
    calls him again at once.
 4. `--level REFACTOR_TEST_190 --room ledge`: face the ledge and `SHOOT`: Rush lands on top of the ledge, not inside
    it; jump onto it to join.
-5. Same room: call Rush, then walk away until he leaves the view: he is gone; `SHOOT` calls him again.
-6. Call Rush, then die (any pit): after the respawn, Rush Jet is not current (the buster is) and no Rush is out.
+5. `--level REFACTOR_TEST_190 --room wide`: call Rush, then walk left until he leaves the view: he is gone; `SHOOT`
+   calls him again.
+6. `--level REFACTOR_TEST_190 --room pit`: face left and call Rush (he lands on the floor left of the pit), then walk
+   into the pit: after the respawn, the buster is current and no Rush is out.
 
 Control checks:
 
@@ -160,6 +162,7 @@ Control checks:
 ## Behaviors to check
 
 - Pause (`START`) during the join pause: after the resume, the join ends and play goes on.
+- In the pause menu, choose Rush Jet again while Rush is joined: he stays joined.
 - Rush Jet with its energy empty: `SHOOT` fires the buster and does not call Rush.
 
 ## Intended changes

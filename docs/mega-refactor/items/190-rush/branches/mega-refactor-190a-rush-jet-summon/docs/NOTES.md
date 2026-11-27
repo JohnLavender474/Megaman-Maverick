@@ -22,6 +22,8 @@ the PR; a change goes back into `SCOPE.md`.
 - D10: The temporary "dog" sprites are programmer placeholders made by a script, not by a Fable art agent (the art
   rule is for real art; `190b` brings the owner's sheet).
 - D11: Merge target directly into `master` (item `ITEM.md`, "Decisions").
+- D12: Choosing the same Rush ability again (pause menu) is no change: Rush stays. Only a change to another weapon
+  sends him away.
 
 ## Overlap with other branches
 
