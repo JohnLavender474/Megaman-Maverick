@@ -1,4 +1,4 @@
-# Notes: mega-refactor-189b-bass-test-fight
+# Notes: mega-refactor-189b-duo-test-fight
 
 ## Decisions
 

@@ -1,4 +1,4 @@
-# Process log: mega-refactor-189c-bass-in-game
+# Process log: mega-refactor-189c-duo-in-game
 
 ## Status
 

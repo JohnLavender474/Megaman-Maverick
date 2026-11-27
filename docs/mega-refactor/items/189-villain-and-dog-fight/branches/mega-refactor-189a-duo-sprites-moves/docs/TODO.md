@@ -1,4 +1,4 @@
-# TODO: mega-refactor-189a-bass-sprites-moves
+# TODO: mega-refactor-189a-duo-sprites-moves
 
 ## Tasks
 

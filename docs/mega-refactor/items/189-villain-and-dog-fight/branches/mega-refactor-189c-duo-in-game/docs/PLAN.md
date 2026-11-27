@@ -1,4 +1,4 @@
-# Plan: mega-refactor-189c-bass-in-game
+# Plan: mega-refactor-189c-duo-in-game
 
 How to do the work in `SCOPE.md`. Write this file after the owner approves the brief. It needs
 no approval. When the plan changes, write the reason in the process log.

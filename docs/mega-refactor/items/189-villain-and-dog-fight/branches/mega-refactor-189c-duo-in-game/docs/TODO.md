@@ -1,4 +1,4 @@
-# TODO: mega-refactor-189c-bass-in-game
+# TODO: mega-refactor-189c-duo-in-game
 
 ## Tasks
 

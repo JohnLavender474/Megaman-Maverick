@@ -1,4 +1,4 @@
-# TODO: mega-refactor-189b-bass-test-fight
+# TODO: mega-refactor-189b-duo-test-fight
 
 ## Tasks
 

@@ -1,4 +1,4 @@
-# Notes: mega-refactor-189a-bass-sprites-moves
+# Notes: mega-refactor-189a-duo-sprites-moves
 
 ## Decisions
 

@@ -1,4 +1,4 @@
-# Scope: mega-refactor-189c-bass-in-game
+# Scope: mega-refactor-189c-duo-in-game
 
 What this branch changes and why, and its contract. Write this file after the scan and before
 `BRIEF.src.html`. This is Claude's record. The owner approves the brief, not this file. If the scope

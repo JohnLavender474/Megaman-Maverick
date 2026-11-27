@@ -195,7 +195,7 @@ statuses and column meanings are in `CLAUDE.md`.
 | 185 | [A second game title on the same engine and shared code](items/185-second-title/ITEM.md) | refactor | `O1`, `O7`, `O8` | active | none | 2026-11-23 | |
 | 187 | [Intro story screen and main menu overhaul](items/187-intro-story-and-menu/ITEM.md) | feature | `O9` | active | none | 2026-11-26 | |
 | 188 | [Dragon mini-boss upgrade (legs and new attacks)](items/188-dragon-mini-boss-upgrade/ITEM.md) | feature | `O4` | active | none | 2026-11-26 | |
-| 189 | [Bass and Treble boss fight (two phases)](items/189-bass-and-treble-fight/ITEM.md) | feature | `O4`, `O9` | planned | none | | |
+| 189 | [Villain and dog boss fight (two phases)](items/189-villain-and-dog-fight/ITEM.md) | feature | `O4`, `O9` | planned | none | | |
 
 ## Branches
 
@@ -343,6 +343,6 @@ statuses and column meanings are in `CLAUDE.md`.
 | [`mega-refactor-187a-intro-story-art`](items/187-intro-story-and-menu/branches/mega-refactor-187a-intro-story-art/process-log.md) | 187 | First round of NES-style art for the intro story slides: the city by day, dusk and night, and the exploding city with two screens, as exported layers (art only) | active | 2026-11-26 | |
 | [`mega-refactor-007a-json-save-slots`](items/007-json-save-slots/branches/mega-refactor-007a-json-save-slots/process-log.md) | 007 | First pass: `SaveStorage`, 5 JSON save slots, a slot picker; no legacy import | active | 2026-11-26 | |
 | [`mega-refactor-188a-dragon-moves-art`](items/188-dragon-mini-boss-upgrade/branches/mega-refactor-188a-dragon-moves-art/process-log.md) | 188 | Opus ideation of new `MechaDragon` moves; Fable art with legs and new attack frames (design and art only) | active | 2026-11-26 | |
-| [`mega-refactor-189a-bass-sprites-moves`](items/189-bass-and-treble-fight/branches/mega-refactor-189a-bass-sprites-moves/process-log.md) | 189 | Claude Fable 5.2 draws new Bass and Treble sprites (strips and an atlas); decide the attacks and animations of both phases | planned | | |
-| [`mega-refactor-189b-bass-test-fight`](items/189-bass-and-treble-fight/branches/mega-refactor-189b-bass-test-fight/process-log.md) | 189 | The two-phase Bass and Treble fight in the test map `REFACTOR_TEST_189` | blocked | | |
-| [`mega-refactor-189c-bass-in-game`](items/189-bass-and-treble-fight/branches/mega-refactor-189c-bass-in-game/process-log.md) | 189 | The fight in the main game: place, trigger and what follows the win | blocked | | |
+| [`mega-refactor-189a-duo-sprites-moves`](items/189-villain-and-dog-fight/branches/mega-refactor-189a-duo-sprites-moves/process-log.md) | 189 | Claude Fable 5.2 designs and draws the villain and the dog (strips and an atlas); decide the attacks and animations of both phases | planned | | |
+| [`mega-refactor-189b-duo-test-fight`](items/189-villain-and-dog-fight/branches/mega-refactor-189b-duo-test-fight/process-log.md) | 189 | The two-phase villain and dog fight in the test map `REFACTOR_TEST_189` | blocked | | |
+| [`mega-refactor-189c-duo-in-game`](items/189-villain-and-dog-fight/branches/mega-refactor-189c-duo-in-game/process-log.md) | 189 | The fight in the main game: place, trigger and what follows the win | blocked | | |

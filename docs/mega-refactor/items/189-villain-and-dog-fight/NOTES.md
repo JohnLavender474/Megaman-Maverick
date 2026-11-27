@@ -1,31 +1,22 @@
-# Notes: 189 Bass and Treble boss fight
+# Notes: 189 villain and dog boss fight
 
 Research for this item. Based on `master` `328de51` (2026-11-26).
 
-## The reference sheet (2026-11-26)
+## The characters (2026-11-26)
 
-The owner's upload, the reference sheet: 525x922, indexed color. A copy is in `temp/bass-treble-sheet/` (not committed).
-The sheet is a reference for the Fable art agent, not the source of the game frames: Claude Fable 5.2 draws new Bass and
-Treble sprites for the fight (owner, 2026-11-26).
-
-The sheet holds more than the fight needs: Reggae (Bass's bird), the weapon-get portraits, the
-stage-select faces and the weapon palettes. The weapon palettes may guide a palette swap when Bass uses a copied
-weapon, if a move asks for it.
-
-The poses that the sheet shows per body are in `ITEM.md`. In short: Bass has a full set; Treble alone has only
-teleport, idle, toss and an arrow effect; Treble Boost has intro, idle, shoot and revert. Fable draws the poses that
-the chosen moves need and the sheet does not show.
+The villain and the dog are new original characters of this game (owner, 2026-11-26). Claude Fable 5.2 designs and
+draws them and their combined form in `189a`; no existing sprite sheet is used. Their names are open (`ITEM.md`).
 
 ## How a two-body boss fits the fight flow
 
 - `FightDirector` holds one fight, and a fight has one boss (`core/.../fights/README.md`). `FightPlans.find` maps a
   boss `TAG` to a plan; any boss not in the list throws `MissingFightPlanException` when the player enters the room.
-- So the fight has one boss entity: `Bass`. `Treble` is a child entity that `Bass` spawns and owns, as
-  `ElecDevil` spawns its body pieces and `BigAssMaverickRobot` its hands. The win rule reads Bass only.
-- Phase 2 is a state of `Bass` (Treble despawns at the merge), not a second boss. One health bar and one fight plan
-  hold across both phases. `WilyFinalBoss` already runs phases inside one boss (`phase_1/...` animation keys).
-- Inference: a shared plan object on `Bass` that issues orders to `Treble` keeps the attacks coordinated and keeps one
-  owner of the timing (`O1-R3`, no new fragile order).
+- So the fight has one boss entity: the villain. The dog is a child entity that the villain spawns and owns, as
+  `ElecDevil` spawns its body pieces and `BigAssMaverickRobot` its hands. The win rule reads the villain only.
+- Phase 2 is a state of the villain (the dog despawns at the merge), not a second boss. One health bar and one fight
+  plan hold across both phases. `WilyFinalBoss` already runs phases inside one boss (`phase_1/...` animation keys).
+- Inference: a shared plan object on the villain that issues orders to the dog keeps the attacks coordinated and
+  keeps one owner of the timing (`O1-R3`, no new fragile order).
 
 ## Where the fight can go (`189c` scans this)
 

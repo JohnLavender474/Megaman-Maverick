@@ -1,9 +1,9 @@
-# Process log: mega-refactor-189a-bass-sprites-moves
+# Process log: mega-refactor-189a-duo-sprites-moves
 
 ## Status
 
 - State: planned
-- Goal: Claude Fable 5.2 draws new Bass and Treble sprites for the fight (strips and an atlas); decide the attacks and animations of both phases.
+- Goal: Claude Fable 5.2 designs and draws the villain and the dog (strips and an atlas); decide the attacks and animations of both phases.
 - Done: folder prepared on `master` with item `189`.
 - Next: branch start (after the merge-target answer of `ITEM.md`).
 - Blocked: none

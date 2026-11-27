@@ -1,4 +1,4 @@
-# Notes: mega-refactor-189c-bass-in-game
+# Notes: mega-refactor-189c-duo-in-game
 
 ## Decisions
 

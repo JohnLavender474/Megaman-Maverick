@@ -98,7 +98,7 @@ Audit of `master` at `30d88f0b7`, 2026-11-01. Counts are `grep` or script result
 | `183` | active | [NES-faithful rotation: no sprite drawn at an angle that is not a multiple of 90](../items/183-nes-faithful-rotation/ITEM.md) (main) |
 | `184` | dropped | [Keep button taps that are shorter than one frame](../items/184-sub-frame-taps/ITEM.md) (main) |
 | `187` | active | [Intro story screen and main menu overhaul](../items/187-intro-story-and-menu/ITEM.md) (main) |
-| `189` | planned | [Bass and Treble boss fight (two phases)](../items/189-bass-and-treble-fight/ITEM.md) |
+| `189` | planned | [Villain and dog boss fight (two phases)](../items/189-villain-and-dog-fight/ITEM.md) |
 
 ## Gaps with no item
 
